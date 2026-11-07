@@ -13,6 +13,13 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - `EngineJobsTest`: the jobs of the service (convert with a separate styles document, fill the Slots and convert,
   preview as one SVG per page) and their errors (in the styles, in the document, in the data, a limit, a cancellation),
   done with the API of the engine as it is: a shared `Converter`, and one per request from its `toBuilder()`.
+- The core of the service, without HTTP, in `dev.stxt.press`: `Press`, on the shared `Converter` of the server, with
+  three jobs: `pdf` (to an `OutputStream`, written only once the document is laid out), `svg` (one SVG per page) and
+  `fill` (the filled document as STXT text). A `Job` carries the layout document, its separate styles documents in
+  order (each with the name it has in the errors), the JSON data and the `Options` (`pdfUa`, `pdfA`, `debug`, the
+  excluded `Check`s); with data, the Slots are filled before converting. Every error is a `PressException` with
+  `kind`, `code`, `line` and `source`, the input the line belongs to: `document`, `data`, `filled` (with the filled
+  text, whose lines are not those of the document with Slots) or the name of a styles document.
 
 ### Changed
 
