@@ -20,6 +20,13 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   excluded `Check`s); with data, the Slots are filled before converting. Every error is a `PressException` with
   `kind`, `code`, `line` and `source`, the input the line belongs to: `document`, `data`, `filled` (with the filled
   text, whose lines are not those of the document with Slots) or the name of a styles document.
+- The templates of the server, without HTTP, in `dev.stxt.press.templates`: `Templates` reads a folder where a template
+  is a `<name>.stxt`, named by its path without extension (`invoices/2026/invoice`), with its own `<name>.styles.stxt`
+  and its sample data `<name>.json` beside it, all optional, and a `.styles.stxt` in any folder above it. The styles are
+  chained from the root to the template, so the nearest one wins. A `Template` gives the job of a `GET` (filled with its
+  sample data, or as it is without them) and that of a `POST` (filled with the data of the request instead). The
+  segments of a path are `[A-Za-z0-9_-]+`; any other path is `TEMPLATE_NOT_FOUND`, and a file that is a symbolic link
+  leaving the folder is not read (`TEMPLATE_LINK_OUTSIDE`). The folder is read on every call.
 
 ### Changed
 

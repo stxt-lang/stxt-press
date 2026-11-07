@@ -6,6 +6,6 @@
  *
  * <p>{@link dev.stxt.press.Press} does the jobs (a PDF, a preview as SVG, the fill of Slots) of a
  * {@link dev.stxt.press.Job}, and every error is a {@link dev.stxt.press.PressException} that says which input of the
- * job its line belongs to.</p>
+ * job its line belongs to. The templates of the server are in {@link dev.stxt.press.templates}.</p>
  */
 package dev.stxt.press;
