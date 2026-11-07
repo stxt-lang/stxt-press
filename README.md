@@ -18,7 +18,7 @@ mvn verify
 | Dependency | Version |
 |---|---|
 | [`dev.stxt:stxt-core`](https://github.com/stxt-lang/stxt-java) | 1.0.3 |
-| [`dev.stxt:stxt-pdf`](https://github.com/stxt-lang/stxt-pdf) | 0.12.0 |
+| [`dev.stxt:stxt-pdf`](https://github.com/stxt-lang/stxt-pdf) | 0.13.0-SNAPSHOT: the working tree of `../stxt-pdf`, installed with `mvn install` there, until 0.13.0 is published |
 | [`dev.stxt:stxt-transform`](https://github.com/stxt-lang/stxt-java-transform) | 0.1.0 |
 
 ## License

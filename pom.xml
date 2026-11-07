@@ -39,19 +39,6 @@
         <junit.version>5.10.2</junit.version>
     </properties>
 
-    <!-- stxt-pdf depends on PDFBox 3.0.8, and de.rototor.pdfbox:graphics2d 3.0.5, which it also brings, on PDFBox
-         3.0.5. stxt-pdf fixes 3.0.8 in its own dependencyManagement, which is not inherited by its consumers: without
-         this, the enforcer's dependencyConvergence fails. The version is the one of the pom of stxt-pdf. -->
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.apache.pdfbox</groupId>
-                <artifactId>pdfbox</artifactId>
-                <version>3.0.8</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <!-- Official STXT parser and validator. The same version as the one stxt-pdf depends on: the enforcer's
              dependencyConvergence fails if they differ.
@@ -63,11 +50,13 @@
         </dependency>
 
         <!-- The layout engine: reads the layout documents (dev.stxt.pdf) and writes the PDF and the SVG pages.
+             Until 0.13.0 is published, the snapshot of the working tree of ../stxt-pdf, installed with mvn install
+             there: the build does not resolve against Maven Central.
              Latest version at https://central.sonatype.com/artifact/dev.stxt/stxt-pdf -->
         <dependency>
             <groupId>dev.stxt</groupId>
             <artifactId>stxt-pdf</artifactId>
-            <version>0.12.0</version>
+            <version>0.13.0-SNAPSHOT</version>
         </dependency>
 
         <!-- The fill of the Slots of a layout document with JSON data (FillJson), before converting it. Its stxt-core
