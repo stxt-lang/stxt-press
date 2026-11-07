@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>dev.stxt</groupId>
+    <artifactId>stxt-press</artifactId>
+    <version>0.1.0</version>
+    <packaging>jar</packaging>
+
+    <!-- A service, not a library: it is distributed as a jar of the GitHub releases and as a Docker image, not on
+         Maven Central. That is why there is no release profile, nor sources and javadoc jars. -->
+    <name>STXT Press</name>
+    <description>PDF and SVG generation service for STXT layout documents, built on dev.stxt:stxt-pdf.</description>
+    <url>https://github.com/stxt-lang/stxt-press</url>
+    <inceptionYear>2026</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/license/mit</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://github.com/stxt-lang/stxt-press.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/stxt-lang/stxt-press.git</developerConnection>
+        <url>https://github.com/stxt-lang/stxt-press</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Reproducible build: fixes the dates inside the jar. Updated on each release. -->
+        <project.build.outputTimestamp>2026-11-07T00:00:00Z</project.build.outputTimestamp>
+        <junit.version>5.10.2</junit.version>
+    </properties>
+
+    <!-- stxt-pdf depends on PDFBox 3.0.8, and de.rototor.pdfbox:graphics2d 3.0.5, which it also brings, on PDFBox
+         3.0.5. stxt-pdf fixes 3.0.8 in its own dependencyManagement, which is not inherited by its consumers: without
+         this, the enforcer's dependencyConvergence fails. The version is the one of the pom of stxt-pdf. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>3.0.8</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Official STXT parser and validator. The same version as the one stxt-pdf depends on: the enforcer's
+             dependencyConvergence fails if they differ.
+             Latest version at https://central.sonatype.com/artifact/dev.stxt/stxt-core -->
+        <dependency>
+            <groupId>dev.stxt</groupId>
+            <artifactId>stxt-core</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
+        <!-- The layout engine: reads the layout documents (dev.stxt.pdf) and writes the PDF and the SVG pages.
+             Latest version at https://central.sonatype.com/artifact/dev.stxt/stxt-pdf -->
+        <dependency>
+            <groupId>dev.stxt</groupId>
+            <artifactId>stxt-pdf</artifactId>
+            <version>0.12.0</version>
+        </dependency>
+
+        <!-- The fill of the Slots of a layout document with JSON data (FillJson), before converting it. Its stxt-core
+             is the one above.
+             Latest version at https://central.sonatype.com/artifact/dev.stxt/stxt-transform -->
+        <dependency>
+            <groupId>dev.stxt</groupId>
+            <artifactId>stxt-transform</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Build rules, checked first (validate): the JDK the code is written for, and a single version of each
+                 dependency in the tree. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[17,)</version>
+                                </requireJavaVersion>
+                                <dependencyConvergence/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <!-- Every javac warning is shown, without failing the build (no -Werror). -->
+                    <compilerArgs>
+                        <arg>-Xlint:all</arg>
+                    </compilerArgs>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <!-- JSVG, which stxt-pdf uses for SVG images, draws with AWT: the service never has a display. -->
+                    <argLine>-Djava.awt.headless=true</argLine>
+                </configuration>
+            </plugin>
+
+            <!-- Packaging. The version is pinned so that the build does not depend on the default one of each
+                 Maven version. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <!-- Stable module name for JPMS consumers, while there is no module-info.java. -->
+                            <Automatic-Module-Name>dev.stxt.press</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

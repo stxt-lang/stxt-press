@@ -1,0 +1,33 @@
+# Continuous integration.
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Tests (JDK ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [17, 21]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - name: Tests
+        run: mvn -B verify
+      - name: Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-jdk${{ matrix.java }}
+          path: target/surefire-reports
+          if-no-files-found: ignore
