@@ -158,6 +158,16 @@ class PressServerTest {
         return body;
     }
 
+    /** {@code /health} says the versions: that of the engine always, that of the service only from its jar. */
+    @Test
+    void healthGivesTheVersions() throws Exception {
+        start(ServerConfig.DEFAULT);
+        JsonNode health = json(get("/health"));
+        assertEquals("ok", health.get("status").asText());
+        assertTrue(health.get("versions").get("stxt-press").isNull());
+        assertEquals(Converter.version(), health.get("versions").get("stxt-pdf").asText());
+    }
+
     @Test
     void renderGivesThePdf() throws Exception {
         start(ServerConfig.DEFAULT);

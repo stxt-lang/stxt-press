@@ -50,13 +50,11 @@
         </dependency>
 
         <!-- The layout engine: reads the layout documents (dev.stxt.pdf) and writes the PDF and the SVG pages.
-             Until 0.13.0 is published, the snapshot of the working tree of ../stxt-pdf, installed with mvn install
-             there: the build does not resolve against Maven Central.
              Latest version at https://central.sonatype.com/artifact/dev.stxt/stxt-pdf -->
         <dependency>
             <groupId>dev.stxt</groupId>
             <artifactId>stxt-pdf</artifactId>
-            <version>0.13.0-SNAPSHOT</version>
+            <version>0.13.0</version>
         </dependency>
 
         <!-- The fill of the Slots of a layout document with JSON data (FillJson), before converting it. Its stxt-core

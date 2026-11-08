@@ -46,6 +46,14 @@ public final class Press {
     }
 
     /**
+     * {@return the version of the service, that of the manifest of its jar, or {@code null} if its classes do not come
+     * from a jar (the tests)}
+     */
+    public static String version() {
+        return Press.class.getPackage().getImplementationVersion();
+    }
+
+    /**
      * Writes the PDF of a job. The document is laid out before anything is written, so an error of the document, of its
      * styles or of its data leaves {@code target} untouched.
      *

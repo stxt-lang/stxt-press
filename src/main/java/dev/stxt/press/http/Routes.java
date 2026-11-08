@@ -25,14 +25,11 @@ import com.sun.net.httpserver.HttpHandler;
 
 import dev.stxt.pdf.convert.Converter;
 import dev.stxt.pdf.model.Cancellation;
-import dev.stxt.pdf.model.FontFace;
 import dev.stxt.pdf.model.FontStyle;
-import dev.stxt.pdf.model.FontWeight;
 import dev.stxt.pdf.model.StxtPdfException;
 import dev.stxt.pdf.model.StxtPdfException.Kind;
 import dev.stxt.pdf.resources.FontFile;
 import dev.stxt.pdf.resources.FontLibrary;
-import dev.stxt.pdf.resources.ResourceException;
 import dev.stxt.pdf.tree.DocumentSchema;
 import dev.stxt.press.Job;
 import dev.stxt.press.Options;
@@ -55,7 +52,7 @@ import dev.stxt.press.templates.Templates;
  * <tr><td>{@code GET /schema}</td><td>The schema {@code dev.stxt.pdf} of the engine</td></tr>
  * <tr><td>{@code GET /fonts}</td><td>The font families of the server, and its faces with their files</td></tr>
  * <tr><td>{@code GET /fonts/{id}}</td><td>The file of a face, by its SHA-256</td></tr>
- * <tr><td>{@code GET /health}</td><td>That the service is alive, without token</td></tr>
+ * <tr><td>{@code GET /health}</td><td>That the service is alive, and its versions, without token</td></tr>
  * <tr><td>{@code GET /}, {@code GET /editor/{file}}</td><td>The web editor and its files, without token</td></tr>
  * </table>
  *
@@ -119,17 +116,12 @@ final class Routes implements HttpHandler {
     private record Shared(Converter converter, Press press) {
     }
 
-    Routes(Supplier<Converter> converter, Templates templates, ServerConfig config) throws IOException {
+    Routes(Supplier<Converter> converter, Templates templates, ServerConfig config) {
         this.converter = converter;
         this.templates = templates;
         this.config = config;
         this.conversions = new Semaphore(config.concurrentConversions());
-        try (InputStream in = DocumentSchema.class.getResourceAsStream("/stxt/" + DocumentSchema.NAMESPACE + ".stxt")) {
-            if (in == null) {
-                throw new IOException("The engine has no schema " + DocumentSchema.NAMESPACE);
-            }
-            this.schema = in.readAllBytes();
-        }
+        this.schema = DocumentSchema.text().getBytes(StandardCharsets.UTF_8);
     }
 
     /**
@@ -172,7 +164,7 @@ final class Routes implements HttpHandler {
         if (path.equals("/health")) {
             method(exchange, "GET");
             parameters(exchange, Set.of());
-            sendJson(exchange, 200, Map.of("status", "ok"));
+            sendJson(exchange, 200, health());
             return;
         }
         if (config.editor() && (path.equals("/") || path.startsWith(EDITOR))) {
@@ -213,6 +205,20 @@ final class Routes implements HttpHandler {
     }
 
     /**
+     * {@code GET /health}: that the service answers, and the versions of the service and of the engine, so that whoever
+     * keeps it can tell what is deployed. The version of the service is {@code null} outside its jar.
+     */
+    private static Map<String, Object> health() {
+        Map<String, Object> versions = new LinkedHashMap<>();
+        versions.put("stxt-press", Press.version());
+        versions.put("stxt-pdf", Converter.version());
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("status", "ok");
+        body.put("versions", versions);
+        return body;
+    }
+
+    /**
      * {@code GET /fonts}: the families, and each face (family, weight, style) with the SHA-256 of its file, which
      * {@code /fonts/{id}} gives. The editor registers them in the page to show the SVG previews with the fonts of the
      * server, which an SVG names and does not carry.
@@ -220,7 +226,7 @@ final class Routes implements HttpHandler {
     private void fonts(HttpExchange exchange) throws IOException {
         FontLibrary library = shared().converter().resources().fonts();
         List<Map<String, Object>> faces = new ArrayList<>();
-        for (FontFile file : faces(library)) {
+        for (FontFile file : library.all()) {
             Map<String, Object> face = new LinkedHashMap<>();
             face.put("family", file.face().family());
             face.put("weight", file.face().weight().value());
@@ -237,7 +243,7 @@ final class Routes implements HttpHandler {
     /** {@code GET /fonts/{id}}: the file of a face, by the SHA-256 of {@code /fonts}. */
     private void font(HttpExchange exchange, String id) throws IOException, HttpError {
         if (FONT_ID.matcher(id).matches()) {
-            for (FontFile file : faces(shared().converter().resources().fonts())) {
+            for (FontFile file : shared().converter().resources().fonts().all()) {
                 if (file.digest().equals(id)) {
                     byte[] content;
                     try (InputStream in = file.content()) {
@@ -251,28 +257,6 @@ final class Routes implements HttpHandler {
             }
         }
         throw new HttpError(404, NOT_FOUND, "There is no font " + id);
-    }
-
-    /**
-     * {@return the files of the fonts of the library, one for each face} The library gives only the families, and a face
-     * by its family, weight and style: each family is asked for the nine weights of CSS, from 100 to 900, upright and
-     * italic. A file with another weight (450) is not listed.
-     */
-    private static List<FontFile> faces(FontLibrary library) {
-        Map<String, FontFile> files = new LinkedHashMap<>();
-        for (String family : library.families()) {
-            for (int weight = 100; weight <= 900; weight += 100) {
-                for (FontStyle style : FontStyle.values()) {
-                    try {
-                        FontFile file = library.find(new FontFace(family, new FontWeight(weight), style));
-                        files.putIfAbsent(file.digest(), file);
-                    } catch (ResourceException e) {
-                        // The family has no face with this weight and style.
-                    }
-                }
-            }
-        }
-        return List.copyOf(files.values());
     }
 
     /** {@code GET /} and {@code GET /editor/{file}}: a file of the editor, from the jar. */

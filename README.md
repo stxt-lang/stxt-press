@@ -24,7 +24,7 @@ java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice
 | `GET /schema` | The schema `dev.stxt.pdf` of the engine |
 | `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file |
 | `GET /fonts/{id}` | The file of a face, by its SHA-256 |
-| `GET /health` | `{"status": "ok"}`, without token |
+| `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.1.0", "stxt-pdf": "0.13.0"}}`, without token |
 | `GET /` | The [web editor](#editor), without token |
 
 `/print` and `/render` answer with a PDF (`?format=pdf`, the default), one SVG per page (`?format=svg`, as
@@ -182,7 +182,7 @@ The folder `templates/` has sample templates with their styles and their data.
 | Dependency | Version |
 |---|---|
 | [`dev.stxt:stxt-core`](https://github.com/stxt-lang/stxt-java) | 1.0.3 |
-| [`dev.stxt:stxt-pdf`](https://github.com/stxt-lang/stxt-pdf) | 0.13.0-SNAPSHOT: the working tree of `../stxt-pdf`, installed with `mvn install` there, until 0.13.0 is published |
+| [`dev.stxt:stxt-pdf`](https://github.com/stxt-lang/stxt-pdf) | 0.13.0 |
 | [`dev.stxt:stxt-transform`](https://github.com/stxt-lang/stxt-java-transform) | 0.1.0 |
 | [`com.fasterxml.jackson.core:jackson-databind`](https://github.com/FasterXML/jackson-databind) | 2.22.4 |
 

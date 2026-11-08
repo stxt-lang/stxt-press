@@ -421,7 +421,7 @@ final class Cli {
     }
 
     private static String version() {
-        String version = Cli.class.getPackage().getImplementationVersion();
+        String version = Press.version();
         return version == null ? "(development)" : version;
     }
 
