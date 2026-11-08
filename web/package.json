@@ -1,0 +1,25 @@
+{
+  "name": "@stxt-lang/press-editor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The web editor of stxt-press, served by the service at GET /.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && node build.mjs ../target/classes/editor",
+    "test": "node --test test/*.test.ts"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@codemirror/commands": "^6.10.4",
+    "@codemirror/lint": "^6.9.7",
+    "@codemirror/state": "^6.7.1",
+    "@codemirror/view": "^6.43.8",
+    "@stxt-lang/editor": "^0.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.x",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.5.4"
+  }
+}

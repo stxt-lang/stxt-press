@@ -1,0 +1,136 @@
+# Invoice template: the invoice example of stxt-pdf with Slots for what changes from one invoice to another. The
+# lines of the table repeat with [lines], one Row for each line of the data; the amounts arrive already written, as
+# text, because the fill puts values and does not calculate. invoice.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 44 44 60 44
+	Title: Invoice ${number}
+	Language: en
+	Section:
+		Page overlay:
+			Offset: auto 0 -34 0
+			Box:
+				Padding: 6 0 0 0
+				Border: 0.5 0 0 0
+				Border color: #DCCFB8
+			Stack:
+				Horizontal: justify
+				Item:
+					Text: Taller Nogal S.L. · Registered in the Girona Commercial Register, volume 2217, folio 88
+				Item:
+					Text: Page {page} of {pages}
+		Stack:
+			Horizontal: justify
+			Vertical: center
+			Box:
+				Margin: 0 0 30 0
+			Item:
+				Text: Taller Nogal
+					Typography:
+						Size: 20
+						Bold: true
+						Color: #A65C1B
+			Item:
+				Block:
+					Text: Invoice
+						Typography:
+							Size: 28
+							Bold: true
+							Color: #3B2A1E
+							Align: right
+							Line height: 30
+							Case: uppercase
+							Letter spacing: 2
+					Text: No. ${number}
+						Typography:
+							Size: 12
+							Color: #A65C1B
+							Align: right
+		Grid:
+			Column sizes: * *
+			Gap: 18
+			Box:
+				Margin: 0 0 18 0
+			Area:
+				Block:
+					Style: party
+					Text: From
+						Style: label
+					Text: Taller Nogal S.L.
+						Style: strong
+					Text: Tax ID B-17482930
+					Text: Carrer de la Farga, 14 · Polígono Les Torres
+					Text: 17800 Olot (Girona)
+			Area:
+				Block: {customer}
+					Style: party
+					Text: Bill to
+						Style: label
+					Text: <name>
+						Style: strong
+					Text: Tax ID ${tax_id}
+					Text: [address]<line>
+		Grid:
+			Column sizes: repeat(3, *)
+			Box:
+				Margin: 0 0 22 0
+				Padding: 9 14
+				Border: 0.5 0 0.5 0
+				Border color: #A65C1B
+			Area:
+				Block:
+					Text: Issue date
+						Style: label
+					Text: <issued>
+			Area:
+				Block:
+					Text: Due date
+						Style: label
+					Text: <due>
+			Area:
+				Block:
+					Text: Order
+						Style: label
+					Text: <?order>
+		Table:
+			Column sizes: 54 * 38 64 94
+			Column align: left left right right right
+			Box:
+				Margin: 0 0 24 0
+			Header rows:
+				Row:
+					Cell: Ref.
+					Cell: Description
+					Cell: Qty
+					Cell: Price
+					Cell: Amount
+			Body:
+				Row: [lines]
+					Cell: <ref>
+					Cell: <description>
+						Row header: true
+					Cell: <quantity>
+					Cell: <price>
+					Cell: <amount>
+			Footer rows:
+				Row:
+					Cell: Taxable base
+						Row header: true
+						Span: 1 4
+					Cell: <base>
+				Row:
+					Cell: VAT (21%)
+						Row header: true
+						Span: 1 4
+					Cell: <vat>
+				Row:
+					Style: total
+					Cell: Total due
+						Row header: true
+						Span: 1 4
+					Cell: <total>
+		Block:
+			Text: Payment
+				Style: label
+			Paragraph: Bank transfer to ES91 2100 0418 4502 0005 1332, within 30 days, with invoice ${number} as the reference.

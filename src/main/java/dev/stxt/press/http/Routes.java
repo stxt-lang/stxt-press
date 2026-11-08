@@ -18,14 +18,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import dev.stxt.pdf.convert.Converter;
 import dev.stxt.pdf.model.Cancellation;
+import dev.stxt.pdf.model.FontFace;
+import dev.stxt.pdf.model.FontStyle;
+import dev.stxt.pdf.model.FontWeight;
 import dev.stxt.pdf.model.StxtPdfException;
 import dev.stxt.pdf.model.StxtPdfException.Kind;
+import dev.stxt.pdf.resources.FontFile;
+import dev.stxt.pdf.resources.FontLibrary;
+import dev.stxt.pdf.resources.ResourceException;
 import dev.stxt.pdf.tree.DocumentSchema;
 import dev.stxt.press.Job;
 import dev.stxt.press.Options;
@@ -46,8 +53,10 @@ import dev.stxt.press.templates.Templates;
  * <tr><td>{@code GET /templates}</td><td>The templates, with what files each one has</td></tr>
  * <tr><td>{@code GET /templates/{path}}</td><td>The texts of a template</td></tr>
  * <tr><td>{@code GET /schema}</td><td>The schema {@code dev.stxt.pdf} of the engine</td></tr>
- * <tr><td>{@code GET /fonts}</td><td>The font families of the server</td></tr>
+ * <tr><td>{@code GET /fonts}</td><td>The font families of the server, and its faces with their files</td></tr>
+ * <tr><td>{@code GET /fonts/{id}}</td><td>The file of a face, by its SHA-256</td></tr>
  * <tr><td>{@code GET /health}</td><td>That the service is alive, without token</td></tr>
+ * <tr><td>{@code GET /}, {@code GET /editor/{file}}</td><td>The web editor and its files, without token</td></tr>
  * </table>
  *
  * <p>{@code /print} and {@code /render} answer in the format of {@code ?format=}: {@code pdf} (by default),
@@ -71,6 +80,23 @@ final class Routes implements HttpHandler {
     private static final String JSON_TYPE = "application/json";
     private static final String STXT_TYPE = "text/stxt; charset=utf-8";
     private static final Set<String> CONVERT_PARAMETERS = Set.of("format", "debug");
+    /** The id of a font: the SHA-256 of its file, in lowercase hexadecimal. */
+    private static final Pattern FONT_ID = Pattern.compile("[0-9a-f]{64}");
+    /** Where the build of {@code web/} leaves the files of the editor, in the jar. */
+    private static final String EDITOR = "/editor/";
+    /** The name of a file of the editor: no folders, no hidden files, with an extension. */
+    private static final Pattern EDITOR_FILE = Pattern.compile("[A-Za-z0-9_-]+(\\.[A-Za-z0-9]+)+");
+    /** The types of the files of the editor, by extension. */
+    private static final Map<String, String> EDITOR_TYPES = Map.of("html", "text/html; charset=utf-8", "js",
+            "text/javascript; charset=utf-8", "css", "text/css; charset=utf-8", "svg", "image/svg+xml", "json",
+            JSON_TYPE, "woff2", "font/woff2");
+    /**
+     * What the page of the editor may load: only its own files and the API of the server. The styles of CodeMirror
+     * are inline, and the previews are images of {@code blob:} URLs.
+     */
+    private static final String EDITOR_POLICY = "default-src 'self'; img-src 'self' blob: data:; "
+            + "style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'; "
+            + "frame-ancestors 'none'";
 
     /** The formats of {@code ?format=}. */
     private enum Format {
@@ -149,6 +175,14 @@ final class Routes implements HttpHandler {
             sendJson(exchange, 200, Map.of("status", "ok"));
             return;
         }
+        if (config.editor() && (path.equals("/") || path.startsWith(EDITOR))) {
+            // Without token: the files of the page have nothing secret, and a browser cannot send the token when it
+            // opens a URL. The page asks for it when the API answers 401.
+            method(exchange, "GET");
+            parameters(exchange, Set.of());
+            editor(exchange, path.equals("/") ? "index.html" : path.substring(EDITOR.length()));
+            return;
+        }
         if (!authorized(exchange)) {
             throw new HttpError(401, UNAUTHORIZED, "The request has no valid token (Authorization: Bearer)",
                     Map.of("WWW-Authenticate", "Bearer"));
@@ -168,11 +202,100 @@ final class Routes implements HttpHandler {
         } else if (path.equals("/fonts")) {
             method(exchange, "GET");
             parameters(exchange, Set.of());
-            List<String> families = List.copyOf(shared().converter().resources().fonts().families());
-            sendJson(exchange, 200, Map.of("families", families));
+            fonts(exchange);
+        } else if (path.startsWith("/fonts/")) {
+            method(exchange, "GET");
+            parameters(exchange, Set.of());
+            font(exchange, path.substring("/fonts/".length()));
         } else {
             throw new HttpError(404, NOT_FOUND, "There is no route " + path);
         }
+    }
+
+    /**
+     * {@code GET /fonts}: the families, and each face (family, weight, style) with the SHA-256 of its file, which
+     * {@code /fonts/{id}} gives. The editor registers them in the page to show the SVG previews with the fonts of the
+     * server, which an SVG names and does not carry.
+     */
+    private void fonts(HttpExchange exchange) throws IOException {
+        FontLibrary library = shared().converter().resources().fonts();
+        List<Map<String, Object>> faces = new ArrayList<>();
+        for (FontFile file : faces(library)) {
+            Map<String, Object> face = new LinkedHashMap<>();
+            face.put("family", file.face().family());
+            face.put("weight", file.face().weight().value());
+            face.put("style", file.face().style() == FontStyle.ITALIC ? "italic" : "normal");
+            face.put("id", file.digest());
+            faces.add(face);
+        }
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("families", List.copyOf(library.families()));
+        body.put("faces", faces);
+        sendJson(exchange, 200, body);
+    }
+
+    /** {@code GET /fonts/{id}}: the file of a face, by the SHA-256 of {@code /fonts}. */
+    private void font(HttpExchange exchange, String id) throws IOException, HttpError {
+        if (FONT_ID.matcher(id).matches()) {
+            for (FontFile file : faces(shared().converter().resources().fonts())) {
+                if (file.digest().equals(id)) {
+                    byte[] content;
+                    try (InputStream in = file.content()) {
+                        content = in.readAllBytes();
+                    }
+                    // The id is the content: the file of an id never changes.
+                    exchange.getResponseHeaders().set("Cache-Control", "private, max-age=31536000, immutable");
+                    send(exchange, 200, file.cff() ? "font/otf" : "font/ttf", content);
+                    return;
+                }
+            }
+        }
+        throw new HttpError(404, NOT_FOUND, "There is no font " + id);
+    }
+
+    /**
+     * {@return the files of the fonts of the library, one for each face} The library gives only the families, and a face
+     * by its family, weight and style: each family is asked for the nine weights of CSS, from 100 to 900, upright and
+     * italic. A file with another weight (450) is not listed.
+     */
+    private static List<FontFile> faces(FontLibrary library) {
+        Map<String, FontFile> files = new LinkedHashMap<>();
+        for (String family : library.families()) {
+            for (int weight = 100; weight <= 900; weight += 100) {
+                for (FontStyle style : FontStyle.values()) {
+                    try {
+                        FontFile file = library.find(new FontFace(family, new FontWeight(weight), style));
+                        files.putIfAbsent(file.digest(), file);
+                    } catch (ResourceException e) {
+                        // The family has no face with this weight and style.
+                    }
+                }
+            }
+        }
+        return List.copyOf(files.values());
+    }
+
+    /** {@code GET /} and {@code GET /editor/{file}}: a file of the editor, from the jar. */
+    private static void editor(HttpExchange exchange, String file) throws IOException, HttpError {
+        if (!EDITOR_FILE.matcher(file).matches()) {
+            throw new HttpError(404, NOT_FOUND, "There is no file " + file + " in the editor");
+        }
+        byte[] content;
+        try (InputStream in = Routes.class.getResourceAsStream(EDITOR + file)) {
+            if (in == null) {
+                throw new HttpError(404, NOT_FOUND, file.equals("index.html")
+                        ? "The server was built without the editor" : "There is no file " + file + " in the editor");
+            }
+            content = in.readAllBytes();
+        }
+        String type = EDITOR_TYPES.getOrDefault(file.substring(file.lastIndexOf('.') + 1), "application/octet-stream");
+        exchange.getResponseHeaders().set("Cache-Control", "no-cache");
+        exchange.getResponseHeaders().set("X-Content-Type-Options", "nosniff");
+        if (type.startsWith("text/html")) {
+            exchange.getResponseHeaders().set("Content-Security-Policy", EDITOR_POLICY);
+            exchange.getResponseHeaders().set("Referrer-Policy", "no-referrer");
+        }
+        send(exchange, 200, type, content);
     }
 
     /** {@code GET} and {@code POST /print/{path}}. */

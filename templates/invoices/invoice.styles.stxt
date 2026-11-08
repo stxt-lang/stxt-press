@@ -1,0 +1,49 @@
+# Styles of the invoice template: those of the invoice example of stxt-pdf, without the base typography, which the
+# .styles.stxt of the root of the folder gives.
+Styles (dev.stxt.pdf):
+	For style: label
+		Typography:
+			Size: 7
+			Bold: true
+			Color: #A65C1B
+			Case: uppercase
+			Letter spacing: 0.6
+		Box:
+			Margin: 0 0 3 0
+	For style: party
+		Box:
+			Padding: 12 14
+			Corner radius: 0 6 6 0
+			Border: 0 0 0 2.5
+			Border color: #A65C1B
+			Background: #F8F3EA
+	For style: strong
+		Typography:
+			Bold: true
+			Size: 10.5
+	For element: Header cell
+		Typography:
+			Bold: true
+			Size: 8
+			Color: #FFFFFF
+		Box:
+			Background: #3B2A1E
+			Padding: 7 8
+	For style: total
+		Typography:
+			Bold: true
+			Size: 11
+			Color: #3B2A1E
+			Case: uppercase
+		Box:
+			Background: #EFE4D2
+			Border: 1.5 0 0 0
+			Border color: #3B2A1E
+	For element: Footer cell
+		Typography:
+			Align: right
+	For element: Cell
+		Box:
+			Padding: 7 8
+			Border: 0 0 0.5 0
+			Border color: #DCCFB8

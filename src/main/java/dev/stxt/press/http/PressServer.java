@@ -2,9 +2,11 @@ package dev.stxt.press.http;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -82,5 +84,25 @@ public final class PressServer implements AutoCloseable {
     public void close() {
         server.stop(0);
         executor.shutdownNow();
+    }
+
+    /**
+     * Stops answering new requests and waits up to {@code grace} for those in progress, then stops the rest: the
+     * shutdown of {@code serve} on {@code SIGTERM}.
+     *
+     * @param grace how long the requests in progress have, such as the timeout of a conversion; not negative
+     */
+    public void close(Duration grace) {
+        // HttpServer.stop waits for the exchanges in progress up to the seconds it is given, and refuses new ones.
+        server.stop((int) Math.min(Integer.MAX_VALUE, Math.max(0, grace.toSeconds())));
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(1, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 }

@@ -44,6 +44,22 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   Relative paths are relative to the folder of the file. An error is a `ConfigException` with its code and its line.
   Without a file, the server listens only on `127.0.0.1:8080`, without token.
 - `PressServer.startLazily`, whose shared converter is created by the first request that needs it.
+- The web editor, at `GET /` and its files under `/editor/`, without token: a document mode (a document, its styles and
+  its data to `/render`, with the examples of stxt-pdf) and a templates mode (a template of the server with its chain
+  of styles and its sample data, printed with `/print` or, edited, rendered with `/render`, and its `curl`). Fill,
+  preview as SVG pages with or without outlines, and download the PDF; the errors of the server are marked in their
+  panel, on their line. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
+  `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
+- `GET /fonts` also lists the faces of the fonts (family, weight, style and the SHA-256 of the file), and
+  `GET /fonts/{id}` gives the file of a face: the SVG pages name their fonts and do not carry them.
+- `templates/`, a folder of sample templates: an invoice with Slots, its styles and its sample data.
+- The command line, `java -jar stxt-press.jar <command>`: `serve` (the HTTP service with its `server.stxt`, which
+  stops on `SIGTERM` letting the conversions in progress finish), `render` (a document with its styles and data, to
+  PDF), `print` (a template, to PDF) and `fill` (the filled document). The errors of a job go to stderr with their file
+  and line. Exit codes: `0`, `1` if the job failed, `2` if the invocation is not valid.
+- The jar is a single file with every dependency inside (`maven-shade-plugin`), with `dev.stxt.press.cli.Main` as
+  its `Main-Class`.
+- `PressServer.close(Duration)`, which waits for the requests in progress.
 
 ### Changed
 

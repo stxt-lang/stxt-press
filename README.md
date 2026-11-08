@@ -5,8 +5,12 @@ and the SVG pages are the work of [stxt-pdf](https://github.com/stxt-lang/stxt-p
 of [stxt-transform](https://github.com/stxt-lang/stxt-java-transform): this project does not parse, validate or lay out
 anything itself.
 
-In development: no version has been released, and the server has no command to start it yet (it is started from Java,
-with `ServerFile.load(...).start()`).
+In development: no version has been released.
+
+```bash
+java -jar stxt-press.jar serve
+java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice.json -o invoice.pdf
+```
 
 ## Routes
 
@@ -18,8 +22,10 @@ with `ServerFile.load(...).start()`).
 | `GET /templates` | The templates, with the files each one has |
 | `GET /templates/{path}` | The document, the chain of styles and the sample data of a template |
 | `GET /schema` | The schema `dev.stxt.pdf` of the engine |
-| `GET /fonts` | The font families of the server |
+| `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file |
+| `GET /fonts/{id}` | The file of a face, by its SHA-256 |
 | `GET /health` | `{"status": "ok"}`, without token |
+| `GET /` | The [web editor](#editor), without token |
 
 `/print` and `/render` answer with a PDF (`?format=pdf`, the default), one SVG per page (`?format=svg`, as
 `{"pages": [...]}`, with `&debug=true` for the outlines of the boxes) or the filled document (`?format=stxt`).
@@ -59,6 +65,55 @@ The server has no TLS or users: it is meant to run behind a reverse proxy that a
 document and `/templates` shows the texts and the sample data of the templates, so both can be turned off, leaving
 `/print`, `/schema`, `/fonts` and `/health`.
 
+## Editor
+
+`GET /` is a page to try documents and templates against the server:
+
+- **Document**: a layout document, its styles and its JSON data, sent to `/render`. The examples of stxt-pdf are in
+  the list.
+- **Templates**: a template of the server, with its chain of styles, one panel per file, and its sample data. With the
+  document and the styles as the server has them, it is printed with `/print` and the data of the panel; edited, with
+  `/render` and the whole chain. Nothing is saved on the server. The page shows the URL of `/print` and a `curl` with
+  the data of the panel.
+
+**Fill** shows the filled document, **Preview** the SVG pages (with **Outlines**, the outlines of the boxes) and
+**Download PDF** the PDF. An error of the server is marked in its panel, on its line. The document panel validates
+against the schema of `/schema` only while the data panel is empty: a document with Slots is validated by the server,
+once filled.
+
+The files of the page are served without token. With a token, the page asks for it when the API answers `401`, and
+keeps it in the `sessionStorage` of the tab.
+
+## Command line
+
+The jar runs with `java -jar stxt-press.jar <command>`. The commands have the names of the routes:
+
+| Command | What it does |
+|---|---|
+| `serve [--config <file>]` | Starts the HTTP service with its `server.stxt` |
+| `render <document> -o <file>` | Converts a layout document to PDF, with `--styles <file>` (one for each, in order), `--data <file>`, `--pdf-ua <1\|2>`, `--pdf-a <A2B\|A2A\|A3B\|A3A>`, `--exclude <check>` and `--debug` |
+| `print <template> -o <file>` | Converts a template of the templates folder to PDF, with its sample data or those of `--data <file>`; the folder is that of `server.stxt` or `--templates <folder>` |
+| `fill <document> --data <file>` | Writes the document with its Slots filled, to stdout or to `-o <file>` |
+
+`render` and `print` take the resources folder, the limits and the options of the templates from `server.stxt`,
+found as for `serve` (`--config`, `STXT_PRESS_CONFIG`, `./server.stxt`). `-` is stdin for a document or a data file,
+and stdout for `-o`. A file of `-o` is replaced only when the job ends well. `java -jar stxt-press.jar --help` lists
+every option.
+
+An error of a job is written to stderr with its file and its line:
+
+```
+stxt-press: templates/invoices/invoice.stxt:66: SLOT_NO_DATA: Node 'Block': No data for {customer}
+```
+
+| Exit code | When |
+|---|---|
+| `0` | The job ended well |
+| `1` | The job failed: the document, its styles, its data, a resource, a limit |
+| `2` | The invocation is not valid: an option, a file that does not exist, a `server.stxt` that is not valid |
+
+`serve` stops on `SIGTERM` or Ctrl+C, giving the conversions in progress the `Timeout` of `server.stxt` to finish.
+
 ## Configuration
 
 A server is configured with a `server.stxt` file:
@@ -79,7 +134,8 @@ Server (dev.stxt.press):
         PDF UA: 2
 ```
 
-The file used is the first of: the path of `--config`, the path of the environment variable `STXT_PRESS_CONFIG`, and
+The file used is the first of: the path of `--config` of the command line, the path of the environment variable
+`STXT_PRESS_CONFIG`, and
 `server.stxt` in the working directory. A path given by `--config` or `STXT_PRESS_CONFIG` that is not a file stops the
 start. Without a file, the server listens only on `127.0.0.1:8080`, without token, with the resources folder
 `resources` of the working directory and without templates.
@@ -99,7 +155,7 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 | `Resource folder` | `resources` | The folder with `fonts/` and `images/` |
 | `Font folder`, `Image folder` | — | The fonts and the images in folders of their own, instead of `Resource folder`; each `Image folder` with its `Prefix` |
 | `Template folder` | none | The templates folder |
-| `Routes` | all on | `Render` and `Templates`: `/render` and `/templates` on or off |
+| `Routes` | all on | `Editor`, `Render` and `Templates`: the editor, `/render` and `/templates` on or off |
 | `Limits` | — | `Max body size` (bytes, 2 MiB), `Timeout` (seconds, 30), `Concurrent conversions` (4), and the limits of the engine: `Max pages`, `Max image pixels`, `Max SVG elements`, `Max SVG depth`, `Max PDF bytes` |
 | `Template options` | — | `PDF UA` (`1` or `2`), `PDF A` (`A2B`, `A2A`, `A3B`, `A3A`) and one `Exclude` for each check not made, as the `options` of `/render` |
 
@@ -108,11 +164,20 @@ written in the file, only the name of its variable.
 
 ## Build
 
-Requires **Java 17** or later.
+Requires **Java 17** or later, and [stxt-pdf](https://github.com/stxt-lang/stxt-pdf) checked out next to this
+repository (`../stxt-pdf`): the tests use its fonts and its examples, and the editor bundles its examples.
 
 ```bash
 mvn verify
 ```
+
+The editor is in `web/` (TypeScript, bundled with esbuild). Maven installs Node in `target/`, runs `npm install` and
+`npm run build`, which leaves the page in `target/classes/editor`, and runs `npm test` after the Java tests.
+
+The folder `templates/` has sample templates with their styles and their data.
+
+`target/stxt-press-<version>.jar` is a single jar with every dependency inside, the one that runs with `java -jar`;
+`target/original-stxt-press-<version>.jar` has only the classes of the service.
 
 | Dependency | Version |
 |---|---|

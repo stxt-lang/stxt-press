@@ -111,6 +111,61 @@
                 </executions>
             </plugin>
 
+            <!-- The web editor (web/, TypeScript bundled with esbuild): Node is installed in target/ (the download is
+                 kept in the local Maven repository), npm installs the dependencies of web/package-lock.json, the build
+                 leaves editor.js, editor.css and index.html in target/classes/editor, which goes into the jar, and
+                 npm test runs the tests of the page with the Java ones. The build reads the examples of
+                 ../stxt-pdf/test/examples. -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <workingDirectory>web</workingDirectory>
+                    <installDirectory>${project.build.directory}</installDirectory>
+                    <nodeVersion>v22.19.0</nodeVersion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install-node</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                    <execution>
+                        <id>npm-install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>install --no-audit --no-fund</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <arguments>run build</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-test</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <arguments>test</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -142,12 +197,66 @@
                 <version>3.4.2</version>
                 <configuration>
                     <archive>
+                        <manifest>
+                            <!-- Implementation-Version: the version that the command line prints. -->
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
                         <manifestEntries>
                             <!-- Stable module name for JPMS consumers, while there is no module-info.java. -->
                             <Automatic-Module-Name>dev.stxt.press</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+
+            <!-- The jar of the release is a single file that runs with java -jar: the classes of the service and of
+                 every dependency (stxt-pdf, PDFBox, Jackson...), with dev.stxt.press.cli.Main as the Main-Class. It
+                 replaces the jar of the project; the one without dependencies stays as original-stxt-press-*.jar. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Not published on Maven Central: no pom without the dependencies is needed. -->
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <!-- The signatures of a jar are not valid once its classes are in another one,
+                                         and module-info only describes the jar it came from. -->
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/versions/*/module-info.class</exclude>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <!-- A list of the dependencies of each Apache jar, generated; not a license. -->
+                                        <exclude>META-INF/DEPENDENCIES</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>dev.stxt.press.cli.Main</mainClass>
+                                    <manifestEntries>
+                                        <!-- Jackson and others carry classes for newer JDKs under META-INF/versions. -->
+                                        <Multi-Release>true</Multi-Release>
+                                    </manifestEntries>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer"/>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

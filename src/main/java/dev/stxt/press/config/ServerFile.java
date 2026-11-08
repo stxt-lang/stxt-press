@@ -301,7 +301,7 @@ public final class ServerFile {
 
             InlineNode routes = group(server, "Routes");
             if (routes != null) {
-                http = http.withRoutes(bool(routes, "Render", http.render()),
+                http = http.withRoutes(bool(routes, "Editor", http.editor()), bool(routes, "Render", http.render()),
                         bool(routes, "Templates", http.templates()));
             }
 

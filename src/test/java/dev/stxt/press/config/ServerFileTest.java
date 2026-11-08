@@ -153,6 +153,7 @@ class ServerFileTest {
                     Resource folder: res
                     Template folder: templates
                     Routes:
+                        Editor: false
                         Render: false
                         Templates: false
                     Limits:
@@ -171,7 +172,7 @@ class ServerFileTest {
                         Exclude: BARCODE_SIZE
                 """, Map.of("PRESS_TOKEN", " secret "));
 
-        assertEquals(new ServerConfig("0.0.0.0", 9090, "secret", false, false, 1000, Duration.ofSeconds(5), 2,
+        assertEquals(new ServerConfig("0.0.0.0", 9090, "secret", false, false, false, 1000, Duration.ofSeconds(5), 2,
                 new Options(1, PdfA.A3B, false, Set.of(Check.CONTRAST, Check.BARCODE_SIZE))), file.http());
         assertEquals(new Limits(10, 11, 12, 13, 14), file.limits());
         assertTrue(file.lazyInit());
@@ -321,9 +322,13 @@ class ServerFileTest {
         String folder = "    Template folder: templates\n";
         try (PressServer on = read(server(folder)).start();
                 PressServer noRender = read(server(folder + "    Routes:\n        Render: false\n")).start();
-                PressServer noTemplates = read(server(folder + "    Routes:\n        Templates: false\n")).start()) {
+                PressServer noTemplates = read(server(folder + "    Routes:\n        Templates: false\n")).start();
+                PressServer noEditor = read(server(folder + "    Routes:\n        Editor: false\n")).start()) {
+            assertEquals(200, get(on, "/", null).statusCode());
             assertEquals(405, get(on, "/render", null).statusCode());
             assertEquals(200, get(on, "/templates", null).statusCode());
+            assertEquals(404, get(noEditor, "/", null).statusCode());
+            assertEquals(405, get(noEditor, "/render", null).statusCode());
             assertEquals(404, get(noRender, "/render", null).statusCode());
             assertEquals(200, get(noRender, "/templates", null).statusCode());
             assertEquals(405, get(noTemplates, "/render", null).statusCode());

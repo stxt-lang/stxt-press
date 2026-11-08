@@ -1,0 +1,180 @@
+/* The page of the editor of stxt-press. The editors take their styles from the stylesheet of @stxt-lang/editor,
+   which goes before this one in editor.css. No rounded corners, like the portal and the playground. */
+
+:root {
+	--accent: #0d5cb6;
+	--text: #1f2328;
+	--muted: #59636e;
+	--line: #d0d7de;
+	--surface: #f6f8fa;
+	--error: #b42318;
+	--font: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: var(--font);
+	font-size: 14px;
+	color: var(--text);
+	background: #fff;
+}
+
+button {
+	font: inherit;
+	padding: 0.35rem 0.8rem;
+	border: 1px solid var(--accent);
+	background: var(--accent);
+	color: #fff;
+	cursor: pointer;
+}
+
+button.quiet,
+.modes button {
+	background: #fff;
+	color: var(--accent);
+}
+
+.modes button[aria-pressed="true"] {
+	background: var(--accent);
+	color: #fff;
+}
+
+button:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+select {
+	font: inherit;
+	padding: 0.25rem;
+	min-width: 16rem;
+}
+
+.bar {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.6rem 1rem;
+	border-bottom: 1px solid var(--line);
+}
+
+.brand {
+	font-weight: 700;
+}
+
+.modes {
+	display: flex;
+}
+
+.modes button + button {
+	border-left: none;
+}
+
+#token {
+	margin-left: auto;
+}
+
+main {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 1rem;
+	padding: 1rem;
+}
+
+@media (max-width: 900px) {
+	main {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.chooser {
+	margin-bottom: 0.8rem;
+}
+
+.print {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin-top: 0.6rem;
+}
+
+#curl {
+	margin: 0.4rem 0 0;
+	padding: 0.5rem;
+	background: var(--surface);
+	border: 1px solid var(--line);
+	font-size: 12px;
+	white-space: pre-wrap;
+	word-break: break-all;
+	max-height: 6rem;
+	overflow: auto;
+}
+
+.panel {
+	margin-bottom: 1rem;
+}
+
+.panel h2 {
+	margin: 0 0 0.3rem;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--muted);
+}
+
+.panel .stxt-editor,
+.panel .cm-editor {
+	max-height: 26rem;
+	border: 1px solid var(--line);
+}
+
+.panel .cm-editor .cm-scroller {
+	font-family: var(--stxt-font-mono, monospace);
+}
+
+.actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-bottom: 0.8rem;
+}
+
+#message {
+	min-height: 1.4rem;
+	margin-bottom: 0.6rem;
+	color: var(--muted);
+	white-space: pre-wrap;
+}
+
+#message.error {
+	color: var(--error);
+}
+
+#pages .page {
+	display: block;
+	width: fit-content;
+	max-width: 100%;
+	margin-bottom: 1rem;
+	border: 1px solid var(--line);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+dialog {
+	border: 1px solid var(--line);
+	padding: 1rem;
+}
+
+dialog input {
+	font: inherit;
+	width: 18rem;
+	padding: 0.3rem;
+}
+
+dialog .buttons {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 0.8rem;
+}

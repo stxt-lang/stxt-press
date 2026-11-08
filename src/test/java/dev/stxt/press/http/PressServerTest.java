@@ -15,8 +15,10 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -338,6 +340,64 @@ class PressServerTest {
     }
 
     @Test
+    void theFontsHaveTheirFacesAndTheirFiles() throws Exception {
+        start(ServerConfig.DEFAULT);
+
+        JsonNode faces = json(get("/fonts")).get("faces");
+        JsonNode bold = null;
+        for (JsonNode face : faces) {
+            if (face.get("family").asText().equals("IBM Plex Sans") && face.get("weight").asInt() == 700
+                    && face.get("style").asText().equals("normal")) {
+                bold = face;
+            }
+        }
+        assertTrue(bold != null, faces::toString);
+        String id = bold.get("id").asText();
+        HttpResponse<byte[]> file = get("/fonts/" + id);
+
+        assertEquals(200, file.statusCode());
+        assertEquals("font/ttf", file.headers().firstValue("Content-Type").orElse(null));
+        assertEquals(id, HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(file.body())));
+        error(get("/fonts/" + "0".repeat(64)), 404, Routes.NOT_FOUND);
+        error(get("/fonts/IBM-Plex-Sans"), 404, Routes.NOT_FOUND);
+    }
+
+    /** The editor is the build of {@code web/}, which Maven leaves in {@code target/classes/editor} before the tests. */
+    @Test
+    void theEditorIsServedWithoutToken() throws Exception {
+        start(ServerConfig.DEFAULT.withToken("s3cret"));
+
+        HttpResponse<byte[]> page = get("/");
+        HttpResponse<byte[]> script = get("/editor/editor.js");
+
+        assertEquals(200, page.statusCode(), () -> text(page));
+        assertEquals("text/html; charset=utf-8", page.headers().firstValue("Content-Type").orElse(null));
+        assertTrue(page.headers().firstValue("Content-Security-Policy").orElse("").startsWith("default-src 'self'"));
+        assertTrue(text(page).contains("editor/editor.js"));
+        assertEquals(200, script.statusCode());
+        assertEquals("text/javascript; charset=utf-8", script.headers().firstValue("Content-Type").orElse(null));
+        assertEquals(200, get("/editor/editor.css").statusCode());
+        error(get("/editor/missing.js"), 404, Routes.NOT_FOUND);
+        error(get("/editor/.hidden"), 404, Routes.NOT_FOUND);
+        error(get("/editor/..%2Fstxt%2Fdev.stxt.press.stxt"), 404, Routes.NOT_FOUND);
+        error(get("/editor/"), 404, Routes.NOT_FOUND);
+        error(post("/", ""), 405, Routes.METHOD_NOT_ALLOWED);
+        error(get("/schema"), 401, Routes.UNAUTHORIZED);
+    }
+
+    @Test
+    void theEditorCanBeTurnedOff() throws Exception {
+        start(ServerConfig.DEFAULT.withRoutes(false, true, true));
+
+        error(get("/"), 404, Routes.NOT_FOUND);
+        error(get("/editor/editor.js"), 404, Routes.NOT_FOUND);
+        server.close();
+        start(ServerConfig.DEFAULT.withRoutes(false, true, true).withToken("s3cret"));
+
+        error(get("/"), 401, Routes.UNAUTHORIZED);
+    }
+
+    @Test
     void theParametersAreChecked() throws Exception {
         start(ServerConfig.DEFAULT);
 
@@ -353,8 +413,8 @@ class PressServerTest {
     void aRouteOrAMethodThatDoesNotExist() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        error(get("/"), 404, Routes.NOT_FOUND);
         error(get("/pdf"), 404, Routes.NOT_FOUND);
+        error(get("/fonts/a/b"), 404, Routes.NOT_FOUND);
         HttpResponse<byte[]> response = get("/render");
         error(response, 405, Routes.METHOD_NOT_ALLOWED);
         assertEquals("POST", response.headers().firstValue("Allow").orElse(null));
@@ -380,7 +440,7 @@ class PressServerTest {
 
     @Test
     void renderAndTemplatesCanBeTurnedOff() throws Exception {
-        start(ServerConfig.DEFAULT.withRoutes(false, false));
+        start(ServerConfig.DEFAULT.withRoutes(true, false, false));
 
         error(post("/render", render(DOCUMENT, Map.of())), 404, Routes.NOT_FOUND);
         error(get("/templates"), 404, Routes.NOT_FOUND);
