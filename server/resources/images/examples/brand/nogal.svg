@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360">
+<ellipse cx="170" cy="180" rx="156" ry="150" fill="none" stroke="#3B2A1E" stroke-width="11.25" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="170" cy="180" rx="117.86" ry="121.5" fill="none" stroke="#3B2A1E" stroke-width="11.25" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="170" cy="180" rx="96.72" ry="93" fill="none" stroke="#B5651D" stroke-width="11.25" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="170" cy="180" rx="62.57" ry="64.5" fill="none" stroke="#3B2A1E" stroke-width="11.25" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="170" cy="180" rx="37.44" ry="36" fill="none" stroke="#3B2A1E" stroke-width="11.25" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="170" cy="180" rx="10.5" ry="10.5" fill="#B5651D"/>
+<text x="360" y="218" font-family="IBM Plex Serif" font-weight="bold" font-size="190" fill="#3B2A1E">Nogal</text>
+<text x="366" y="290" font-family="IBM Plex Sans" font-size="44" fill="#B5651D">TALLER DE MOBILIARIO</text>
+</svg>

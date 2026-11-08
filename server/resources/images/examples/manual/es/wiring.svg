@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="560" viewBox="0 0 1400 560">
+<rect x="40" y="40" width="520" height="480" rx="20" ry="20" fill="#F4F4F1"/>
+<rect x="40" y="40" width="520" height="480" rx="20" ry="20" fill="none" stroke="#D0D0CA" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="80" y="110" font-family="IBM Plex Sans" font-weight="bold" font-size="40" fill="#1F2A44">Termostato</text>
+<rect x="440" y="160" width="120" height="60" rx="6" ry="6" fill="#2E3A46"/>
+<text x="489.8" y="202" font-family="IBM Plex Mono" font-weight="bold" font-size="34" fill="#FFFFFF">L</text>
+<line x1="560" y1="190" x2="900" y2="190" fill="none" stroke="#8B4A2B" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="902" cy="190" rx="12" ry="12" fill="#8B4A2B"/>
+<text x="940" y="203" font-family="IBM Plex Sans" font-size="38" fill="#1F2A44">Fase (marrón)</text>
+<rect x="440" y="248" width="120" height="60" rx="6" ry="6" fill="#2E3A46"/>
+<text x="489.8" y="290" font-family="IBM Plex Mono" font-weight="bold" font-size="34" fill="#FFFFFF">N</text>
+<line x1="560" y1="278" x2="900" y2="278" fill="none" stroke="#2F6DB5" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="902" cy="278" rx="12" ry="12" fill="#2F6DB5"/>
+<text x="940" y="291" font-family="IBM Plex Sans" font-size="38" fill="#1F2A44">Neutro (azul)</text>
+<rect x="440" y="336" width="120" height="60" rx="6" ry="6" fill="#2E3A46"/>
+<text x="489.8" y="378" font-family="IBM Plex Mono" font-weight="bold" font-size="34" fill="#FFFFFF">C</text>
+<line x1="560" y1="366" x2="900" y2="366" fill="none" stroke="#777777" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="902" cy="366" rx="12" ry="12" fill="#777777"/>
+<text x="940" y="379" font-family="IBM Plex Sans" font-size="38" fill="#1F2A44">Común de la caldera</text>
+<rect x="440" y="424" width="120" height="60" rx="6" ry="6" fill="#2E3A46"/>
+<text x="479.6" y="466" font-family="IBM Plex Mono" font-weight="bold" font-size="34" fill="#FFFFFF">NO</text>
+<line x1="560" y1="454" x2="900" y2="454" fill="none" stroke="#D9A400" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="902" cy="454" rx="12" ry="12" fill="#D9A400"/>
+<text x="940" y="467" font-family="IBM Plex Sans" font-size="38" fill="#1F2A44">Caldera: contacto NO</text>
+</svg>

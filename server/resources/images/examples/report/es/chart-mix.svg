@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="640" viewBox="0 0 1400 640">
+<path d="M340 40L340 160C428.37 160 500 231.63 500 320C500 394.64 448.9 457.33 379.77 475.02L379.77 475.02L409.59 591.22C546.24 556.15 635.47 424.9 617.8 284.93C600.13 144.96 481.08 40 340 40Z" fill="#1B6E8C"/>
+<path d="M181.24 340.03L62.2 355.04C72.26 434.8 116.12 506.38 182.6 551.57C229.47 583.43 284.4 600 340.01 600C363.28 600 386.67 597.1 409.63 591.2L379.8 475.01L379.8 475.01C367.08 478.27 353.74 480 340 480C258.42 480 191.1 418.94 181.24 340.03Z" fill="#E07B1F"/>
+<path d="M205.15 74.61C104.48 129.93 47.81 241.13 62.21 355.09L62.21 355.09L181.24 340.06L181.24 340.06C180.42 333.49 180 326.79 180 320C180 259.58 213.49 206.98 262.93 179.75L262.93 179.75L205.15 74.61Z" fill="#4C8C4A"/>
+<path d="M340 40C292.84 40 246.44 51.91 205.11 74.63L262.91 179.76L262.91 179.76C285.77 167.17 312.05 160 340 160L340.03 160L340.05 40C340.03 40 340.02 40 340 40Z" fill="#8A6FB3"/>
+<text x="253.28" y="335" font-family="IBM Plex Sans" font-weight="bold" font-size="64" fill="#1F2A44">8.412</text>
+<text x="283.54" y="382" font-family="IBM Plex Sans" font-size="32" fill="#6B6B6B">clientes</text>
+<rect x="720" y="116" width="44" height="44" rx="5" ry="5" fill="#1B6E8C"/>
+<text x="790" y="150" font-family="IBM Plex Sans" font-size="42" fill="#1F2A44">Hogares</text>
+<text x="1170" y="150" font-family="IBM Plex Sans" font-weight="bold" font-size="42" fill="#1B6E8C">46 %</text>
+<rect x="720" y="226" width="44" height="44" rx="5" ry="5" fill="#E07B1F"/>
+<text x="790" y="260" font-family="IBM Plex Sans" font-size="42" fill="#1F2A44">Comercios</text>
+<text x="1170" y="260" font-family="IBM Plex Sans" font-weight="bold" font-size="42" fill="#E07B1F">27 %</text>
+<rect x="720" y="336" width="44" height="44" rx="5" ry="5" fill="#4C8C4A"/>
+<text x="790" y="370" font-family="IBM Plex Sans" font-size="42" fill="#1F2A44">Industria</text>
+<text x="1170" y="370" font-family="IBM Plex Sans" font-weight="bold" font-size="42" fill="#4C8C4A">19 %</text>
+<rect x="720" y="446" width="44" height="44" rx="5" ry="5" fill="#8A6FB3"/>
+<text x="790" y="480" font-family="IBM Plex Sans" font-size="42" fill="#1F2A44">Administración</text>
+<text x="1170" y="480" font-family="IBM Plex Sans" font-weight="bold" font-size="42" fill="#8A6FB3">8 %</text>
+</svg>

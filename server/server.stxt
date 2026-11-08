@@ -1,0 +1,25 @@
+# A server of stxt-press: java -jar stxt-press.jar serve --config server.stxt
+# Every node is optional; the commented ones show their default. Relative paths are relative to this folder, so the
+# folder can be copied or moved as it is. Each node is described in the README of stxt-press, "Configuration".
+Server (dev.stxt.press):
+	# 127.0.0.1 answers only this machine; 0.0.0.0, every address of the machine (in a container, for example).
+	Host: 127.0.0.1
+	Port: 8080
+	# The environment variable with the token. Without Token env, every route answers without a token.
+	# Token env: STXT_PRESS_TOKEN
+	# The fonts in fonts/, one folder for each family, and the images in images/, by the path a document gives them
+	# (Image: examples/menu/emblem.svg).
+	Resource folder: resources
+	# The templates of /print: each one with its document, its styles and its sample data.
+	Template folder: templates
+	# Routes:
+	#     Editor: true
+	#     Render: true
+	#     Templates: true
+	# Limits:
+	#     Max body size: 2097152
+	#     Timeout: 30
+	#     Concurrent conversions: 4
+	#     Max pages: 2000
+	# Template options:
+	#     PDF UA: 1

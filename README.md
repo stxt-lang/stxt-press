@@ -8,7 +8,7 @@ anything itself.
 In development: no version has been released.
 
 ```bash
-java -jar stxt-press.jar serve
+java -jar stxt-press.jar serve --config server/server.stxt
 java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice.json -o invoice.pdf
 ```
 
@@ -103,7 +103,7 @@ every option.
 An error of a job is written to stderr with its file and its line:
 
 ```
-stxt-press: templates/invoices/invoice.stxt:66: SLOT_NO_DATA: Node 'Block': No data for {customer}
+stxt-press: server/templates/invoices/invoice.stxt:66: SLOT_NO_DATA: Node 'Block': No data for {customer}
 ```
 
 | Exit code | When |
@@ -162,6 +162,12 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 Relative paths are relative to the folder of `server.stxt`, so a server moves with its configuration. The token is not
 written in the file, only the name of its variable.
 
+The folder [`server/`](server/) is a server to start a project from: its `server.stxt`, which listens on
+`127.0.0.1:8080` and shows the other nodes commented with their defaults, the fonts IBM Plex Sans, Serif and Mono and the
+images of the examples of stxt-pdf in `resources/`, and a sample template in `templates/`, an invoice with Slots, its
+styles and its sample data. `java -jar stxt-press.jar serve --config server/server.stxt` serves it, and
+`print invoices/invoice -o invoice.pdf --config server/server.stxt` prints its template.
+
 ## Build
 
 Requires **Java 17** or later, and [stxt-pdf](https://github.com/stxt-lang/stxt-pdf) checked out next to this
@@ -173,8 +179,6 @@ mvn verify
 
 The editor is in `web/` (TypeScript, bundled with esbuild). Maven installs Node in `target/`, runs `npm install` and
 `npm run build`, which leaves the page in `target/classes/editor`, and runs `npm test` after the Java tests.
-
-The folder `templates/` has sample templates with their styles and their data.
 
 `target/stxt-press-<version>.jar` is a single jar with every dependency inside, the one that runs with `java -jar`;
 `target/original-stxt-press-<version>.jar` has only the classes of the service.

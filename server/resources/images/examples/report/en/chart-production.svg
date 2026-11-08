@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="640" viewBox="0 0 1400 640">
+<line x1="90" y1="560" x2="1370" y2="560" fill="none" stroke="#D9DDE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="60.4" y="569" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">0</text>
+<line x1="90" y1="397.5" x2="1370" y2="397.5" fill="none" stroke="#D9DDE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="29.2" y="406.5" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">100</text>
+<line x1="90" y1="235" x2="1370" y2="235" fill="none" stroke="#D9DDE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="29.2" y="244" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">200</text>
+<line x1="90" y1="72.5" x2="1370" y2="72.5" fill="none" stroke="#D9DDE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="29.2" y="81.5" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">300</text>
+<rect x="109.2" y="378" width="68.27" height="182" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="122.38" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Jan</text>
+<rect x="215.87" y="352" width="68.27" height="208" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="228.06" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Feb</text>
+<rect x="322.53" y="282.13" width="68.27" height="277.88" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="334.4" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Mar</text>
+<rect x="429.2" y="222" width="68.27" height="338" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="442.69" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Apr</text>
+<rect x="535.87" y="152.13" width="68.27" height="407.88" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="546.01" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">May</text>
+<rect x="642.53" y="93.63" width="68.27" height="466.38" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="655.27" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Jun</text>
+<rect x="749.2" y="62.75" width="68.27" height="497.25" rx="4" ry="4" fill="#E07B1F"/>
+<text x="765.78" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Jul</text>
+<rect x="855.87" y="87.13" width="68.27" height="472.88" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="867.42" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Aug</text>
+<rect x="962.53" y="183" width="68.27" height="377" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="974.44" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Sep</text>
+<rect x="1069.2" y="274" width="68.27" height="286" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="1083.03" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Oct</text>
+<rect x="1175.87" y="358.5" width="68.27" height="201.5" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="1187.13" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Nov</text>
+<rect x="1282.53" y="400.75" width="68.27" height="159.25" rx="4" ry="4" fill="#1B6E8C"/>
+<text x="1294.27" y="600" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">Dec</text>
+</svg>

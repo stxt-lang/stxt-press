@@ -35,7 +35,7 @@ class CliTest {
     private static final Path RESOURCES = Path.of("..", "stxt-pdf", "resources").toAbsolutePath().normalize();
     private static final Path LETTER = Path.of("..", "stxt-pdf", "test", "examples", "02-letter").toAbsolutePath()
             .normalize();
-    private static final Path TEMPLATES = Path.of("templates").toAbsolutePath();
+    private static final Path TEMPLATES = Path.of("server", "templates").toAbsolutePath();
 
     @TempDir
     Path dir;

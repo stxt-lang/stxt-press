@@ -52,7 +52,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
 - `GET /fonts` also lists the faces of the fonts (family, weight, style and the SHA-256 of the file), and
   `GET /fonts/{id}` gives the file of a face: the SVG pages name their fonts and do not carry them.
-- `templates/`, a folder of sample templates: an invoice with Slots, its styles and its sample data.
+- `server/`, a server folder to start a project from: its `server.stxt`, the fonts IBM Plex Sans, Serif and Mono and
+  the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/`: an invoice with
+  Slots, its styles and its sample data. `serve --config server/server.stxt` serves it.
 - The command line, `java -jar stxt-press.jar <command>`: `serve` (the HTTP service with its `server.stxt`, which
   stops on `SIGTERM` letting the conversions in progress finish), `render` (a document with its styles and data, to
   PDF), `print` (a template, to PDF) and `fill` (the filled document). The errors of a job go to stderr with their file

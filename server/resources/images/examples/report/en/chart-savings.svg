@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="640" viewBox="0 0 1400 640">
+<defs>
+<linearGradient id="g1" gradientUnits="userSpaceOnUse" x1="0" y1="50" x2="0" y2="540"><stop offset="0" stop-color="#4C8C4A" stop-opacity="0.59"/><stop offset="1" stop-color="#4C8C4A" stop-opacity="0.04"/></linearGradient>
+</defs>
+<line x1="100" y1="540" x2="1330" y2="540" fill="none" stroke="#D9DDE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="70.4" y="549" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">0</text>
+<line x1="100" y1="395.88" x2="1330" y2="395.88" fill="none" stroke="#D9DDE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="70.4" y="404.88" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">5</text>
+<line x1="100" y1="251.76" x2="1330" y2="251.76" fill="none" stroke="#D9DDE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="54.8" y="260.76" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">10</text>
+<line x1="100" y1="107.65" x2="1330" y2="107.65" fill="none" stroke="#D9DDE3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="54.8" y="116.65" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">15</text>
+<text x="68.8" y="584" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">2019</text>
+<text x="273.8" y="584" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">2020</text>
+<text x="478.8" y="584" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">2021</text>
+<text x="683.8" y="584" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">2022</text>
+<text x="888.8" y="584" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">2023</text>
+<text x="1093.8" y="584" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">2024</text>
+<text x="1298.8" y="584" font-family="IBM Plex Sans" font-size="26" fill="#6B6B6B">2025</text>
+<path d="M100 540L100 540L305 499.65L510 450.65L715 390.12L920 309.41L1125 205.65L1330 81.71L1330 540Z" fill="url(#g1)"/>
+<path d="M100 540L305 499.65L510 450.65L715 390.12L920 309.41L1125 205.65L1330 81.71" fill="none" stroke="#2F6B2E" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="100" cy="540" rx="11" ry="11" fill="#FFFFFF"/>
+<ellipse cx="100" cy="540" rx="11" ry="11" fill="none" stroke="#2F6B2E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="305" cy="499.65" rx="11" ry="11" fill="#FFFFFF"/>
+<ellipse cx="305" cy="499.65" rx="11" ry="11" fill="none" stroke="#2F6B2E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="510" cy="450.65" rx="11" ry="11" fill="#FFFFFF"/>
+<ellipse cx="510" cy="450.65" rx="11" ry="11" fill="none" stroke="#2F6B2E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="715" cy="390.12" rx="11" ry="11" fill="#FFFFFF"/>
+<ellipse cx="715" cy="390.12" rx="11" ry="11" fill="none" stroke="#2F6B2E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="920" cy="309.41" rx="11" ry="11" fill="#FFFFFF"/>
+<ellipse cx="920" cy="309.41" rx="11" ry="11" fill="none" stroke="#2F6B2E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="1125" cy="205.65" rx="11" ry="11" fill="#FFFFFF"/>
+<ellipse cx="1125" cy="205.65" rx="11" ry="11" fill="none" stroke="#2F6B2E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="1330" cy="81.71" rx="11" ry="11" fill="#FFFFFF"/>
+<ellipse cx="1330" cy="81.71" rx="11" ry="11" fill="none" stroke="#2F6B2E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
