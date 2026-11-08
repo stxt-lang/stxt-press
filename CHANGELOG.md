@@ -36,6 +36,14 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   (a conversion out of time, `CANCELLED`, or the server busy, `SERVER_BUSY`) and `500`. With a token, every route but
   `/health` asks for `Authorization: Bearer`. `/render` and `/templates` can be turned off.
 - `jackson-databind` 2.22.4, for the JSON of the HTTP service.
+- The configuration of a server, `server.stxt`, in `dev.stxt.press.config`: `ServerFile` finds it (`--config`, then
+  `STXT_PRESS_CONFIG`, then `server.stxt` in the working directory), validates it with the schema `dev.stxt.press` of
+  the jar and starts the server with it. It sets the address, the token (only the name of its environment variable,
+  `Token env`), `Lazy init`, `Preload resources`, the resources folder or separate folders of fonts and images, the
+  templates folder, the routes on, the limits of the server and of the engine, and the options of the templates.
+  Relative paths are relative to the folder of the file. An error is a `ConfigException` with its code and its line.
+  Without a file, the server listens only on `127.0.0.1:8080`, without token.
+- `PressServer.startLazily`, whose shared converter is created by the first request that needs it.
 
 ### Changed
 

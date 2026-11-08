@@ -17,12 +17,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
+import java.util.function.Supplier;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import dev.stxt.pdf.convert.Converter;
 import dev.stxt.pdf.model.Cancellation;
+import dev.stxt.pdf.model.StxtPdfException;
 import dev.stxt.pdf.model.StxtPdfException.Kind;
 import dev.stxt.pdf.tree.DocumentSchema;
 import dev.stxt.press.Job;
@@ -75,8 +77,10 @@ final class Routes implements HttpHandler {
         PDF, SVG, STXT
     }
 
-    private final Press press;
-    private final Converter shared;
+    /** What creates the converter of the server, called once by the first request that needs it. */
+    private final Supplier<Converter> converter;
+    /** The converter of the server and the {@link Press} on it; {@code null} until a request needs them. */
+    private volatile Shared shared;
     /** The templates folder, or {@code null} if the server has none. */
     private final Templates templates;
     private final ServerConfig config;
@@ -85,9 +89,12 @@ final class Routes implements HttpHandler {
     /** The conversions that can still start. */
     private final Semaphore conversions;
 
-    Routes(Converter shared, Templates templates, ServerConfig config) throws IOException {
-        this.press = new Press(shared);
-        this.shared = shared;
+    /** The converter of the server and the {@link Press} on it. */
+    private record Shared(Converter converter, Press press) {
+    }
+
+    Routes(Supplier<Converter> converter, Templates templates, ServerConfig config) throws IOException {
+        this.converter = converter;
         this.templates = templates;
         this.config = config;
         this.conversions = new Semaphore(config.concurrentConversions());
@@ -97,6 +104,25 @@ final class Routes implements HttpHandler {
             }
             this.schema = in.readAllBytes();
         }
+    }
+
+    /**
+     * {@return the converter of the server and its {@link Press}, created by the first call} If creating them fails, the
+     * exception goes to that request and the next call tries again.
+     */
+    private Shared shared() {
+        Shared current = shared;
+        if (current == null) {
+            synchronized (this) {
+                current = shared;
+                if (current == null) {
+                    Converter created = converter.get();
+                    current = new Shared(created, new Press(created));
+                    shared = current;
+                }
+            }
+        }
+        return current;
     }
 
     @Override
@@ -142,7 +168,8 @@ final class Routes implements HttpHandler {
         } else if (path.equals("/fonts")) {
             method(exchange, "GET");
             parameters(exchange, Set.of());
-            sendJson(exchange, 200, Map.of("families", List.copyOf(shared.resources().fonts().families())));
+            List<String> families = List.copyOf(shared().converter().resources().fonts().families());
+            sendJson(exchange, 200, Map.of("families", families));
         } else {
             throw new HttpError(404, NOT_FOUND, "There is no route " + path);
         }
@@ -213,7 +240,7 @@ final class Routes implements HttpHandler {
     /** Converts {@code job} and answers with it in {@code format}; {@code name} names the PDF, if not {@code null}. */
     private void respond(HttpExchange exchange, Job job, Format format, String name) throws Exception {
         if (format == Format.STXT) {
-            String filled = job.data() == null ? job.document() : press.fill(job.document(), job.data());
+            String filled = job.data() == null ? job.document() : shared().press().fill(job.document(), job.data());
             send(exchange, 200, STXT_TYPE, filled.getBytes(StandardCharsets.UTF_8));
             return;
         }
@@ -224,7 +251,7 @@ final class Routes implements HttpHandler {
         try {
             Cancellation cancellation = Cancellation.timeout(config.timeout());
             if (format == Format.SVG) {
-                List<String> pages = press.svg(job, cancellation);
+                List<String> pages = shared().press().svg(job, cancellation);
                 sendJson(exchange, 200, Map.of("pages", pages));
             } else {
                 exchange.getResponseHeaders().set("Content-Type", "application/pdf");
@@ -233,7 +260,7 @@ final class Routes implements HttpHandler {
                 }
                 // Not closed if the job fails: closing would end the body as if the PDF were whole.
                 ResponseBody body = new ResponseBody(exchange);
-                press.pdf(job, body, cancellation);
+                shared().press().pdf(job, body, cancellation);
                 body.close();
             }
         } finally {
@@ -265,6 +292,13 @@ final class Routes implements HttpHandler {
             if (press.filled() != null) {
                 body.put("filled", press.filled());
             }
+        } else if (e instanceof StxtPdfException engine) {
+            // The converter of a lazy server could not be created: its resources.
+            status = status(engine.kind());
+            LOG.log(status == 500 ? Level.ERROR : Level.WARNING, "Error of " + exchange.getRequestURI(), e);
+            body.put("kind", engine.kind().name());
+            body.put("code", engine.code());
+            body.put("message", engine.getMessage());
         } else if (e instanceof TemplateException template) {
             boolean notFound = template.code().equals(TemplateException.NOT_FOUND);
             status = notFound ? 404 : 500;
