@@ -258,7 +258,7 @@
             </plugin>
 
             <!-- The single jar, without version, into the server folder (server/stxt-press.jar, in .gitignore), so that
-                 the folder is a whole server: copied anywhere, its serve.sh or serve.bat starts it. After the shade,
+                 the folder is a whole server: copied anywhere, its start.sh or start.bat starts it. After the shade,
                  which is declared before in the same phase. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

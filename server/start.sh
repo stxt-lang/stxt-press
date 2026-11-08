@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "$0")"
 
 if [ ! -f stxt-press.jar ]; then
-    echo "serve.sh: no stxt-press.jar in $(pwd); in the project of stxt-press, mvn package puts it here" >&2
+    echo "start.sh: no stxt-press.jar in $(pwd); in the project of stxt-press, mvn package puts it here" >&2
     exit 1
 fi
 
@@ -13,4 +13,4 @@ java=java
 if [ -n "$JAVA_HOME" ]; then
     java="$JAVA_HOME/bin/java"
 fi
-exec "$java" -jar stxt-press.jar serve --config server.stxt
+exec "$java" -jar stxt-press.jar start --config server.stxt

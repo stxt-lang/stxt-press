@@ -1,4 +1,4 @@
-# A server of stxt-press, started by serve.sh or serve.bat (java -jar stxt-press.jar serve --config server.stxt).
+# A server of stxt-press, started by start.sh or start.bat (java -jar stxt-press.jar start --config server.stxt).
 # Every node is optional; the commented ones show their default. Relative paths are relative to this folder, so the
 # folder can be copied or moved as it is. Each node is described in the README of stxt-press, "Configuration".
 Server (dev.stxt.press):

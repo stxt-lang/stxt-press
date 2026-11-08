@@ -39,7 +39,7 @@ import dev.stxt.press.templates.Templates;
 import dev.stxt.utils.FileUtils;
 
 /**
- * The command line of the service (ROADMAP-PDF 2.8): {@code serve}, {@code render}, {@code print} and {@code fill},
+ * The command line of the service (ROADMAP-PDF 2.8): {@code start}, {@code render}, {@code print} and {@code fill},
  * with the names of the HTTP routes. It is the face of the service on the command line, not a CLI of the ecosystem:
  * {@code stxt-cli} has nothing of PDF.
  *
@@ -58,12 +58,12 @@ final class Cli {
             Usage: java -jar stxt-press.jar <command> [options]
 
             Commands:
-              serve                      Starts the HTTP service
+              start                      Starts the HTTP service
               render <document>          Converts a layout document to PDF
               print <template>           Converts a template of the templates folder to PDF
               fill <document>            Fills the Slots of a document with JSON data
 
-            Options of serve:
+            Options of start:
               --config <file>            The server.stxt (by default STXT_PRESS_CONFIG, or ./server.stxt)
 
             Options of render:
@@ -109,7 +109,7 @@ final class Cli {
         this.workingDirectory = workingDirectory;
     }
 
-    /** Runs a command and {@return its exit code}; {@code serve} returns only when the process is stopped. */
+    /** Runs a command and {@return its exit code}; {@code start} returns only when the process is stopped. */
     int run(String... args) {
         List<String> rest = List.of(args).subList(Math.min(1, args.length), args.length);
         String command = args.length == 0 ? "" : args[0];
@@ -117,7 +117,7 @@ final class Cli {
             switch (command) {
                 case "-h", "--help" -> out.print(HELP);
                 case "-v", "--version" -> out.println("stxt-press " + version());
-                case "serve" -> serveUntilStopped(rest);
+                case "start" -> startUntilStopped(rest);
                 case "render" -> render(rest);
                 case "print" -> print(rest);
                 case "fill" -> fill(rest);
@@ -140,10 +140,10 @@ final class Cli {
 
     // ---- The commands
 
-    /** {@code serve}: starts the server of the configuration and waits until the process is stopped. */
-    private void serveUntilStopped(List<String> args) throws UsageException, ConfigException, Failure {
+    /** {@code start}: starts the server of the configuration and waits until the process is stopped. */
+    private void startUntilStopped(List<String> args) throws UsageException, ConfigException, Failure {
         ServerFile config = config(Arguments.parse(args, Set.of(), Set.of("--config"), Set.of()).none());
-        PressServer server = start(config);
+        PressServer server = startServer(config);
         // SIGTERM (docker stop) and Ctrl+C: the conversions in progress have the time of a conversion to finish.
         Runtime.getRuntime().addShutdownHook(new Thread(() -> server.close(config.http().timeout()),
                 "stxt-press-shutdown"));
@@ -154,12 +154,12 @@ final class Cli {
         }
     }
 
-    /** {@code serve} without waiting: {@return the server, already answering} */
-    PressServer serve(List<String> args) throws UsageException, ConfigException, Failure {
-        return start(config(Arguments.parse(args, Set.of(), Set.of("--config"), Set.of()).none()));
+    /** {@code start} without waiting: {@return the server, already answering} */
+    PressServer start(List<String> args) throws UsageException, ConfigException, Failure {
+        return startServer(config(Arguments.parse(args, Set.of(), Set.of("--config"), Set.of()).none()));
     }
 
-    private PressServer start(ServerFile config) throws Failure {
+    private PressServer startServer(ServerFile config) throws Failure {
         PressServer server;
         try {
             server = config.start();

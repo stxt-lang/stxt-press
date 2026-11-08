@@ -180,14 +180,14 @@ class CliTest {
         assertTrue(err().startsWith("stxt-press: data.json:3: JSON_NOT_VALID: "), err());
     }
 
-    // ---- serve
+    // ---- start
 
     @Test
-    void serveStartsTheServerOfServerStxt() throws Exception {
+    void startStartsTheServerOfServerStxt() throws Exception {
         Files.writeString(dir.resolve("server.stxt"), "Server (dev.stxt.press):\n    Port: 0\n    Resource folder: "
                 + RESOURCES + "\n");
 
-        try (PressServer server = cli().serve(List.of())) {
+        try (PressServer server = cli().start(List.of())) {
             int status = HttpClient.newHttpClient().send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"
                     + server.address().getPort() + "/health")).build(), BodyHandlers.discarding()).statusCode();
 
@@ -200,7 +200,7 @@ class CliTest {
     void aServerStxtThatIsNotValidIsAnErrorOfTheInvocation() throws Exception {
         Files.writeString(dir.resolve("server.stxt"), "Server (dev.stxt.press):\n    Port: 70000\n");
 
-        assertEquals(Cli.USAGE, run("serve"));
+        assertEquals(Cli.USAGE, run("start"));
         assertTrue(err().startsWith("stxt-press: CONFIG_VALUE_NOT_VALID: "), err());
         assertTrue(err().contains("server.stxt:2: "), err());
     }
@@ -234,8 +234,8 @@ class CliTest {
             stdin twice                | render - --styles - -o x.pdf
             output folder missing      | render a.stxt -o nowhere/x.pdf
             fill without data          | fill a.stxt
-            serve with an argument     | serve now
-            config that does not exist | serve --config missing.stxt
+            start with an argument     | start now
+            config that does not exist | start --config missing.stxt
             """)
     void anInvocationThatIsNotValidIsExit2(String name, String line) throws IOException {
         Files.writeString(dir.resolve("a.stxt"), "Document (dev.stxt.pdf):\n");

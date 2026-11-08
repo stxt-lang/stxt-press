@@ -8,7 +8,7 @@ anything itself.
 In development: no version has been released.
 
 ```bash
-server/serve.sh
+server/start.sh
 java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice.json -o invoice.pdf
 ```
 
@@ -90,13 +90,13 @@ The jar runs with `java -jar stxt-press.jar <command>`. The commands have the na
 
 | Command | What it does |
 |---|---|
-| `serve [--config <file>]` | Starts the HTTP service with its `server.stxt` |
+| `start [--config <file>]` | Starts the HTTP service with its `server.stxt` |
 | `render <document> -o <file>` | Converts a layout document to PDF, with `--styles <file>` (one for each, in order), `--data <file>`, `--pdf-ua <1\|2>`, `--pdf-a <A2B\|A2A\|A3B\|A3A>`, `--exclude <check>` and `--debug` |
 | `print <template> -o <file>` | Converts a template of the templates folder to PDF, with its sample data or those of `--data <file>`; the folder is that of `server.stxt` or `--templates <folder>` |
 | `fill <document> --data <file>` | Writes the document with its Slots filled, to stdout or to `-o <file>` |
 
 `render` and `print` take the resources folder, the limits and the options of the templates from `server.stxt`,
-found as for `serve` (`--config`, `STXT_PRESS_CONFIG`, `./server.stxt`). `-` is stdin for a document or a data file,
+found as for `start` (`--config`, `STXT_PRESS_CONFIG`, `./server.stxt`). `-` is stdin for a document or a data file,
 and stdout for `-o`. A file of `-o` is replaced only when the job ends well. `java -jar stxt-press.jar --help` lists
 every option.
 
@@ -112,7 +112,7 @@ stxt-press: server/templates/invoices/invoice.stxt:66: SLOT_NO_DATA: Node 'Block
 | `1` | The job failed: the document, its styles, its data, a resource, a limit |
 | `2` | The invocation is not valid: an option, a file that does not exist, a `server.stxt` that is not valid |
 
-`serve` stops on `SIGTERM` or Ctrl+C, giving the conversions in progress the `Timeout` of `server.stxt` to finish.
+`start` stops on `SIGTERM` or Ctrl+C, giving the conversions in progress the `Timeout` of `server.stxt` to finish.
 
 ## Configuration
 
@@ -162,11 +162,11 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 Relative paths are relative to the folder of `server.stxt`, so a server moves with its configuration. The token is not
 written in the file, only the name of its variable.
 
-The folder [`server/`](server/) is a whole server, to copy anywhere and to start a project from: `serve.sh` and
-`serve.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
+The folder [`server/`](server/) is a whole server, to copy anywhere and to start a project from: `start.sh` and
+`start.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
 `127.0.0.1:8080` and shows the other nodes commented with their defaults; the fonts IBM Plex Sans, Serif and Mono and
 the images of the examples of stxt-pdf in `resources/`; and a sample template in `templates/`, an invoice with Slots,
-its styles and its sample data. `server/serve.sh` serves it, from any working directory, and
+its styles and its sample data. `server/start.sh` starts it, from any working directory, and
 `java -jar server/stxt-press.jar print invoices/invoice -o invoice.pdf --config server/server.stxt` prints its template.
 
 ## Build

@@ -88,7 +88,7 @@ public final class PressServer implements AutoCloseable {
 
     /**
      * Stops answering new requests and waits up to {@code grace} for those in progress, then stops the rest: the
-     * shutdown of {@code serve} on {@code SIGTERM}.
+     * shutdown of {@code start} on {@code SIGTERM}.
      *
      * @param grace how long the requests in progress have, such as the timeout of a conversion; not negative
      */
