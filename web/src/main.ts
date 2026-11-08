@@ -14,9 +14,6 @@ import type { Editor } from "@stxt-lang/editor";
 import { curl, fileName, parseData, request, target, validatesDocument } from "./model";
 import type { Format, LocalError, Request, ServerError, State, StylesText, Target } from "./model";
 
-/** The examples of stxt-pdf in English, put here by build.mjs. */
-declare const EXAMPLES: { name: string; document: string; styles: string }[];
-
 const TOKEN_KEY = "stxt-press-token";
 
 /** A panel: a title and an editor, of STXT or of JSON. */
@@ -39,6 +36,8 @@ let documentPanel: Panel;
 let stylesPanels: Panel[] = [];
 let dataPanel: Panel;
 let filledPanel: Panel | undefined;
+/** The names of the styles panels of the document mode: the paths of the chain of its template, or "Styles". */
+let documentStyles: string[] = [];
 /** The template on the panels, as the server gave it. */
 let original: { path: string; document: string; styles: StylesText[]; data: string | null } | undefined;
 /** The fonts of the server, registered in the page by the first preview. */
@@ -204,7 +203,12 @@ function state(): State {
 			original,
 		};
 	}
-	return { mode: "document", document: documentPanel.text(), styles: stylesPanels[0]?.text() ?? "", data: dataPanel.text() };
+	return {
+		mode: "document",
+		document: documentPanel.text(),
+		styles: stylesPanels.map((panel, i) => ({ path: documentStyles[i], text: panel.text() })),
+		data: dataPanel.text(),
+	};
 }
 
 // ---- The API
@@ -400,10 +404,26 @@ function download(blob: Blob, name: string): void {
 
 // ---- The modes
 
-function showExample(index: number): void {
-	const example = EXAMPLES[index];
+/** The template of the server as a document: filled with its sample data, with its chain of styles, without data. */
+async function showDocument(path: string): Promise<void> {
+	const [response, filled] = await Promise.all([call("GET", `/templates/${path}`), call("GET", `/print/${path}?format=stxt`)]);
+	const failed = [response, filled].find((r) => !r.ok);
+	if (failed) {
+		const error = await errorOf(failed);
+		say(`${error.code}: ${error.message}`, true);
+		return;
+	}
+	const template = (await response.json()) as { styles: StylesText[] };
+	showBlankDocument(await filled.text(), template.styles);
+	say("");
+}
+
+/** The panels of a document, with one blank styles panel if it has no styles, for the ones the user writes. */
+function showBlankDocument(text = "", styles: StylesText[] = []): void {
 	original = undefined;
-	showPanels(example.document, [{ path: "Styles", text: example.styles }], "", { document: "Document", data: "Data (JSON)" });
+	const panels = styles.length > 0 ? styles : [{ path: "Styles", text: "" }];
+	documentStyles = panels.map((item) => item.path);
+	showPanels(text, panels, "", { document: "Document", data: "Data (JSON)" });
 }
 
 async function showTemplate(path: string): Promise<void> {
@@ -430,16 +450,18 @@ async function setMode(next: "document" | "template"): Promise<void> {
 	$("template-mode").hidden = next !== "template";
 	$("pages").replaceChildren();
 	say("");
-	if (next === "document") {
-		showExample($<HTMLSelectElement>("examples").selectedIndex);
-	} else {
-		const select = $<HTMLSelectElement>("templates");
-		if (select.value) {
-			await showTemplate(select.value);
+	const select = $<HTMLSelectElement>(next === "document" ? "documents" : "templates");
+	if (!select.value) {
+		if (next === "document") {
+			showBlankDocument();
 		} else {
 			clearPanels();
-			say("The server has no templates.");
 		}
+		say("The server has no templates.");
+	} else if (next === "document") {
+		await showDocument(select.value);
+	} else {
+		await showTemplate(select.value);
 	}
 }
 
@@ -447,16 +469,16 @@ async function start(): Promise<void> {
 	const schemaResponse = await call("GET", "/schema");
 	schema = schemaResponse.ok ? await schemaResponse.text() : "";
 
-	const examples = $<HTMLSelectElement>("examples");
-	EXAMPLES.forEach((example, i) => examples.add(new Option(example.name, String(i))));
-	examples.onchange = () => showExample(examples.selectedIndex);
-
+	// The two modes list the templates of the server: as documents, filled with their sample data, and as templates.
+	const documents = $<HTMLSelectElement>("documents");
 	const templates = $<HTMLSelectElement>("templates");
 	const listed = await call("GET", "/templates");
 	if (listed.ok) {
 		for (const entry of ((await listed.json()) as { templates: { path: string }[] }).templates) {
+			documents.add(new Option(entry.path, entry.path));
 			templates.add(new Option(entry.path, entry.path));
 		}
+		documents.onchange = () => void showDocument(documents.value);
 		templates.onchange = () => void showTemplate(templates.value);
 	} else {
 		// /templates is off in this server.

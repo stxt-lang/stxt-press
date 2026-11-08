@@ -12,11 +12,14 @@ export interface StylesText {
 	text: string;
 }
 
-/** The panels of the document mode: a document, its styles and its data. */
+/**
+ * The panels of the document mode: a document, its styles documents in order (those of the chain of the template it
+ * comes from, or one blank panel) and its data.
+ */
 export interface DocumentState {
 	mode: "document";
 	document: string;
-	styles: string;
+	styles: StylesText[];
 	data: string;
 }
 
@@ -131,9 +134,14 @@ export function request(state: State, format: Format, debug: boolean): Request |
 	if (data.error) {
 		return data.error;
 	}
-	const styles = state.mode === "document"
-		? (state.styles.trim() === "" ? [] : [state.styles])
+	// A blank styles panel of a document is not sent; its name is "", which no error has, so that every name keeps the
+	// place of its panel.
+	const panels = state.mode === "document"
+		? state.styles.map((item) => item.text.trim() === "" ? null : item.text)
 		: state.styles.map((item) => item.text);
+	const styles = panels.filter((text): text is string => text !== null);
+	let sent = 0;
+	const stylesNames = panels.map((text) => text === null ? "" : `styles[${++sent}]`);
 	const fields = [`"document":${JSON.stringify(state.document)}`];
 	if (styles.length > 0) {
 		fields.push(`"styles":${JSON.stringify(styles)}`);
@@ -147,7 +155,7 @@ export function request(state: State, format: Format, debug: boolean): Request |
 		url: `/render${query}`,
 		body: `{${fields.join(",")}}`,
 		contentType: "application/json",
-		stylesNames: styles.map((_, i) => `styles[${i + 1}]`),
+		stylesNames,
 	};
 }
 

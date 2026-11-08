@@ -4,7 +4,7 @@ import { describe, it } from "node:test";
 import { curl, fileName, isUnchanged, jsonErrorLine, parseData, request, target, validatesDocument } from "../src/model.ts";
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
 
-const DOCUMENT: DocumentState = { mode: "document", document: "Document (dev.stxt.pdf):", styles: "", data: "" };
+const DOCUMENT: DocumentState = { mode: "document", document: "Document (dev.stxt.pdf):", styles: [{ path: "Styles", text: "" }], data: "" };
 
 function template(changes: Partial<TemplateState> = {}): TemplateState {
 	const styles = [{ path: ".styles.stxt", text: "root" }, { path: "invoices/invoice.styles.stxt", text: "own" }];
@@ -31,15 +31,30 @@ describe("request", () => {
 		assert.equal(r.method, "POST");
 		assert.equal(r.url, "/render?format=pdf");
 		assert.deepEqual(JSON.parse(r.body!), { document: "Document (dev.stxt.pdf):" });
-		assert.deepEqual(r.stylesNames, []);
+		assert.deepEqual(r.stylesNames, [""]);
 	});
 
 	it("sends the styles as styles[1] and the data as a JSON value, its numbers as they are", () => {
-		const r = asRequest(request({ ...DOCUMENT, styles: "Styles (dev.stxt.pdf):", data: "{\"n\": 2}" }, "svg", true));
+		const styles = [{ path: "Styles", text: "Styles (dev.stxt.pdf):" }];
+		const r = asRequest(request({ ...DOCUMENT, styles, data: "{\"n\": 2}" }, "svg", true));
 
 		assert.equal(r.url, "/render?format=svg&debug=true");
 		assert.deepEqual(JSON.parse(r.body!), { document: DOCUMENT.document, styles: ["Styles (dev.stxt.pdf):"], data: { n: 2 } });
 		assert.deepEqual(r.stylesNames, ["styles[1]"]);
+	});
+
+	it("sends the chain of styles of a document in order, without its blank panels, each name in the place of its panel", () => {
+		const styles = [
+			{ path: ".styles.stxt", text: "root" },
+			{ path: "invoices/.styles.stxt", text: " \n" },
+			{ path: "invoices/invoice.styles.stxt", text: "own" },
+		];
+
+		const r = asRequest(request({ ...DOCUMENT, styles }, "pdf", false));
+
+		assert.deepEqual(JSON.parse(r.body!).styles, ["root", "own"]);
+		assert.deepEqual(r.stylesNames, ["styles[1]", "", "styles[2]"]);
+		assert.deepEqual(target("styles[2]", r.stylesNames), { panel: "styles", index: 2 });
 	});
 
 	it("sends the data as they are written: 1.10 stays 1.10", () => {

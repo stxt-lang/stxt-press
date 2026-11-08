@@ -69,8 +69,9 @@ document and `/templates` shows the texts and the sample data of the templates, 
 
 `GET /` is a page to try documents and templates against the server:
 
-- **Document**: a layout document, its styles and its JSON data, sent to `/render`. The English examples of stxt-pdf
-  are in the list.
+- **Document**: a layout document, its styles and its JSON data, sent to `/render`. The list has the templates of the
+  server, each one filled with its sample data and with its chain of styles, one panel per file; the data panel
+  starts empty.
 - **Templates**: a template of the server: its sample data first, the panel that changes from one PDF to another, then
   the document and its chain of styles, one panel per file. With the document and the styles as the server has them,
   it is printed with `/print` and the data of the panel; edited, with `/render` and the whole chain. Nothing is saved
@@ -177,7 +178,7 @@ starts it, from any working directory, and
 ## Build
 
 Requires **Java 17** or later, and [stxt-pdf](https://github.com/stxt-lang/stxt-pdf) checked out next to this
-repository (`../stxt-pdf`): the tests use its fonts and its examples, and the editor bundles its examples.
+repository (`../stxt-pdf`): the tests use its fonts and its examples.
 
 ```bash
 mvn verify

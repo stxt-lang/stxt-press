@@ -45,7 +45,7 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   Without a file, the server listens only on `127.0.0.1:8080`, without token.
 - `PressServer.startLazily`, whose shared converter is created by the first request that needs it.
 - The web editor, at `GET /` and its files under `/editor/`, without token: a document mode (a document, its styles and
-  its data to `/render`, with the English examples of stxt-pdf) and a templates mode (a template of the server with its sample
+  its data to `/render`, starting from a template of the server filled with its sample data) and a templates mode (a template of the server with its sample
   data first and then its document and its chain of styles, printed with `/print` or, edited, rendered with
   `/render`, and its `curl`). Fill,
   preview as SVG pages with or without outlines, and download the PDF; the errors of the server are marked in their
