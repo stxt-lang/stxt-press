@@ -54,8 +54,10 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - `GET /fonts` also lists the faces of the fonts (family, weight, style and the SHA-256 of the file), and
   `GET /fonts/{id}` gives the file of a face: the SVG pages name their fonts and do not carry them.
 - `server/`, a server folder to start a project from: its `server.stxt`, the fonts IBM Plex Sans, Serif and Mono and
-  the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/`: an invoice with
-  Slots, its styles and its sample data. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, for the
+  the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/`: one for each
+  example of `stxt-pdf` (an invoice, a letter, a resume, an annual report, a newsletter, a menu, a contract, a manual,
+  a catalog, a certificate and a timetable), with Slots for what changes from one document to another, its styles and
+  its sample data, which give the pages of the example. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, for the
   editors with discovery. `start --config server/server.stxt` starts it.
 - `start.sh`, and `start.bat` for Windows, in `server/`: they start the server of the folder with the
   `stxt-press.jar` beside them, which `mvn package` copies there, so the folder is a whole server that can be copied

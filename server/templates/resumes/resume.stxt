@@ -1,0 +1,125 @@
+# Resume template: the "resume" example of stxt-pdf with Slots for the person, so the whole content comes in the data:
+# the photo (optional), the contact lines (each one with its link, if it has one), the tools with their level, the
+# languages, the key figures, the jobs and the studies. The layout and the section titles are part of the template.
+# In the example, each job is two areas of one Grid, the dates and the content, and a Slot repeats a single node: here
+# each job is an Area of a one-column Grid, with the two areas in a Grid of its own, and each tool, a Block with its
+# name and its bar. The achievements of a job accept Markdown. resume.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+	Title: ${name} · ${position}
+	Language: en
+	Section:
+		Grid:
+			Id: page
+			Column sizes: 190 *
+			Row sizes: *
+			Box:
+				Height: 100%
+			Area:
+				Block:
+					Id: sidebar
+					Style: side
+					Image: {?photo}<file>
+						Alt: <alt>
+						Box:
+							Width: 100%
+							Corner radius: 50%
+							Margin: 0 0 4 0
+					Text: Contact
+						Style: side-title
+					Text: [contact]<text>
+						Link: <?link>
+					Text: Tools
+						Style: side-title
+					Block: [tools]
+						Text: <name>
+						Block:
+							Style: track
+							Block:
+								Style: fill
+								Box:
+									Width: <level>
+					Text: Languages
+						Style: side-title
+					Text: [languages]
+					Text: Interests
+						Style: side-title
+					Paragraph: <interests>
+			Area:
+				Block:
+					Id: main
+					Box:
+						Padding: 40 36 36 34
+					Heading 1:
+						Text: <name>
+					Text: <headline>
+						Typography:
+							Size: 12.5
+							Color: #1F7A7A
+						Box:
+							Margin: 2 0 14 0
+					Paragraph: <profile>
+						Typography:
+							Align: justify
+					Stack:
+						Id: figures
+						Gap: 10
+						Box:
+							Margin: 14 0 0 0
+							Padding: 10 0
+							Border: 0.5 0 0.5 0
+							Border color: #BFD9D7
+						Item: [figures]
+							Grow: 1
+							Block:
+								Text: <value>
+									Style: figure
+								Text: <caption>
+									Style: caption
+					Heading 2:
+						Text: Experience
+					Grid:
+						Id: jobs
+						Column sizes: *
+						Gap: 14
+						Area: [jobs]
+							Grid:
+								Column sizes: 70 *
+								Gap: 12
+								Area:
+									Text: <dates>
+										Style: dates
+								Area:
+									Block:
+										Text: <role>
+											Style: role
+										Text: <place>
+											Style: place
+										List:
+											List item: [achievements]
+												Text: <text>
+													Typography:
+														Markup: markdown
+					Heading 2:
+						Text: Education
+					Grid:
+						Id: education
+						Column sizes: *
+						Gap: 8
+						Area: [education]
+							Grid:
+								Column sizes: 70 *
+								Gap: 12
+								Area:
+									Text: <year>
+										Style: dates
+								Area:
+									Block:
+										Text: <degree>
+											Style: role
+										Text: <school>
+											Style: place
+					Heading 2:
+						Text: Talks and publications
+					Paragraph: <talks>

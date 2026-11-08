@@ -1,6 +1,9 @@
-# Invoice template: the invoice example of stxt-pdf with Slots for what changes from one invoice to another. The
-# lines of the table repeat with [lines], one Row for each line of the data; the amounts arrive already written, as
-# text, because the fill puts values and does not calculate. invoice.json has the sample data.
+# Invoice template of a furniture workshop: the "invoice" example of stxt-pdf with Slots for what changes from one
+# invoice to another. The workshop (logo, details, payment details, terms) is part of the template; the customer, the
+# dates, the lines and the totals come in the data. The lines of the table repeat with [lines], one Row for each line,
+# and the amounts arrive already written, as text, because the fill puts values and does not calculate: the QR code
+# of the transfer (the EPC format that banking apps read) takes the total without format, in transfer_amount. The
+# order and the email of the customer are optional. invoice.json has the sample data.
 Document (dev.stxt.pdf):
 	Page:
 		Paper: A4
@@ -9,6 +12,7 @@ Document (dev.stxt.pdf):
 	Language: en
 	Section:
 		Page overlay:
+			Id: footer
 			Offset: auto 0 -34 0
 			Box:
 				Padding: 6 0 0 0
@@ -21,16 +25,16 @@ Document (dev.stxt.pdf):
 				Item:
 					Text: Page {page} of {pages}
 		Stack:
+			Id: masthead
 			Horizontal: justify
 			Vertical: center
 			Box:
 				Margin: 0 0 30 0
 			Item:
-				Text: Taller Nogal
-					Typography:
-						Size: 20
-						Bold: true
-						Color: #A65C1B
+				Image: examples/brand/nogal.svg
+					Alt: Nogal, furniture workshop
+					Box:
+						Width: 172
 			Item:
 				Block:
 					Text: Invoice
@@ -48,6 +52,7 @@ Document (dev.stxt.pdf):
 							Color: #A65C1B
 							Align: right
 		Grid:
+			Id: parties
 			Column sizes: * *
 			Gap: 18
 			Box:
@@ -62,6 +67,8 @@ Document (dev.stxt.pdf):
 					Text: Tax ID B-17482930
 					Text: Carrer de la Farga, 14 · Polígono Les Torres
 					Text: 17800 Olot (Girona)
+					Text: administracion@tallernogal.example
+						Link: mailto:administracion@tallernogal.example
 			Area:
 				Block: {customer}
 					Style: party
@@ -70,9 +77,12 @@ Document (dev.stxt.pdf):
 					Text: <name>
 						Style: strong
 					Text: Tax ID ${tax_id}
-					Text: [address]<line>
+					Text: [address]
+					Text: <?email>
+						Link: mailto:${email}
 		Grid:
-			Column sizes: repeat(3, *)
+			Id: strip
+			Column sizes: repeat(4, *)
 			Box:
 				Margin: 0 0 22 0
 				Padding: 9 14
@@ -90,10 +100,16 @@ Document (dev.stxt.pdf):
 					Text: <due>
 			Area:
 				Block:
+					Text: Payment method
+						Style: label
+					Text: <payment_method>
+			Area:
+				Block:
 					Text: Order
 						Style: label
 					Text: <?order>
 		Table:
+			Id: lines
 			Column sizes: 54 * 38 64 94
 			Column align: left left right right right
 			Box:
@@ -120,7 +136,7 @@ Document (dev.stxt.pdf):
 						Span: 1 4
 					Cell: <base>
 				Row:
-					Cell: VAT (21%)
+					Cell: VAT (${vat_rate})
 						Row header: true
 						Span: 1 4
 					Cell: <vat>
@@ -130,7 +146,48 @@ Document (dev.stxt.pdf):
 						Row header: true
 						Span: 1 4
 					Cell: <total>
-		Block:
-			Text: Payment
-				Style: label
-			Paragraph: Bank transfer to ES91 2100 0418 4502 0005 1332, within 30 days, with invoice ${number} as the reference.
+		Grid:
+			Id: payment
+			Column sizes: * *
+			Gap: 18
+			Area:
+				Stack:
+					Gap: 12
+					Item:
+						Grow: 1
+						Block:
+							Typography:
+								Markup: markdown
+								Code font: IBM Plex Mono
+							Text: Payment details
+								Style: label
+							Paragraph: **`ES91 2100 0418 4502 0005 1332`**
+							Paragraph: Caixa Girona · BIC `CAIXESBBXXX`
+							Paragraph: Include the **invoice number** in the payment reference.
+					Item:
+						Barcode:
+							Id: payment-qr
+							Alt: QR code to pay the invoice by transfer: ${total} to Taller Nogal S.L.
+							Box:
+								Width: 76
+							Content >>
+								BCD
+								002
+								1
+								SCT
+								CAIXESBBXXX
+								Taller Nogal S.L.
+								ES9121000418450200051332
+								EUR${transfer_amount}
+
+
+								Invoice ${number}
+			Area:
+				Block:
+					Text: Terms
+						Style: label
+					Paragraph: The furniture remains the property of the workshop until the invoice is paid in full. **Five-year** warranty on frame and hardware; solid wood may vary slightly in tone, as befits a living material.
+						Typography:
+							Size: 8
+							Color: #5C4E43
+							Markup: markdown

@@ -1,0 +1,113 @@
+{
+  "year": "2025",
+  "previous_year": "2024",
+  "next_year": "2026",
+  "approved": "March 21, 2026",
+  "cover": {
+    "photo": "examples/report/cover.jpg",
+    "headline": ["A year of sun", "and of wind"],
+    "figures": [
+      {"value": "2,384 MWh", "caption": "of clean energy produced"},
+      {"value": "8,412", "caption": "customers supplied"},
+      {"value": "€312k", "caption": "net result for the year"}
+    ]
+  },
+  "letter": {
+    "lead": "When we founded Solvent, eleven years ago, we had three rooftops, a borrowed windmill and more enthusiasm than money. Today we produce energy for more than eight thousand homes, shops and businesses in the county, and we do it without leaving it: what we generate here is consumed here.",
+    "paragraphs": [
+      "2025 has been the year of **consolidation**. We commissioned the Les Preses solar park, expanded the one at Sant Joan and repowered the three oldest wind turbines. We produced 11% more than the previous year and closed the year with a positive result for the fifth year in a row.",
+      "None of this is the work of one person. It is the result of the work of the twenty-three people on our staff, of the more than twelve hundred members who make the decisions in the assembly, and of a network of local suppliers who have installed every kilowatt with their hands and with good judgment.",
+      "This report tells what we have achieved, and also what it has cost us and what we still have to do. We invite you to read it with a critical eye: a cooperative improves by asking questions.",
+      "With warm regards and eager to keep going,"
+    ],
+    "president": "Carme Vidal i Roca",
+    "milestones": [
+      {"month": "March", "text": "The assembly approves the 2024 accounts with 94% of the votes."},
+      {"month": "June", "text": "The 1.6 MWp Les Preses solar park is connected to the grid."},
+      {"month": "September", "text": "Repowering works on the three wind turbines are completed."},
+      {"month": "November", "text": "We reach customer number 8,000, a bakery in Sant Feliu."}
+    ]
+  },
+  "in_figures": {
+    "tiles": [
+      {"value": "2,384 MWh", "caption": "of renewable production, 11% more than in 2024"},
+      {"value": "8,412", "caption": "customers supplied, among homes, shops, industry and public bodies"},
+      {"value": "15,900 t", "caption": "of CO₂ avoided since 2019, the year of the first installation"},
+      {"value": "1,204", "caption": "members, eighty-seven more than the previous year"},
+      {"value": "23", "caption": "people on the staff, 48% of them women"},
+      {"value": "€1.35M", "caption": "invested in new generation and storage"}
+    ],
+    "chart": {
+      "image": "examples/report/en/chart-production.svg",
+      "alt": "Bar chart of the monthly production in 2025, in MWh: from 98 in December to 306 in July",
+      "caption": "Monthly renewable energy production in 2025, in MWh. The peak, in July, with 306 MWh."
+    },
+    "comment": "Production follows the curve of the sun: from November to January it drops below 125 MWh, and between May and August it exceeds 250. Wind partly makes up for the winter, which is why adding a fourth wind turbine, planned for 2026, is one of our priorities."
+  },
+  "customers": {
+    "lead": "A cooperative exists for those who use it. This year we served 8,412 customers, 46% of them households.",
+    "community": "## Households\n\nWe added 412 households, most of them in Garrotxa villages that had no local supply offer. The **stable price** tariff held all year, including the winter months.\n\n## Shops and businesses\n\nA third of our non-residential customers are bakeries, workshops and small industries that cover part of their consumption with the solar installation we fitted on their roof.\n\n## Energy communities\n\nWe supported the creation of **five local energy communities**, in which neighbors share the production of a single roof. Each one received free training and legal advice.\n\n## Solidarity fund\n\nOne percent of our turnover goes to a fund that pays the bills of families in vulnerable situations: this year, 61 households.",
+    "chart": {
+      "image": "examples/report/en/chart-mix.svg",
+      "alt": "Donut chart of customers by type: households 46%, shops 27%, industry 19% and public bodies 8%",
+      "caption": "Breakdown of the 8,412 customers by customer type."
+    }
+  },
+  "results": {
+    "lead": "The accounts for the year, in thousands of euros. Revenue grows by 11.5% and the result by 33.9%, after absorbing the higher depreciation of the new installations.",
+    "accounts": [
+      {"item": "Energy sales", "current": "4,128", "previous": "3,774", "change": "+9.4%"},
+      {"item": "Services and maintenance", "current": "792", "previous": "640", "change": "+23.8%"},
+      {"item": "Operating expenses", "current": "−3,980", "previous": "−3,612", "change": "+10.2%"},
+      {"item": "Depreciation", "current": "−540", "previous": "−498", "change": "+8.4%"},
+      {"item": "Financial result", "current": "−88", "previous": "−71", "change": "+23.9%"}
+    ],
+    "total": {"item": "Net result for the year", "current": "312", "previous": "233", "change": "+33.9%"},
+    "investments": [
+      {"project": "Les Preses solar park", "amount": "780", "capacity": "1.6 MWp"},
+      {"project": "Sant Joan expansion", "amount": "310", "capacity": "0.6 MWp"},
+      {"project": "Wind turbine repowering", "amount": "190", "capacity": "0.9 MW"},
+      {"project": "Community warehouse batteries", "amount": "70", "capacity": "0.2 MWh"}
+    ],
+    "investment_note": "100% of the investment was financed with contributions from members, with no debt to financial institutions."
+  },
+  "environment": {
+    "chart": {
+      "image": "examples/report/en/chart-savings.svg",
+      "alt": "Line chart of the cumulative tonnes of CO₂ avoided: from 0 in 2019 to 15,900 in 2025",
+      "caption": "Cumulative tonnes of CO₂ avoided since 2019, in thousands."
+    },
+    "quote": "Every kilowatt-hour we produce here is one that does not have to be brought from far away, or burned.",
+    "commitments": [
+      {"text": "Exceed 2,700 MWh of production with the fourth wind turbine and the Les Preses expansion."},
+      {"text": "Cut the emissions of the maintenance vehicle fleet to zero; today it has two diesel vans."},
+      {"text": "Publish the carbon footprint of the whole supplier chain, with the help of the university."},
+      {"text": "Plant four thousand native trees on land provided by the town councils of the county."}
+    ],
+    "indicators": {
+      "years": ["2023", "2024", "2025"],
+      "rows": [
+        {"name": "Renewable production (MWh)", "values": ["1,930", "2,148", "2,384"]},
+        {"name": "CO₂ avoided in the year (t)", "values": ["2,800", "3,600", "4,300"]},
+        {"name": "Waste recovered (%)", "values": ["82", "87", "91"]},
+        {"name": "Water used at the plants (m³)", "values": ["640", "590", "540"]}
+      ]
+    }
+  },
+  "governance": {
+    "board": [
+      {"name": "Carme Vidal i Roca", "position": "President", "since": "2019"},
+      {"name": "Oriol Pagès Vila", "position": "Vice President", "since": "2019"},
+      {"name": "Núria Serra Comas", "position": "Secretary", "since": "2023"},
+      {"name": "Jordi Casas Font", "position": "Treasurer", "since": "2023"},
+      {"name": "Anna Bosch Puig", "position": "Consumer member representative", "since": "2023"}
+    ],
+    "next_steps": "The **General Assembly** of March 21 approved these lines of work for the next fiscal year:\n\n1. Open a customer service office in Olot, with afternoon hours.\n2. Launch the time-of-use tariff for customers with an electric car.\n3. Double the storage capacity of the community warehouse.\n\nMembers can propose items for the agenda one month in advance.",
+    "schedule": [
+      {"activity": "Customer office in Olot", "quarters": [{"text": "Works and opening", "span": "1 2", "style": "bar"}, {}, {}]},
+      {"activity": "Time-of-use tariff", "quarters": [{}, {"text": "Design and testing", "span": "1 2", "style": "bar"}, {}]},
+      {"activity": "Warehouse storage", "quarters": [{}, {}, {"text": "Expansion", "span": "1 2", "style": "bar"}]},
+      {"activity": "Fourth wind turbine", "quarters": [{"text": "Permits, construction and commissioning", "span": "1 3", "style": "bar"}, {}]}
+    ]
+  }
+}

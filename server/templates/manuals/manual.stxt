@@ -1,0 +1,401 @@
+# Quick guide template of a thermostat: the "manual" example of stxt-pdf with Slots for what changes from one model
+# or edition to another. The instructions, the figures, the wiring and the troubleshooting are part of the template;
+# the model, the version of the guide, the contents of the box, the factory schedule, the specifications, the
+# warranty and the support contacts come in the data, so one guide serves the models that share the device.
+# manual.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 64 54 66 54
+	Title: Quick guide to the ${model} thermostat
+	Language: en
+	Styles:
+		For element: Figure
+			Typography:
+				Number label: Figure {number}.
+		For style: table
+			Typography:
+				Number label: Table {number}.
+	Section:
+		Page overlay:
+			Id: header
+			Offset: -34 0 auto 0
+			Stack:
+				Horizontal: justify
+				Item:
+					Text: ${model} · Quick guide · Version ${version}
+				Item:
+					Text: {heading 2}
+		Page overlay:
+			Id: footer
+			Offset: auto 0 -40 0
+			Box:
+				Padding: 5 0 0 0
+				Border: 0.5 0 0 0
+				Border color: #BFD9D7
+			Stack:
+				Horizontal: justify
+				Item:
+					Text: Need help? Write to us at ${email}
+						Link: mailto:${email}
+				Item:
+					Text: Page {page} of {pages}
+		Block:
+			Id: banner
+			Style: banner
+			Box:
+				Margin: 0 0 18 0
+			Text: Quick guide
+				Typography:
+					Size: 8
+					Bold: true
+					Color: #8FD1CC
+					Case: uppercase
+					Letter spacing: 1.2
+			Heading 1:
+				Text: ${model} Thermostat
+				Box:
+					Padding: 0
+					Border: 0
+					Margin: 0
+				Typography:
+					Color: #FFFFFF
+					Numbered: false
+			Text: Install it, connect it to the app and program your home in under half an hour.
+				Typography:
+					Size: 11
+					Color: #C7E4E1
+				Box:
+					Margin: 4 0 0 0
+		Stack:
+			Id: overview
+			Gap: 26
+			Box:
+				Margin: 0 0 6 0
+			Item:
+				Figure:
+					Id: fig-device
+					Alt: The thermostat seen from the front, with its four parts numbered
+					Box:
+						Width: 250
+						Margin: 0
+					Caption: The four parts of the thermostat.
+					Block:
+						Frame:
+							Id: device
+							Box:
+								Width: 250
+								Height: 250
+							Image: examples/manual/en/thermostat.svg
+								Box:
+									Width: 100%
+							Overlay:
+								Offset: 30 auto auto 184
+								Style: badge
+								Text: 1
+							Overlay:
+								Offset: 76 auto auto 124
+								Style: badge
+								Text: 2
+							Overlay:
+								Offset: 170 auto auto 70
+								Style: badge
+								Text: 3
+							Overlay:
+								Offset: 120 auto auto 190
+								Style: badge
+								Text: 4
+			Item:
+				Grow: 1
+				Block:
+					Heading 2:
+						Text: Meet your thermostat
+						Box:
+							Margin: 0 0 8 0
+					List:
+						Marker: decimal
+						List item:
+							Paragraph: **Status light.** Solid green when connected to the network; flashes while pairing.
+						List item:
+							Paragraph: **Current temperature** of the room, in degrees Celsius.
+						List item:
+							Paragraph: **Target temperature.** The orange dot marks the one you have chosen.
+						List item:
+							Paragraph: **Dial.** Turn it to raise or lower the temperature and press it to change mode.
+		Heading 2:
+			Text: In the box
+		Grid:
+			Id: contents
+			Column sizes: repeat(3, *)
+			Gap: 10
+			Box:
+				Margin: 0 0 4 0
+			Area: [box]
+				Block:
+					Style: tip
+					Text: <item>
+						Typography:
+							Bold: true
+					Text: <detail>
+		Block:
+			Id: warning-power
+			Style: notice
+			Text: Warning
+				Style: label
+			Text: Installation must be carried out by a qualified person. Before touching any wire, switch off the power at the electrical panel and check with a voltage tester that there is no voltage.
+		Block:
+			Id: installation
+			Heading 2:
+				Text: Installation
+				Box:
+					Margin: 0 0 8 0
+			Markdown:
+				Number markers: decimal
+				Content >>
+					1. Remove the old thermostat and note which terminal each wire goes to.
+					2. Separate the wall plate from the thermostat by gently prying at the bottom.
+					3. Screw the plate to the wall, **1.5 m** from the floor and away from drafts and heat sources.
+					4. Connect the wires to the terminals following the diagram below and tighten the screws firmly.
+					5. Fit the thermostat onto the plate and restore the power: it will switch on by itself.
+			Figure:
+				Id: wiring
+				Caption: Wiring diagram of the four terminals.
+				Image: examples/manual/en/wiring.svg
+					Alt: Wiring diagram of terminals L, N, C and NO with the wire colors
+					Box:
+						Width: 100%
+			Heading 3:
+				Text: If your installation has no neutral
+			Markdown:
+				Typography:
+					Code font: IBM Plex Mono
+				Content >>
+					The thermostat can run on batteries in homes without a neutral wire. Leave terminal `N` free and see [section {number of: specs-heading}](#specs) to find out which batteries to use. In that case the screen turns off when it is not touched.
+			Heading 3:
+				Text: Check the connection
+			Paragraph: Once installed, the screen should show the time and the temperature. You can check the state of the terminals from the settings menu, with the following sequence:
+			Block:
+				Id: terminal
+				Style: code
+				Text:
+					Typography:
+						Preformatted: true
+					Content >>
+						> Settings > Service > Terminals
+
+						L     230 V      [ OK ]
+						N     0 V        [ OK ]
+						C     closed     [ OK ]
+						NO    open       [ OK ]
+			Block:
+				Style: tip
+				Text: Tip
+					Style: label
+					Typography:
+						Color: #134E4A
+				Text: If a terminal shows in red, check the wire and repeat the check before closing the cover.
+			Heading 3:
+				Text: Terminal reference
+			Figure:
+				Id: tab-terminals
+				Style: table
+				Caption: Thermostat terminals and usual wires.
+				Table:
+					Id: terminals
+					Column sizes: 56 * 100
+					Header rows:
+						Row:
+							Cell: Terminal
+							Cell: Function
+							Cell: Usual wire
+					Body:
+						Row:
+							Cell: L
+								Row header: true
+								Style: mono
+							Cell: Power supply, live
+							Cell: Brown
+						Row:
+							Cell: N
+								Row header: true
+								Style: mono
+							Cell: Power supply, neutral
+							Cell: Blue
+						Row:
+							Cell: C
+								Row header: true
+								Style: mono
+							Cell: Boiler common contact
+							Cell: Gray
+						Row:
+							Cell: NO
+								Row header: true
+								Style: mono
+							Cell: Normally open contact
+							Cell: Yellow
+		Block:
+			Id: app
+			Break:
+				Before: page
+			Heading 2:
+				Text: Connect the app
+				Box:
+					Margin: 0 0 8 0
+			Stack:
+				Gap: 24
+				Box:
+					Margin: 0 0 8 0
+				Item:
+					Figure:
+						Id: fig-app
+						Box:
+							Width: 112
+							Margin: 0
+						Caption: The main screen of the app.
+						Image: examples/manual/en/app.png
+							Id: app-screen
+							Alt: The main screen of the app, with the living room temperature and the plus and minus buttons
+							Box:
+								Width: 112
+				Item:
+					Grow: 1
+					Markdown:
+						Number markers: decimal
+						Content >>
+							1. Download the **Aire+** app from your phone's app store.
+							2. Create an account or sign in with the one you already have.
+							3. Tap **Add thermostat** and press and hold the thermostat dial for five seconds.
+							4. When the light flashes green, choose your Wi-Fi network and enter the password.
+							5. Give the room a name, for example “Living room”. Done!
+
+							If pairing fails, bring the phone closer to the thermostat and check that you are using a **2.4 GHz** network: 5 GHz is not supported.
+			Heading 2:
+				Text: Set your weekly schedule
+			Paragraph: The thermostat comes with an energy-saving schedule that you can change from the app or from the dial menu. These are the factory time slots (table {number of: tab-schedule}):
+			Figure:
+				Id: tab-schedule
+				Style: table
+				Caption: Time slots of the factory schedule.
+				Table:
+					Id: schedule
+					Column sizes: * * *
+					Header rows:
+						Row:
+							Cell: Time slot
+							Cell: Monday to Friday
+							Cell: Weekend
+					Body:
+						Row: [schedule]
+							Cell: <slot>
+								Row header: true
+							Cell: <weekdays>
+							Cell: <weekend>
+			Heading 2:
+				Text: Troubleshooting
+			Markdown:
+				Table columns: auto
+				Content >>
+					| Symptom | Probable cause | What to do |
+					|---------|----------------|-----------|
+					| The screen does not turn on | No power or a loose wire | Check the panel and terminals L and N |
+					| Status light in red | No Wi-Fi connection | Move the router closer or pair again |
+					| The boiler does not start | C/NO contact wired wrong | Check figure {number of: wiring} (page {page of: wiring}) |
+					| Wrong temperature | It is near a heat source | Move it 1.5 m from the floor |
+			Heading 2:
+				Id: specs-heading
+				Text: Technical specifications
+			Figure:
+				Id: tab-specs
+				Style: table
+				Caption: Specifications of the ${model}.
+				Table:
+					Id: specs
+					Column sizes: 150 *
+					Body:
+						Row: [specifications]
+							Cell: <name>
+								Row header: true
+							Cell: <value>
+								Style: mono
+		Block:
+			Id: support
+			Heading 2:
+				Text: Warranty and support
+			Columns:
+				Count: 2
+				Gap: 26
+				Separator: 0.5
+				Separator color: #BFD9D7
+				Box:
+					Margin: 0 0 12 0
+				Markdown:
+					Content >>
+						### Warranty
+
+						The ${model} has a **${warranty}** warranty from the date of purchase, covering any manufacturing defect. It does not cover damage from incorrect installation or damage caused by moisture or impacts. Keep the invoice: we will ask for it to process the warranty.
+
+						### Recycling
+
+						At the end of its useful life, do not throw the thermostat away with household waste. Take it to a recycling center or hand it in at any store when you buy a new one. Batteries are recycled separately.
+			Grid:
+				Id: contact
+				Column sizes: repeat(3, *)
+				Gap: 10
+				Area:
+					Block:
+						Style: tip
+						Text: Phone
+							Style: label
+							Typography:
+								Color: #134E4A
+						Text: <phone>
+							Typography:
+								Bold: true
+								Size: 11
+						Text: <phone_hours>
+							Typography:
+								Size: 8
+				Area:
+					Block:
+						Style: tip
+						Text: Email
+							Style: label
+							Typography:
+								Color: #134E4A
+						Text: <email>
+							Link: mailto:${email}
+							Typography:
+								Bold: true
+								Size: 11
+						Text: We reply in less than 24 hours
+							Typography:
+								Size: 8
+				Area:
+					Block:
+						Style: tip
+						Text: Web
+							Style: label
+							Typography:
+								Color: #134E4A
+						Text: <web>
+							Link: https://${web}
+							Typography:
+								Bold: true
+								Size: 11
+						Text: Videos, FAQs and forum
+							Typography:
+								Size: 8
+		Block:
+			Id: lists
+			Heading 2:
+				Text: List of figures and tables
+			Text: Figures
+				Style: list-label
+			Table of contents:
+				Id: figures
+				Of: figures
+			Text: Tables
+				Style: list-label
+			Table of contents:
+				Id: tables
+				Of: tables

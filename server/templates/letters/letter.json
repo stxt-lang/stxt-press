@@ -1,0 +1,17 @@
+{
+  "title": "Furniture proposal for the Mirador del Valle",
+  "date": "October 20, 2025",
+  "recipient": {
+    "name": "Mr. Ramon Puig Casals",
+    "lines": ["Management, Hotel Mirador del Valle", "Camí del Mirador, s/n", "17850 Besalú (Girona)"]
+  },
+  "subject": "furniture renovation proposal",
+  "reference": "P-2025-118",
+  "salutation": "Dear Mr. Puig,",
+  "body": "Thank you for welcoming us at the Mirador del Valle last Thursday. Having walked through the eighteen rooms and the breakfast room, we enclose our proposal to renew the furniture before the spring season.\n\nOur approach starts from a simple premise: that **every piece should age well**. We work solid walnut and oak from managed forests in the region, with traditional joinery and oil finishes that can be repaired without sanding down the whole piece. For your hotel we propose:\n\n- an oak desk and chair for each room, with a natural finish;\n- a 180 cm *dining table* for the breakfast room, with ++six chairs++ to match;\n- walnut wall shelves and mirrors for the corridors on both floors.\n\nProduction takes **ten weeks** from acceptance of the quote. If you confirm before November 15, we can deliver and install everything between February 2 and 6, while the hotel is closed for the holidays and without disturbing your guests.\n\nWe would love you to visit the workshop to see the woods and try the chairs. We are open Monday to Friday, and Joan, our master cabinetmaker, will explain each joint to you.",
+  "closing": "Kind regards,",
+  "signature": "examples/letter/signature.svg",
+  "signer": "Laia Soler Vidal",
+  "position": "Sales Director",
+  "postscript": "P.S. We enclose the catalog of finishes with samples of both woods; if you prefer, we can bring them to the hotel."
+}

@@ -103,7 +103,7 @@ every option.
 An error of a job is written to stderr with its file and its line:
 
 ```
-stxt-press: server/templates/invoices/invoice.stxt:66: SLOT_NO_DATA: Node 'Block': No data for {customer}
+stxt-press: server/templates/invoices/invoice.stxt:73: SLOT_NO_DATA: Node 'Block': No data for {customer}
 ```
 
 | Exit code | When |
@@ -165,8 +165,11 @@ written in the file, only the name of its variable.
 The folder [`server/`](server/) is a whole server, to copy anywhere and to start a project from: `start.sh` and
 `start.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
 `127.0.0.1:8080` and shows the other nodes commented with their defaults; the fonts IBM Plex Sans, Serif and Mono and
-the images of the examples of stxt-pdf in `resources/`; and a sample template in `templates/`, an invoice with Slots,
-its styles and its sample data. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, so that an editor
+the images of the examples of stxt-pdf in `resources/`; and in `templates/`, one template for each example of
+stxt-pdf (`invoices/invoice`, `letters/letter`, `resumes/resume`, `reports/annual-report`, `newsletters/newsletter`,
+`menus/menu`, `contracts/contract`, `manuals/manual`, `catalogs/catalog`, `certificates/certificate` and
+`timetables/timetable`), with Slots for what changes from one document to another, its styles and its sample data,
+which give the example. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, so that an editor
 with discovery (VS Code with the STXT extension) checks and completes every file of the folder. `server/start.sh`
 starts it, from any working directory, and
 `java -jar server/stxt-press.jar print invoices/invoice -o invoice.pdf --config server/server.stxt` prints its template.

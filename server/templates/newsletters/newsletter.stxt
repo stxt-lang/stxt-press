@@ -1,0 +1,182 @@
+# Monthly newsletter template: the "newsletter" example of stxt-pdf with Slots for the content of each issue. The
+# masthead, the layout and the section titles are part of the template; the month and the number of the issue, the
+# two stories (the main one on the front page and the feature, which starts on the second page, each with its photo
+# from the resources), the briefs, the events and the classified ads come in the data. The bodies of the stories and
+# the briefs are Markdown. newsletter.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 38 44 58 44
+	Title: Gaceta del Valle · ${month}
+	Language: en
+	Section:
+		Page overlay:
+			Id: running
+			Pages: not-first
+			Offset: -24 0 auto 0
+			Typography:
+				Font: IBM Plex Sans
+				Size: 7
+				Color: gray
+			Stack:
+				Horizontal: justify
+				Item:
+					Text: Gaceta del Valle
+						Typography:
+							Bold: true
+							Color: red
+							Case: uppercase
+							Letter spacing: 0.8
+				Item:
+					Text: ${month} · No. ${number}
+		Page overlay:
+			Id: footer
+			Offset: auto 0 -36 0
+			Box:
+				Padding: 5 0 0 0
+				Border: 0.5 0 0 0
+				Border color: rule
+			Stack:
+				Horizontal: justify
+				Item:
+					Text: Gaceta del Valle · ${month} · No. ${number}
+						Link: https://gacetadelvalle.example
+				Item:
+					# A value that starts with {page} would be the navigation {page}: the empty ${?_} in front, which no data
+					# fills, makes the whole value text.
+					Text: ${?_}{page} / {pages}
+		Block:
+			Id: masthead
+			Box:
+				Padding: 6 0 6 0
+				Border: 3 0 1 0
+				Border color: ink
+				Margin: 0 0 14 0
+			Text: Gaceta del Valle
+				Typography:
+					Size: 52
+					Line height: 56
+					Bold: true
+					Align: center
+			Stack:
+				Horizontal: justify
+				Box:
+					Padding: 4 0 0 0
+					Border: 0.5 0 0 0
+					Border color: ink
+				Typography:
+					Font: IBM Plex Sans
+					Size: 7.5
+					Bold: true
+					Case: uppercase
+					Letter spacing: 0.8
+				Item:
+					Text: Monthly newsletter of the villages of the Garrotxa
+				Item:
+					Text: ${month} · No. ${number} · Free
+		Block: {lead}
+			Id: lead
+			Text: <kicker>
+				Style: kicker
+			Heading 1:
+				Text: <headline>
+			Image: {photo}<image>
+				Id: lead-photo
+				Alt: <alt>
+				Fit: fill
+				Box:
+					Width: 100%
+					Height: 214
+			Text: {photo}<caption>
+				Style: caption
+			Columns:
+				Id: lead-text
+				Count: 3
+				Gap: 16
+				Separator: 0.5
+				Separator color: rule
+				Box:
+					Margin: 0 0 6 0
+				Markdown:
+					Content >>
+						<body>
+			Text: <?quote>
+				Style: quote
+		Block: {feature}
+			Id: feature
+			Break:
+				Before: page
+			Text: <kicker>
+				Style: kicker
+			Heading 1:
+				Text: <headline>
+			Block:
+				Id: feature-story
+				Box:
+					Margin: 0 0 14 0
+				Block: {photo}
+					Id: feature-figure
+					Side: right
+					Box:
+						Width: 200
+						Margin: 0 0 4 16
+					Image: <image>
+						Id: feature-photo
+						Alt: <alt>
+						Box:
+							Width: 100%
+					Text: <caption>
+						Style: caption
+				Markdown:
+					Bullet markers: dash
+					Content >>
+						<body>
+		Columns:
+			Id: briefs
+			Count: 2
+			Gap: 22
+			Separator: 0.5
+			Separator color: rule
+			Box:
+				Margin: 0 0 14 0
+			Markdown:
+				Content >>
+					<briefs>
+		Heading 2:
+			Text: Events in ${events_period}
+				Typography:
+					Case: uppercase
+					Letter spacing: 0.6
+		Table:
+			Id: agenda
+			Column sizes: 70 52 * 120
+			Box:
+				Margin: 0 0 14 0
+			Header rows:
+				Row:
+					Cell: Date
+					Cell: Time
+					Cell: Event
+					Cell: Venue
+			Body:
+				Row: [events]
+					Cell: <date>
+					Cell: <time>
+					Cell: <event>
+						Row header: true
+					Cell: <venue>
+		Heading 2:
+			Text: Classified ads
+				Typography:
+					Case: uppercase
+					Letter spacing: 0.6
+		Grid:
+			Id: classifieds
+			Column sizes: repeat(4, *)
+			Gap: 10
+			Area: [classifieds]
+				Block:
+					Style: ad
+					Text: <kind>
+						Style: ad-title
+					Text: <text>

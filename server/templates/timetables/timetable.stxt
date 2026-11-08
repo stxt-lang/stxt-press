@@ -1,0 +1,104 @@
+# Weekly school timetable template: the "timetable" example of stxt-pdf with Slots for each class. The layout, the
+# days and the colors are part of the template; the class, the school year, the class teacher, the hours, the rows of
+# the table, the legend and the notes come in the data. A row has either the five slots of the week, each one a
+# subject with its color (the style slot <color> of the styles), or a band that spans the five days, such as the
+# recess; in both, the hour is optional. The notes are Markdown. timetable.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Orientation: landscape
+		Margin: 40 46 46 46
+	Title: Class ${class} timetable · School year ${school_year}
+	Language: en
+	Section:
+		Page overlay:
+			Id: footer
+			Offset: auto 0 -30 0
+			Stack:
+				Horizontal: justify
+				Item:
+					Text: CEIP Pla de les Eres · Olot
+				Item:
+					Text: Timetable valid from ${valid_from} to ${valid_to}
+		Stack:
+			Id: masthead
+			Vertical: center
+			Gap: 14
+			Box:
+				Margin: 0 0 16 0
+			Item:
+				Image: examples/planner/icon.png
+					Alt: Calendar icon
+					Box:
+						Width: 50
+			Item:
+				Grow: 1
+				Block:
+					Heading 1:
+						Text: Class ${class} timetable
+					Text: School year ${school_year} · Class teacher: ${teacher}
+						Typography:
+							Size: 11
+							Color: #55655D
+			Item:
+				Block:
+					Text: Start ${start} · End ${end}
+						Typography:
+							Bold: true
+							Align: right
+					Text: Recess from ${recess}
+						Typography:
+							Size: 8.5
+							Align: right
+							Color: #55655D
+		Table:
+			Id: timetable
+			Column sizes: 92 repeat(5, *)
+			Gap: 3
+			Box:
+				Margin: 0 0 14 0
+			Header rows:
+				Row:
+					Cell:
+					Cell: Monday
+					Cell: Tuesday
+					Cell: Wednesday
+					Cell: Thursday
+					Cell: Friday
+			Body:
+				Row: [rows]
+					Cell: ${?hour}
+						Row header: true
+						Style: hour
+					Cell: [?slots]<subject>
+						Style: slot ${style}
+					Cell: <?band>
+						Span: 1 5
+						Style: break
+		Stack:
+			Id: legend
+			Wrap: true
+			Gap: 6 16
+			Box:
+				Margin: 0 0 12 0
+				Padding: 8 0
+				Border: 0.5 0 0 0
+				Border color: #CAD3CD
+			Item: [subjects]
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot ${style}
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: <name>
+		Markdown:
+			Id: notes
+			Bullet markers: bullet
+			Typography:
+				Size: 8.5
+			Content >>
+				<notes>

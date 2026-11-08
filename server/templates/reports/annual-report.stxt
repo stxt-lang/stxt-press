@@ -1,0 +1,350 @@
+# Annual report template of a renewable energy cooperative: the "annual-report" example of stxt-pdf with Slots for
+# what changes from one year to the next. The structure, the chapter titles and what describes the cooperative are part
+# of the template; the year, the figures, the texts of the year, the charts (images of the resources, one per year),
+# the tables and the plans come in the data, one object per chapter. The texts of the chapters are Markdown, which the
+# Paragraph rule enables, and some are whole Markdown blocks, with their own headings and lists. The table of the
+# investment, a Markdown table in the example, is a Table with one Row for each project. annual-report.json has the
+# sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 56 56 70 56
+	Title: Annual Report ${year} · Cooperativa Solvent
+	Language: en
+	Page overlay:
+		Id: footer
+		Offset: auto 0 -42 0
+		Box:
+			Padding: 6 0 0 0
+			Border: 0.5 0 0 0
+			Border color: rule
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Cooperativa Solvent · Annual Report ${year}
+			Item:
+				Text: Page {page} of {pages}
+	Section:
+		Id: front-cover
+		Page numbering: none
+		Inherit page overlays: false
+		Page:
+			Margin: 0
+		Frame: {cover}
+			Id: cover
+			Box:
+				Width: 210mm
+				Height: 297mm
+				Background: navy
+			Typography:
+				Color: white
+			Image: <photo>
+				Id: cover-photo
+				Box:
+					Width: 100%
+			Overlay:
+				Id: cover-fade
+				Offset: 250 0 auto 0
+				Box:
+					Height: 90
+					Background: linear(180, #12315A00, navy)
+			Block:
+				Box:
+					Padding: 36 56 0 56
+				Text: Annual report · Fiscal year ${year}
+					Typography:
+						Size: 9
+						Bold: true
+						Color: #F2A65A
+						Case: uppercase
+						Letter spacing: 2
+					Box:
+						Margin: 0 0 10 0
+				Heading 1:
+					In table of contents: false
+					Box:
+						Margin: 0 0 14 0
+						Padding: 0
+						Border: 0
+					Typography:
+						Numbered: false
+						Font: IBM Plex Serif
+						Bold: true
+						Size: 44
+						Line height: 48
+						Color: white
+					Text: [headline]
+				Text: Cooperativa Solvent · Local renewable energy in the Garrotxa
+					Typography:
+						Font: IBM Plex Serif
+						Italic: true
+						Size: 14
+						Line height: 20
+						Color: rule
+					Box:
+						Margin: 0 0 90 0
+				Stack:
+					Gap: 30
+					Item: [figures]
+						Grow: 1
+						Block:
+							Text: <value>
+								Typography:
+									Font: IBM Plex Serif
+									Size: 22
+									Bold: true
+							Text: <caption>
+								Typography:
+									Size: 8.5
+									Color: rule
+			Text: Approved by the General Assembly of members on ${approved}.
+				Typography:
+					Size: 8
+					Color: #8FA4BF
+				Box:
+					Margin: 120 56 0 56
+	Section:
+		Id: body
+		Block:
+			Id: contents
+			Heading 1:
+				In table of contents: false
+				Text: Contents
+				Typography:
+					Numbered: false
+			Table of contents:
+				Id: toc
+				Levels: 1 1
+		Block: {letter}
+			Id: letter
+			Box:
+				Margin: 30 0 0 0
+			Heading 1:
+				Text: Letter from the President
+			Paragraph: <lead>
+				Style: lead
+			Paragraph: [paragraphs]
+			Text: <president>
+				Typography:
+					Font: IBM Plex Serif
+					Bold: true
+					Size: 11
+				Box:
+					Margin: 14 0 0 0
+			Text: President of the Governing Council
+				Typography:
+					Size: 8.5
+					Color: slate
+			Heading 2:
+				Text: Milestones of the year
+			Grid:
+				Id: milestones
+				Column sizes: repeat(4, *)
+				Gap: 14
+				Area: [milestones]
+					Block:
+						Style: milestone
+						Text: <month>
+							Style: kicker
+						Text: <text>
+		Block: {in_figures}
+			Id: figures
+			Style: section
+			Heading 1:
+				Text: The year in figures
+			Grid:
+				Id: tiles
+				Column sizes: repeat(3, *)
+				Gap: 12
+				Box:
+					Margin: 0 0 18 0
+				Area: [tiles]
+					Block:
+						Style: tile
+						Text: <value>
+							Style: figure
+						Text: <caption>
+							Style: caption
+			Heading 2:
+				Text: Monthly production
+			Image: {chart}<image>
+				Id: chart-production
+				Alt: <alt>
+				Box:
+					Width: 100%
+			Text: {chart}<caption>
+				Style: caption
+			Paragraph: <comment>
+		Block: {customers}
+			Id: customers
+			Style: section
+			Heading 1:
+				Text: Customers and community
+			Paragraph: <lead>
+				Style: lead
+			Columns:
+				Id: community
+				Count: 2
+				Gap: 26
+				Separator: 0.5
+				Separator color: rule
+				Box:
+					Margin: 0 0 14 0
+				Markdown:
+					Bullet markers: bullet
+					Content >>
+						<community>
+			Image: {chart}<image>
+				Id: chart-mix
+				Alt: <alt>
+				Box:
+					Width: 100%
+			Text: {chart}<caption>
+				Style: caption
+		Block: {results}
+			Id: results
+			Style: section
+			Heading 1:
+				Text: Financial results
+			Paragraph: <lead>
+				Style: lead
+			Table:
+				Id: accounts
+				Column sizes: * 80 80 80
+				Column align: left right right right
+				Box:
+					Margin: 0 0 18 0
+				Header rows:
+					Row:
+						Cell: Item
+						Cell: ${year}
+						Cell: ${previous_year}
+						Cell: Change
+				Body:
+					Row: [accounts]
+						Cell: <item>
+							Row header: true
+						Cell: <current>
+						Cell: <previous>
+						Cell: <change>
+				Footer rows:
+					Row: {total}
+						Style: total
+						Cell: <item>
+							Row header: true
+						Cell: <current>
+						Cell: <previous>
+						Cell: <change>
+			Heading 2:
+				Text: Where the investment went
+			Table:
+				Column sizes: repeat(3, auto)
+				Column align: left right right
+				Header rows:
+					Row:
+						Cell: Project
+						Cell: Investment (€k)
+						Cell: Capacity
+				Body:
+					Row: [investments]
+						Cell: <project>
+						Cell: <amount>
+						Cell: <capacity>
+			Text: <investment_note>
+				Style: caption
+				Box:
+					Margin: 8 0 0 0
+		Block: {environment}
+			Id: environment
+			Style: section
+			Heading 1:
+				Text: Environment
+			Image: {chart}<image>
+				Id: chart-savings
+				Alt: <alt>
+				Box:
+					Width: 100%
+			Text: {chart}<caption>
+				Style: caption
+			Block:
+				Style: quote
+				Text: <quote>
+			Heading 2:
+				Text: Commitments for ${next_year}
+			List:
+				Marker: decimal
+				List item: [commitments]
+					Paragraph: <text>
+			Heading 2:
+				Text: Environmental indicators
+			Table: {indicators}
+				Id: indicators
+				Column sizes: * 70 70 70
+				Column align: left right right right
+				Header rows:
+					Row:
+						Cell: Indicator
+						Cell: [years]
+				Body:
+					Row: [rows]
+						Cell: <name>
+							Row header: true
+						Cell: [values]
+		Block: {governance}
+			Id: governance
+			Style: section
+			Heading 1:
+				Text: Governance and next steps
+			Paragraph: The Governing Council is elected every four years by the assembly. It has seven members: four are worker members and three are consumer members.
+				Style: lead
+			Table:
+				Id: board
+				Column sizes: * * 104
+				Column align: left left right
+				Box:
+					Margin: 0 0 18 0
+				Header rows:
+					Row:
+						Cell: Name
+						Cell: Position
+						Cell: In office since
+				Body:
+					Row: [board]
+						Cell: <name>
+							Row header: true
+						Cell: <position>
+						Cell: <since>
+			Heading 2:
+				Text: What comes next
+			Markdown:
+				Bullet markers: dash
+				Number markers: lower-alpha
+				Content >>
+					<next_steps>
+			Heading 2:
+				Text: ${next_year} schedule
+			Table:
+				Id: calendar
+				Column sizes: 170 * * * *
+				Column align: left right right right right
+				Box:
+					Margin: 0 0 6 0
+				Header rows:
+					Row:
+						Cell: Activity
+						Cell: Q1
+						Cell: Q2
+						Cell: Q3
+						Cell: Q4
+				Body:
+					Row: [schedule]
+						Cell: <activity>
+							Row header: true
+						Cell: [quarters]${?text}
+							Span: <?span>
+							Style: <?style>
+			Text: Cooperativa Solvent, S. Coop. Ltda. · Polígono de la Canya, nave 6 · 17800 Olot · solvent.example
+				Link: https://solvent.example
+				Style: caption
+				Box:
+					Margin: 22 0 0 0

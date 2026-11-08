@@ -1,0 +1,27 @@
+{
+  "reference": "LUM-2025-044",
+  "place": "Olot",
+  "date": "November 3, 2025",
+  "client": {
+    "name": "Cooperativa Solvent, S. Coop. Ltda.",
+    "tax_id": "F-17482211",
+    "address": "Polígono de la Canya, unit 6, Olot (Girona)",
+    "represented_by": "Ms. Carme Vidal i Roca, chair of its Governing Board",
+    "signer": "Carme Vidal i Roca",
+    "signer_position": "Chair of the Governing Board, Cooperativa Solvent",
+    "signature": "examples/letter/signature.svg"
+  },
+  "recital": "The Client is a renewable energy cooperative that wishes to renew its visual identity and its corporate website on the occasion of its tenth anniversary.",
+  "purpose": "a new visual identity and a corporate website",
+  "proposal_date": "October 20, 2025",
+  "scope": "   1. research into and assessment of the current identity, with interviews with ten cooperative members;\n   2. the design of the logo, color palette, typography and brand manual, which will include:\n      1. versions of the logo for light and dark backgrounds;\n      2. rules for use in print, on screen and on signage;\n   3. the design and layout of the website in five templates; and\n   4. delivery of the source files in open formats.",
+  "deadlines": "The Studio will deliver the visual identity within six weeks of signing, and the website within a further eight weeks of approval of the identity.",
+  "fees": "18,400 euros",
+  "data_of": "cooperative members",
+  "milestones": [
+    {"number": 1, "milestone": "Contract signature and kickoff (40%)", "date": "Nov 3, 2025", "amount": "€7,360"},
+    {"number": 2, "milestone": "Visual identity and brand manual delivery (30%)", "date": "Dec 15, 2025", "amount": "€5,520"},
+    {"number": 3, "milestone": "Website launch and delivery of the files (30%)", "date": "Feb 9, 2026", "amount": "€5,520"}
+  ],
+  "total": "€18,400"
+}

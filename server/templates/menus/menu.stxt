@@ -1,0 +1,188 @@
+# Restaurant menu template: the "menu" example of stxt-pdf with Slots for the dishes. The format, the frame, the
+# emblem and the sections are part of the template; the dishes of each section (name, description and price), the
+# drinks and the tasting menu, which is optional, come in the data, so the menu changes with the season without
+# touching the layout. menu.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Width: 420
+		Height: 700
+		Margin: 50 54 52 54
+	Title: Menu · Restaurante La Cala
+	Language: en
+	Section:
+		Page overlay:
+			Id: paper
+			Offset: -50 -54 -52 -54
+			Layer: -2
+			Box:
+				Background: #FBF6EA
+		Page overlay:
+			Id: frame-outer
+			Offset: -30 -34 -32 -34
+			Layer: -1
+			Box:
+				Corner radius: 10
+				Border: 1.2
+				Border color: #14365C
+		Page overlay:
+			Id: frame-inner
+			Offset: -24 -28 -26 -28
+			Layer: -1
+			Box:
+				Corner radius: 4
+				Border: 0.5
+				Border color: #926829
+		Page overlay:
+			Id: footer
+			Pages: not-first
+			Offset: auto 0 -19 0
+			Typography:
+				Font: IBM Plex Sans
+				Size: 7
+				Align: center
+			Text: Cadaqués · La Cala · {page} / {pages}
+		Block:
+			Id: front
+			Image: examples/menu/emblem.svg
+				Id: emblem
+				Alt: Emblem of La Cala restaurant, with the sun and the waves
+				Box:
+					Width: 78
+					Margin: 0 auto 4 auto
+			Heading 1:
+				Text: Menu
+			Text: Market and seafood cuisine
+				Typography:
+					Italic: true
+					Size: 11
+					Align: center
+					Color: #14365C
+				Box:
+					Margin: 0 0 8 0
+			Image: examples/menu/ornament.svg
+				Box:
+					Width: 100%
+					Margin: 0 0 2 0
+			Heading 2:
+				Text: To start
+			Stack: [starters]
+				Style: dish
+				Item:
+					Block:
+						Text: <name>
+							Style: name
+						Text: <description>
+							Style: desc
+				Item:
+					Text: <price>
+						Style: price
+			Heading 2:
+				Text: From the sea
+			Stack: [sea]
+				Style: dish
+				Item:
+					Block:
+						Text: <name>
+							Style: name
+						Text: <description>
+							Style: desc
+				Item:
+					Text: <price>
+						Style: price
+			Heading 2:
+				Text: From the land
+			Stack: [land]
+				Style: dish
+				Item:
+					Block:
+						Text: <name>
+							Style: name
+						Text: <description>
+							Style: desc
+				Item:
+					Text: <price>
+						Style: price
+		Block:
+			Id: back
+			Break:
+				Before: page
+			Heading 2:
+				Text: Desserts
+				Box:
+					Margin: 0 0 9 0
+			Stack: [desserts]
+				Style: dish
+				Item:
+					Block:
+						Text: <name>
+							Style: name
+						Text: <description>
+							Style: desc
+				Item:
+					Text: <price>
+						Style: price
+			Image: examples/menu/ornament.svg
+				Box:
+					Width: 100%
+					Margin: 10 0 0 0
+			Heading 2:
+				Text: Wines and drinks by the glass
+			Stack: [drinks]
+				Style: dish
+				Item:
+					Block:
+						Text: <name>
+							Style: name
+						Text: <description>
+							Style: desc
+				Item:
+					Text: <price>
+						Style: price
+			Block: {?tasting}
+				Id: tasting
+				Box:
+					Margin: 18 0 12 0
+					Padding: 14 16
+					Corner radius: 6
+					Border: 1.2
+					Border color: #14365C
+					Background: #FFFFFF
+				Text: Tasting menu
+					Typography:
+						Font: IBM Plex Sans
+						Size: 8
+						Bold: true
+						Color: #926829
+						Case: uppercase
+						Letter spacing: 2
+						Align: center
+				Text: <title>
+					Typography:
+						Size: 12
+						Bold: true
+						Align: center
+						Color: #14365C
+					Box:
+						Margin: 3 0 3 0
+				Text: <description>
+					Typography:
+						Italic: true
+						Size: 8.5
+						Align: center
+						Color: #6E675C
+				Text: **${price}**  ·  ${pairing}
+					Typography:
+						Font: IBM Plex Sans
+						Markup: markdown
+						Size: 10
+						Align: center
+						Color: #14365C
+					Box:
+						Margin: 8 0 0 0
+			Text: **VAT included.** If you have any allergy or intolerance, please tell your server: almost every dish can be adapted.
+				Typography:
+					Font: IBM Plex Sans
+					Markup: markdown
+					Size: 7
+					Align: center
+					Color: #776F64

@@ -1,0 +1,62 @@
+{
+  "class": "2B",
+  "school_year": "2025–26",
+  "teacher": "Marta Ferrer",
+  "start": "9:00",
+  "end": "16:00",
+  "recess": "11:00 to 11:30",
+  "valid_from": "September 8, 2025",
+  "valid_to": "June 19, 2026",
+  "rows": [
+    {"hour": "9:00 – 10:00", "slots": [
+      {"subject": "Math", "style": "math"},
+      {"subject": "Language", "style": "lang"},
+      {"subject": "English", "style": "eng"},
+      {"subject": "Math", "style": "math"},
+      {"subject": "Science", "style": "sci"}
+    ]},
+    {"hour": "10:00 – 11:00", "slots": [
+      {"subject": "Language", "style": "lang"},
+      {"subject": "Math", "style": "math"},
+      {"subject": "Science", "style": "sci"},
+      {"subject": "Language", "style": "lang"},
+      {"subject": "English", "style": "eng"}
+    ]},
+    {"band": "Recess · 11:00 – 11:30"},
+    {"hour": "11:30 – 12:30", "slots": [
+      {"subject": "Science", "style": "sci"},
+      {"subject": "Music", "style": "music"},
+      {"subject": "Math", "style": "math"},
+      {"subject": "Art", "style": "art"},
+      {"subject": "Language", "style": "lang"}
+    ]},
+    {"hour": "12:30 – 13:30", "slots": [
+      {"subject": "Physical education", "style": "pe"},
+      {"subject": "English", "style": "eng"},
+      {"subject": "Language", "style": "lang"},
+      {"subject": "Science", "style": "sci"},
+      {"subject": "Math", "style": "math"}
+    ]},
+    {"band": "Lunch and playground · 13:30 – 15:00"},
+    {"hour": "15:00 – 16:00", "slots": [
+      {"subject": "Workshop", "style": "lab"},
+      {"subject": "Physical education", "style": "pe"},
+      {"subject": "Homeroom", "style": "tutor"},
+      {"subject": "Workshop", "style": "lab"},
+      {"subject": "Project", "style": "proj"}
+    ]}
+  ],
+  "subjects": [
+    {"name": "Math", "style": "math"},
+    {"name": "Language", "style": "lang"},
+    {"name": "English", "style": "eng"},
+    {"name": "Science", "style": "sci"},
+    {"name": "Music", "style": "music"},
+    {"name": "Art", "style": "art"},
+    {"name": "Physical education", "style": "pe"},
+    {"name": "Workshop", "style": "lab"},
+    {"name": "Homeroom", "style": "tutor"},
+    {"name": "Project", "style": "proj"}
+  ],
+  "notes": "- On **Physical education** days, students bring sportswear and a bottle of water.\n- The afternoon **workshops** rotate by term: ceramics, vegetable garden and robotics.\n- **Recess** and **lunch** are supervised by school staff; families can pick up their children from 15:00."
+}

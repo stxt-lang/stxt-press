@@ -1,0 +1,125 @@
+# Styles of the contract template: those of the "contract" example of stxt-pdf, with its base typography.
+Styles (dev.stxt.pdf):
+	# The palette: each color once, by its name.
+	Named color: ink #1E1D2B
+	Named color: indigo #3F3D8F
+	Named color: gray #6C6B8A
+	Named color: rule #B9B8D9
+	Named color: light-rule #CFCEE6
+	Named color: lavender #ECECF7
+	Named color: pale #F4F4FA
+	Named color: white #FFFFFF
+	For element: Document
+		Typography:
+			Font: IBM Plex Serif
+			Size: 10
+			Line height: 15
+			Color: ink
+			Numbered: true
+	For element: Heading 1
+		Typography:
+			Size: 15
+			Line height: 20
+			Bold: true
+			Align: center
+			Color: indigo
+			Case: uppercase
+			Letter spacing: 0.4
+		Box:
+			Margin: 0 0 4 0
+	For element: Heading 2
+		Typography:
+			Font: IBM Plex Sans
+			Size: 9
+			Line height: 13
+			Bold: true
+			Color: indigo
+			Case: uppercase
+			Letter spacing: 0.8
+		Box:
+			Margin: 16 0 6 0
+			Padding: 0 0 3 0
+			Border: 0 0 0.5 0
+			Border color: rule
+	For style: annex
+		Typography:
+			Font: IBM Plex Sans
+			Size: 9
+			Line height: 13
+			Align: left
+			Letter spacing: 0.8
+			Number format: upper-roman
+		Box:
+			Margin: 16 0 6 0
+			Padding: 0 0 3 0
+			Border: 0 0 0.5 0
+			Border color: rule
+	For element: Paragraph
+		Typography:
+			Align: justify
+			Markup: markdown
+		Box:
+			Margin: 0 0 7 0
+	For element: Footnotes
+		Typography:
+			Size: 8
+			Line height: 11
+			Color: gray
+		Box:
+			Margin: 12 0 0 0
+			Border: 0.5 0 0 0
+			Border color: rule
+			Padding: 4 0 0 0
+	For element: Footnote
+		Box:
+			Margin: 0 0 2 0
+	For element: List
+		Box:
+			Padding: 0 0 0 20
+	For element: Cell
+		Box:
+			Padding: 6 8
+			Border: 0 0 0.5 0
+			Border color: light-rule
+	For element: Page overlay
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Color: gray
+	For element: Header cell
+		Typography:
+			Font: IBM Plex Sans
+			Bold: true
+			Size: 8
+			Color: white
+		Box:
+			Background: indigo
+	For style: total
+		Typography:
+			Bold: true
+		Box:
+			Background: lavender
+			Border: 1.2 0 0 0
+			Border color: indigo
+	For style: party
+		Box:
+			Padding: 8 12
+			Border: 0 0 0 2
+			Border color: indigo
+			Background: pale
+		Typography:
+			Size: 9
+			Line height: 13
+	For style: sign
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8.5
+		Box:
+			Padding: 0 0 0 0
+	For style: initials
+		Box:
+			Width: 46
+			Height: 11
+			Margin: 0 0 0 6
+			Border: 0 0 0.5 0
+			Border color: gray

@@ -1,0 +1,63 @@
+{
+  "name": "Marta Ferrer Soler",
+  "position": "Product Designer",
+  "headline": "Product Designer · UX/UI",
+  "photo": {"file": "examples/resume/photo.jpg", "alt": "Portrait of Marta Ferrer"},
+  "contact": [
+    {"text": "marta.ferrer@correo.example", "link": "mailto:marta.ferrer@correo.example"},
+    {"text": "+34 600 112 233"},
+    {"text": "Girona, Spain"},
+    {"text": "martaferrer.example", "link": "https://martaferrer.example"}
+  ],
+  "tools": [
+    {"name": "Figma", "level": "95%"},
+    {"name": "User research", "level": "90%"},
+    {"name": "Design systems", "level": "92%"},
+    {"name": "Accessibility (WCAG)", "level": "85%"},
+    {"name": "HTML and CSS", "level": "72%"}
+  ],
+  "languages": ["Catalan and Spanish · native", "English · C1", "French · B1"],
+  "interests": "Ceramics, trail running, botanical illustration and seasonal cooking.",
+  "profile": "I design digital products that people understand the first time. Eight years across a studio, a cooperative and in-house product, always close to the people who use what gets built: I research, prototype, test and ship with the development team, not after it.",
+  "figures": [
+    {"value": "+40", "caption": "projects delivered"},
+    {"value": "71%", "caption": "conversion in customer onboarding"},
+    {"value": "6", "caption": "teams sharing one design system"},
+    {"value": "4", "caption": "designers mentored"}
+  ],
+  "jobs": [
+    {
+      "dates": "2022 – present",
+      "role": "Senior Product Designer",
+      "place": "Cobalto · fintech · Barcelona",
+      "achievements": [
+        {"text": "I lead the design system used by six teams and four applications."},
+        {"text": "Customer onboarding redesign: conversion rose from 54% to 71%."},
+        {"text": "Mentor to four junior designers."}
+      ]
+    },
+    {
+      "dates": "2018 – 2022",
+      "role": "UX Designer",
+      "place": "Estudio Pimienta · Girona",
+      "achievements": [
+        {"text": "Projects for museums, city councils and local businesses."},
+        {"text": "Weekly user research workshop, open to clients."},
+        {"text": "**Premio Sol Digital 2021** for the best interaction design."}
+      ]
+    },
+    {
+      "dates": "2016 – 2018",
+      "role": "Graphic Designer",
+      "place": "Cooperativa La Fàbrica · Olot",
+      "achievements": [
+        {"text": "Branding, posters and websites for small cooperatives."}
+      ]
+    }
+  ],
+  "education": [
+    {"year": "2016", "degree": "Master's in Interaction Design", "school": "Escola Superior de Disseny d'Olot"},
+    {"year": "2014", "degree": "Bachelor's in Product Design and Development", "school": "Escola Superior de Disseny d'Olot"}
+  ],
+  "talks": "“*Designing for people in a hurry*”, Barcelona UX Days (2024) · “*Accessibility without frills*”, article in *Interfaz* magazine (2023) · Juror at the Premios Sol Digital (2024)."
+}

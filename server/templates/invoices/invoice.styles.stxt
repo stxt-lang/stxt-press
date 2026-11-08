@@ -1,6 +1,11 @@
-# Styles of the invoice template: those of the invoice example of stxt-pdf, without the base typography, which the
-# .styles.stxt of the root of the folder gives.
+# Styles of the invoice template: those of the "invoice" example of stxt-pdf, with its base typography.
 Styles (dev.stxt.pdf):
+	For element: Document
+		Typography:
+			Font: IBM Plex Sans
+			Size: 9
+			Line height: 13
+			Color: #2B2420
 	For style: label
 		Typography:
 			Size: 7
@@ -47,3 +52,7 @@ Styles (dev.stxt.pdf):
 			Padding: 7 8
 			Border: 0 0 0.5 0
 			Border color: #DCCFB8
+	For element: Page overlay
+		Typography:
+			Size: 7.5
+			Color: #7A6A5C

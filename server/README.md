@@ -17,8 +17,9 @@ On Windows, `start.bat`. The server listens on `http://127.0.0.1:8080/`, where t
 | `resources/fonts/` | IBM Plex Sans, Serif and Mono, each with its license (`OFL.txt`) |
 | `resources/images/examples/` | The images of the examples of stxt-pdf, the ones the editor opens |
 | `.stxt/` | The schemas `dev.stxt.pdf` (layout documents and styles) and `dev.stxt.press` (`server.stxt`), found by the editors that support [discovery](https://stxt.dev/stxt-discovery-ref) for every file of the folder: VS Code with the STXT extension, the `stxt` command |
-| `templates/` | The templates of `/print`: `invoices/invoice` with its styles and its sample data, and `.styles.stxt` with the styles of every template of the folder |
+| `templates/` | The templates of `/print`, one for each example of stxt-pdf, in a folder for each kind of document (`invoices/invoice`, `letters/letter`, `reports/annual-report`…), each one with its styles and its sample data |
 
 The fonts and the images are copies of those of `../stxt-pdf/resources`, and the schemas, of those inside
-`stxt-press.jar`; a test checks that they are the same. A template with Slots validates only once filled: the editor
+`stxt-press.jar`; a test checks that they are the same, and that each template with its sample data gives the pages
+of its example. A template with Slots validates only once filled: the editor
 marks the Slot of a node without value, such as `Row: [lines]`, until then.

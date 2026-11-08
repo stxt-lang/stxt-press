@@ -1,0 +1,36 @@
+{
+  "starters": [
+    {"name": "Crystal bread with ripe tomato", "description": "With Cantabrian anchovies and Empordà olive oil", "price": "9"},
+    {"name": "House Russian salad", "description": "With wild bluefin tuna belly", "price": "11"},
+    {"name": "Red prawn croquetas", "description": "Six pieces, with saffron aioli", "price": "13"},
+    {"name": "Confit artichokes", "description": "With Ibérico ham and a slow-cooked egg yolk", "price": "14"}
+  ],
+  "sea": [
+    {"name": "Brothy rice with langoustines and squid", "description": "Price per person, minimum two. Cooked to order: about 25 minutes", "price": "26"},
+    {"name": "Suquet, rockfish stew", "description": "With potato and ground almonds, as made on the boats", "price": "24"},
+    {"name": "Oven-baked wild sea bass", "description": "With fennel, lemon and boulangère potatoes", "price": "27"},
+    {"name": "Chargrilled octopus", "description": "With potato purée and La Vera smoked paprika", "price": "22"}
+  ],
+  "land": [
+    {"name": "Chargrilled Ibérico pork presa", "description": "With seasonal mushrooms and red wine sauce", "price": "21"},
+    {"name": "Grandma's cannelloni", "description": "The St. Stephen's Day recipe, with nutmeg béchamel", "price": "15"}
+  ],
+  "desserts": [
+    {"name": "Crema catalana", "description": "Catalan custard, torched to order, with Ceylon cinnamon", "price": "7"},
+    {"name": "Creamy cheesecake", "description": "With house-made fig jam", "price": "8"},
+    {"name": "Artisan sheep's milk ice cream", "description": "Three scoops, choice of vanilla, honey or lemon", "price": "7"},
+    {"name": "Pear poached in red wine", "description": "With cinnamon ice cream", "price": "8"}
+  ],
+  "drinks": [
+    {"name": "House white", "description": "White Garnatxa, D. O. Empordà", "price": "4.50"},
+    {"name": "Cava Brut Nature Reserva", "description": "Penedès, bottle-fermented sparkling wine", "price": "5.00"},
+    {"name": "Young red", "description": "Garnatxa and Carignan, D. O. Empordà", "price": "4.50"},
+    {"name": "House vermouth", "description": "With soda, an olive and a slice of orange", "price": "4.00"}
+  ],
+  "tasting": {
+    "title": "Seven courses, from market to table",
+    "description": "Chosen every day by the kitchen from the fish and vegetables that come into the harbor. For the whole table.",
+    "price": "€54",
+    "pairing": "wine pairing, €24 extra"
+  }
+}

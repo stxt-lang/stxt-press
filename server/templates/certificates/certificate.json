@@ -1,0 +1,14 @@
+{
+  "number": "cer-2025-0412",
+  "recipient": "Elena Ruiz Navarro",
+  "course": "Handmade Ceramics: From Clay to Finished Piece",
+  "course_short": "Handmade Ceramics",
+  "hours": 40,
+  "place": "Olot",
+  "dates": "September 8 to October 24, 2025",
+  "grade": "Outstanding",
+  "instructor": {
+    "name": "Martí Roca Font",
+    "signature": "examples/certificate/signature-teacher.svg"
+  }
+}

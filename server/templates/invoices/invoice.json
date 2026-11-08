@@ -2,21 +2,26 @@
   "number": "2025-0147",
   "issued": "October 14, 2025",
   "due": "November 13, 2025",
+  "payment_method": "Bank transfer, 30 days",
   "order": "PO-2025-311",
   "customer": {
     "name": "Hotel Mirador del Valle, S.A.",
     "tax_id": "A-08827416",
-    "address": [
-      {"line": "Camí del Mirador, s/n"},
-      {"line": "17850 Besalú (Girona)"}
-    ]
+    "address": ["Camí del Mirador, s/n", "17850 Besalú (Girona)"],
+    "email": "compras@miradordelvalle.example"
   },
   "lines": [
     {"ref": "MN-014", "description": "Solid walnut dining table, 180 × 90 cm", "quantity": 6, "price": "€640.00", "amount": "€3,840.00"},
     {"ref": "MN-022", "description": "Oak chair with rush seat", "quantity": 24, "price": "€118.00", "amount": "€2,832.00"},
-    {"ref": "SV-001", "description": "Delivery and on-site assembly", "quantity": 1, "price": "€480.00", "amount": "€480.00"}
+    {"ref": "MN-031", "description": "Modular wall shelving, five shelves", "quantity": 8, "price": "€215.00", "amount": "€1,720.00"},
+    {"ref": "MN-040", "description": "Upholstered entryway bench", "quantity": 4, "price": "€189.50", "amount": "€758.00"},
+    {"ref": "MN-057", "description": "Oval mirror with walnut frame, 70 × 100 cm", "quantity": 12, "price": "€96.00", "amount": "€1,152.00"},
+    {"ref": "SV-001", "description": "Delivery and on-site assembly (two fitters, one day)", "quantity": 1, "price": "€480.00", "amount": "€480.00"},
+    {"ref": "SV-004", "description": "Natural oil and beeswax finish", "quantity": 1, "price": "€260.00", "amount": "€260.00"}
   ],
-  "base": "€7,152.00",
-  "vat": "€1,501.92",
-  "total": "€8,653.92"
+  "base": "€11,042.00",
+  "vat_rate": "21%",
+  "vat": "€2,318.82",
+  "total": "€13,360.82",
+  "transfer_amount": "13360.82"
 }

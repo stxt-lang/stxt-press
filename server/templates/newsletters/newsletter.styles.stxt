@@ -1,0 +1,110 @@
+# Styles of the newsletter template: those of the "newsletter" example of stxt-pdf, with its base typography.
+Styles (dev.stxt.pdf):
+	# The palette: each color once, by its name.
+	Named color: ink #1C1A19
+	Named color: red #A4301F
+	Named color: gray #6B635C
+	Named color: light-gray #7A726B
+	Named color: rule #CFC8C0
+	Named color: paper #F1EDE8
+	Named color: white #FFFFFF
+	For element: Document
+		Typography:
+			Font: IBM Plex Serif
+			Size: 9
+			Line height: 13
+			Color: ink
+			Hyphenate: true
+	For element: Heading 1
+		Typography:
+			Size: 27
+			Line height: 30
+			Bold: true
+			Hyphenate: false
+		Box:
+			Margin: 2 0 8 0
+	For element: Heading 2
+		Typography:
+			Size: 10.5
+			Line height: 13
+			Bold: true
+			Color: red
+			Hyphenate: false
+		Box:
+			Margin: 8 0 3 0
+	For element: Paragraph
+		Typography:
+			Align: justify
+		Box:
+			Margin: 0 0 6 0
+	For element: List
+		Box:
+			Padding: 0 0 0 12
+			Margin: 0 0 6 0
+	For element: Cell
+		Box:
+			Padding: 5 6
+			Border: 0 0 0.5 0
+			Border color: rule
+	For element: Page overlay
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Color: light-gray
+	For style: kicker
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Bold: true
+			Color: red
+			Case: uppercase
+			Letter spacing: 0.8
+	For style: caption
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Italic: true
+			Color: gray
+		Box:
+			Margin: 3 0 10 0
+	For style: quote
+		Typography:
+			Size: 15
+			Line height: 19
+			Italic: true
+			Color: red
+			Align: center
+		Box:
+			Margin: 10 0 12 0
+			Padding: 10 30
+			Border: 1 0 1 0
+			Border color: red
+	For element: Header cell
+		Typography:
+			Font: IBM Plex Sans
+			Bold: true
+			Size: 7.5
+			Color: white
+		Box:
+			Background: ink
+	For element: Even row cell
+		Box:
+			Background: paper
+	For style: ad
+		Box:
+			Padding: 8 10
+			Border: 0.75
+			Border color: rule
+		Typography:
+			Size: 8.5
+			Line height: 12
+	For style: ad-title
+		Typography:
+			Font: IBM Plex Sans
+			Bold: true
+			Size: 7
+			Color: red
+			Case: uppercase
+			Letter spacing: 0.6
+		Box:
+			Margin: 0 0 3 0

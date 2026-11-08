@@ -1,0 +1,40 @@
+{
+  "month": "October 2025",
+  "number": "87",
+  "lead": {
+    "kicker": "Community",
+    "headline": "The chestnut festival brings the biggest market in a decade",
+    "photo": {
+      "image": "examples/newsletter/market.jpg",
+      "alt": "Market stalls with colorful awnings",
+      "caption": "The autumn market stalls being set up on Thursday in the Plaza Mayor. Photo: Town Hall archive."
+    },
+    "body": "More than fifty stalls will fill the Plaza Mayor and the nearby streets on November 1, in the biggest chestnut festival market anyone can remember. Forty producers from the area, among them eleven bakeries, seven cheesemakers and three honey cooperatives, will sell directly to the public.\n\nThe organizers expect some five thousand people to visit the market over the day, twice as many as five years ago. “We have had to borrow the high school parking lot,” jokes Anna Bosch, president of the shopkeepers' association.\n\nBesides the stalls, there will be live music from eleven in the morning, a chestnut bread workshop for children run by the Cal Forn bakery, and a **big public chestnut roast** in the square at five in the afternoon.\n\nThe Town Hall will close the village center to traffic from seven in the morning to nine at night. Residents will be able to reach their garages via Calle del Molí, through a checkpoint staffed by the Local Police.\n\nAnyone who would like to volunteer can sign up at the tourist office until October 28. Hands are needed for setting up, information and waste collection, and those who take part will be invited to the organizers' lunch.",
+    "quote": "“We have watched everything sold here grow, from cheese to honey.”"
+  },
+  "feature": {
+    "kicker": "Nature",
+    "headline": "Three trails to enjoy the beech forest",
+    "photo": {
+      "image": "examples/newsletter/trail.jpg",
+      "alt": "A path between meadows with mountains in the background",
+      "caption": "The Pla de les Eres trail on an October Sunday. Photo: Joan Casas."
+    },
+    "body": "October is beech forest month. Here are three outings to enjoy it without the crowds, from the shortest to the most demanding:\n\n- **The Molí path** (1 h 30 min, 4 km, suitable for children): starts at the factory parking lot and follows the river up to a small waterfall.\n- **The Pla de les Eres loop** (3 h, 9 km): meadows, farmhouses and a viewpoint over the whole area.\n- **The Sant Roc ridge** (5 h, 14 km): only in good weather and with hiking boots; ++best to set off before eight++.\n\nRemember to carry water, stay on the marked trails and take back with you any waste you produce."
+  },
+  "briefs": "## New library opening hours\n\nStarting in November, the municipal library will also open on Saturday mornings, from ten to one. The change is possible thanks to two new staff positions and a group of volunteers who are already preparing the children's activities.\n\n## Roadworks on the Olot road\n\nThe improvement works on the road will begin on November 10 and last about six weeks. Traffic will be controlled with temporary lights, and a shuttle bus will run between the two villages at peak hours.\n\n## The book club turns ten\n\nIt will celebrate with a dinner on November 22 at the community center. Anyone who wants to come must sign up a week in advance and bring a book for the exchange.\n\n## Clothing drive\n\nCáritas is collecting warm clothing from November 3 to 14. The drop-off points are the parish church, the community center and the sports center.",
+  "events_period": "October and November",
+  "events": [
+    {"date": "Sat. Oct 25", "time": "19:00", "event": "Concert by the valley choir", "venue": "Sant Roc Church"},
+    {"date": "Sun. Oct 26", "time": "10:00", "event": "Guided mushroom walk", "venue": "Plaza Mayor"},
+    {"date": "Sat. Nov 1", "time": "11:00", "event": "Market and public chestnut roast", "venue": "Plaza Mayor"},
+    {"date": "Fri. Nov 7", "time": "20:30", "event": "Open-air cinema: “The Beech Forest”", "venue": "Sports center"},
+    {"date": "Sat. Nov 22", "time": "21:00", "event": "Book club dinner", "venue": "Community center"}
+  ],
+  "classifieds": [
+    {"kind": "For sale", "text": "Wood-burning stove in good condition, with flue pipes and cowl. €180. Call afternoons on 600 11 22 33."},
+    {"kind": "Wanted", "text": "Trustworthy person to look after two children aged 4 and 7, Monday to Friday, from 4 to 8."},
+    {"kind": "Offered", "text": "Math and physics tutoring for middle and high school students. First class free."},
+    {"kind": "Lost", "text": "Brown mixed-breed dog with a blue collar, near the soccer field. Reward offered."}
+  ]
+}

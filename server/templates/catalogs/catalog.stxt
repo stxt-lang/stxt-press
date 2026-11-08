@@ -1,0 +1,241 @@
+# Catalog template of a furniture workshop: the "catalog" example of stxt-pdf with Slots for the collection. The
+# layout, the cover, how the workshop works and the contact are part of the template; the year, the cover texts and
+# photos, the categories with their products (photo, name, reference, description, dimensions, price and an optional
+# badge in the corner, such as "New") and the woods come in the data. Each category starts on a new page, and the
+# contents list the categories and the products with their pages. catalog.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 54 50 64 50
+	Title: ${year} Catalog · Taller Nogal
+	Language: en
+	Page overlay:
+		Id: footer
+		Offset: auto 0 -40 0
+		Box:
+			Padding: 6 0 0 0
+			Border: 0.5 0 0 0
+			Border color: #DCCFB8
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Taller Nogal · ${year} Catalog · tallernogal.example
+					Link: https://tallernogal.example
+			Item:
+				Text: Page {page} of {pages}
+	Section:
+		Id: front-cover
+		Page numbering: none
+		Inherit page overlays: false
+		Page:
+			Margin: 0
+		Frame:
+			Id: cover
+			Box:
+				Width: 210mm
+				Height: 297mm
+				Background: #2B1E15
+			Typography:
+				Color: #FFFFFF
+			Block:
+				Box:
+					Padding: 64 56 0 56
+				Image: examples/brand/nogal-mark-white.svg
+					Id: cover-mark
+					Box:
+						Width: 74
+						Margin: 0 0 26 0
+				Text: Catalog
+					Typography:
+						Size: 10
+						Bold: true
+						Color: #F3C27C
+						Case: uppercase
+						Letter spacing: 4
+					Box:
+						Margin: 0 0 8 0
+				Heading 1:
+					In table of contents: false
+					Box:
+						Margin: 0 0 14 0
+					Typography:
+						Font: IBM Plex Serif
+						Bold: true
+						Size: 46
+						Line height: 50
+						Color: #FFFFFF
+					Text: [headline]
+				Text: <intro>
+					Typography:
+						Font: IBM Plex Serif
+						Italic: true
+						Size: 13
+						Line height: 19
+						Color: #D8C7B0
+					Box:
+						Width: 360
+						Margin: 0 0 56 0
+				Grid:
+					Id: cover-products
+					Column sizes: repeat(4, *)
+					Gap: 8
+					Area: [cover_images]
+						Image: <image>
+							Box:
+								Width: 100%
+								Height: 108
+				Text: ${year} Collection · Prices include VAT · Valid until ${valid_until}
+					Typography:
+						Size: 8
+						Color: #A89A88
+					Box:
+						Margin: 150 0 0 0
+	Section:
+		Id: body
+		Block:
+			Id: index
+			Heading 1:
+				In table of contents: false
+				Text: Contents
+			Paragraph: Each piece, with the page of its product sheet.
+				Style: lead
+			Table of contents:
+				Id: toc
+				Levels: 1 2
+		Block: [categories]
+			Id: <id>
+			Break:
+				Before: page
+			Heading 1:
+				Text: <title>
+			Paragraph: <lead>
+				Style: lead
+			Grid:
+				Id: grid-${id}
+				Column sizes: * *
+				Gap: 18
+				Area: [products]
+					Block:
+						Style: card
+						Frame:
+							Image: <image>
+								Alt: <name>
+							Overlay: {?badge}
+								Offset: 18 -12 auto auto
+								Rotate: 40
+								Style: new
+								Box:
+									Width: 96
+								Text: <text>
+						Block:
+							Style: body
+							Stack:
+								Style: spread
+								Item:
+									Heading 2:
+										Style: product
+										Text: <name>
+								Item:
+									Text: <ref>
+										Style: ref
+							Paragraph: <description>
+							Stack:
+								Style: spread
+								Box:
+									Margin: 6 0 0 0
+								Item:
+									Text: <dimensions>
+										Style: dims
+								Item:
+									Text: <price>
+										Style: price
+		Block:
+			Id: woods
+			Break:
+				Before: page
+			Heading 1:
+				Text: Woods and finishes
+			Paragraph: We work only with solid wood from managed forests in the region, air-dried for at least two years.
+				Style: lead
+			Table:
+				Id: wood-table
+				Column sizes: 70 * 90 *
+				Box:
+					Margin: 0 0 22 0
+				Header rows:
+					Row:
+						Cell: Wood
+						Cell: Character
+						Cell: Origin
+						Cell: Finishes
+				Body:
+					Row: [woods]
+						Cell: <wood>
+							Row header: true
+							Typography:
+								Bold: true
+						Cell: <character>
+						Cell: <origin>
+						Cell: <finishes>
+			Heading 2:
+				Text: How we work
+				Box:
+					Margin: 0 0 10 0
+			Grid:
+				Id: steps
+				Column sizes: repeat(3, *)
+				Gap: 20
+				Box:
+					Margin: 0 0 26 0
+				Area:
+					Block:
+						Text: 01
+							Style: step-number
+						Heading 3:
+							Text: Visit and measuring
+						Paragraph: We come to your home, take measurements and listen to what you need. The visit is free of charge.
+				Area:
+					Block:
+						Text: 02
+							Style: step-number
+						Heading 3:
+							Text: Design and quote
+						Paragraph: Within a week we send you the design, the proposed wood and a fixed quote.
+				Area:
+					Block:
+						Text: 03
+							Style: step-number
+						Heading 3:
+							Text: Making
+						Paragraph: We make the pieces in the workshop, then deliver and assemble them, so you do not have to take care of anything.
+			Block:
+				Id: contact
+				Box:
+					Background: #3B2A1E
+					Padding: 22 26
+				Typography:
+					Color: #FFFFFF
+				Stack:
+					Gap: 24
+					Vertical: center
+					Item:
+						Image: examples/brand/nogal-mark-white.svg
+							Box:
+								Width: 56
+					Item:
+						Grow: 1
+						Block:
+							Text: Visit the workshop
+								Typography:
+									Font: IBM Plex Serif
+									Size: 15
+									Bold: true
+							Text: Carrer de la Farga, 14 · Polígono Les Torres · 17800 Olot
+								Typography:
+									Color: #D8C7B0
+								Box:
+									Margin: 3 0 0 0
+							Text: Monday to Friday, 8 a.m. to 6 p.m. · 972 00 11 22 · pedidos@tallernogal.example
+								Link: mailto:pedidos@tallernogal.example
+								Typography:
+									Color: #D8C7B0

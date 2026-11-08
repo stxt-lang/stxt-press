@@ -1,0 +1,42 @@
+{
+  "year": "2026",
+  "valid_until": "December 31, 2026",
+  "headline": ["Furniture that", "ages well"],
+  "intro": "Solid wood from the region, carpentry joints and oil finishes. Pieces for a lifetime, made in Olot since 1987.",
+  "cover_images": [
+    {"image": "examples/catalog/silla.jpg"},
+    {"image": "examples/catalog/mesa.jpg"},
+    {"image": "examples/catalog/lampara.jpg"},
+    {"image": "examples/catalog/estanteria.jpg"}
+  ],
+  "categories": [
+    {
+      "id": "dining",
+      "title": "Dining and living room",
+      "lead": "Chairs, tables and shelves for a home that is lived in. Each piece is made to order; the usual lead time is six weeks.",
+      "products": [
+        {"name": "Olot Chair", "ref": "MN-022", "description": "Solid oak with a rush seat, assembled without a single nail.", "dimensions": "46 × 44 × 86 cm", "price": "€118", "image": "examples/catalog/silla.jpg"},
+        {"name": "Besalú Table", "ref": "MN-014", "description": "Solid walnut with a one-piece top and legs joined with dovetails.", "dimensions": "180 × 90 × 75 cm", "price": "€640", "image": "examples/catalog/mesa.jpg"},
+        {"name": "Sol Lamp", "ref": "MN-063", "description": "Turned walnut base and natural linen shade. Two-meter fabric cord.", "dimensions": "Ø 38 × 52 cm", "price": "€139", "image": "examples/catalog/lampara.jpg", "badge": {"text": "New"}},
+        {"name": "Cal Stool", "ref": "MN-049", "description": "Round oak seat with three splayed legs. Stacks two at a time.", "dimensions": "Ø 34 × 46 / 62 / 74 cm", "price": "€64", "image": "examples/catalog/taburete.jpg"}
+      ]
+    },
+    {
+      "id": "rest",
+      "title": "Bedroom and study",
+      "lead": "For the entrance hall, the bedroom and the work corner. Every piece can be ordered in walnut or in oak, with the finish you prefer.",
+      "products": [
+        {"name": "Fageda Bookcase", "ref": "MN-031", "description": "Walnut with five adjustable shelves and slotted sides. Fixes to the wall.", "dimensions": "90 × 30 × 180 cm", "price": "€215", "image": "examples/catalog/estanteria.jpg"},
+        {"name": "Mirador Bench", "ref": "MN-040", "description": "Hall bench with a seat upholstered in wool from local sheep.", "dimensions": "120 × 40 × 46 cm", "price": "€189.50", "image": "examples/catalog/banco.jpg"},
+        {"name": "Lluna Mirror", "ref": "MN-057", "description": "Oval mirror with a solid walnut frame and concealed hanging hardware.", "dimensions": "70 × 100 cm", "price": "€96", "image": "examples/catalog/espejo.jpg"},
+        {"name": "Torre Desk", "ref": "MN-071", "description": "Oak with a three-drawer pedestal and cable outlet. Rounded edges.", "dimensions": "130 × 60 × 75 cm", "price": "€420", "image": "examples/catalog/escritorio.jpg", "badge": {"text": "New"}}
+      ]
+    }
+  ],
+  "woods": [
+    {"wood": "Walnut", "character": "Dark, warm and with a strong grain", "origin": "La Garrotxa", "finishes": "Natural oil, beeswax, dark walnut stain"},
+    {"wood": "Oak", "character": "Light, fine-grained and very durable", "origin": "Pyrenees", "finishes": "White or natural oil, soap"},
+    {"wood": "Cherry", "character": "Reddish, darkens with light", "origin": "Sierra del Cadí", "finishes": "Natural oil"},
+    {"wood": "Ash", "character": "Light and flexible, ideal for curved pieces", "origin": "La Garrotxa", "finishes": "White oil, natural"}
+  ]
+}

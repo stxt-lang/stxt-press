@@ -1,0 +1,140 @@
+# Styles of the catalog template: those of the "catalog" example of stxt-pdf, with its base typography.
+Styles (dev.stxt.pdf):
+	For element: Document
+		Typography:
+			Font: IBM Plex Sans
+			Size: 9
+			Line height: 13.5
+			Color: #2B2420
+	For element: Heading 1
+		Typography:
+			Font: IBM Plex Serif
+			Size: 28
+			Line height: 32
+			Bold: true
+			Color: #3B2A1E
+		Box:
+			Margin: 0 0 6 0
+	For element: Heading 2
+		Typography:
+			Font: IBM Plex Serif
+			Size: 17
+			Line height: 22
+			Bold: true
+			Color: #3B2A1E
+		Box:
+			Margin: 0 0 4 0
+	For element: Heading 3
+		Typography:
+			Font: IBM Plex Serif
+			Size: 13
+			Line height: 17
+			Bold: true
+			Color: #3B2A1E
+	For element: Paragraph
+		Box:
+			Margin: 0 0 6 0
+	For element: Image
+		Fit: fill
+	For element: Cell
+		Box:
+			Padding: 6 8
+			Border: 0 0 0.5 0
+			Border color: #DCCFB8
+	For element: Page overlay
+		Typography:
+			Size: 7.5
+			Color: #7D6F62
+	For element: TOC 1
+		Typography:
+			Font: IBM Plex Serif
+			Bold: true
+			Size: 13
+			Line height: 18
+			Color: #3B2A1E
+		Box:
+			Margin: 14 0 4 0
+			Padding: 0 0 4 0
+			Border: 0 0 0.5 0
+			Border color: #DCCFB8
+	For element: TOC 2
+		Typography:
+			Size: 10
+			Line height: 15
+			Color: #2B2420
+		Box:
+			Padding: 1 0 1 14
+	For style: lead
+		Typography:
+			Font: IBM Plex Serif
+			Italic: true
+			Size: 11.5
+			Line height: 17
+			Color: #6B5B4E
+		Box:
+			Margin: 0 0 16 0
+	For style: card
+		Box:
+			Corner radius: 6
+			Background: #FBF8F3
+			Border: 0.5
+			Border color: #E6DAC6
+		For element: Frame
+			Box:
+				Height: 205
+		For element: Image
+			Box:
+				Width: 100%
+				Height: 205
+				Corner radius: 5.5 5.5 0 0
+	For style: body
+		Box:
+			Padding: 10 12 12 12
+	For style: spread
+		Horizontal: justify
+		Vertical: end
+	For style: product
+		Typography:
+			Size: 13
+			Line height: 17
+	For style: ref
+		Typography:
+			Font: IBM Plex Mono
+			Size: 7.5
+			Color: #7D6F62
+	For style: dims
+		Typography:
+			Size: 7.5
+			Color: #6B5B4E
+	For style: price
+		Typography:
+			Font: IBM Plex Serif
+			Size: 14
+			Bold: true
+			Color: #A65C1B
+	For style: new
+		Typography:
+			Size: 7
+			Bold: true
+			Align: center
+			Color: #FFFFFF
+			Case: uppercase
+			Letter spacing: 0.8
+		Box:
+			Corner radius: 3
+			Background: #A65C1B
+			Padding: 3 7
+	For element: Header cell
+		Typography:
+			Bold: true
+			Size: 8
+			Color: #FFFFFF
+		Box:
+			Background: #3B2A1E
+	For style: step-number
+		Typography:
+			Font: IBM Plex Serif
+			Size: 30
+			Line height: 32
+			Bold: true
+			Color: #A65C1B

@@ -1,0 +1,95 @@
+# Business letter template of a furniture workshop: the "letter" example of stxt-pdf with Slots for what changes from
+# one letter to another. The letterhead and the footer are part of the template; the date, the recipient, the subject
+# and the body come in the data, and so does the person who signs, with the image of their signature. The body is
+# Markdown, with its paragraphs separated by an empty line; the signature and the postscript are optional.
+# letter.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 44 72 64 72
+	Title: <title>
+	Language: en
+	Section:
+		Page overlay:
+			Id: footer
+			Offset: auto 0 -42 0
+			Text: Taller Nogal S.L. · Tax ID B-17482930 · Carrer de la Farga, 14 · 17800 Olot · tallernogal.example
+				Link: https://tallernogal.example
+		Stack:
+			Id: letterhead
+			Horizontal: justify
+			Vertical: end
+			Box:
+				Margin: 0 0 24 0
+				Padding: 0 0 12 0
+				Border: 0 0 1.5 0
+				Border color: #3B2A1E
+			Item:
+				Image: examples/brand/nogal.svg
+					Alt: Nogal, furniture workshop
+					Box:
+						Width: 150
+			Item:
+				Block:
+					Text: Carrer de la Farga, 14 · 17800 Olot
+						Style: small
+						Typography:
+							Align: right
+					Text: 972 00 11 22 · tallernogal.example
+						Link: https://tallernogal.example
+						Style: small
+						Typography:
+							Align: right
+		Text: Olot, ${date}
+			Id: date
+			Typography:
+				Align: right
+			Box:
+				Margin: 0 0 16 0
+		Block: {recipient}
+			Id: recipient
+			Box:
+				Margin: 0 0 16 0
+			Text: <name>
+				Typography:
+					Bold: true
+			Text: [lines]
+		Text: Subject: ${subject} · Ref. ${reference}
+			Id: subject
+			Style: subject
+		Markdown:
+			Id: body
+			Bullet markers: dash
+			Typography:
+				Align: justify
+				Line breaking: balanced
+			Content >>
+				${salutation}
+
+				${body}
+
+				${closing}
+		Image: <?signature>
+			Id: signature
+			Box:
+				Width: 128
+				Margin: 4 0 2 0
+		Text: <signer>
+			Id: name
+			Typography:
+				Bold: true
+		Text: ${position} · Taller Nogal
+			Style: small
+			Typography:
+				Font: IBM Plex Serif
+				Italic: true
+				Size: 9.5
+		Paragraph: <?postscript>
+			Id: postscript
+			Style: small
+			Typography:
+				Font: IBM Plex Serif
+				Italic: true
+				Size: 9.5
+			Box:
+				Margin: 14 0 0 0

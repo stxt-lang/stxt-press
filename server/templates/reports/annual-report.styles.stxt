@@ -1,0 +1,158 @@
+# Styles of the annual report template: those of the "annual-report" example of stxt-pdf, with its base typography.
+Styles (dev.stxt.pdf):
+	# The palette: each color once, by its name.
+	Named color: ink #1E2A3A
+	Named color: navy #12315A
+	Named color: slate #5B6B7C
+	Named color: gray #687788
+	Named color: rule #C9D5E3
+	Named color: cell-rule #D5DEE9
+	Named color: teal #1B6E8C
+	Named color: copper #B16118
+	Named color: orange #E07B1F
+	Named color: mist #EEF3F8
+	Named color: pale-teal #EEF6F8
+	Named color: white #FFFFFF
+	For element: Document
+		Typography:
+			Font: IBM Plex Sans
+			Size: 9.5
+			Line height: 14.5
+			Color: ink
+			Numbered: true
+			Kerning: true
+	For element: Heading 1
+		Typography:
+			Font: IBM Plex Serif
+			Size: 26
+			Line height: 30
+			Bold: true
+			Color: navy
+		Box:
+			Margin: 0 0 14 0
+			Padding: 0 0 10 0
+			Border: 0 0 1 0
+			Border color: rule
+	For element: Heading 2
+		Typography:
+			Font: IBM Plex Serif
+			Size: 13
+			Line height: 17
+			Bold: true
+			Color: navy
+		Box:
+			Margin: 14 0 5 0
+	For element: Paragraph
+		Box:
+			Margin: 0 0 8 0
+		Typography:
+			Align: justify
+			Markup: markdown
+	For element: List
+		Box:
+			Padding: 0 0 0 16
+			Margin: 0 0 8 0
+	For element: Cell
+		Box:
+			Padding: 6 8
+			Border: 0 0 0.5 0
+			Border color: cell-rule
+	For element: Page overlay
+		Typography:
+			Size: 7.5
+			Color: gray
+	For style: section
+		Break:
+			Before: page
+	For style: lead
+		Typography:
+			Font: IBM Plex Serif
+			Italic: true
+			Size: 12.5
+			Line height: 18
+			Color: navy
+			Align: left
+		Box:
+			Margin: 0 0 14 0
+	For style: kicker
+		Typography:
+			Size: 8
+			Bold: true
+			Color: copper
+			Case: uppercase
+			Letter spacing: 1
+		Box:
+			Margin: 0 0 6 0
+	For style: milestone
+		Box:
+			Padding: 10 0 0 0
+			Border: 2 0 0 0
+			Border color: navy
+		Typography:
+			Size: 8.5
+			Line height: 12.5
+	For style: bar
+		Typography:
+			Size: 7.5
+			Bold: true
+			Color: white
+			Align: center
+		Box:
+			Background: teal
+	For style: tile
+		Box:
+			Background: mist
+			Padding: 14 14 12 14
+			Border: 0 0 0 3
+			Border color: orange
+		For style: caption
+			Box:
+				Margin: 2 0 0 0
+	For style: figure
+		Typography:
+			Font: IBM Plex Serif
+			Size: 21
+			Line height: 26
+			Bold: true
+			Color: navy
+	For style: caption
+		Typography:
+			Size: 8
+			Color: slate
+			Align: left
+		Box:
+			Margin: 4 0 12 0
+	For element: TOC 1
+		Box:
+			Padding: 7 0
+		Typography:
+			Size: 10.5
+			Line height: 15
+	For element: Header cell
+		Typography:
+			Bold: true
+			Size: 8
+			Color: white
+		Box:
+			Background: navy
+	For style: total
+		Typography:
+			Bold: true
+			Color: navy
+		Box:
+			Background: mist
+			Border: 1.5 0 0 0
+			Border color: navy
+	For style: quote
+		Box:
+			Padding: 12 16
+			Margin: 6 0 12 0
+			Border: 0 0 0 3
+			Border color: teal
+			Background: pale-teal
+		Typography:
+			Font: IBM Plex Serif
+			Italic: true
+			Size: 11
+			Line height: 16
+			Color: navy

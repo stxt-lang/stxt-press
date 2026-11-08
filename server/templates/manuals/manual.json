@@ -1,0 +1,27 @@
+{
+  "model": "Aire+ T2",
+  "version": "2.1",
+  "box": [
+    {"item": "1 Aire+ T2 thermostat", "detail": "with its wall plate"},
+    {"item": "2 screws and 2 wall plugs", "detail": "3.5 × 30 mm"},
+    {"item": "1 quick guide", "detail": "the one you are reading"}
+  ],
+  "schedule": [
+    {"slot": "Morning · 06:30–08:30", "weekdays": "21 °C", "weekend": "18 °C"},
+    {"slot": "Day · 08:30–17:00", "weekdays": "17 °C", "weekend": "20 °C"},
+    {"slot": "Evening · 17:00–23:00", "weekdays": "21.5 °C", "weekend": "21.5 °C"},
+    {"slot": "Night · 23:00–06:30", "weekdays": "16 °C", "weekend": "16 °C"}
+  ],
+  "specifications": [
+    {"name": "Power supply", "value": "230 V AC, 50 Hz, or 2 AA batteries"},
+    {"name": "Output contact", "value": "6 A / 250 V, potential-free"},
+    {"name": "Temperature range", "value": "5 to 30 °C, in 0.5 °C steps"},
+    {"name": "Connectivity", "value": "Wi-Fi 2.4 GHz (IEEE 802.11 b/g/n)"},
+    {"name": "Dimensions", "value": "86 × 86 × 24 mm"}
+  ],
+  "warranty": "three-year",
+  "phone": "900 100 200",
+  "phone_hours": "Weekdays, 9 a.m. to 6 p.m.",
+  "email": "soporte@airemas.example",
+  "web": "airemas.example/ayuda"
+}

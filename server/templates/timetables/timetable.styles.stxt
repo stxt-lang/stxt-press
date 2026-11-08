@@ -1,0 +1,106 @@
+# Styles of the timetable template: those of the "timetable" example of stxt-pdf, with its base typography.
+Styles (dev.stxt.pdf):
+	For element: Document
+		Typography:
+			Font: IBM Plex Sans
+			Size: 9.5
+			Line height: 13
+			Color: #1F2B24
+	For element: Heading 1
+		Typography:
+			Size: 24
+			Line height: 28
+			Bold: true
+			Color: #1B4332
+	For element: List
+		Box:
+			Padding: 0 0 0 14
+	For element: Cell
+		Box:
+			Padding: 14 6
+			Corner radius: 5
+		Typography:
+			Align: center
+	For element: Page overlay
+		Typography:
+			Size: 7.5
+			Color: #6B7A72
+	For element: Header cell
+		Typography:
+			Bold: true
+			Size: 9
+			Color: #FFFFFF
+		Box:
+			Background: #2D6A4F
+	For style: hour
+		Typography:
+			Bold: true
+			Size: 8.5
+			Color: #2D6A4F
+			Align: right
+		Box:
+			Padding: 14 8 14 0
+	For style: break
+		Typography:
+			Size: 8.5
+			Italic: true
+			Color: #55655D
+		Box:
+			Background: #EEF1EF
+			Padding: 4 6
+	For style: legend
+		Gap: 5
+		Vertical: center
+	For style: slot
+		Typography:
+			Bold: true
+	For style: math
+		Box:
+			Background: #D6E4F7
+		Typography:
+			Color: #1D3B6B
+	For style: lang
+		Box:
+			Background: #F8D9D6
+		Typography:
+			Color: #6B2218
+	For style: eng
+		Box:
+			Background: #E5DAF3
+		Typography:
+			Color: #432468
+	For style: sci
+		Box:
+			Background: #D5ECD9
+		Typography:
+			Color: #1B4D2A
+	For style: music
+		Box:
+			Background: #FBE8B8
+		Typography:
+			Color: #6B4A05
+	For style: art
+		Box:
+			Background: #F9D8EA
+		Typography:
+			Color: #6B1D46
+	For style: pe
+		Box:
+			Background: #FBDCC3
+		Typography:
+			Color: #6B3207
+	For style: lab
+		Box:
+			Background: #CDEBEA
+		Typography:
+			Color: #12504D
+	For style: tutor
+		Box:
+			Background: #E3E3E3
+		Typography:
+			Color: #333333
+	For style: proj
+		Box:
+			Background: #E6EBC3
+		Typography:
+			Color: #475010
