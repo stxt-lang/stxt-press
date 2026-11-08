@@ -256,6 +256,30 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- The single jar, without version, into the server folder (server/stxt-press.jar, in .gitignore), so that
+                 the folder is a whole server: copied anywhere, its serve.sh or serve.bat starts it. After the shade,
+                 which is declared before in the same phase. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>server-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                        tofile="${project.basedir}/server/stxt-press.jar" preservelastmodified="true"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

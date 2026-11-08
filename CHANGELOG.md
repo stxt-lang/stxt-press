@@ -56,8 +56,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - `server/`, a server folder to start a project from: its `server.stxt`, the fonts IBM Plex Sans, Serif and Mono and
   the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/`: an invoice with
   Slots, its styles and its sample data. `serve --config server/server.stxt` serves it.
-- `serve.sh`, and `serve.bat` for Windows, which start the server of `server/` with the jar of `target/`, building it
-  first if there is none or with `--build`.
+- `serve.sh`, and `serve.bat` for Windows, in `server/`: they start the server of the folder with the
+  `stxt-press.jar` beside them, which `mvn package` copies there, so the folder is a whole server that can be copied
+  anywhere. The Java is that of `JAVA_HOME`, or the `java` of the `PATH`.
 - The command line, `java -jar stxt-press.jar <command>`: `serve` (the HTTP service with its `server.stxt`, which
   stops on `SIGTERM` letting the conversions in progress finish), `render` (a document with its styles and data, to
   PDF), `print` (a template, to PDF) and `fill` (the filled document). The errors of a job go to stderr with their file

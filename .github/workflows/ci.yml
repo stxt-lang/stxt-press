@@ -16,18 +16,36 @@ jobs:
       matrix:
         java: [17, 21]
     steps:
+      # The tests and the editor need stxt-pdf next to stxt-press (../stxt-pdf): its fonts, its examples and their
+      # output.pdf. Both are checked out side by side, stxt-pdf at the tag of the version the pom depends on, whose
+      # examples the engine of Maven Central writes byte for byte.
       - uses: actions/checkout@v4
+        with:
+          path: stxt-press
+      - name: Version of stxt-pdf in the pom
+        id: pdf
+        run: |
+          version=$(sed -n '/<artifactId>stxt-pdf<\/artifactId>/{n;s/.*<version>\(.*\)<\/version>.*/\1/p;}' stxt-press/pom.xml)
+          test -n "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          repository: stxt-lang/stxt-pdf
+          ref: v${{ steps.pdf.outputs.version }}
+          path: stxt-pdf
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
           cache: maven
+          cache-dependency-path: stxt-press/pom.xml
       - name: Tests
+        working-directory: stxt-press
         run: mvn -B verify
       - name: Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: reports-jdk${{ matrix.java }}
-          path: target/surefire-reports
+          path: stxt-press/target/surefire-reports
           if-no-files-found: ignore

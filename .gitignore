@@ -4,3 +4,6 @@ target/
 *.iml
 .vscode/
 web/node_modules/
+
+# The jar of the server folder, copied there by mvn package.
+server/stxt-press.jar

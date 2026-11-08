@@ -8,7 +8,7 @@ anything itself.
 In development: no version has been released.
 
 ```bash
-java -jar stxt-press.jar serve --config server/server.stxt
+server/serve.sh
 java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice.json -o invoice.pdf
 ```
 
@@ -162,13 +162,12 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 Relative paths are relative to the folder of `server.stxt`, so a server moves with its configuration. The token is not
 written in the file, only the name of its variable.
 
-The folder [`server/`](server/) is a server to start a project from: its `server.stxt`, which listens on
-`127.0.0.1:8080` and shows the other nodes commented with their defaults, the fonts IBM Plex Sans, Serif and Mono and the
-images of the examples of stxt-pdf in `resources/`, and a sample template in `templates/`, an invoice with Slots, its
-styles and its sample data. `java -jar stxt-press.jar serve --config server/server.stxt` serves it, and
-`print invoices/invoice -o invoice.pdf --config server/server.stxt` prints its template. In a clone of this repository,
-`./serve.sh` serves it with the jar of `target/`, building it first if there is none, and `./serve.sh --build` builds
-it again from the sources; on Windows, `serve.bat` and `serve.bat --build`.
+The folder [`server/`](server/) is a whole server, to copy anywhere and to start a project from: `serve.sh` and
+`serve.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
+`127.0.0.1:8080` and shows the other nodes commented with their defaults; the fonts IBM Plex Sans, Serif and Mono and
+the images of the examples of stxt-pdf in `resources/`; and a sample template in `templates/`, an invoice with Slots,
+its styles and its sample data. `server/serve.sh` serves it, from any working directory, and
+`java -jar server/stxt-press.jar print invoices/invoice -o invoice.pdf --config server/server.stxt` prints its template.
 
 ## Build
 
