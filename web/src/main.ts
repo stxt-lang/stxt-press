@@ -123,18 +123,23 @@ function clearPanels(): void {
 	hideFilled();
 }
 
-function showPanels(text: string, styles: StylesText[], data: string, titles: { document: string; data: string }): void {
+/**
+ * Shows the panels of a document: the document, its styles and its data, in this order, or with the data first
+ * (`dataFirst`), for a template, whose data are what changes from one PDF to another.
+ */
+function showPanels(text: string, styles: StylesText[], data: string, titles: { document: string; data: string },
+	dataFirst = false): void {
 	clearPanels();
-	const container = $("panels");
 	documentPanel = stxtPanel(titles.document, text);
-	container.appendChild(documentPanel.element);
-	for (const item of styles) {
-		const panel = stxtPanel(item.path, item.text);
-		stylesPanels.push(panel);
-		container.appendChild(panel.element);
-	}
+	stylesPanels = styles.map((item) => stxtPanel(item.path, item.text));
 	dataPanel = jsonPanel(titles.data, data, dataChanged);
-	container.appendChild(dataPanel.element);
+	const order = [documentPanel, ...stylesPanels];
+	if (dataFirst) {
+		order.unshift(dataPanel);
+	} else {
+		order.push(dataPanel);
+	}
+	$("panels").append(...order.map((panel) => panel.element));
 	dataChanged();
 }
 
@@ -412,7 +417,7 @@ async function showTemplate(path: string): Promise<void> {
 	original = { path: template.path, document: template.document, styles: template.styles, data: template.data };
 	$("print-url").textContent = `${location.origin}/print/${template.path}`;
 	showPanels(template.document, template.styles, template.data ?? "",
-		{ document: `${template.path}.stxt`, data: template.data === null ? "Data (JSON)" : `${template.path}.json` });
+		{ document: `${template.path}.stxt`, data: template.data === null ? "Data (JSON)" : `${template.path}.json` }, true);
 	say("");
 }
 

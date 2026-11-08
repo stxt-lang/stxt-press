@@ -71,10 +71,10 @@ document and `/templates` shows the texts and the sample data of the templates, 
 
 - **Document**: a layout document, its styles and its JSON data, sent to `/render`. The examples of stxt-pdf are in
   the list.
-- **Templates**: a template of the server, with its chain of styles, one panel per file, and its sample data. With the
-  document and the styles as the server has them, it is printed with `/print` and the data of the panel; edited, with
-  `/render` and the whole chain. Nothing is saved on the server. The page shows the URL of `/print` and a `curl` with
-  the data of the panel.
+- **Templates**: a template of the server: its sample data first, the panel that changes from one PDF to another, then
+  the document and its chain of styles, one panel per file. With the document and the styles as the server has them,
+  it is printed with `/print` and the data of the panel; edited, with `/render` and the whole chain. Nothing is saved
+  on the server. The page shows the URL of `/print` and a `curl` with the data of the panel.
 
 **Fill** shows the filled document, **Preview** the SVG pages (with **Outlines**, the outlines of the boxes) and
 **Download PDF** the PDF. An error of the server is marked in its panel, on its line. The document panel validates
@@ -166,7 +166,9 @@ The folder [`server/`](server/) is a server to start a project from: its `server
 `127.0.0.1:8080` and shows the other nodes commented with their defaults, the fonts IBM Plex Sans, Serif and Mono and the
 images of the examples of stxt-pdf in `resources/`, and a sample template in `templates/`, an invoice with Slots, its
 styles and its sample data. `java -jar stxt-press.jar serve --config server/server.stxt` serves it, and
-`print invoices/invoice -o invoice.pdf --config server/server.stxt` prints its template.
+`print invoices/invoice -o invoice.pdf --config server/server.stxt` prints its template. In a clone of this repository,
+`./serve.sh` serves it with the jar of `target/`, building it first if there is none, and `./serve.sh --build` builds
+it again from the sources; on Windows, `serve.bat` and `serve.bat --build`.
 
 ## Build
 

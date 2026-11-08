@@ -1,0 +1,3 @@
+# The scripts keep the line ends of their system in every checkout, whatever core.autocrlf says.
+*.sh text eol=lf
+*.bat text eol=crlf

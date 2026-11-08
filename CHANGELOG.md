@@ -45,8 +45,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   Without a file, the server listens only on `127.0.0.1:8080`, without token.
 - `PressServer.startLazily`, whose shared converter is created by the first request that needs it.
 - The web editor, at `GET /` and its files under `/editor/`, without token: a document mode (a document, its styles and
-  its data to `/render`, with the examples of stxt-pdf) and a templates mode (a template of the server with its chain
-  of styles and its sample data, printed with `/print` or, edited, rendered with `/render`, and its `curl`). Fill,
+  its data to `/render`, with the examples of stxt-pdf) and a templates mode (a template of the server with its sample
+  data first and then its document and its chain of styles, printed with `/print` or, edited, rendered with
+  `/render`, and its `curl`). Fill,
   preview as SVG pages with or without outlines, and download the PDF; the errors of the server are marked in their
   panel, on their line. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
@@ -55,6 +56,8 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - `server/`, a server folder to start a project from: its `server.stxt`, the fonts IBM Plex Sans, Serif and Mono and
   the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/`: an invoice with
   Slots, its styles and its sample data. `serve --config server/server.stxt` serves it.
+- `serve.sh`, and `serve.bat` for Windows, which start the server of `server/` with the jar of `target/`, building it
+  first if there is none or with `--build`.
 - The command line, `java -jar stxt-press.jar <command>`: `serve` (the HTTP service with its `server.stxt`, which
   stops on `SIGTERM` letting the conversions in progress finish), `render` (a document with its styles and data, to
   PDF), `print` (a template, to PDF) and `fill` (the filled document). The errors of a job go to stderr with their file
