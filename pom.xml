@@ -68,6 +68,15 @@
             <version>0.1.0</version>
         </dependency>
 
+        <!-- The JSON of the HTTP service: the body of /render and the responses. The data of a template (/print) are
+             not read with it: they go to FillJson as they come.
+             Latest version at https://central.sonatype.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.22.4</version>
+        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

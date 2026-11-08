@@ -27,6 +27,15 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   sample data, or as it is without them) and that of a `POST` (filled with the data of the request instead). The
   segments of a path are `[A-Za-z0-9_-]+`; any other path is `TEMPLATE_NOT_FOUND`, and a file that is a symbolic link
   leaving the folder is not read (`TEMPLATE_LINK_OUTSIDE`). The folder is read on every call.
+- The HTTP service, in `dev.stxt.press.http`, on the `HttpServer` of the JDK: `PressServer` with a `ServerConfig`
+  (address, token, routes on, limits, options of the templates). Routes: `GET`/`POST /print/{path}` (a template,
+  filled with its sample data or with the body), `POST /render` (any document, with its styles, its data as a JSON
+  value and its options), `GET /templates`, `GET /templates/{path}`, `GET /schema`, `GET /fonts` and `GET /health`.
+  `?format=pdf|svg|stxt` and `&debug=true` on `/print` and `/render`. Errors as JSON with `code` and `message`, and
+  `kind`, `line`, `source` and `filled` for those of a conversion: `400`, `401`, `404`, `405`, `413`, `422`, `503`
+  (a conversion out of time, `CANCELLED`, or the server busy, `SERVER_BUSY`) and `500`. With a token, every route but
+  `/health` asks for `Authorization: Bearer`. `/render` and `/templates` can be turned off.
+- `jackson-databind` 2.22.4, for the JSON of the HTTP service.
 
 ### Changed
 
