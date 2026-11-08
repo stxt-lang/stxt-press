@@ -14,7 +14,7 @@ import type { Editor } from "@stxt-lang/editor";
 import { curl, fileName, parseData, request, target, validatesDocument } from "./model";
 import type { Format, LocalError, Request, ServerError, State, StylesText, Target } from "./model";
 
-/** The examples of stxt-pdf, put here by build.mjs. */
+/** The examples of stxt-pdf in English, put here by build.mjs. */
 declare const EXAMPLES: { name: string; document: string; styles: string }[];
 
 const TOKEN_KEY = "stxt-press-token";

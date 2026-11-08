@@ -1,0 +1,1898 @@
+# Schema of the box model (reference/common/structure.md).
+# First the elements, then the reusable rules (Styles), the groups (Box, Typography,
+# Break) and finally the properties.
+# Each name has a single definition in the whole namespace: the Width of Page and the one of Box are
+# the same node.
+Schema (@stxt.schema): dev.stxt.pdf
+	Description: Documents of stxt-pdf, the layout and PDF generation engine. Lengths are in points (12) or in millimeters (12mm). Manual in docs/en/manual and complete reference in docs/en/reference.
+
+	# Elements
+
+	Node: Document
+		Type: GROUP
+		Description: Box document: the medium (the one of the sections that do not declare their own), the title and the language (required), the subject (optional), the reusable rules (also the base typography, with For element: Document), the Page overlay of all the sections and one or more Section with the content, in order.
+		Children:
+			Child: Page
+				Min: 1
+				Max: 1
+			Child: Title
+				Min: 1
+				Max: 1
+			Child: Subject
+				Max: 1
+			Child: Language
+				Min: 1
+				Max: 1
+			Child: Styles
+				Max: 1
+			Child: Page overlay
+			Child: Section
+				Min: 1
+	Node: Page
+		Type: GROUP
+		Description: The page: its size, with Paper (and Orientation) or with Width and Height, and its margins, mirrored on the even pages with Mirror margins. It defines the page area, which is the initial reference container.
+		Children:
+			Child: Paper
+				Max: 1
+			Child: Orientation
+				Max: 1
+			Child: Width
+				Max: 1
+			Child: Height
+				Max: 1
+			Child: Margin
+				Max: 1
+			Child: Mirror margins
+				Max: 1
+	Node: Section
+		Type: GROUP
+		Description: Independent part of the document: it starts a new page and has its own Page (which inherits from the document by groups), its own Page overlay, its own page numbering and its footnote numbering. It contains the in-flow elements, the positioned ones and the Footnote.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Page
+				Max: 1
+			Child: Page numbering
+				Max: 1
+			Child: Page number format
+				Max: 1
+			Child: Start
+				Max: 1
+			Child: Inherit page overlays
+				Max: 1
+			Child: Begin on
+				Max: 1
+			Child: Footnote numbering
+				Max: 1
+			Child: Footnote number format
+				Max: 1
+			Child: Block
+			Child: Stack
+			Child: Grid
+			Child: Text
+			Child: Paragraph
+			Child: Heading 1
+			Child: Heading 2
+			Child: Heading 3
+			Child: Heading 4
+			Child: Heading 5
+			Child: Heading 6
+			Child: List
+			Child: Markdown
+			Child: Table of contents
+			Child: Image
+			Child: Barcode
+			Child: Figure
+			Child: Table
+			Child: Columns
+			Child: Frame
+			Child: Overlay
+			Child: Page overlay
+			Child: Footnote
+	Node: Block
+		Type: GROUP
+		Description: Box that stacks its children vertically (block flow). With Side, a side box: it goes to one side and the text of the siblings that follow it runs beside it.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Isolate margins
+				Max: 1
+			Child: Rotate
+				Max: 1
+			Child: Side
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Block
+			Child: Stack
+			Child: Grid
+			Child: Text
+			Child: Paragraph
+			Child: Heading 1
+			Child: Heading 2
+			Child: Heading 3
+			Child: Heading 4
+			Child: Heading 5
+			Child: Heading 6
+			Child: List
+			Child: Markdown
+			Child: Table of contents
+			Child: Image
+			Child: Barcode
+			Child: Figure
+			Child: Table
+			Child: Columns
+			Child: Frame
+			Child: Overlay
+			Child: Page overlay
+			Child: Footnote
+	Node: Stack
+		Type: GROUP
+		Description: Places its items (Item) one after another, horizontally or vertically (Direction), and distributes the leftover space among them.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Direction
+				Max: 1
+			Child: Wrap
+				Max: 1
+			Child: Gap
+				Max: 1
+			Child: Horizontal
+				Max: 1
+			Child: Vertical
+				Max: 1
+			Child: Line distribution
+				Max: 1
+			Child: Split items
+				Max: 1
+			Child: Item
+			Child: Overlay
+			Child: Page overlay
+	Node: Grid
+		Type: GROUP
+		Description: Grid container: places its items (Area) in a grid of rows and columns.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Column sizes
+				Max: 1
+			Child: Row sizes
+				Max: 1
+			Child: Gap
+				Max: 1
+			Child: Areas
+				Max: 1
+			Child: Flow
+				Max: 1
+			Child: Horizontal
+				Max: 1
+			Child: Vertical
+				Max: 1
+			Child: Split rows
+				Max: 1
+			Child: Area
+			Child: Overlay
+			Child: Page overlay
+	Node: Text
+		Type: INLINE
+		Description: Standalone text, not a paragraph of the content: a label, a figure, a line of a header, the pieces of a heading. The text goes in the value (one line) or in Content (a block), without blank lines unless it is preformatted.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Content
+				Max: 1
+			Child: Rotate
+				Max: 1
+			Child: Clear
+				Max: 1
+	Node: Paragraph
+		Type: INLINE
+		Description: A paragraph of the content, which For element: Paragraph rules style separately from standalone texts. A single paragraph: no blank lines in Content. With Drop cap, its first letter is a drop cap.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Content
+				Max: 1
+			Child: Rotate
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Drop cap
+				Max: 1
+	Node: Heading 1
+		Type: GROUP
+		Description: Level 1 heading: a block with one or more Text. It appears in the PDF bookmarks and the engine avoids breaking inside it and after it.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Text
+				Min: 1
+	Node: Heading 2
+		Type: GROUP
+		Description: Level 2 heading (see Heading 1).
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Text
+				Min: 1
+	Node: Heading 3
+		Type: GROUP
+		Description: Level 3 heading (see Heading 1).
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Text
+				Min: 1
+	Node: Heading 4
+		Type: GROUP
+		Description: Level 4 heading (see Heading 1).
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Text
+				Min: 1
+	Node: Heading 5
+		Type: GROUP
+		Description: Level 5 heading (see Heading 1).
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Text
+				Min: 1
+	Node: Heading 6
+		Type: GROUP
+		Description: Level 6 heading (see Heading 1).
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Text
+				Min: 1
+	Node: List
+		Type: GROUP
+		Description: List: its items (List item) stacked vertically, each with a marker hung in the indent (the left Padding of the list). Its Marker, its own or from a rule of Styles, is required.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Marker
+				Max: 1
+			Child: Marker image
+				Max: 1
+			Child: Start
+				Max: 1
+			Child: List item
+				Min: 1
+	Node: List item
+		Type: GROUP
+		Description: Item of a List: a block with one or more elements, without headings. Its marker is aligned with its first line.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Number
+				Max: 1
+			Child: Marker image
+				Max: 1
+			Child: Block
+			Child: Stack
+			Child: Grid
+			Child: Text
+			Child: Paragraph
+			Child: List
+			Child: Markdown
+			Child: Table of contents
+			Child: Image
+			Child: Barcode
+			Child: Figure
+			Child: Table
+			Child: Columns
+			Child: Frame
+			Child: Overlay
+			Child: Page overlay
+			Child: Footnote
+	Node: Columns
+		Type: GROUP
+		Description: Block in columns: its content fills the first column, continues in the next one and, at the end of the page, continues in the first column of the next page. Count, Min column width or both set the columns.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Count
+				Max: 1
+			Child: Min column width
+				Max: 1
+			Child: Gap
+				Max: 1
+			Child: Separator
+				Max: 1
+			Child: Separator color
+				Max: 1
+			Child: Balance
+				Max: 1
+			Child: Block
+			Child: Stack
+			Child: Grid
+			Child: Text
+			Child: Paragraph
+			Child: Heading 1
+			Child: Heading 2
+			Child: Heading 3
+			Child: Heading 4
+			Child: Heading 5
+			Child: Heading 6
+			Child: List
+			Child: Markdown
+			Child: Table of contents
+			Child: Image
+			Child: Barcode
+			Child: Figure
+			Child: Table
+			Child: Columns
+			Child: Frame
+			Child: Footnote
+	Node: Footnote
+		Type: GROUP
+		Description: A footnote: the content of a note that the engine places at the bottom of the page where the text calls it with [^id] (in a text with Markup: markdown or in a Markdown), under a rule, numbered in the order of the calls. Its Id is the name the call uses; it is written anywhere in its section and takes no space there. It starts with a Paragraph, a Text or a Markdown paragraph, which gets the number; no headings or images. Every note is called exactly once and every call has its note.
+		Children:
+			Child: Id
+				Min: 1
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Paragraph
+			Child: Text
+			Child: Markdown
+			Child: List
+			Child: Table
+			Child: Block
+	Node: Frame
+		Type: GROUP
+		Description: Frame: a block in its place in the flow that can be shifted with Offset without moving its siblings. It is the reference of the Overlay it contains.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Isolate margins
+				Max: 1
+			Child: Offset
+				Max: 1
+			Child: Layer
+				Max: 1
+			Child: Rotate
+				Max: 1
+			Child: Rotate origin
+				Max: 1
+			Child: Block
+			Child: Stack
+			Child: Grid
+			Child: Text
+			Child: Paragraph
+			Child: Heading 1
+			Child: Heading 2
+			Child: Heading 3
+			Child: Heading 4
+			Child: Heading 5
+			Child: Heading 6
+			Child: List
+			Child: Markdown
+			Child: Table of contents
+			Child: Image
+			Child: Barcode
+			Child: Figure
+			Child: Table
+			Child: Columns
+			Child: Frame
+			Child: Overlay
+			Child: Page overlay
+			Child: Footnote
+	Node: Overlay
+		Type: GROUP
+		Description: Superimposed block, out of flow: it takes no space and is placed with Offset in the Frame, Overlay or Page overlay that contains it (or, if there is none, in the page area).
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Offset
+				Max: 1
+			Child: Layer
+				Max: 1
+			Child: Rotate
+				Max: 1
+			Child: Rotate origin
+				Max: 1
+			Child: Block
+			Child: Stack
+			Child: Grid
+			Child: Text
+			Child: Paragraph
+			Child: Heading 1
+			Child: Heading 2
+			Child: Heading 3
+			Child: Heading 4
+			Child: Heading 5
+			Child: Heading 6
+			Child: List
+			Child: Markdown
+			Child: Table of contents
+			Child: Image
+			Child: Barcode
+			Child: Figure
+			Child: Table
+			Child: Columns
+			Child: Frame
+			Child: Overlay
+			Child: Page overlay
+	Node: Page overlay
+		Type: GROUP
+		Description: Block superimposed on the pages, out of flow: it is placed with Offset in the page area and is repeated on the pages that Pages says (all by default). Headers, footers and watermarks.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Offset
+				Max: 1
+			Child: Layer
+				Max: 1
+			Child: Pages
+				Max: 1
+			Child: Rotate
+				Max: 1
+			Child: Rotate origin
+				Max: 1
+			Child: Block
+			Child: Stack
+			Child: Grid
+			Child: Text
+			Child: Paragraph
+			Child: Heading 1
+			Child: Heading 2
+			Child: Heading 3
+			Child: Heading 4
+			Child: Heading 5
+			Child: Heading 6
+			Child: List
+			Child: Markdown
+			Child: Table of contents
+			Child: Image
+			Child: Barcode
+			Child: Table
+			Child: Columns
+			Child: Frame
+			Child: Overlay
+			Child: Page overlay
+	Node: Item
+		Type: GROUP
+		Description: Item of a Stack: how it grows, shrinks and is aligned on the cross axis. It contains exactly one element.
+		Children:
+			Child: Grow
+				Max: 1
+			Child: Shrink
+				Max: 1
+			Child: Base size
+				Max: 1
+			Child: Horizontal
+				Max: 1
+			Child: Vertical
+				Max: 1
+			Child: Layer
+				Max: 1
+			Child: Block
+				Max: 1
+			Child: Stack
+				Max: 1
+			Child: Grid
+				Max: 1
+			Child: Text
+				Max: 1
+			Child: Paragraph
+				Max: 1
+			Child: Heading 1
+				Max: 1
+			Child: Heading 2
+				Max: 1
+			Child: Heading 3
+				Max: 1
+			Child: Heading 4
+				Max: 1
+			Child: Heading 5
+				Max: 1
+			Child: Heading 6
+				Max: 1
+			Child: List
+			Child: Markdown
+				Max: 1
+			Child: Table of contents
+				Max: 1
+			Child: Image
+			Child: Barcode
+				Max: 1
+			Child: Figure
+				Max: 1
+			Child: Table
+				Max: 1
+			Child: Columns
+				Max: 1
+			Child: Frame
+				Max: 1
+	Node: Area
+		Type: INLINE
+		Description: Item of a Grid: the area it takes. The value is the placement: an area name, or 'row column [rows columns]' counting from 1; without a value, it is placed automatically. It contains exactly one element.
+		Children:
+			Child: Horizontal
+				Max: 1
+			Child: Vertical
+				Max: 1
+			Child: Layer
+				Max: 1
+			Child: Block
+				Max: 1
+			Child: Stack
+				Max: 1
+			Child: Grid
+				Max: 1
+			Child: Text
+				Max: 1
+			Child: Paragraph
+				Max: 1
+			Child: Heading 1
+				Max: 1
+			Child: Heading 2
+				Max: 1
+			Child: Heading 3
+				Max: 1
+			Child: Heading 4
+				Max: 1
+			Child: Heading 5
+				Max: 1
+			Child: Heading 6
+				Max: 1
+			Child: List
+			Child: Markdown
+				Max: 1
+			Child: Table of contents
+				Max: 1
+			Child: Image
+			Child: Barcode
+				Max: 1
+			Child: Figure
+				Max: 1
+			Child: Table
+				Max: 1
+			Child: Columns
+				Max: 1
+			Child: Frame
+				Max: 1
+	Node: Table
+		Type: GROUP
+		Description: Table: its rows (Row) in Header rows, Body and Footer rows, in that order, over the columns of Column sizes, its own or from a rule of Styles, which is required. When it breaks, Header rows and Footer rows are repeated on each page.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Column sizes
+				Max: 1
+			Child: Column align
+				Max: 1
+			Child: Gap
+				Max: 1
+			Child: Split rows
+				Max: 1
+			Child: Header rows
+				Max: 1
+			Child: Body
+				Min: 1
+				Max: 1
+			Child: Footer rows
+				Max: 1
+	Node: Header rows
+		Type: GROUP
+		Description: Header rows of a Table: they go at the start of each page of the table.
+		Children:
+			Child: Row
+				Min: 1
+	Node: Body
+		Type: GROUP
+		Description: Body rows of a Table.
+		Children:
+			Child: Row
+				Min: 1
+	Node: Footer rows
+		Type: GROUP
+		Description: Footer rows of a Table: they go at the end of each page of the table.
+		Children:
+			Child: Row
+				Min: 1
+	Node: Row
+		Type: GROUP
+		Description: Row of a table: its cells (Cell), from left to right. It is not a layout box: its Box only accepts the appearance (Background, Border, Border color and Corner radius), which is painted as a band beneath its cells, and its Id is a link target. Its Typography is inherited by its cells, and the For style rules of its Style and For id rules of its Id apply to each of them.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Cell
+				Min: 1
+	Node: Cell
+		Type: INLINE
+		Description: Cell of a table. With a value, a one-line text box; without a value, a block with its elements (or empty).
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Span
+				Max: 1
+			Child: Row header
+				Max: 1
+			Child: Block
+			Child: Stack
+			Child: Grid
+			Child: Text
+			Child: Paragraph
+			Child: List
+			Child: Markdown
+			Child: Table of contents
+			Child: Image
+			Child: Barcode
+			Child: Figure
+			Child: Table
+			Child: Columns
+			Child: Frame
+			Child: Overlay
+			Child: Page overlay
+			Child: Footnote
+
+	Node: Markdown
+		Type: GROUP
+		Description: Content in Markdown (headings, paragraphs, lists, GFM tables, code blocks and, inline, **bold**, *italic*, ++underline++, ~~strikethrough~~, `code` and [links](target)), which is translated into Heading, Paragraph, List, Table and Text. A block.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Bullet markers
+				Max: 1
+			Child: Number markers
+				Max: 1
+			Child: Table columns
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Content
+				Min: 1
+				Max: 1
+	Node: Table of contents
+		Type: GROUP
+		Description: Automatic table of contents: one entry per heading of the levels in Levels or, with Of, per figure or per table (the Figure elements of that counter), in document order, with its title, a leader and the page. A block; the entries are styled with the For element rules 'TOC 1' to 'TOC 6' (those of figures and tables, 'TOC 1').
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Of
+				Max: 1
+			Child: Levels
+				Max: 1
+			Child: Leader
+				Max: 1
+	Node: Figure
+		Type: GROUP
+		Description: A figure with a caption: exactly one element (an Image, a Barcode, a Table or a Block) and its Caption, below it (above a Table) or where Caption position says. A block that is not split across pages (a Table inside is, with the caption on its first or last part). It is numbered with the counter of the figures or, with a Table inside, of the tables (Figure counter changes it): the number, or its Number label, goes before the caption, {number of: id} gives it and a Table of contents with Of: figures or tables lists it. Numbered: false in its Typography, or in a rule that reaches it, leaves it without a number. The image inside carries its Alt; with a Block, the Figure carries its own.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Alt
+				Max: 1
+			Child: Caption position
+				Max: 1
+			Child: Figure counter
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Side
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Caption
+				Min: 1
+				Max: 1
+			Child: Image
+			Child: Barcode
+			Child: Table
+			Child: Block
+	Node: Caption
+		Type: INLINE
+		Description: The caption of a Figure: a text, in the value (one line) or in Content (a block), that goes above or below the content of the figure, with the number of the figure before it. It inherits the Typography of the Figure, and For element: Caption styles all the captions.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Content
+				Max: 1
+	Node: Image
+		Type: INLINE
+		Description: PNG, JPEG, SVG or PDF image from the images/ folder of the resources; the value is its path, relative to images/ (logos/acme.png). A box without children with the size and proportions of the file (of a PDF, of its page); it does not break across pages. With Side, the text that follows it runs beside it.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Alt
+				Max: 1
+			Child: Fit
+				Max: 1
+			Child: Pdf page
+				Max: 1
+			Child: Rotate
+				Max: 1
+			Child: Side
+				Max: 1
+			Child: Clear
+				Max: 1
+	Node: Barcode
+		Type: INLINE
+		Description: QR code or barcode that the engine generates from its data, in the Format qr (by default), code-128 or ean-13. The data goes in the value (Barcode: https://example.com/verify/1234) or, if it has several lines, in a Content >> block, one of the two. It is laid out as an Image: its natural size comes from its modules (0.5 mm in a QR code; 0.33 mm by 22.85 mm in the others), with the quiet zone (Quiet zone) included; a QR code is drawn square and centered, and the others are stretched to the box. Alt is required. The modules have the Color of the Typography (only Color is allowed in its Typography) and the background is that of the Box.
+		Children:
+			Child: Id
+				Max: 1
+			Child: Style
+				Max: 1
+			Child: Link
+				Max: 1
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Alt
+				Max: 1
+			Child: Format
+				Max: 1
+			Child: Error correction
+				Max: 1
+			Child: Quiet zone
+				Max: 1
+			Child: Rotate
+				Max: 1
+			Child: Side
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Content
+				Max: 1
+
+	# Reusable rules
+
+	Node: Styles
+		Type: GROUP
+		Description: Reusable rules: default properties of the elements of a type, with a named style or with an Id, and the colors with a name (Named color). It is a child of Document or the root of a separate styles document, which is passed along with the document and ranks below it.
+		Children:
+			Child: Named color
+			Child: For element
+			Child: For style
+			Child: For id
+			Child: For column
+	Node: Named color
+		Type: INLINE
+		Description: Color with a name: the name and the color separated by a space (Named color: brand #12315A). The name, in lowercase letters and digits with words joined by hyphens, is then written wherever a color goes (Color, Border color, Background, also inside linear, and Separator color). If the document and the separate styles document declare the same name, the document wins.
+	Node: For element
+		Type: INLINE
+		Description: Rule for all the elements of a type; the value is its name (Text, Block, Heading 1...), one generated by the engine (Code block, the code block of a Markdown; TOC 1 to 6, the entries of a Table of contents; Footnotes, the footnote area at the bottom of the page), a position within a table (Header cell, Body cell, Footer cell, Odd row cell, Even row cell) or Document, which only accepts Typography and is the typography that all boxes inherit. Besides the groups, it accepts the properties of how an element looks and distributes its content (Gap, Column sizes, Fit, Marker...) that the element of its type can declare; Grow, Shrink and Base size are those of the Item that wraps the element. A For element, For style or For column written inside it is a nested rule: it applies to the elements it names that are inside an element this rule applies to.
+		Children:
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Direction
+				Max: 1
+			Child: Wrap
+				Max: 1
+			Child: Gap
+				Max: 1
+			Child: Horizontal
+				Max: 1
+			Child: Vertical
+				Max: 1
+			Child: Line distribution
+				Max: 1
+			Child: Split items
+				Max: 1
+			Child: Column sizes
+				Max: 1
+			Child: Row sizes
+				Max: 1
+			Child: Areas
+				Max: 1
+			Child: Flow
+				Max: 1
+			Child: Split rows
+				Max: 1
+			Child: Column align
+				Max: 1
+			Child: Count
+				Max: 1
+			Child: Min column width
+				Max: 1
+			Child: Separator
+				Max: 1
+			Child: Separator color
+				Max: 1
+			Child: Balance
+				Max: 1
+			Child: Marker
+				Max: 1
+			Child: Marker image
+				Max: 1
+			Child: Fit
+				Max: 1
+			Child: Format
+				Max: 1
+			Child: Error correction
+				Max: 1
+			Child: Quiet zone
+				Max: 1
+			Child: Caption position
+				Max: 1
+			Child: Figure counter
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Levels
+				Max: 1
+			Child: Leader
+				Max: 1
+			Child: Drop cap
+				Max: 1
+			Child: Side
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Isolate margins
+				Max: 1
+			Child: Bullet markers
+				Max: 1
+			Child: Number markers
+				Max: 1
+			Child: Table columns
+				Max: 1
+			Child: Grow
+				Max: 1
+			Child: Shrink
+				Max: 1
+			Child: Base size
+				Max: 1
+			Child: For element
+			Child: For style
+			Child: For column
+	Node: For style
+		Type: INLINE
+		Description: Rule for the elements that have that style in their Style. Besides the groups, it accepts the properties of how an element looks and distributes its content (Gap, Column sizes, Fit, Marker...); applied to an element that cannot declare one of them, it is an error. Grow, Shrink and Base size are those of the Item that wraps the element. A For element, For style or For column written inside it is a nested rule: it applies to the elements it names that are inside an element this rule applies to.
+		Children:
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Direction
+				Max: 1
+			Child: Wrap
+				Max: 1
+			Child: Gap
+				Max: 1
+			Child: Horizontal
+				Max: 1
+			Child: Vertical
+				Max: 1
+			Child: Line distribution
+				Max: 1
+			Child: Split items
+				Max: 1
+			Child: Column sizes
+				Max: 1
+			Child: Row sizes
+				Max: 1
+			Child: Areas
+				Max: 1
+			Child: Flow
+				Max: 1
+			Child: Split rows
+				Max: 1
+			Child: Column align
+				Max: 1
+			Child: Count
+				Max: 1
+			Child: Min column width
+				Max: 1
+			Child: Separator
+				Max: 1
+			Child: Separator color
+				Max: 1
+			Child: Balance
+				Max: 1
+			Child: Marker
+				Max: 1
+			Child: Marker image
+				Max: 1
+			Child: Fit
+				Max: 1
+			Child: Format
+				Max: 1
+			Child: Error correction
+				Max: 1
+			Child: Quiet zone
+				Max: 1
+			Child: Caption position
+				Max: 1
+			Child: Figure counter
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Levels
+				Max: 1
+			Child: Leader
+				Max: 1
+			Child: Drop cap
+				Max: 1
+			Child: Side
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Isolate margins
+				Max: 1
+			Child: Bullet markers
+				Max: 1
+			Child: Number markers
+				Max: 1
+			Child: Table columns
+				Max: 1
+			Child: Grow
+				Max: 1
+			Child: Shrink
+				Max: 1
+			Child: Base size
+				Max: 1
+			Child: For element
+			Child: For style
+			Child: For column
+	Node: For id
+		Type: INLINE
+		Description: Rule for the element with that Id. Besides the groups, it accepts the properties of how an element looks and distributes its content (Gap, Column sizes, Fit, Marker...); applied to an element that cannot declare one of them, it is an error. Grow, Shrink and Base size are those of the Item that wraps the element. A For element, For style or For column written inside it is a nested rule: it applies to the elements it names that are inside an element this rule applies to.
+		Children:
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+			Child: Direction
+				Max: 1
+			Child: Wrap
+				Max: 1
+			Child: Gap
+				Max: 1
+			Child: Horizontal
+				Max: 1
+			Child: Vertical
+				Max: 1
+			Child: Line distribution
+				Max: 1
+			Child: Split items
+				Max: 1
+			Child: Column sizes
+				Max: 1
+			Child: Row sizes
+				Max: 1
+			Child: Areas
+				Max: 1
+			Child: Flow
+				Max: 1
+			Child: Split rows
+				Max: 1
+			Child: Column align
+				Max: 1
+			Child: Count
+				Max: 1
+			Child: Min column width
+				Max: 1
+			Child: Separator
+				Max: 1
+			Child: Separator color
+				Max: 1
+			Child: Balance
+				Max: 1
+			Child: Marker
+				Max: 1
+			Child: Marker image
+				Max: 1
+			Child: Fit
+				Max: 1
+			Child: Format
+				Max: 1
+			Child: Error correction
+				Max: 1
+			Child: Quiet zone
+				Max: 1
+			Child: Caption position
+				Max: 1
+			Child: Figure counter
+				Max: 1
+			Child: In table of contents
+				Max: 1
+			Child: Levels
+				Max: 1
+			Child: Leader
+				Max: 1
+			Child: Drop cap
+				Max: 1
+			Child: Side
+				Max: 1
+			Child: Clear
+				Max: 1
+			Child: Isolate margins
+				Max: 1
+			Child: Bullet markers
+				Max: 1
+			Child: Number markers
+				Max: 1
+			Child: Table columns
+				Max: 1
+			Child: Grow
+				Max: 1
+			Child: Shrink
+				Max: 1
+			Child: Base size
+				Max: 1
+			Child: For element
+			Child: For style
+			Child: For column
+	Node: For column
+		Type: INLINE
+		Description: Rule for the table cells that start in that column (n) or in any column of a range (n m, both included).
+		Children:
+			Child: Box
+				Max: 1
+			Child: Typography
+				Max: 1
+			Child: Break
+				Max: 1
+
+	# Groups
+
+	Node: Box
+		Type: GROUP
+		Description: Box model: size, margins, padding, border and background, and what is done with what does not fit (Overflow). Not inherited.
+		Children:
+			Child: Width
+				Max: 1
+			Child: Height
+				Max: 1
+			Child: Min width
+				Max: 1
+			Child: Max width
+				Max: 1
+			Child: Min height
+				Max: 1
+			Child: Max height
+				Max: 1
+			Child: Aspect ratio
+				Max: 1
+			Child: Margin
+				Max: 1
+			Child: Padding
+				Max: 1
+			Child: Border
+				Max: 1
+			Child: Border color
+				Max: 1
+			Child: Corner radius
+				Max: 1
+			Child: Background
+				Max: 1
+			Child: Overflow
+				Max: 1
+			Child: Merge borders
+				Max: 1
+	Node: Typography
+		Type: GROUP
+		Description: Font, code font, weight, size (and the minimum it may shrink to), line height, alignment, hyphenation, color and language of the text, heading numbering, and widows and orphans. Inherited.
+		Children:
+			Child: Font
+				Max: 1
+			Child: Code font
+				Max: 1
+			Child: Bold
+				Max: 1
+			Child: Weight
+				Max: 1
+			Child: Italic
+				Max: 1
+			Child: Size
+				Max: 1
+			Child: Min size
+				Max: 1
+			Child: Line height
+				Max: 1
+			Child: Align
+				Max: 1
+			Child: Color
+				Max: 1
+			Child: Line breaking
+				Max: 1
+			Child: Hyphenate
+				Max: 1
+			Child: Markup
+				Max: 1
+			Child: Case
+				Max: 1
+			Child: Letter spacing
+				Max: 1
+			Child: Small caps
+				Max: 1
+			Child: Ligatures
+				Max: 1
+			Child: Kerning
+				Max: 1
+			Child: Preformatted
+				Max: 1
+			Child: Tab size
+				Max: 1
+			Child: Widows
+				Max: 1
+			Child: Orphans
+				Max: 1
+			Child: Language
+				Max: 1
+			Child: Numbered
+				Max: 1
+			Child: Number format
+				Max: 1
+			Child: Number label
+				Max: 1
+	Node: Break
+		Type: GROUP
+		Description: Page breaks: the breaks before and after the box, what is kept together and the decoration of the broken box. Not inherited.
+		Children:
+			Child: Before
+				Max: 1
+			Child: After
+				Max: 1
+			Child: Keep with next
+				Max: 1
+			Child: Keep with previous
+				Max: 1
+			Child: Keep together
+				Max: 1
+			Child: Edges
+				Max: 1
+
+	# Document
+
+	Node: Title
+		Description: Title of the document: the one the PDF viewer shows. Required.
+	Node: Subject
+		Description: What the document is about, in a sentence: the subject of the PDF, which the viewer shows in the document properties and which document managers and search engines index. Optional.
+	Node: Language
+		Description: Language, as a BCP 47 tag (es, en-US, ca...). In Document, the one of the content and of the tagged PDF (required). In Typography, the one of a box whose text is in another language (inherited): a screen reader reads it (Lang of the tagged PDF) and it sets the letter rules of Case. Not valid in For element: Document, which uses the one of Document.
+
+	# Element
+
+	Node: Id
+		Description: Identifier for dumps, tests, messages and For id rules. Unique in the document.
+	Node: Style
+		Description: Named styles of the element, separated by spaces: the For style rules with those names apply to it. In a Row, to each of its cells.
+	Node: Link
+		Description: Target the whole box leads to when clicked: https://..., http://..., mailto:... or #id (a box of the document). It does not change its appearance.
+	Node: In table of contents
+		Type: BOOLEAN
+		Description: Whether the heading, or the Figure, has an entry in the tables of contents (Table of contents). By default, true. With false a heading is still a heading (structure, bookmark and hierarchy) but it is not listed: the title of the cover or the one of the table of contents itself; a Figure keeps its number and is not listed.
+	Node: Isolate margins
+		Type: BOOLEAN
+		Description: Whether the box isolates the margins of its children: with true, those of the first and the last stay inside and do not merge with its own. By default, false.
+	Node: Offset
+		Description: Offset: top, right, bottom, left (1 to 4 values).
+	Node: Layer
+		Type: INTEGER
+		Description: Stacking order within its context. Not declared = auto.
+	Node: Pages
+		Type: ENUM
+		Description: Pages on which a Page overlay appears, counting from 1 within its scope (those of the document if it is a Page overlay of Document, those of the section if it is of a Section): all, every page; first, only the first; not-first, all but the first; odd, the odd ones; even, the even ones; last, only the last.
+		Values:
+			Value: all
+			Value: first
+			Value: not-first
+			Value: odd
+			Value: even
+			Value: last
+	Node: Page numbering
+		Type: ENUM
+		Description: How a Section numbers its pages with {page} and {pages}: continue (by default) follows the document counter, restart goes back to 1 and none neither numbers them nor advances the counter (a cover). {pages} is the last number of the page sequence, which starts at each restart.
+		Values:
+			Value: continue
+			Value: restart
+			Value: none
+	Node: Page number format
+		Type: ENUM
+		Description: How the page numbers of a Section are written: decimal (1, by default), lower-roman (i) or upper-roman (I), in {page}, {pages}, {page of: id}, the tables of contents and the viewer. Not valid with Page numbering: none.
+		Values:
+			Value: decimal
+			Value: lower-roman
+			Value: upper-roman
+	Node: Inherit page overlays
+		Type: BOOLEAN
+		Description: Whether the Section carries the Page overlay of the Document. By default, true; with false only its own appear (a cover without a footer).
+	Node: Mirror margins
+		Type: BOOLEAN
+		Description: Whether the even physical pages swap the left and right margins of Margin, for double-sided printing: Margin is that of the odd pages, the right-hand ones. By default, false. A Section inherits it together with Margin. With equal left and right margins it has no effect and is an error.
+	Node: Begin on
+		Type: ENUM
+		Description: On which physical page a Section starts: any (by default), on the next one; odd, on an odd one, the right-hand one when printing double-sided. If it does not fall there, the previous section ends with a blank page, which counts for the number but does not print it or carry the Page overlay. Not valid in the first section.
+		Values:
+			Value: any
+			Value: odd
+	Node: Footnote numbering
+		Type: ENUM
+		Description: How a Section numbers its footnotes: continue (by default) follows the counter of the document and restart goes back to 1.
+		Values:
+			Value: continue
+			Value: restart
+	Node: Footnote number format
+		Type: ENUM
+		Description: How the footnotes of a Section are numbered, in the call and in the note: decimal (1, by default), lower-alpha (a), upper-alpha (A), lower-roman (i) or upper-roman (I).
+		Values:
+			Value: decimal
+			Value: lower-alpha
+			Value: upper-alpha
+			Value: lower-roman
+			Value: upper-roman
+	Node: Rotate
+		Type: NUMBER
+		Description: Rotation of the box, in degrees clockwise (from -360 to 360, without 0). In Block, Text, Paragraph, Image and Barcode, which are in flow, it rotates about its center and the box takes the rectangle that encloses it rotated; without Width, it measures its content without breaking lines. In Frame, Overlay and Page overlay it rotates when painting, around Rotate origin, and does not change the layout. What is rotated must fit on the page and does not break across pages.
+	Node: Rotate origin
+		Description: Point around which the border box rotates with Rotate: one or two keywords out of top, bottom, left, right and center (top left, bottom...), or two measures from its top left corner, as lengths or as a percentage of its width and its height (20 50%). By default, center.
+	Node: Side
+		Type: ENUM
+		Description: Side box: an Image, a Barcode or a Block (with Width or Max width) in block flow that goes to the left or to the right of its container, at its place in the flow, and the text of the siblings that follow it shortens its lines beside it; its Margin is the separation. A sibling that is not text (a Table, a Stack, a List) goes below it. It is not split across pages: if it does not fit, it moves to the next page with the first line that runs beside it. Not on an item of a Stack or a Grid, nor on a cell.
+		Values:
+			Value: left
+			Value: right
+	Node: Clear
+		Type: BOOLEAN
+		Description: Whether the box goes below the side boxes (Side) before it, instead of running beside them. By default, false. Without a side box before it, it is an error.
+	Node: Drop cap
+		Type: INTEGER
+		Description: Drop cap of a Paragraph: its first letter is taken out of the text and set, in the font of the paragraph, at the size whose capitals are as tall as this number of lines (from 2 to 5), at the left of them. Not in a preformatted Paragraph.
+	Node: Paper
+		Type: ENUM
+		Description: Named paper size of the medium, in portrait: A3 (297 × 420 mm), A4 (210 × 297 mm), A5 (148 × 210 mm), A6 (105 × 148 mm), B4 (250 × 353 mm), B5 (176 × 250 mm), Letter (612 × 792 pt) or Legal (612 × 1008 pt). It is not declared with Width or Height.
+		Values:
+			Value: A3
+			Value: A4
+			Value: A5
+			Value: A6
+			Value: B4
+			Value: B5
+			Value: Letter
+			Value: Legal
+	Node: Orientation
+		Type: ENUM
+		Description: Orientation of the paper of Paper: portrait (by default) or landscape, which swaps the width and the height.
+		Values:
+			Value: portrait
+			Value: landscape
+	Node: Content
+		Type: BLOCK
+		Description: Block text. A single line break counts as a space; a blank line is an error, except in a preformatted Text (Preformatted: true or wrap). In a Barcode, the data, with its lines as they are.
+
+	# Box
+
+	Node: Width
+		Description: Width of the border box (in Page, of the page).
+	Node: Height
+		Description: Height of the border box (in Page, of the page; in a Marker image, of the image, a positive length).
+	Node: Min width
+		Description: Minimum width.
+	Node: Max width
+		Description: Maximum width.
+	Node: Min height
+		Description: Minimum height.
+	Node: Max height
+		Description: Maximum height.
+	Node: Aspect ratio
+		Description: Width/height ratio (16/9 or a number): derives an auto axis from the other.
+	Node: Margin
+		Description: Margin: top, right, bottom, left (1 to 4 values).
+	Node: Padding
+		Description: Padding: top, right, bottom, left (1 to 4 values).
+	Node: Border
+		Description: Border width: top, right, bottom, left (1 to 4 values).
+	Node: Border color
+		Description: Border color: top, right, bottom, left (1 to 4 colors). By default, the Color of the text.
+	Node: Corner radius
+		Description: Rounded corners: top left, top right, bottom right, bottom left (1 to 4 values, number or %). Painting only: it rounds the background, the border and the clipping of an Image or a Barcode.
+	Node: Background
+		Description: Background, painted in the padding box: a color or a gradient linear(angle, color, color...).
+	Node: Overflow
+		Type: ENUM
+		Description: What is done when what the box contains does not fit in it: error (by default) stops the conversion; shrink, only in a box with text (Text, Paragraph, a Cell with a value), reduces the Size of the text in steps of 0.5 pt until it fits, without going below Min size (if it still does not fit, it is an error); clip, only in a box without text inside, paints what sticks out of its padding box clipped (also the Overlay boxes inside) and does not split the box across pages.
+		Values:
+			Value: error
+			Value: shrink
+			Value: clip
+
+	# Typography
+
+	Node: Font
+		Description: Font family, as declared by its TTF or OTF files in resources/fonts. Required in the text, own or inherited (also from Document).
+	Node: Code font
+		Description: Font family of the code (`code` in a text with Markup: markdown or in a Markdown, and the code blocks), as declared by its TTF or OTF files in resources/fonts; usually a monospaced one. Required if there is code, own or inherited.
+	Node: Bold
+		Type: BOOLEAN
+		Description: Bold: true is Weight: 700 and false, Weight: 400. By default, false. Not together with Weight in the same Typography.
+	Node: Weight
+		Type: INTEGER
+		Description: Weight of the font, from 100 (thin) to 900 (black) in steps of 100; the family needs a file with that weight in resources/fonts. By default, 400.
+	Node: Italic
+		Type: BOOLEAN
+		Description: Italic: the italic variant of the font. By default, false.
+	Node: Size
+		Description: Font size, a length. Required in the text, own or inherited (also from Document).
+	Node: Min size
+		Description: The smallest Size that Overflow: shrink may reduce the text to, a length. By default, 6. Inherited. In a box with Overflow: shrink it cannot be greater than Size.
+	Node: Line height
+		Description: Line height: a length, or a percentage (120%) relative to the Size.
+	Node: Align
+		Type: ENUM
+		Description: Alignment of the lines.
+		Values:
+			Value: left
+			Value: right
+			Value: center
+			Value: justify
+	Node: Color
+		Description: Color of the text.
+	Node: Line breaking
+		Type: ENUM
+		Description: Line breaking of the text: simple (greedy, by default: each line is filled as much as it can) or balanced (Knuth-Plass, which balances the lines of the paragraph).
+		Values:
+			Value: simple
+			Value: balanced
+	Node: Hyphenate
+		Type: BOOLEAN
+		Description: Whether the line breaking may split a word at the end of a line with a hyphen, following the hyphenation patterns of the language of Language (the engine has them for es, ca, en-US, en-GB, de, fr, it, nl and pt; any other language is an error). By default, false. Inherited. A soft hyphen (U+00AD) in the text is always a break point, with or without Hyphenate, and is only painted where the word is split.
+	Node: Markup
+		Type: ENUM
+		Description: Inline formatting of the text: none (by default; the text is literal) or markdown (interprets **bold**, *italic*, ++underline++, ~~strikethrough~~ and [links](target), with the CommonMark escapes; it does nothing inside a Markdown).
+		Values:
+			Value: none
+			Value: markdown
+	Node: Case
+		Type: ENUM
+		Description: Letter case of the text when painting it: none (by default), uppercase, lowercase or capitalize (the first letter of each word). The text of the document and the one in the PDF structure remain as written; the rules for each letter are those of the language of Language.
+		Values:
+			Value: none
+			Value: uppercase
+			Value: lowercase
+			Value: capitalize
+	Node: Letter spacing
+		Description: Spacing between letters, a length, added to the advance of each character (also in line breaking and in justify); the last character of the line does not get it. It can be negative. By default, 0.
+	Node: Small caps
+		Type: BOOLEAN
+		Description: Small caps: lowercase letters are painted as uppercase at 80 % of the size. By default, false.
+	Node: Ligatures
+		Type: BOOLEAN
+		Description: Whether the text is measured and painted with the ligatures of the font (fi, fl, ffi...). By default, false: one glyph per character. Inherited. With Letter spacing other than 0 there are no ligatures. It only matters in the fonts that have them (IBM Plex Sans and Serif; Plex Mono does not).
+	Node: Kerning
+		Type: BOOLEAN
+		Description: Whether the text is measured and painted with the kerning pairs of the font, which adjust the space between two letters (AV, To). By default, false. Inherited. The pairs come from the kern feature of the GPOS table or, in a font without it, from the kern table; a pair does not cross a space or the boundary between two runs. It does not change the text that is read or copied.
+	Node: Preformatted
+		Type: ENUM
+		Description: Preformatted text: false (by default; spaces and line breaks count as a space), true (keeps the spaces and line breaks, and does not break lines: one wider than the box is an error) or wrap (like true, but breaks lines that are too wide between words). Preformatted lines are not justified.
+		Values:
+			Value: false
+			Value: true
+			Value: wrap
+	Node: Tab size
+		Type: INTEGER
+		Description: With Preformatted: true or wrap, the width of a tab: each one leads to the next column that is a multiple of this number of characters. By default, 4.
+	Node: Numbered
+		Type: BOOLEAN
+		Description: Whether the headings carry a number (1, 1.1, 1.1.1...), which is written before the title and is given by {number of: id}, the tables of contents and the PDF bookmarks. By default, false. Inherited: For element: Document turns it on in all of them, a For element rule in those of one level and, in the Typography of a heading, only in that one. Headings whose Numbered is false are neither numbered nor counted. A Figure is numbered by default, and only Numbered: false declared in it, or in a rule that reaches it, leaves it without a number.
+	Node: Number format
+		Type: ENUM
+		Description: How the level number of a numbered heading, or the number of a Figure, is written: decimal (1, by default), lower-alpha (a), upper-alpha (A), lower-roman (i) or upper-roman (I). Each level of the full number is written with the one of its heading (II.a). Inherited.
+		Values:
+			Value: decimal
+			Value: lower-alpha
+			Value: upper-alpha
+			Value: lower-roman
+			Value: upper-roman
+	Node: Number label
+		Description: What is written before the title of a numbered heading, or before the caption of a numbered Figure, with {number} where the number goes (Number label: Annex {number}., Number label: Figure {number}.); without it, the number. Inherited.
+	Node: Widows
+		Type: INTEGER
+		Description: Minimum number of lines of a paragraph that move to the next page. By default, 2.
+	Node: Orphans
+		Type: INTEGER
+		Description: Minimum number of lines of a paragraph that stay at the end of a page. By default, 2.
+
+	# Break
+
+	Node: Before
+		Type: ENUM
+		Description: Break before the box: auto (by default) does not force it; page takes it to a new page and column, inside a Columns, to the next column.
+		Values:
+			Value: auto
+			Value: page
+			Value: column
+	Node: After
+		Type: ENUM
+		Description: Break after the box: auto (by default) does not force it; page takes what follows to a new page and column, inside a Columns, to the next column.
+		Values:
+			Value: auto
+			Value: page
+			Value: column
+	Node: Keep with next
+		Type: BOOLEAN
+		Description: Whether the box is kept on the same page as the next one: it avoids the break between the two (titles, labels). By default, false. With After: page or column, it is a contradiction.
+	Node: Keep with previous
+		Type: BOOLEAN
+		Description: Whether the box is kept on the same page as the previous one: it avoids the break between the two. By default, false. With Before: page or column, it is a contradiction.
+	Node: Keep together
+		Type: BOOLEAN
+		Description: Whether the box is kept whole: it avoids breaking it across pages. By default, false.
+	Node: Edges
+		Type: ENUM
+		Description: Border and padding of a box broken across pages: open (by default) leaves them open at the break; closed closes them in each fragment, which carries its full border and padding.
+		Values:
+			Value: open
+			Value: closed
+
+	# Stack
+
+	Node: Direction
+		Type: ENUM
+		Description: Main axis of a Stack, along which the items go one after another: horizontal (by default) or vertical.
+		Values:
+			Value: horizontal
+			Value: vertical
+	Node: Wrap
+		Type: BOOLEAN
+		Description: Allows the items to be distributed over several lines.
+	Node: Split items
+		Type: BOOLEAN
+		Description: With true (by default), a line of a Stack (in vertical, an item) that does not fit in what is left of the page is broken on that page, each item on its own; with false it moves whole to the next page, and is only broken if it does not fit on a whole page either.
+	Node: Gap
+		Description: Spacing: in Stack and Grid, one value, or two (rows columns); in Columns, one value, the gap between columns.
+	Node: Line distribution
+		Type: ENUM
+		Description: Distribution of the lines in the container: start, end, center, justify (the first and the last at the edges), around or stretch. Only with Wrap: true.
+		Values:
+			Value: start
+			Value: end
+			Value: center
+			Value: justify
+			Value: around
+			Value: stretch
+	Node: Grow
+		Description: Share of the leftover space that the item receives.
+	Node: Shrink
+		Description: Share of the shortfall that the item gives up, weighted by Base size.
+	Node: Base size
+		Description: Starting size of the item on the main axis.
+
+	# Grid
+
+	Node: Column sizes
+		Description: Size of each column: one track per column.
+	Node: Row sizes
+		Description: Size of each row: one track per row.
+	Node: Areas
+		Type: TEXT
+		Description: One row of the grid per line; names separated by spaces and . for empty cells.
+	Node: Flow
+		Type: ENUM
+		Description: Direction of the automatic placement of a Grid: horizontal (by default) fills the rows one by one; vertical, the columns.
+		Values:
+			Value: horizontal
+			Value: vertical
+	Node: Split rows
+		Type: BOOLEAN
+		Description: With true (by default), a row of a Grid or a Table that does not fit in what is left of the page is broken on that page, each item on its own; with false it moves whole to the next page, and is only broken if it does not fit on a whole page either.
+	Node: Merge borders
+		Type: BOOLEAN
+		Description: Only in a Table (from a rule of Styles, the other boxes ignore it): with true, the border between two cells is drawn once, centered on the line between them, with the wider of their two borders (and its color); the outer border of the table goes inside it. False by default.
+	Node: Horizontal
+		Type: ENUM
+		Description: Horizontal alignment or distribution. In a Grid, the alignment of all the items in their area, and in an Area, that of one (start, end, center or stretch). In a Stack, if its main axis is the horizontal one, the distribution of the leftover space (start, end, center, justify, around or distribute); if not, the alignment of all the items (start, end, center or stretch). In an Item, the alignment of one, only if it is the cross axis of its Stack.
+		Values:
+			Value: start
+			Value: end
+			Value: center
+			Value: stretch
+			Value: justify
+			Value: around
+			Value: distribute
+	Node: Vertical
+		Type: ENUM
+		Description: Vertical alignment or distribution, like Horizontal: in a Grid and in an Area, the alignment in the area; in a Stack, the distribution if its main axis is the vertical one and, if not, the alignment of the items; in an Item, the alignment of one, only if it is the cross axis of its Stack.
+		Values:
+			Value: start
+			Value: end
+			Value: center
+			Value: stretch
+			Value: justify
+			Value: around
+			Value: distribute
+
+	# List
+
+	Node: Marker
+		Type: ENUM
+		Description: Marker of the items: bullet (•), dash (–) or none, an image (the Marker image of the list or of each item), or a numbering (1., a., A., i., I.).
+		Values:
+			Value: bullet
+			Value: dash
+			Value: none
+			Value: image
+			Value: decimal
+			Value: lower-alpha
+			Value: upper-alpha
+			Value: lower-roman
+			Value: upper-roman
+	Node: Marker image
+		Type: INLINE
+		Description: Image of the marker, with Marker: image, in the List (for all its items) or in a List item (its own, which replaces that of the list); the value is its path, relative to images/, as in an Image. As tall as the Size of the item unless it declares Height, as wide as its proportion gives, centered on the capitals of the first line of the item and followed by a space. With Alt it is read as a figure; without it, it is decorative.
+		Children:
+			Child: Alt
+				Max: 1
+			Child: Height
+				Max: 1
+	Node: Start
+		Type: INTEGER
+		Description: Number a numbering starts with: that of the first item of a numbered list or, in a Section with Page numbering: restart, that of its first page. By default, 1.
+	Node: Number
+		Type: INTEGER
+		Description: Number of this item of a numbered list; the following ones continue from it.
+
+	# Table
+
+	Node: Span
+		Description: Rows and columns the cell spans, in that order (1 1 by default): 1 3 spans three columns of its row.
+	Node: Row header
+		Type: BOOLEAN
+		Description: The cell is the header of its row (the item of an invoice, the time of a timetable): in the tagged PDF it is a TH with Scope Row, and a screen reader announces it with each cell of the row. By default, false. Not valid in Header rows, whose cells are already column headers.
+
+	# Columns
+
+	Node: Count
+		Type: INTEGER
+		Description: Number of columns of a Columns (at least 1); with Min column width, the maximum.
+	Node: Min column width
+		Description: Minimum width of the columns: as many fit as the width allows, up to Count if it is declared.
+	Node: Separator
+		Description: Width of the line between the columns of a Columns, centered in Gap, which must be at least as wide.
+	Node: Separator color
+		Description: Color of the line between columns. By default, the Color of the text.
+	Node: Balance
+		Type: BOOLEAN
+		Description: Distribution among the columns of a Columns: with true (by default) the columns of the last fragment are balanced; with false they are filled in order.
+
+	# Image
+
+	Node: Alt
+		Description: Alternative text of an Image or a Barcode: with it, the image is a figure (Figure) of the tagged PDF; without it, an Image is decorative. A Barcode requires it, and so does the image of a Figure. In a Figure with a Block, the alternative text of the whole figure, required.
+	Node: Fit
+		Type: ENUM
+		Description: How an Image fills its box if they have different proportions: inside (by default) fits whole and centered; fill fills the box, centered and clipped; stretch stretches it to the box and distorts it.
+		Values:
+			Value: inside
+			Value: fill
+			Value: stretch
+	Node: Pdf page
+		Type: INTEGER
+		Description: Page drawn by an Image of a PDF, from 1 (by default, the first). In an image that is not a PDF, or a page the PDF does not have, it is an error.
+
+	# Barcode
+
+	Node: Format
+		Type: ENUM
+		Description: Symbology of a Barcode: qr (by default), a QR code; code-128, printable ASCII characters, up to 80; ean-13, 12 digits (the check digit is added) or 13 (it is checked).
+		Values:
+			Value: qr
+			Value: code-128
+			Value: ean-13
+	Node: Error correction
+		Type: ENUM
+		Description: Error correction of a QR code, the part of its modules that can be damaged and it can still be read: low (7 %), medium (15 %, by default), quartile (25 %) or high (30 %). In another Format, it is an error.
+		Values:
+			Value: low
+			Value: medium
+			Value: quartile
+			Value: high
+	Node: Quiet zone
+		Type: INTEGER
+		Description: Light modules on each side of a Barcode, which the reader needs around the code, from 0 to 40. By default, those of its standard: 4 in a QR code, 10 in a Code 128, and 11 on the left and 7 on the right in an EAN-13. They are part of its natural size, so in a box of a given size fewer modules of quiet zone give wider modules.
+
+	# Markdown
+
+	Node: Bullet markers
+		Description: Markers of the bulleted lists (-, *, +) of a Markdown, one per nesting level (the last one serves the deeper levels): bullet, dash or none.
+	Node: Number markers
+		Description: Markers of the numbered lists (1., 1)) of a Markdown, one per nesting level (the last one serves the deeper levels): decimal, lower-alpha, upper-alpha, lower-roman or upper-roman.
+	Node: Column align
+		Description: Alignment of each column of a Table (left, center, right or justify), one per column: it is the default value of its cells, which the Styles rules and what the cell declares override.
+	Node: Table columns
+		Type: ENUM
+		Description: Columns of the tables of a Markdown: equal, all of the same width (repeat(n, *)); auto, each according to its content (repeat(n, auto)).
+		Values:
+			Value: equal
+			Value: auto
+
+	# Figure
+
+	Node: Caption position
+		Type: ENUM
+		Description: Where the Caption of a Figure goes: top, above its content, or bottom, below it. By default, bottom, and top in a Figure with a Table.
+		Values:
+			Value: top
+			Value: bottom
+	Node: Figure counter
+		Type: ENUM
+		Description: The counter a Figure is numbered with and the tables of contents that list it: figures or tables. By default, tables in a Figure with a Table and figures in the rest.
+		Values:
+			Value: figures
+			Value: tables
+
+	# Table of contents
+
+	Node: Of
+		Type: ENUM
+		Description: What a Table of contents lists: headings (by default), the headings of its Levels; figures or tables, the Figure elements numbered with that counter, with the text of their caption. With figures or tables, Levels has no effect and is an error.
+		Values:
+			Value: headings
+			Value: figures
+			Value: tables
+	Node: Levels
+		Description: Heading levels listed by a Table of contents with Of: headings: the first and the last, from 1 to 6 (by default, 1 3).
+	Node: Leader
+		Type: ENUM
+		Description: Leader between the title and the page of the entries of a Table of contents: dots (by default), line (a line) or none.
+		Values:
+			Value: dots
+			Value: line
+			Value: none

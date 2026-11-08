@@ -45,7 +45,7 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   Without a file, the server listens only on `127.0.0.1:8080`, without token.
 - `PressServer.startLazily`, whose shared converter is created by the first request that needs it.
 - The web editor, at `GET /` and its files under `/editor/`, without token: a document mode (a document, its styles and
-  its data to `/render`, with the examples of stxt-pdf) and a templates mode (a template of the server with its sample
+  its data to `/render`, with the English examples of stxt-pdf) and a templates mode (a template of the server with its sample
   data first and then its document and its chain of styles, printed with `/print` or, edited, rendered with
   `/render`, and its `curl`). Fill,
   preview as SVG pages with or without outlines, and download the PDF; the errors of the server are marked in their
@@ -55,7 +55,8 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   `GET /fonts/{id}` gives the file of a face: the SVG pages name their fonts and do not carry them.
 - `server/`, a server folder to start a project from: its `server.stxt`, the fonts IBM Plex Sans, Serif and Mono and
   the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/`: an invoice with
-  Slots, its styles and its sample data. `start --config server/server.stxt` starts it.
+  Slots, its styles and its sample data. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, for the
+  editors with discovery. `start --config server/server.stxt` starts it.
 - `start.sh`, and `start.bat` for Windows, in `server/`: they start the server of the folder with the
   `stxt-press.jar` beside them, which `mvn package` copies there, so the folder is a whole server that can be copied
   anywhere. The Java is that of `JAVA_HOME`, or the `java` of the `PATH`.

@@ -1,0 +1,163 @@
+# Schema of server.stxt, the configuration of a server of stxt-press (README.md, "Configuration").
+# Each name has a single definition in the whole namespace. The values that the types do not check (a port above
+# 65535, a folder that does not exist, a variable that is not set) are checked when the file is read.
+Schema (@stxt.schema): dev.stxt.press
+	Description: The configuration of a server of stxt-press: where it listens, its token, its resources and templates folders, which routes are on, its limits and the options of the templates. Relative paths are relative to the folder of the file.
+
+	Node: Server
+		Type: GROUP
+		Description: The configuration of the server. Every child is optional: what is not written has its default.
+		Children:
+			Child: Host
+				Max: 1
+			Child: Port
+				Max: 1
+			Child: Token env
+				Max: 1
+			Child: Lazy init
+				Max: 1
+			Child: Preload resources
+				Max: 1
+			Child: Resource folder
+				Max: 1
+			Child: Font folder
+				Max: 1
+			Child: Image folder
+			Child: Template folder
+				Max: 1
+			Child: Routes
+				Max: 1
+			Child: Limits
+				Max: 1
+			Child: Template options
+				Max: 1
+	Node: Host
+		Type: INLINE
+		Description: The address the server listens on. By default 127.0.0.1, only this machine; 0.0.0.0 for every address of the machine.
+	Node: Port
+		Type: NATURAL
+		Description: The port, from 0 to 65535; 0 for any free one. By default 8080.
+	Node: Token env
+		Type: INLINE
+		Description: The name of the environment variable that holds the token of the server: every route but /health then asks for Authorization: Bearer <token>. The variable has to be set and not empty when the server starts. Without Token env, the server asks for no token.
+	Node: Lazy init
+		Type: BOOLEAN
+		Description: Whether the resources are opened when the first request needs them instead of when the server starts. By default false, so that resources that are missing are seen before the first request.
+	Node: Preload resources
+		Type: BOOLEAN
+		Description: Whether the whole resources folder is read when the resources are opened, instead of each font and image the first time a document uses it. By default false.
+	Node: Resource folder
+		Type: INLINE
+		Description: The resources folder, with the fonts in fonts/ and the images in images/. By default resources, next to this file. Not with Font folder or Image folder.
+	Node: Font folder
+		Type: INLINE
+		Description: The folder of the fonts, instead of the fonts/ of a Resource folder.
+	Node: Image folder
+		Type: INLINE
+		Description: A folder of images, instead of the images/ of a Resource folder: the one of the paths without prefix, or, with Prefix, the one of the paths that start with it. Several, each with a different prefix.
+		Children:
+			Child: Prefix
+				Max: 1
+	Node: Prefix
+		Type: INLINE
+		Description: The first segments of the paths of the images of the folder: with logos, Image: logos/a.png is its file a.png.
+	Node: Template folder
+		Type: INLINE
+		Description: The templates folder of /print and /templates. Without it, the server has no templates.
+
+	Node: Routes
+		Type: GROUP
+		Description: Which routes are on, besides /print, /schema, /fonts and /health, which always are. A route that is off answers 404.
+		Children:
+			Child: Editor
+				Max: 1
+			Child: Render
+				Max: 1
+			Child: Templates
+				Max: 1
+	Node: Editor
+		Type: BOOLEAN
+		Description: Whether the web editor, GET / and its files under /editor/, is on. Its files are served without token; the page asks for the token when the API answers 401. By default true.
+	Node: Render
+		Type: BOOLEAN
+		Description: Whether POST /render, which converts any document, is on. By default true.
+	Node: Templates
+		Type: BOOLEAN
+		Description: Whether /templates, which shows the texts and the sample data of the templates, is on. By default true.
+
+	Node: Limits
+		Type: GROUP
+		Description: The limits of the server and of the engine. Each one is at least 1.
+		Children:
+			Child: Max body size
+				Max: 1
+			Child: Timeout
+				Max: 1
+			Child: Concurrent conversions
+				Max: 1
+			Child: Max pages
+				Max: 1
+			Child: Max image pixels
+				Max: 1
+			Child: Max SVG elements
+				Max: 1
+			Child: Max SVG depth
+				Max: 1
+			Child: Max PDF bytes
+				Max: 1
+	Node: Max body size
+		Type: NATURAL
+		Description: The largest body of a request, in bytes. By default 2097152 (2 MiB).
+	Node: Timeout
+		Type: NATURAL
+		Description: The seconds a PDF or SVG conversion has: then it is cancelled and answered with 503. By default 30.
+	Node: Concurrent conversions
+		Type: NATURAL
+		Description: How many PDF or SVG conversions run at once: one more is answered with 503 at once. By default 4.
+	Node: Max pages
+		Type: NATURAL
+		Description: The pages of a document. By default 2000, the one of the engine.
+	Node: Max image pixels
+		Type: NATURAL
+		Description: The pixels of a PNG or JPEG image. By default 25000000, the one of the engine.
+	Node: Max SVG elements
+		Type: NATURAL
+		Description: The elements of an SVG image. By default 20000, the one of the engine.
+	Node: Max SVG depth
+		Type: NATURAL
+		Description: The nesting of the elements of an SVG image. By default 64, the one of the engine.
+	Node: Max PDF bytes
+		Type: NATURAL
+		Description: The size of a PDF image, in bytes. By default 20000000, the one of the engine.
+
+	Node: Template options
+		Type: GROUP
+		Description: The options of the engine for every template of /print, the same as the options of a body of /render.
+		Children:
+			Child: PDF UA
+				Max: 1
+			Child: PDF A
+				Max: 1
+			Child: Exclude
+	Node: PDF UA
+		Type: ENUM
+		Description: The part of PDF/UA the PDF complies with: 1 (PDF 1.7, by default) or 2 (PDF 2.0). 2 is not valid with PDF A.
+		Values:
+			Value: 1
+			Value: 2
+	Node: PDF A
+		Type: ENUM
+		Description: The PDF/A the PDF complies with besides: A2B, A2A, A3B or A3A. By default none.
+		Values:
+			Value: A2B
+			Value: A2A
+			Value: A3B
+			Value: A3A
+	Node: Exclude
+		Type: ENUM
+		Description: A check of the engine that is not made. One Exclude for each.
+		Values:
+			Value: CONTRAST
+			Value: PDF_IMAGE_FONTS
+			Value: PDF_IMAGE_ANNOTATIONS
+			Value: BARCODE_SIZE

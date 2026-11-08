@@ -69,8 +69,8 @@ document and `/templates` shows the texts and the sample data of the templates, 
 
 `GET /` is a page to try documents and templates against the server:
 
-- **Document**: a layout document, its styles and its JSON data, sent to `/render`. The examples of stxt-pdf are in
-  the list.
+- **Document**: a layout document, its styles and its JSON data, sent to `/render`. The English examples of stxt-pdf
+  are in the list.
 - **Templates**: a template of the server: its sample data first, the panel that changes from one PDF to another, then
   the document and its chain of styles, one panel per file. With the document and the styles as the server has them,
   it is printed with `/print` and the data of the panel; edited, with `/render` and the whole chain. Nothing is saved
@@ -166,7 +166,9 @@ The folder [`server/`](server/) is a whole server, to copy anywhere and to start
 `start.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
 `127.0.0.1:8080` and shows the other nodes commented with their defaults; the fonts IBM Plex Sans, Serif and Mono and
 the images of the examples of stxt-pdf in `resources/`; and a sample template in `templates/`, an invoice with Slots,
-its styles and its sample data. `server/start.sh` starts it, from any working directory, and
+its styles and its sample data. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, so that an editor
+with discovery (VS Code with the STXT extension) checks and completes every file of the folder. `server/start.sh`
+starts it, from any working directory, and
 `java -jar server/stxt-press.jar print invoices/invoice -o invoice.pdf --config server/server.stxt` prints its template.
 
 ## Build

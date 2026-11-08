@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
+import dev.stxt.pdf.tree.DocumentSchema;
 import dev.stxt.press.config.ConfigException;
 import dev.stxt.press.config.ServerFile;
 import dev.stxt.press.templates.Template;
@@ -27,8 +29,9 @@ import dev.stxt.press.templates.Templates;
 
 /**
  * The server folder of the project ({@code server/}), the start of a project and the one of the Docker image: its
- * {@code server.stxt} is valid, every template converts with its sample data and the resources of the folder, and the
- * fonts and the images are the same as those of {@code ../stxt-pdf/resources}.
+ * {@code server.stxt} is valid, every template converts with its sample data and the resources of the folder, the
+ * fonts and the images are the same as those of {@code ../stxt-pdf/resources}, and the schemas of {@code .stxt/} are
+ * those of the jar.
  */
 class ServerFolderTest {
 
@@ -77,7 +80,21 @@ class ServerFolderTest {
         assertSameFiles("images/examples");
     }
 
-    /** The files under {@code folder} of the resources of the server and of {@code stxt-pdf}: the same, byte by byte. */
+    @Test
+    void definitionsAreTheSchemasOfTheJar() throws IOException {
+        // .stxt/ holds the schemas for the editors (discovery): those the server and the engine validate with.
+        assertEquals(List.of(Path.of("dev.stxt.pdf.stxt"), Path.of("dev.stxt.press.stxt")),
+                files(FOLDER.resolve(".stxt")));
+        assertEquals(DocumentSchema.text(), Files.readString(FOLDER.resolve(".stxt/dev.stxt.pdf.stxt")),
+                "server/.stxt/dev.stxt.pdf.stxt is not the schema of the engine");
+        try (InputStream in = ServerFile.class.getResourceAsStream("/stxt/dev.stxt.press.stxt")) {
+            assertEquals(new String(in.readAllBytes(), StandardCharsets.UTF_8),
+                    Files.readString(FOLDER.resolve(".stxt/dev.stxt.press.stxt")),
+                    "server/.stxt/dev.stxt.press.stxt is not the schema of server.stxt");
+        }
+    }
+
+    /** The files under {@code folder} of the resources of the server and of stxt-pdf: byte for byte the same. */
     private static void assertSameFiles(String folder) throws IOException {
         Path ours = FOLDER.resolve("resources").resolve(folder);
         Path theirs = STXT_PDF.resolve(folder);
