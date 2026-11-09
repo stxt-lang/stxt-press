@@ -76,6 +76,7 @@ final class Routes implements HttpHandler {
     static final String BODY_NOT_VALID = "BODY_NOT_VALID";
     static final String BODY_TOO_LARGE = "BODY_TOO_LARGE";
     static final String SERVER_BUSY = "SERVER_BUSY";
+    static final String SERVER_STARTING = "SERVER_STARTING";
     static final String INTERNAL = "INTERNAL";
 
     private static final Logger LOG = System.getLogger("dev.stxt.press");
@@ -127,6 +128,8 @@ final class Routes implements HttpHandler {
     private final Object drained = new Object();
     /** Whether the server is stopping: every new request is answered with {@code 503}. */
     private volatile boolean closing;
+    /** Whether the server is warming up: every request, {@code /health} too, is answered with {@code 503}. */
+    private volatile boolean starting;
 
     /** The converter of the server and the {@link Press} on it. */
     private record Shared(Converter converter, Press press) {
@@ -167,6 +170,9 @@ final class Routes implements HttpHandler {
             try {
                 if (closing) {
                     throw new HttpError(503, SERVER_BUSY, "The server is stopping", Map.of("Connection", "close"));
+                }
+                if (starting) {
+                    throw new HttpError(503, SERVER_STARTING, "The server is warming up", Map.of("Retry-After", "1"));
                 }
                 route(exchange);
             } catch (Exception e) {
@@ -218,6 +224,23 @@ final class Routes implements HttpHandler {
     /** {@return the requests being answered} */
     int active() {
         return active.get();
+    }
+
+    /** Whether the server is warming up, and answers every request with {@code 503} until it is not. */
+    void starting(boolean starting) {
+        this.starting = starting;
+    }
+
+    /**
+     * Warms the server up: creates its converter, which reads the whole resources folder, and converts its templates
+     * ({@link WarmUp}).
+     *
+     * @throws dev.stxt.pdf.model.StxtPdfException if the converter cannot be created: its resources
+     */
+    WarmUp.Result warmUp() {
+        Shared current = shared();
+        String font = current.converter().resources().fonts().families().stream().findFirst().orElse(null);
+        return WarmUp.run(current.press(), templates, font, config.templateOptions(), config.timeout());
     }
 
     private void route(HttpExchange exchange) throws Exception {

@@ -16,7 +16,7 @@ Schema (@stxt.schema): dev.stxt.press
 				Max: 1
 			Child: Lazy init
 				Max: 1
-			Child: Preload resources
+			Child: Warm up
 				Max: 1
 			Child: Resource folder
 				Max: 1
@@ -42,10 +42,10 @@ Schema (@stxt.schema): dev.stxt.press
 		Description: The name of the environment variable that holds the token of the server: every route but /health then asks for Authorization: Bearer <token>. The variable has to be set and not empty when the server starts. Without Token env, the server asks for no token.
 	Node: Lazy init
 		Type: BOOLEAN
-		Description: Whether the resources are opened when the first request needs them instead of when the server starts. By default false, so that resources that are missing are seen before the first request.
-	Node: Preload resources
+		Description: Whether the resources are opened when the first request needs them instead of when the server starts, without warm up. By default false, so that resources that are missing are seen before the first request.
+	Node: Warm up
 		Type: BOOLEAN
-		Description: Whether the whole resources folder is read when the resources are opened, instead of each font and image the first time a document uses it. By default false.
+		Description: Whether the server warms up before answering: it reads the whole resources folder and converts every template with its sample data, to PDF and to SVG, so that the first request is as fast as the next ones. Until it ends, every request, /health too, is answered with 503 (SERVER_STARTING). A template that cannot be converted is a warning in the log. By default true, and false with Lazy init: true; both true is an error.
 	Node: Resource folder
 		Type: INLINE
 		Description: The resources folder, with the fonts in fonts/ and the images in images/. By default resources, next to this file. Not with Font folder or Image folder.

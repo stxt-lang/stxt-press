@@ -51,7 +51,7 @@ An error is a JSON body with its `code` and its `message`:
 | `405` | The method is not one of the route, which the `Allow` header lists |
 | `413` | The body is larger than the server accepts (`BODY_TOO_LARGE`), or the document exceeds a limit of the engine |
 | `422` | The document, its styles or its data are not valid |
-| `503` | The conversion ran out of time (`CANCELLED`), or the server is converting as many as it can (`SERVER_BUSY`) |
+| `503` | The conversion ran out of time (`CANCELLED`), the server is converting as many as it can or stopping (`SERVER_BUSY`), or it is warming up (`SERVER_STARTING`, `/health` too) |
 | `500` | An error of the server: its resources, its templates folder, the engine |
 
 The errors of a conversion (`413`, `422`, `503`) also carry `kind`, `line` and `source`, the input the line belongs to:
@@ -131,6 +131,11 @@ stxt-press: server/templates/invoices/invoice.stxt:73: SLOT_NO_DATA: Node 'Block
 | `1` | The job failed: the document, its styles, its data, a resource, a limit |
 | `2` | The invocation is not valid: an option, a file that does not exist, a `server.stxt` that is not valid |
 
+`start` warms up before answering (`Warm up` of `server.stxt`): it reads the whole resources folder and converts every
+template with its sample data, to PDF and to SVG, so that the first request is as fast as the next ones. It listens
+from the start, and until it ends every route, `/health` too, answers `503` (`SERVER_STARTING`, with `Retry-After`). A
+template that cannot be converted is a warning in the log, and the server starts all the same.
+
 `start` stops on `SIGTERM` or Ctrl+C, giving the conversions in progress the `Timeout` of `server.stxt` to finish;
 without any it stops at once. While it waits, new requests are answered with `503`.
 
@@ -170,8 +175,8 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 | `Host` | `127.0.0.1` | The address the server listens on |
 | `Port` | `8080` | The port; `0` for any free one |
 | `Token env` | none | The environment variable with the token. It has to be set and not empty when the server starts |
-| `Lazy init` | `false` | Opening the resources with the first request that needs them, instead of at the start |
-| `Preload resources` | `false` | Reading the whole resources folder when it is opened, instead of each file when a document uses it |
+| `Warm up` | `true` | Reading the whole resources folder and converting every template once before answering; until then every route answers `503` |
+| `Lazy init` | `false` | Opening the resources with the first request that needs them, instead of at the start; it turns `Warm up` off, and both `true` is an error |
 | `Resource folder` | `resources` | The folder with `fonts/` and `images/` |
 | `Font folder`, `Image folder` | — | The fonts and the images in folders of their own, instead of `Resource folder`; each `Image folder` with its `Prefix` |
 | `Template folder` | none | The templates folder |

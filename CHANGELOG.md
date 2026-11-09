@@ -39,7 +39,7 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - The configuration of a server, `server.stxt`, in `dev.stxt.press.config`: `ServerFile` finds it (`--config`, then
   `STXT_PRESS_CONFIG`, then `server.stxt` in the working directory), validates it with the schema `dev.stxt.press` of
   the jar and starts the server with it. It sets the address, the token (only the name of its environment variable,
-  `Token env`), `Lazy init`, `Preload resources`, the resources folder or separate folders of fonts and images, the
+  `Token env`), `Lazy init`, `Warm up`, the resources folder or separate folders of fonts and images, the
   templates folder, the routes on, the limits of the server and of the engine, and the options of the templates.
   Relative paths are relative to the folder of the file. An error is a `ConfigException` with its code and its line.
   Without a file, the server listens only on `127.0.0.1:8080`, without token.
@@ -75,6 +75,13 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   and line. Exit codes: `0`, `1` if the job failed, `2` if the invocation is not valid.
 - The jar is a single file with every dependency inside (`maven-shade-plugin`), with `dev.stxt.press.cli.Main` as
   its `Main-Class`.
+- The warm up of the server (`Warm up` in `server.stxt`, on by default): before answering, it reads the whole resources
+  folder and converts every template with its sample data, to PDF and to SVG, so that the first request is as fast as
+  the next ones (the catalog of `server/`, 1.3 s cold and 0.3 s warm). It listens from the start, and until it ends
+  every route, `/health` too, answers `503` with the code `SERVER_STARTING` and `Retry-After: 1`. A template that cannot
+  be converted is a warning in the log, or only information if it has no sample data. It replaces `Preload
+  resources`; `Lazy init: true` turns it off, and both `true` is `CONFIG_CONFLICT`. `PressServer.startWarmingUp` and
+  `PressServer.warmUp()` for it.
 - `PressServer.close(Duration)`, which answers new requests with `503` and waits for those in progress, and without
   any stops at once: it does not use `HttpServer.stop(seconds)`, which on Java 17 waits all the seconds even without
   requests, so a Ctrl+C of `start` took the whole `Timeout`.

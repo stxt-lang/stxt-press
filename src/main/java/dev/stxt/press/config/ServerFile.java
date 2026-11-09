@@ -80,17 +80,17 @@ public final class ServerFile {
     private final ServerConfig http;
     private final Resources resources;
     private final Limits limits;
-    private final boolean preloadResources;
+    private final boolean warmUp;
     private final boolean lazyInit;
     private final Path templateFolder;
 
-    private ServerFile(Path file, ServerConfig http, Resources resources, Limits limits, boolean preloadResources,
+    private ServerFile(Path file, ServerConfig http, Resources resources, Limits limits, boolean warmUp,
             boolean lazyInit, Path templateFolder) {
         this.file = file;
         this.http = http;
         this.resources = resources;
         this.limits = limits;
-        this.preloadResources = preloadResources;
+        this.warmUp = warmUp;
         this.lazyInit = lazyInit;
         this.templateFolder = templateFolder;
     }
@@ -161,7 +161,7 @@ public final class ServerFile {
      */
     public static ServerFile defaults(Path workingDirectory) {
         return new ServerFile(null, ServerConfig.DEFAULT,
-                new Resources(workingDirectory.resolve(Resources.DEFAULT_ROOT)), Limits.DEFAULT, false, false, null);
+                new Resources(workingDirectory.resolve(Resources.DEFAULT_ROOT)), Limits.DEFAULT, true, false, null);
     }
 
     /**
@@ -217,9 +217,13 @@ public final class ServerFile {
         return limits;
     }
 
-    /** {@return whether the whole resources folder is read when the converter is created} */
-    public boolean preloadResources() {
-        return preloadResources;
+    /**
+     * {@return whether the server warms up before answering: it reads the whole resources folder and converts its
+     * templates, and until then answers every request with {@code 503}} By default {@code true}, and {@code false}
+     * with {@link #lazyInit()}.
+     */
+    public boolean warmUp() {
+        return warmUp;
     }
 
     /** {@return whether the converter is created by the first request that needs it instead of at the start} */
@@ -235,36 +239,48 @@ public final class ServerFile {
     /**
      * {@return the shared converter of the server: its resources and its limits}
      *
-     * @throws dev.stxt.pdf.resources.ResourceException with {@link #preloadResources()}, if the fonts cannot be read
+     * @throws dev.stxt.pdf.resources.ResourceException with {@link #warmUp()}, which reads the whole resources folder,
+     *         if the fonts cannot be read
      */
     public Converter converter() {
-        return Converter.builder().resources(resources).limits(limits).preloadResources(preloadResources).build();
+        return Converter.builder().resources(resources).limits(limits).preloadResources(warmUp).build();
     }
 
     /**
-     * Starts the server of this configuration: with its converter created now or, with {@link #lazyInit()}, by the first
-     * request that needs it. Without token, it says so in the log.
+     * Starts the server of this configuration: with {@link #warmUp()}, it listens at once, answering {@code 503}, and
+     * returns once it has warmed up; without it, with its converter created now or, with {@link #lazyInit()}, by the
+     * first request that needs it. Without token, it says so in the log.
      *
-     * @return the server, already answering
+     * @return the server, answering
      * @throws IOException if it cannot listen on its address, or the templates folder cannot be read
-     * @throws dev.stxt.pdf.resources.ResourceException without {@link #lazyInit()} and with
-     *         {@link #preloadResources()}, if the fonts cannot be read
+     * @throws dev.stxt.pdf.resources.ResourceException with {@link #warmUp()}, if the fonts cannot be read
      */
     public PressServer start() throws IOException {
         Templates templates = templateFolder == null ? null : new Templates(templateFolder);
-        PressServer server = lazyInit ? PressServer.startLazily(this::converter, templates, http)
-                : PressServer.start(converter(), templates, http);
         if (http.token() == null) {
             LOG.log(Level.WARNING, "The server has no token: every route answers without one (Token env in "
                     + FILE_NAME + ")");
+        }
+        if (lazyInit) {
+            return PressServer.startLazily(this::converter, templates, http);
+        }
+        if (!warmUp) {
+            return PressServer.start(converter(), templates, http);
+        }
+        PressServer server = PressServer.startWarmingUp(this::converter, templates, http);
+        try {
+            server.warmUp();
+        } catch (RuntimeException e) {
+            server.close();
+            throw e;
         }
         return server;
     }
 
     @Override
     public String toString() {
-        return "ServerFile[file=" + file + ", http=" + http + ", limits=" + limits + ", preloadResources="
-                + preloadResources + ", lazyInit=" + lazyInit + ", templateFolder=" + templateFolder + "]";
+        return "ServerFile[file=" + file + ", http=" + http + ", limits=" + limits + ", warmUp="
+                + warmUp + ", lazyInit=" + lazyInit + ", templateFolder=" + templateFolder + "]";
     }
 
     private static SchemaProviderMemory loadSchema() {
@@ -325,9 +341,16 @@ public final class ServerFile {
                 http = http.withTemplateOptions(options(options));
             }
 
+            boolean lazyInit = bool(server, "Lazy init", false);
+            // The warm up opens the resources at the start, Lazy init with the first request: without Warm up written,
+            // Lazy init turns it off.
+            boolean warmUp = bool(server, "Warm up", !lazyInit);
+            if (lazyInit && warmUp) {
+                throw error(ConfigException.CONFLICT, server.getChild("Warm up"), "Warm up does not go with Lazy init, "
+                        + "which opens the resources with the first request instead of at the start");
+            }
             Node templates = server.getChild("Template folder");
-            return new ServerFile(file, http, resources(server), limits,
-                    bool(server, "Preload resources", false), bool(server, "Lazy init", false),
+            return new ServerFile(file, http, resources(server), limits, warmUp, lazyInit,
                     templates == null ? null : folder(templates));
         }
 

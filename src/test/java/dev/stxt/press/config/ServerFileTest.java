@@ -121,7 +121,7 @@ class ServerFileTest {
         assertNull(defaults.http().token());
         assertEquals(work.resolve("resources").toAbsolutePath().normalize(), defaults.resources().root());
         assertEquals(Limits.DEFAULT, defaults.limits());
-        assertFalse(defaults.preloadResources());
+        assertTrue(defaults.warmUp());
         assertFalse(defaults.lazyInit());
         assertNull(defaults.templateFolder());
     }
@@ -134,7 +134,17 @@ class ServerFileTest {
         assertEquals(ServerConfig.DEFAULT, file.http());
         assertEquals(config.resolve("resources").toAbsolutePath().normalize(), file.resources().root());
         assertEquals(Limits.DEFAULT, file.limits());
+        assertTrue(file.warmUp());
+        assertFalse(file.lazyInit());
         assertNull(file.templateFolder());
+    }
+
+    @Test
+    void lazyInitTurnsTheWarmUpOff() throws Exception {
+        ServerFile lazy = read("Server (dev.stxt.press):\n    Lazy init: true\n");
+        assertTrue(lazy.lazyInit());
+        assertFalse(lazy.warmUp());
+        assertFalse(read("Server (dev.stxt.press):\n    Warm up: false\n").warmUp());
     }
 
     // ---- The values
@@ -149,7 +159,7 @@ class ServerFileTest {
                     Port: 9090
                     Token env: PRESS_TOKEN
                     Lazy init: true
-                    Preload resources: true
+                    Warm up: false
                     Resource folder: res
                     Template folder: templates
                     Routes:
@@ -176,7 +186,7 @@ class ServerFileTest {
                 new Options(1, PdfA.A3B, false, Set.of(Check.CONTRAST, Check.BARCODE_SIZE))), file.http());
         assertEquals(new Limits(10, 11, 12, 13, 14), file.limits());
         assertTrue(file.lazyInit());
-        assertTrue(file.preloadResources());
+        assertFalse(file.warmUp());
         assertEquals(config.resolve("res").toAbsolutePath().normalize(), file.resources().root());
         assertEquals(config.resolve("templates").toAbsolutePath().normalize(), file.templateFolder());
     }
@@ -236,6 +246,7 @@ class ServerFileTest {
             node that does not exist         | NODE_NOT_DEFINED_IN_SCHEMA | 2 | '    Colour: red'
             node in a group not its own      | CHILD_NOT_DECLARED       | 3 | '    Routes:\\n        Port: 1'
             value of a boolean               | INVALID_VALUE            | 2 | '    Lazy init: yes'
+            warm up with lazy init           | CONFIG_CONFLICT          | 3 | '    Lazy init: true\\n    Warm up: true'
             two ports                        | TOO_MANY_CHILDREN        | 1 | '    Port: 1\\n    Port: 2'
             port too large                   | CONFIG_VALUE_NOT_VALID   | 2 | '    Port: 65536'
             number too large for a long      | CONFIG_VALUE_NOT_VALID   | 3 | '    Limits:\\n        Timeout: 99999999999999999999'
@@ -366,7 +377,7 @@ class ServerFileTest {
     void aLazyServerStartsWithResourcesThatFailAndTheFirstRequestGetsTheError() throws Exception {
         Files.createDirectories(config.resolve("fonts"));
         Files.writeString(config.resolve("fonts/broken.ttf"), "not a font");
-        String broken = "    Preload resources: true\n    Font folder: fonts\n";
+        String broken = "    Font folder: fonts\n";
 
         String eager = "Server (dev.stxt.press):\n    Port: 0\n" + broken;
 
@@ -383,7 +394,7 @@ class ServerFileTest {
 
     @Test
     void aLazyServerCreatesTheConverterWithTheFirstRequest() throws Exception {
-        try (PressServer server = read(server("    Lazy init: true\n    Preload resources: true\n")).start()) {
+        try (PressServer server = read(server("    Lazy init: true\n")).start()) {
             HttpResponse<byte[]> fonts = get(server, "/fonts", null);
 
             assertEquals(200, fonts.statusCode());

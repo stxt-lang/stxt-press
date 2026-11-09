@@ -26,6 +26,7 @@ import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +39,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.stxt.pdf.convert.Converter;
 import dev.stxt.pdf.model.Limits;
 import dev.stxt.pdf.resources.Resources;
+import dev.stxt.press.Options;
+import dev.stxt.press.Press;
 import dev.stxt.press.templates.Templates;
 
 /**
@@ -422,6 +425,60 @@ class PressServerTest {
         error(post("/editor/hello", ""), 405, Routes.METHOD_NOT_ALLOWED);
         error(get("/schema"), 401, Routes.UNAUTHORIZED);
         error(get("/templates/hello"), 401, Routes.UNAUTHORIZED);
+    }
+
+    /** A server that warms up answers every request with 503, /health too, until the warm up ends. */
+    @Test
+    void aServerThatWarmsUpAnswers503UntilItEnds() throws Exception {
+        CountDownLatch release = new CountDownLatch(1);
+        server = PressServer.startWarmingUp(() -> {
+            try {
+                release.await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            return SHARED;
+        }, templates, ServerConfig.DEFAULT.withAddress("127.0.0.1", 0));
+        PressServer warming = server;
+        Thread warmUp = new Thread(warming::warmUp);
+        warmUp.start();
+
+        HttpResponse<byte[]> health = get("/health");
+        error(health, 503, Routes.SERVER_STARTING);
+        assertEquals("1", health.headers().firstValue("Retry-After").orElse(null));
+        error(get("/print/hello"), 503, Routes.SERVER_STARTING);
+        error(get("/"), 503, Routes.SERVER_STARTING);
+
+        release.countDown();
+        warmUp.join(60_000);
+        assertFalse(warmUp.isAlive());
+        assertEquals(200, get("/health").statusCode());
+        assertEquals(200, get("/print/hello").statusCode());
+    }
+
+    /**
+     * The warm up converts every template with its sample data; one that fails is reported, and that of a template
+     * without sample data says so, since a template with Slots needs the data of the request.
+     */
+    @Test
+    void theWarmUpConvertsEveryTemplate() throws Exception {
+        Path folder = templates.folder();
+        Files.writeString(folder.resolve("broken.stxt"), "Document (dev.stxt.pdf):\n\tColour: red\n");
+        Files.writeString(folder.resolve("broken.json"), "{}");
+        // A template without sample data: its failure is only information.
+        Files.writeString(folder.resolve("plain.stxt"), "Document (dev.stxt.pdf):\n\tColour: red\n");
+
+        WarmUp.Result result = WarmUp.run(new Press(SHARED), templates, "IBM Plex Sans", Options.DEFAULT, Duration.ofSeconds(30));
+
+        assertEquals(2, result.converted(), result::toString);
+        assertEquals(List.of("broken", "plain"), result.failures().stream().map(WarmUp.Failure::path).toList());
+        assertTrue(result.failures().get(0).withData());
+        assertFalse(result.failures().get(1).withData());
+        assertTrue(result.failures().get(0).error().startsWith("NODE_NOT_DEFINED_IN_SCHEMA"), result::toString);
+
+        WarmUp.Result none = WarmUp.run(new Press(SHARED), null, "IBM Plex Sans", Options.DEFAULT, Duration.ofSeconds(30));
+        assertEquals(1, none.converted(), none::toString);
+        assertEquals(List.of(), none.failures());
     }
 
     /**
