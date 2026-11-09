@@ -62,6 +62,11 @@ final class Conversions {
         return current;
     }
 
+    /** {@return the permits of the conversions that can still start, for the tests} */
+    Semaphore permits() {
+        return permits;
+    }
+
     /** {@return the converter of the server, created if no request has needed it yet} */
     Converter converter() {
         return shared().converter();

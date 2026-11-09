@@ -48,12 +48,15 @@ public final class PressServer implements AutoCloseable {
     private final ExecutorService executor;
     private final Gate gate;
     private final Routes routes;
+    private final Conversions conversions;
 
-    private PressServer(HttpServer server, ExecutorService executor, Gate gate, Routes routes) {
+    private PressServer(HttpServer server, ExecutorService executor, Gate gate, Routes routes,
+            Conversions conversions) {
         this.server = server;
         this.executor = executor;
         this.gate = gate;
         this.routes = routes;
+        this.conversions = conversions;
     }
 
     /**
@@ -147,7 +150,8 @@ public final class PressServer implements AutoCloseable {
         Objects.requireNonNull(shared, "shared");
         Objects.requireNonNull(config, "config");
         HttpServer server = HttpServer.create(new InetSocketAddress(config.host(), config.port()), 0);
-        Routes routes = new Routes(shared, templates, config);
+        Conversions conversions = new Conversions(shared, config.concurrentConversions(), config.timeout());
+        Routes routes = new Routes(conversions, templates, config);
         // The address it got, not the name of the configuration, says whether the server is only local.
         Gate gate = new Gate(routes, Gate.localHosts(config, server.getAddress().getAddress()));
         gate.starting(starting);
@@ -158,12 +162,17 @@ public final class PressServer implements AutoCloseable {
         server.setExecutor(executor);
         server.createContext("/", gate);
         server.start();
-        return new PressServer(server, executor, gate, routes);
+        return new PressServer(server, executor, gate, routes, conversions);
     }
 
     /** {@return the gate of the server, with the requests in progress, for the tests} */
     Gate gate() {
         return gate;
+    }
+
+    /** {@return the conversions of the server, with the permits of those that run at once, for the tests} */
+    Conversions conversions() {
+        return conversions;
     }
 
     /**

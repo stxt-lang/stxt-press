@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -540,6 +541,75 @@ class PressServerTest {
         } finally {
             server = null;
         }
+    }
+
+    /**
+     * The shutdown with a request that does not end in time: {@code close(grace)} returns when the grace runs out, and
+     * the request is cut without a response.
+     */
+    @Test
+    void closingCutsWhatDoesNotEndInTime() throws Exception {
+        start(ServerConfig.DEFAULT);
+        PressServer closing = server;
+        try (Socket socket = new Socket("127.0.0.1", closing.address().getPort())) {
+            // A body that never arrives whole: the request is in progress until the JDK closes it, after
+            // sun.net.httpserver.maxReqTime (3 s in the tests).
+            OutputStream out = socket.getOutputStream();
+            out.write(("POST /render HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Type: application/json\r\n"
+                    + "Content-Length: 100\r\n\r\n{").getBytes(StandardCharsets.US_ASCII));
+            out.flush();
+            long until = System.nanoTime() + Duration.ofSeconds(10).toNanos();
+            while (closing.gate().active() == 0 && System.nanoTime() < until) {
+                Thread.sleep(10);
+            }
+            assertEquals(1, closing.gate().active());
+
+            long started = System.nanoTime();
+            closing.close(Duration.ofMillis(300));
+            Duration took = Duration.ofNanos(System.nanoTime() - started);
+            assertTrue(took.toMillis() >= 300, "it waits for the request up to the grace: " + took);
+            // Well before the JDK would close the request itself.
+            assertTrue(took.toMillis() < 2500, "it stops when the grace runs out: " + took);
+
+            socket.setSoTimeout(5000);
+            try {
+                assertEquals(-1, socket.getInputStream().read(), "the request is cut without a response");
+            } catch (IOException e) {
+                // Reset: cut too.
+            }
+        } finally {
+            server = null;
+        }
+    }
+
+    /**
+     * With every conversion that can run at once running, a new one is answered at once with {@code 503} and
+     * {@code Retry-After}: there is no queue. A fill and {@code /health}, which are no conversions, answer all the
+     * same. The test takes the permits instead of running conversions, which at once would be fragile.
+     */
+    @Test
+    void aConversionThatDoesNotFitIsAnswered503() throws Exception {
+        start(ServerConfig.DEFAULT);
+        Semaphore permits = server.conversions().permits();
+        int taken = permits.drainPermits();
+        assertEquals(ServerConfig.DEFAULT.concurrentConversions(), taken);
+        try {
+            HttpResponse<byte[]> busy = post("/render", render(DOCUMENT, Map.of()));
+            error(busy, 503, HttpError.SERVER_BUSY);
+            assertEquals("1", busy.headers().firstValue("Retry-After").orElse(null));
+            error(get("/print/hello?format=svg"), 503, HttpError.SERVER_BUSY);
+
+            HttpResponse<byte[]> filled = get("/print/invoices/invoice?format=stxt");
+            assertEquals(200, filled.statusCode(), () -> text(filled));
+            assertEquals(200, get("/health").statusCode());
+        } finally {
+            permits.release(taken);
+        }
+        assertEquals(taken, permits.availablePermits(), "a conversion refused gives back no permit it did not take");
+
+        HttpResponse<byte[]> pdf = post("/render", render(DOCUMENT, Map.of()));
+        assertEquals(200, pdf.statusCode(), () -> text(pdf));
+        assertTrue(isPdf(pdf.body()));
     }
 
     /**

@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -108,10 +107,11 @@ final class Routes {
     private final List<Route> table;
 
     /**
-     * @param converter what creates the converter of the server, called once by the first request that needs it
+     * @param conversions the converter of the server and the conversions that run at once
+     * @param templates the templates folder, or {@code null} if the server has none
      */
-    Routes(Supplier<Converter> converter, Templates templates, ServerConfig config) {
-        this.conversions = new Conversions(converter, config.concurrentConversions(), config.timeout());
+    Routes(Conversions conversions, Templates templates, ServerConfig config) {
+        this.conversions = conversions;
         this.templates = templates;
         this.config = config;
         this.schema = DocumentSchema.text().getBytes(StandardCharsets.UTF_8);
