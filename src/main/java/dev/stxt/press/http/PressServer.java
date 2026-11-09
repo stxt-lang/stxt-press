@@ -24,7 +24,8 @@ import dev.stxt.press.templates.Templates;
  * {@link Converter} of the server and its templates folder. The requests are answered by a fixed pool of threads, and
  * the conversions that run at once are limited by {@link ServerConfig#concurrentConversions()}.
  *
- * <p>It has no TLS or users: for that, it is deployed behind what the one who runs it puts in front.</p>
+ * <p>It has no TLS or users: for that, it is deployed behind what the one who runs it puts in front. Without a token, a
+ * server on a loopback address answers only to the local names in {@code Host} ({@link Routes#localHosts}).</p>
  */
 public final class PressServer implements AutoCloseable {
 
@@ -142,9 +143,11 @@ public final class PressServer implements AutoCloseable {
             boolean starting) throws IOException {
         Objects.requireNonNull(shared, "shared");
         Objects.requireNonNull(config, "config");
-        Routes routes = new Routes(shared, templates, config);
-        routes.starting(starting);
         HttpServer server = HttpServer.create(new InetSocketAddress(config.host(), config.port()), 0);
+        // The address it got, not the name of the configuration, says whether the server is only local.
+        Routes routes = new Routes(shared, templates, config,
+                Routes.localHosts(config, server.getAddress().getAddress()));
+        routes.starting(starting);
         // Enough threads to answer a 503 or a /health while every conversion is running.
         AtomicInteger count = new AtomicInteger();
         ExecutorService executor = Executors.newFixedThreadPool(Math.max(4, 2 * config.concurrentConversions()),

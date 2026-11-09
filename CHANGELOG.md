@@ -96,3 +96,7 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   and eight such clients left a server with the default limits without answering, `/health` too. A body that does not
   arrive whole is a `400` (`BODY_NOT_VALID`).
 - `X-Content-Type-Options: nosniff` on every response, not only on the files of `/assets/`.
+- A server without token on a loopback address answers only to the `Host` `localhost`, `127.0.0.1`, `[::1]` or that
+  of `server.stxt`; any other, or none, is `403` with the code `HOST_NOT_ALLOWED`, on every route, `/health` too. Before,
+  a page of another site could make its own name resolve to `127.0.0.1` (DNS rebinding) and read the templates or use
+  `/render` from the browser of whoever runs the server.

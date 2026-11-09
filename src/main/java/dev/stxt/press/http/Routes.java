@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.net.InetAddress;
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -13,14 +14,18 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -77,6 +82,7 @@ final class Routes implements HttpHandler {
     static final String BODY_TOO_LARGE = "BODY_TOO_LARGE";
     static final String SERVER_BUSY = "SERVER_BUSY";
     static final String SERVER_STARTING = "SERVER_STARTING";
+    static final String HOST_NOT_ALLOWED = "HOST_NOT_ALLOWED";
     static final String INTERNAL = "INTERNAL";
 
     private static final Logger LOG = System.getLogger("dev.stxt.press");
@@ -106,6 +112,11 @@ final class Routes implements HttpHandler {
             + "style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'; "
             + "frame-ancestors 'none'";
 
+    /** The names of the local machine that a server without token answers to, besides the address it listens on. */
+    private static final List<String> LOCAL_HOSTS = List.of("localhost", "127.0.0.1", "[::1]");
+    /** The value of a {@code Host} header: a name or an IPv4 address, or an IPv6 one in brackets, and the port. */
+    private static final Pattern HOST = Pattern.compile("(\\[[0-9A-Fa-f:.]+\\]|[^:\\[\\]]+)(?::[0-9]*)?");
+
     /** The formats of {@code ?format=}. */
     private enum Format {
         PDF, SVG, STXT
@@ -118,6 +129,8 @@ final class Routes implements HttpHandler {
     /** The templates folder, or {@code null} if the server has none. */
     private final Templates templates;
     private final ServerConfig config;
+    /** The names a request may give in {@code Host}, in lowercase, or {@code null} for any: {@link #localHosts}. */
+    private final Set<String> hosts;
     /** The text of the schema of the engine, read once. */
     private final byte[] schema;
     /** The conversions that can still start. */
@@ -135,12 +148,51 @@ final class Routes implements HttpHandler {
     private record Shared(Converter converter, Press press) {
     }
 
-    Routes(Supplier<Converter> converter, Templates templates, ServerConfig config) {
+    /**
+     * @param hosts the names a request may give in {@code Host}, or {@code null} for any: {@link #localHosts}
+     */
+    Routes(Supplier<Converter> converter, Templates templates, ServerConfig config, Set<String> hosts) {
         this.converter = converter;
         this.templates = templates;
         this.config = config;
+        this.hosts = hosts;
         this.conversions = new Semaphore(config.concurrentConversions());
         this.schema = DocumentSchema.text().getBytes(StandardCharsets.UTF_8);
+    }
+
+    /**
+     * {@return the names a request may give in {@code Host} on a server with {@code config} listening on
+     * {@code address}, or {@code null} for any} A server without token on a loopback address answers only to
+     * {@code localhost}, {@code 127.0.0.1}, {@code [::1]} and the {@code Host} of its configuration: otherwise a page
+     * of another site, open in the browser of whoever runs it, could make its own name resolve to {@code 127.0.0.1}
+     * (DNS rebinding) and, being then of the same origin, read the templates and use {@code /render}. With a token that
+     * page cannot do anything, since it does not have it; on another address the server is meant to be behind a proxy,
+     * whose name is the one the requests give.
+     */
+    static Set<String> localHosts(ServerConfig config, InetAddress address) {
+        if (config.token() != null || address == null || !address.isLoopbackAddress()) {
+            return null;
+        }
+        Set<String> hosts = new LinkedHashSet<>(LOCAL_HOSTS);
+        String host = config.host().toLowerCase(Locale.ROOT);
+        hosts.add(host.contains(":") && !host.startsWith("[") ? "[" + host + "]" : host);
+        return Collections.unmodifiableSet(hosts);
+    }
+
+    /** That the request names the server by one of {@link #hosts}, if it has to. */
+    private void host(HttpExchange exchange) throws HttpError {
+        if (hosts == null) {
+            return;
+        }
+        List<String> values = exchange.getRequestHeaders().get("Host");
+        if (values != null && values.size() == 1) {
+            Matcher matcher = HOST.matcher(values.get(0).trim());
+            if (matcher.matches() && hosts.contains(matcher.group(1).toLowerCase(Locale.ROOT))) {
+                return;
+            }
+        }
+        throw new HttpError(403, HOST_NOT_ALLOWED, "A server without token on a local address answers only to the Host "
+                + String.join(", ", hosts) + ": with another name it needs a token (Token env in server.stxt)");
     }
 
     /**
@@ -168,6 +220,8 @@ final class Routes implements HttpHandler {
         active.incrementAndGet();
         try {
             try {
+                // Before anything else, /health and the 503 too: a request with a foreign Host gets nothing.
+                host(exchange);
                 if (closing) {
                     throw new HttpError(503, SERVER_BUSY, "The server is stopping", Map.of("Connection", "close"));
                 }

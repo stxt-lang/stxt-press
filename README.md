@@ -47,6 +47,7 @@ An error is a JSON body with its `code` and its `message`:
 |---|---|
 | `400` | The body or a parameter is not valid (`BODY_NOT_VALID`, `PARAMETER_NOT_VALID`) |
 | `401` | The server has a token and the request does not carry it (`Authorization: Bearer <token>`) |
+| `403` | The server has no token, listens on a loopback address and the `Host` of the request is not a local name (`HOST_NOT_ALLOWED`) |
 | `404` | The route or the template does not exist (`NOT_FOUND`, `TEMPLATE_NOT_FOUND`) |
 | `405` | The method is not one of the route, which the `Allow` header lists |
 | `413` | The body is larger than the server accepts (`BODY_TOO_LARGE`), or the document exceeds a limit of the engine |
@@ -71,6 +72,13 @@ and `sun.net.httpserver.maxRspTime` of the JDK, in seconds, and a value given wi
 ```bash
 java -Dsun.net.httpserver.maxReqTime=120 -jar stxt-press.jar start
 ```
+
+A server without token that listens on a loopback address, as the default `127.0.0.1`, answers only to requests whose
+`Host` is `localhost`, `127.0.0.1`, `[::1]` or the `Host` of `server.stxt`, with any port; any other, a missing one
+included, gets `403` (`HOST_NOT_ALLOWED`), on every route. A page of another site open in the browser could otherwise
+make its own name resolve to `127.0.0.1` (DNS rebinding) and read the templates or use `/render` as if it were of the
+same origin. A server reached through another name, such as an alias of the `hosts` file, needs a token (`Token env`)
+or that name in `Host`. With a token, or on another address, any `Host` is answered.
 
 `/render` converts any
 document and `/templates` shows the texts and the sample data of the templates, so both can be turned off. `/fonts`

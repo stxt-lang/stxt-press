@@ -2,6 +2,7 @@ package dev.stxt.press.http;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -28,6 +30,7 @@ import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import org.junit.jupiter.api.AfterEach;
@@ -605,6 +608,89 @@ class PressServerTest {
         // Too long to be counted: no limit, as the JDK takes a negative number.
         assertEquals("-1", PressServer.timeLimits(Duration.ofSeconds(Long.MAX_VALUE))
                 .get(PressServer.MAX_RESPONSE_TIME));
+    }
+
+    /** The status and the body of a response to {@link #raw}. */
+    private record Raw(int status, String body) {
+    }
+
+    /**
+     * {@return the response to a request written as it is, with these headers} The {@code HttpClient} of the JDK does
+     * not let a test set {@code Host}.
+     */
+    private Raw raw(String requestLine, String... headers) throws IOException {
+        StringBuilder request = new StringBuilder(requestLine).append("\r\n");
+        for (String header : headers) {
+            request.append(header).append("\r\n");
+        }
+        request.append("Connection: close\r\n\r\n");
+        try (Socket socket = new Socket("127.0.0.1", server.address().getPort())) {
+            socket.setSoTimeout(10_000);
+            socket.getOutputStream().write(request.toString().getBytes(StandardCharsets.ISO_8859_1));
+            socket.getOutputStream().flush();
+            String response = new String(socket.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            return new Raw(Integer.parseInt(response.substring("HTTP/1.1 ".length(), "HTTP/1.1 ".length() + 3)),
+                    response.substring(response.indexOf("\r\n\r\n") + 4));
+        }
+    }
+
+    /**
+     * A server without token on {@code 127.0.0.1} answers only to the local names in {@code Host}: a page of another
+     * site that makes its name resolve to {@code 127.0.0.1} (DNS rebinding) gets nothing, not even {@code /health}.
+     */
+    @Test
+    void aLocalServerWithoutTokenAnswersOnlyToLocalNames() throws Exception {
+        start(ServerConfig.DEFAULT);
+        int port = server.address().getPort();
+
+        for (String host : List.of("localhost:" + port, "127.0.0.1:" + port, "[::1]:" + port, "LocalHost", "127.0.0.1",
+                "localhost:")) {
+            assertEquals(200, raw("GET /templates HTTP/1.1", "Host: " + host).status(), host);
+        }
+        for (String host : List.of("evil.example:" + port, "evil.example", "localhost.evil.example",
+                "127.0.0.1.nip.io:" + port, "localhost.", "localhost:80:80", "[::1", "[::2]:" + port)) {
+            for (String path : List.of("/templates", "/templates/hello", "/health", "/", "/editor", "/print/hello")) {
+                Raw response = raw("GET " + path + " HTTP/1.1", "Host: " + host);
+                assertEquals(403, response.status(), host + " " + path);
+                JsonNode body = JSON.readTree(response.body());
+                assertEquals(Routes.HOST_NOT_ALLOWED, body.get("code").asText());
+                assertTrue(body.get("message").asText().contains("localhost, 127.0.0.1, [::1]"), body::toString);
+            }
+        }
+        // Without Host, as HTTP/1.0 allows, or with two.
+        assertEquals(403, raw("GET /health HTTP/1.0").status());
+        assertEquals(403, raw("GET /health HTTP/1.1", "Host: localhost", "Host: evil.example").status());
+    }
+
+    /** With a token, the page of another site cannot do anything: the server answers to any {@code Host}. */
+    @Test
+    void withATokenAnyHostIsAnswered() throws Exception {
+        start(ServerConfig.DEFAULT.withToken("s3cret"));
+
+        assertEquals(200, raw("GET /health HTTP/1.1", "Host: evil.example").status());
+        assertEquals(401, raw("GET /templates HTTP/1.1", "Host: evil.example").status());
+        assertEquals(200, raw("GET /templates HTTP/1.1", "Host: evil.example", "Authorization: Bearer s3cret").status());
+    }
+
+    /**
+     * The names a server without token answers to, by the address it listens on: only on a loopback one, which a
+     * proxy does not reach, and with the {@code Host} of its configuration besides the local names.
+     */
+    @Test
+    void theLocalNamesDependOnTheAddressAndTheToken() throws Exception {
+        Set<String> local = Set.of("localhost", "127.0.0.1", "[::1]");
+        assertEquals(local, Routes.localHosts(ServerConfig.DEFAULT, InetAddress.getByName("127.0.0.1")));
+        assertEquals(local, Routes.localHosts(ServerConfig.DEFAULT.withAddress("::1", 0),
+                InetAddress.getByName("::1")));
+        assertEquals(Set.of("localhost", "127.0.0.1", "[::1]", "127.0.0.2"),
+                Routes.localHosts(ServerConfig.DEFAULT.withAddress("127.0.0.2", 0), InetAddress.getByName("127.0.0.2")));
+        assertEquals(Set.of("localhost", "127.0.0.1", "[::1]", "[0:0:0:0:0:0:0:1]"), Routes.localHosts(
+                ServerConfig.DEFAULT.withAddress("0:0:0:0:0:0:0:1", 0), InetAddress.getByName("::1")));
+        // Any Host: on every address, or on another one, which is that of a proxy; or with a token.
+        assertNull(Routes.localHosts(ServerConfig.DEFAULT.withAddress("0.0.0.0", 0), InetAddress.getByName("0.0.0.0")));
+        assertNull(Routes.localHosts(ServerConfig.DEFAULT.withAddress("192.0.2.1", 0),
+                InetAddress.getByName("192.0.2.1")));
+        assertNull(Routes.localHosts(ServerConfig.DEFAULT.withToken("s3cret"), InetAddress.getByName("127.0.0.1")));
     }
 
     @Test
