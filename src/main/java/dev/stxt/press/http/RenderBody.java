@@ -143,18 +143,11 @@ final class RenderBody {
 
     /** {@return the constant of {@code type} that {@code node} names} */
     private static <E extends Enum<E>> E constant(Class<E> type, JsonNode node, String field) throws HttpError {
-        if (node.isTextual()) {
-            for (E constant : type.getEnumConstants()) {
-                if (constant.name().equals(node.textValue())) {
-                    return constant;
-                }
-            }
+        E constant = node.isTextual() ? Options.named(type, node.textValue()) : null;
+        if (constant == null) {
+            throw notValid("\"" + field + "\" is " + node + ", not one of " + Options.names(type));
         }
-        List<String> names = new ArrayList<>();
-        for (E constant : type.getEnumConstants()) {
-            names.add(constant.name());
-        }
-        throw notValid("\"" + field + "\" is " + node + ", not one of " + String.join(", ", names));
+        return constant;
     }
 
     /** That {@code object} has no field but {@code fields}. */

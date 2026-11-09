@@ -106,3 +106,8 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   is of the server. The invoice of `server/` prints in 1.9–2.1 s instead of 2.3 s, with the same PDF. `Press.fill` is
   static, so `fill` creates no converter, and a fill (`?format=stxt`) on a server with `Lazy init` does not create
   its converter either: with resources that cannot be read, it is answered.
+- `Options.named` and `Options.names`, the lookup of a `Check` or a `PdfA` by its name and the list of the names for a
+  message, which the body of `/render` and the command `render` share; `Press.text`, the strict UTF-8 decoding of the
+  body of `POST /print` and of the stdin of the commands; and `Templates.files`, the file of each input of a template,
+  for the errors of `print`. The `CONFIG_CONFLICT` of `PDF UA: 2` with `PDF A` in `server.stxt` has the message of
+  `Options`, which names the PDF/A (`A2B`).

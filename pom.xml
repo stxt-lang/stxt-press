@@ -112,8 +112,7 @@
             <!-- The web editor (web/, TypeScript bundled with esbuild): Node is installed in target/ (the download is
                  kept in the local Maven repository), npm installs the dependencies of web/package-lock.json, the build
                  leaves editor.js, editor.css and index.html in target/classes/editor, which goes into the jar, and
-                 npm test runs the tests of the page with the Java ones. The build reads the examples of
-                 ../stxt-pdf/test/examples. -->
+                 npm test runs the tests of the page with the Java ones. -->
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>

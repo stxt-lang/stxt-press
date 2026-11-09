@@ -423,11 +423,13 @@ public final class ServerFile {
             }
             Node a = group.getChild("PDF A");
             if (a != null) {
-                if (options.pdfUa() == 2) {
-                    throw error(ConfigException.CONFLICT, a, "PDF/UA-2 is a PDF 2.0 file and PDF/A a PDF 1.7 one: a "
-                            + "PDF cannot comply with both");
+                PdfA pdfA = PdfA.valueOf(a.getText());
+                try {
+                    options = options.withPdfA(pdfA);
+                } catch (IllegalArgumentException e) {
+                    // PDF/UA-2 with a PDF/A, which Options does not take: its message, with the line of PDF A.
+                    throw error(ConfigException.CONFLICT, a, e.getMessage());
                 }
-                options = options.withPdfA(PdfA.valueOf(a.getText()));
             }
             Set<Check> excluded = EnumSet.noneOf(Check.class);
             for (Node node : group.getChildren("Exclude")) {

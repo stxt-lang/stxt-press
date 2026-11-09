@@ -1,8 +1,10 @@
 package dev.stxt.press;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import dev.stxt.pdf.model.Check;
 import dev.stxt.pdf.model.PdfA;
@@ -55,5 +57,23 @@ public record Options(int pdfUa, PdfA pdfA, boolean debug, Set<Check> excluded) 
     /** {@return these options without the checks {@code excluded}, instead of the ones they had} */
     public Options withExcluded(Set<Check> excluded) {
         return new Options(pdfUa, pdfA, debug, excluded);
+    }
+
+    /**
+     * {@return the constant of {@code type} named {@code name}, or {@code null} if none is} For a {@link Check} or a
+     * {@link PdfA} written by name, as the body of {@code /render} and the command {@code render} write them.
+     */
+    public static <E extends Enum<E>> E named(Class<E> type, String name) {
+        for (E constant : type.getEnumConstants()) {
+            if (constant.name().equals(name)) {
+                return constant;
+            }
+        }
+        return null;
+    }
+
+    /** {@return the names of the constants of {@code type}, in their order and separated by commas, for a message} */
+    public static String names(Class<? extends Enum<?>> type) {
+        return Arrays.stream(type.getEnumConstants()).map(Enum::name).collect(Collectors.joining(", "));
     }
 }

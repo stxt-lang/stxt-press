@@ -9,11 +9,14 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 import dev.stxt.press.Job;
+import dev.stxt.press.PressException;
 import dev.stxt.utils.FileUtils;
 
 /**
@@ -100,6 +103,21 @@ public final class Templates {
 
         String data = isFile(path + DATA) ? read(path + DATA, path) : null;
         return new Template(path, document, styles, data);
+    }
+
+    /**
+     * {@return the file of each input of the job of {@code template}, by the {@link PressException#source() source} of its
+     * errors} The document, each of its styles by its name and the sample data, {@code <name>.json}, which may not
+     * exist.
+     */
+    public Map<String, Path> files(Template template) {
+        Map<String, Path> files = new LinkedHashMap<>();
+        files.put(PressException.DOCUMENT, folder.resolve(template.path() + DOCUMENT));
+        for (Job.Styles styles : template.styles()) {
+            files.put(styles.name(), folder.resolve(styles.name()));
+        }
+        files.put(PressException.DATA, folder.resolve(template.path() + DATA));
+        return files;
     }
 
     /**

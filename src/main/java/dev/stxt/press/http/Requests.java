@@ -2,9 +2,7 @@ package dev.stxt.press.http;
 
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
-import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.LinkedHashMap;
@@ -13,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.sun.net.httpserver.HttpExchange;
+
+import dev.stxt.press.Press;
 
 /**
  * What the service reads of a request: its method, its query, its token and its body, each with the {@link HttpError}
@@ -141,8 +141,7 @@ final class Requests {
     /** {@return {@code body} as UTF-8 text, strictly decoded} */
     static String text(byte[] body) throws HttpError {
         try {
-            return StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
-                    .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(body)).toString();
+            return Press.text(body);
         } catch (CharacterCodingException e) {
             throw new HttpError(400, HttpError.BODY_NOT_VALID, "The body is not UTF-8 text");
         }

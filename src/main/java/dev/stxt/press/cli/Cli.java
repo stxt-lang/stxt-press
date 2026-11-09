@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
-import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
@@ -219,9 +217,11 @@ final class Cli {
         if (folder == null) {
             throw new UsageException("No templates folder: --templates, or Template folder in server.stxt");
         }
+        Templates templates;
         Template template;
         try {
-            template = new Templates(folder).get(path);
+            templates = new Templates(folder);
+            template = templates.get(path);
         } catch (TemplateException e) {
             throw new UsageException(e.code() + ": " + e.getMessage());
         } catch (IOException e) {
@@ -232,11 +232,10 @@ final class Cli {
         Job job = data == null ? template.job(options) : template.job(options, read(data));
 
         Map<String, String> files = new LinkedHashMap<>();
-        files.put(PressException.DOCUMENT, folder.resolve(path + ".stxt").toString());
-        for (Job.Styles styles : template.styles()) {
-            files.put(styles.name(), folder.resolve(styles.name()).toString());
+        templates.files(template).forEach((source, file) -> files.put(source, file.toString()));
+        if (data != null) {
+            files.put(PressException.DATA, data);
         }
-        files.put(PressException.DATA, data != null ? data : folder.resolve(path + ".json").toString());
         writePdf(new Press(config.converter()), job, output, files);
     }
 
@@ -304,9 +303,7 @@ final class Cli {
 
     private static String utf8(byte[] bytes, String name) throws Failure {
         try {
-            String text = StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
-                    .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(bytes)).toString();
-            return FileUtils.removeUTF8BOM(text);
+            return FileUtils.removeUTF8BOM(Press.text(bytes));
         } catch (CharacterCodingException e) {
             throw new Failure(name + " is not UTF-8 text");
         }
@@ -412,16 +409,11 @@ final class Cli {
     }
 
     private static <E extends Enum<E>> E constant(Class<E> type, String value, String option) throws UsageException {
-        for (E constant : type.getEnumConstants()) {
-            if (constant.name().equals(value)) {
-                return constant;
-            }
+        E constant = Options.named(type, value);
+        if (constant == null) {
+            throw new UsageException(option + " is one of " + Options.names(type) + ", not " + value);
         }
-        List<String> names = new ArrayList<>();
-        for (E constant : type.getEnumConstants()) {
-            names.add(constant.name());
-        }
-        throw new UsageException(option + " is one of " + String.join(", ", names) + ", not " + value);
+        return constant;
     }
 
     private static String version() {

@@ -15,8 +15,12 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +28,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import dev.stxt.pdf.model.Check;
+import dev.stxt.pdf.model.PdfA;
 import dev.stxt.press.http.PressServer;
 
 /**
@@ -213,6 +219,21 @@ class CliTest {
         assertTrue(out().startsWith("Usage: java -jar stxt-press.jar"));
         assertEquals(Cli.OK, run("-v"));
         assertTrue(out().contains("stxt-press "), out());
+    }
+
+    @Test
+    void theHelpNamesEveryCheckAndEveryPdfAOfTheEngine() {
+        // Written by hand: a Check or a PdfA new in the engine has to be added, as in the schema of server.stxt.
+        String help = Cli.HELP.replaceAll("\\s+", " ");
+        Matcher checks = Pattern.compile("is not made: ([A-Z_, ]+);").matcher(help);
+
+        assertTrue(checks.find(), help);
+        assertEquals(names(Check.values(), ", "), checks.group(1));
+        assertTrue(help.contains("--pdf-a <" + names(PdfA.values(), "|") + ">"), help);
+    }
+
+    private static String names(Enum<?>[] values, String separator) {
+        return Arrays.stream(values).map(Enum::name).collect(Collectors.joining(separator));
     }
 
     @ParameterizedTest(name = "{0}")

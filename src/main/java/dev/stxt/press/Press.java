@@ -2,6 +2,10 @@ package dev.stxt.press;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CodingErrorAction;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,6 +55,17 @@ public final class Press {
      */
     public static String version() {
         return Press.class.getPackage().getImplementationVersion();
+    }
+
+    /**
+     * {@return {@code bytes} as UTF-8 text, decoded strictly, as {@code stxt-core} reads a file: bytes that are not UTF-8
+     * are an error, never a U+FFFD} A BOM is kept.
+     *
+     * @throws CharacterCodingException if {@code bytes} are not UTF-8
+     */
+    public static String text(byte[] bytes) throws CharacterCodingException {
+        return StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(bytes)).toString();
     }
 
     /**
