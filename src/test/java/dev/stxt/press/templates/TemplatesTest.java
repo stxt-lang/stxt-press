@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -113,6 +114,15 @@ class TemplatesTest {
         write(".git/ignored.stxt", RECEIPT);
         write("with.dot/ignored.stxt", RECEIPT);
         templates = new Templates(folder);
+    }
+
+    /** A symbolic link; where the system cannot create one (Windows without the privilege), the test is skipped. */
+    private static void link(Path link, Path target) {
+        try {
+            Files.createSymbolicLink(link, target);
+        } catch (UnsupportedOperationException | IOException e) {
+            assumeTrue(false, "No symbolic links: " + e.getMessage());
+        }
     }
 
     private static String svg(Job job) {
@@ -237,10 +247,10 @@ class TemplatesTest {
         Path outside = Files.createDirectories(temp.resolve("outside"));
         Files.writeString(outside.resolve("secret.stxt"), RECEIPT);
         Files.writeString(outside.resolve("styles.stxt"), styles("#555555", false));
-        Files.createSymbolicLink(folder.resolve("linked.stxt"), outside.resolve("secret.stxt"));
-        Files.createSymbolicLink(folder.resolve("away"), outside);
+        link(folder.resolve("linked.stxt"), outside.resolve("secret.stxt"));
+        link(folder.resolve("away"), outside);
         Files.createDirectories(folder.resolve("shared"));
-        Files.createSymbolicLink(folder.resolve("shared/.styles.stxt"), outside.resolve("styles.stxt"));
+        link(folder.resolve("shared/.styles.stxt"), outside.resolve("styles.stxt"));
         write("shared/receipt.stxt", RECEIPT);
 
         for (String path : List.of("linked", "away/secret", "shared/receipt")) {
@@ -255,7 +265,7 @@ class TemplatesTest {
 
     @Test
     void aLinkInsideTheFolderIsATemplate() throws IOException {
-        Files.createSymbolicLink(folder.resolve("alias.stxt"), folder.resolve("invoices/receipt.stxt"));
+        link(folder.resolve("alias.stxt"), folder.resolve("invoices/receipt.stxt"));
 
         assertEquals(RECEIPT, templates.get("alias").document());
         assertEquals(List.of(".styles.stxt"), names(templates.get("alias")));

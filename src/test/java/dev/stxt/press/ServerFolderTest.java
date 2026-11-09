@@ -133,13 +133,18 @@ class ServerFolderTest {
         // .stxt/ holds the schemas for the editors (discovery): those the server and the engine validate with.
         assertEquals(List.of(Path.of("dev.stxt.pdf.stxt"), Path.of("dev.stxt.press.stxt")),
                 files(FOLDER.resolve(".stxt")));
-        assertEquals(DocumentSchema.text(), Files.readString(FOLDER.resolve(".stxt/dev.stxt.pdf.stxt")),
+        assertEquals(lines(DocumentSchema.text()), lines(Files.readString(FOLDER.resolve(".stxt/dev.stxt.pdf.stxt"))),
                 "server/.stxt/dev.stxt.pdf.stxt is not the schema of the engine");
         try (InputStream in = ServerFile.class.getResourceAsStream("/stxt/dev.stxt.press.stxt")) {
-            assertEquals(new String(in.readAllBytes(), StandardCharsets.UTF_8),
-                    Files.readString(FOLDER.resolve(".stxt/dev.stxt.press.stxt")),
+            assertEquals(lines(new String(in.readAllBytes(), StandardCharsets.UTF_8)),
+                    lines(Files.readString(FOLDER.resolve(".stxt/dev.stxt.press.stxt"))),
                     "server/.stxt/dev.stxt.press.stxt is not the schema of server.stxt");
         }
+    }
+
+    /** The text with LF line ends: a checkout with core.autocrlf has CRLF, and the jar of the engine, LF. */
+    private static String lines(String text) {
+        return text.replace("\r\n", "\n");
     }
 
     /** The files under {@code folder} of the resources of the server and of stxt-pdf: byte for byte the same. */
