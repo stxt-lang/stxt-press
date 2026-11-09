@@ -5,7 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -418,6 +422,56 @@ class PressServerTest {
         error(post("/editor/hello", ""), 405, Routes.METHOD_NOT_ALLOWED);
         error(get("/schema"), 401, Routes.UNAUTHORIZED);
         error(get("/templates/hello"), 401, Routes.UNAUTHORIZED);
+    }
+
+    /**
+     * The shutdown of {@code start} (SIGTERM, Ctrl+C): at once without requests, and with one in progress, it waits for
+     * it and answers the new ones with {@code 503}.
+     */
+    @Test
+    void closingWaitsOnlyForTheRequestsInProgress() throws Exception {
+        start(ServerConfig.DEFAULT);
+        long started = System.nanoTime();
+        server.close(Duration.ofSeconds(30));
+        server = null;
+        assertTrue(Duration.ofNanos(System.nanoTime() - started).toSeconds() < 5, "without requests it stops at once");
+
+        start(ServerConfig.DEFAULT);
+        PressServer closing = server;
+        byte[] body = "{\"document\": \"Document (dev.stxt.pdf):\"}".getBytes(StandardCharsets.UTF_8);
+        try (Socket socket = new Socket("127.0.0.1", closing.address().getPort())) {
+            // A request whose body has not all arrived: it is in progress until the rest comes.
+            OutputStream out = socket.getOutputStream();
+            out.write(("POST /render?format=stxt HTTP/1.1\r\nHost: 127.0.0.1\r\nContent-Type: application/json\r\n"
+                    + "Content-Length: " + body.length + "\r\n\r\n").getBytes(StandardCharsets.US_ASCII));
+            out.write(body, 0, 10);
+            out.flush();
+            long until = System.nanoTime() + Duration.ofSeconds(10).toNanos();
+            while (closing.routes().active() == 0 && System.nanoTime() < until) {
+                Thread.sleep(10);
+            }
+            assertEquals(1, closing.routes().active());
+
+            started = System.nanoTime();
+            Thread close = new Thread(() -> closing.close(Duration.ofSeconds(30)));
+            close.start();
+            HttpResponse<byte[]> refused = get("/health");
+            while (refused.statusCode() == 200 && System.nanoTime() < until) {
+                refused = get("/health");
+            }
+            error(refused, 503, Routes.SERVER_BUSY);
+            assertTrue(close.isAlive(), "it waits for the request in progress");
+
+            out.write(body, 10, body.length - 10);
+            out.flush();
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+            assertEquals("HTTP/1.1 200 OK", in.readLine());
+            close.join(10_000);
+            assertFalse(close.isAlive(), "it stops when the request in progress ends");
+            assertTrue(Duration.ofNanos(System.nanoTime() - started).toSeconds() < 10);
+        } finally {
+            server = null;
+        }
     }
 
     @Test

@@ -26,10 +26,12 @@ public final class PressServer implements AutoCloseable {
 
     private final HttpServer server;
     private final ExecutorService executor;
+    private final Routes routes;
 
-    private PressServer(HttpServer server, ExecutorService executor) {
+    private PressServer(HttpServer server, ExecutorService executor, Routes routes) {
         this.server = server;
         this.executor = executor;
+        this.routes = routes;
     }
 
     /**
@@ -71,7 +73,12 @@ public final class PressServer implements AutoCloseable {
         server.setExecutor(executor);
         server.createContext("/", routes);
         server.start();
-        return new PressServer(server, executor);
+        return new PressServer(server, executor, routes);
+    }
+
+    /** {@return the routes of the server, for the tests} */
+    Routes routes() {
+        return routes;
     }
 
     /** {@return the address it listens on, with the port it got if the configuration asked for any free one} */
@@ -87,14 +94,15 @@ public final class PressServer implements AutoCloseable {
     }
 
     /**
-     * Stops answering new requests and waits up to {@code grace} for those in progress, then stops the rest: the
-     * shutdown of {@code start} on {@code SIGTERM}.
+     * Answers new requests with {@code 503} and waits up to {@code grace} for those in progress, then stops: the
+     * shutdown of {@code start} on {@code SIGTERM} and Ctrl+C. Without requests in progress it stops at once.
      *
      * @param grace how long the requests in progress have, such as the timeout of a conversion; not negative
      */
     public void close(Duration grace) {
-        // HttpServer.stop waits for the exchanges in progress up to the seconds it is given, and refuses new ones.
-        server.stop((int) Math.min(Integer.MAX_VALUE, Math.max(0, grace.toSeconds())));
+        // Not HttpServer.stop(seconds), which on Java 17 waits all the seconds even without requests: see Routes.drain.
+        routes.drain(grace.isNegative() ? Duration.ZERO : grace);
+        server.stop(0);
         executor.shutdown();
         try {
             if (!executor.awaitTermination(1, TimeUnit.SECONDS)) {

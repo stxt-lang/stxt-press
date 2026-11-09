@@ -75,6 +75,8 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   and line. Exit codes: `0`, `1` if the job failed, `2` if the invocation is not valid.
 - The jar is a single file with every dependency inside (`maven-shade-plugin`), with `dev.stxt.press.cli.Main` as
   its `Main-Class`.
-- `PressServer.close(Duration)`, which waits for the requests in progress.
+- `PressServer.close(Duration)`, which answers new requests with `503` and waits for those in progress, and without
+  any stops at once: it does not use `HttpServer.stop(seconds)`, which on Java 17 waits all the seconds even without
+  requests, so a Ctrl+C of `start` took the whole `Timeout`.
 - `GET /health` gives the versions of the service and of the engine (`Converter.version()` of `stxt-pdf`), the first
   `null` outside the jar.

@@ -131,7 +131,8 @@ stxt-press: server/templates/invoices/invoice.stxt:73: SLOT_NO_DATA: Node 'Block
 | `1` | The job failed: the document, its styles, its data, a resource, a limit |
 | `2` | The invocation is not valid: an option, a file that does not exist, a `server.stxt` that is not valid |
 
-`start` stops on `SIGTERM` or Ctrl+C, giving the conversions in progress the `Timeout` of `server.stxt` to finish.
+`start` stops on `SIGTERM` or Ctrl+C, giving the conversions in progress the `Timeout` of `server.stxt` to finish;
+without any it stops at once. While it waits, new requests are answered with `503`.
 
 ## Configuration
 

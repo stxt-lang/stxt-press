@@ -11,12 +11,15 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -118,6 +121,12 @@ final class Routes implements HttpHandler {
     private final byte[] schema;
     /** The conversions that can still start. */
     private final Semaphore conversions;
+    /** The requests being answered, for {@link #drain}. */
+    private final AtomicInteger active = new AtomicInteger();
+    /** What {@link #drain} waits on, notified when the last request in progress ends. */
+    private final Object drained = new Object();
+    /** Whether the server is stopping: every new request is answered with {@code 503}. */
+    private volatile boolean closing;
 
     /** The converter of the server and the {@link Press} on it. */
     private record Shared(Converter converter, Press press) {
@@ -152,18 +161,63 @@ final class Routes implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+        // Counted before looking at closing: drain() either sees this request or this request sees closing.
+        active.incrementAndGet();
         try {
-            route(exchange);
-        } catch (Exception e) {
-            if (exchange.getResponseCode() != -1) {
-                // The response had started (a PDF being written): the exception drops the connection, so that the
-                // client does not take a part of the PDF for the whole.
-                LOG.log(Level.WARNING, "The response to " + exchange.getRequestURI() + " could not be finished", e);
-                throw e instanceof IOException io ? io : new IOException(e);
+            try {
+                if (closing) {
+                    throw new HttpError(503, SERVER_BUSY, "The server is stopping", Map.of("Connection", "close"));
+                }
+                route(exchange);
+            } catch (Exception e) {
+                if (exchange.getResponseCode() != -1) {
+                    // The response had started (a PDF being written): the exception drops the connection, so that the
+                    // client does not take a part of the PDF for the whole.
+                    LOG.log(Level.WARNING, "The response to " + exchange.getRequestURI() + " could not be finished", e);
+                    throw e instanceof IOException io ? io : new IOException(e);
+                }
+                fail(exchange, e);
             }
-            fail(exchange, e);
+            exchange.close();
+        } finally {
+            if (active.decrementAndGet() == 0) {
+                synchronized (drained) {
+                    drained.notifyAll();
+                }
+            }
         }
-        exchange.close();
+    }
+
+    /**
+     * Answers every new request with {@code 503} and waits up to {@code grace} for those in progress, so that the server
+     * can stop without cutting them. {@code HttpServer.stop(seconds)} does this too, but on Java 17 it waits all the
+     * seconds even without requests (fixed in later JDKs), so a Ctrl+C took the whole timeout of a conversion.
+     *
+     * @return whether every request finished in time
+     */
+    boolean drain(Duration grace) {
+        closing = true;
+        long deadline = System.nanoTime() + grace.toNanos();
+        synchronized (drained) {
+            try {
+                while (active.get() > 0) {
+                    long left = deadline - System.nanoTime();
+                    if (left <= 0) {
+                        return false;
+                    }
+                    TimeUnit.NANOSECONDS.timedWait(drained, left);
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** {@return the requests being answered} */
+    int active() {
+        return active.get();
     }
 
     private void route(HttpExchange exchange) throws Exception {

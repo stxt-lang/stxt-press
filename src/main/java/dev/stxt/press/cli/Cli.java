@@ -144,9 +144,13 @@ final class Cli {
     private void startUntilStopped(List<String> args) throws UsageException, ConfigException, Failure {
         ServerFile config = config(Arguments.parse(args, Set.of(), Set.of("--config"), Set.of()).none());
         PressServer server = startServer(config);
-        // SIGTERM (docker stop) and Ctrl+C: the conversions in progress have the time of a conversion to finish.
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> server.close(config.http().timeout()),
-                "stxt-press-shutdown"));
+        // SIGTERM (docker stop) and Ctrl+C: the conversions in progress have the time of a conversion to finish, and
+        // without any it stops at once.
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            server.close(config.http().timeout());
+            out.println("stxt-press stopped");
+            out.flush();
+        }, "stxt-press-shutdown"));
         try {
             new CountDownLatch(1).await();
         } catch (InterruptedException e) {
