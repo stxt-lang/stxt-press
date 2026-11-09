@@ -15,8 +15,9 @@ import dev.stxt.press.Options;
  * @param port the port, or 0 for any free one
  * @param token the token every route but {@code /health} asks for ({@code Authorization: Bearer <token>}), or
  *        {@code null} for none
- * @param editor whether the editor, {@code GET /} and its files under {@code /editor/}, is on, and with it
- *        {@code /fonts}, which only its previews use
+ * @param editor whether the index ({@code GET /}) and the editor ({@code GET /editor} and
+ *        {@code /editor/{path}}) are on, with their files under {@code /assets/} and {@code /fonts}, which only the
+ *        previews of the editor use
  * @param render whether {@code POST /render}, which converts any document, is on
  * @param templates whether {@code /templates}, which shows the texts and the sample data of the templates, is on
  * @param maxBodySize the largest body of a request, in bytes; at least 1

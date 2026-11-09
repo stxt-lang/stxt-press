@@ -44,13 +44,19 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   Relative paths are relative to the folder of the file. An error is a `ConfigException` with its code and its line.
   Without a file, the server listens only on `127.0.0.1:8080`, without token.
 - `PressServer.startLazily`, whose shared converter is created by the first request that needs it.
-- The web editor, at `GET /` and its files under `/editor/`, without token: a document mode (a document, its styles and
+- The web editor, without token, with what it shows in its URL, so that a reload shows it again: `GET /editor` (a
+  blank document), `GET /editor/{path}` (a template in the templates mode) and `GET /editor/{path}?mode=document` (the
+  template as a document); the list of templates and the mode buttons change the URL, and with changes in the panels
+  leaving them asks first. A document mode (a document, its styles and
   its data to `/render`, starting from a template of the server filled with its sample data) and a templates mode (a template of the server with its sample
   data first and then its document and its chain of styles, printed with `/print` or, edited, rendered with
   `/render`, and its `curl`). Fill,
   preview as SVG pages with or without outlines, and download the PDF; the errors of the server are marked in their
   panel, on their line. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
+- The index, at `GET /`, without token: the templates of the server by folder, each with links to the editor and a
+  button that opens its PDF, a link to a new document, and the routes of the API. The files of the index and the
+  editor are served under `/assets/`. It is turned off with the editor.
 - `GET /fonts` also lists the faces of the fonts (family, weight, style and the SHA-256 of the file), and
   `GET /fonts/{id}` gives the file of a face: the SVG pages name their fonts and do not carry them. Both are for the
   previews of the editor and are turned off with it (`Editor: false`): no other client needs the files of the fonts.

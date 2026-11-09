@@ -1,4 +1,4 @@
-/* The page of the editor of stxt-press. The editors take their styles from the stylesheet of @stxt-lang/editor,
+/* The pages of stxt-press: the index and the editor. The editors take their styles from the stylesheet of @stxt-lang/editor,
    which goes before this one in editor.css. No rounded corners, like the portal and the playground. */
 
 :root {
@@ -64,6 +64,21 @@ select {
 
 .brand {
 	font-weight: 700;
+	color: var(--text);
+	text-decoration: none;
+}
+
+.muted {
+	color: var(--muted);
+}
+
+button.small {
+	padding: 0.1rem 0.5rem;
+	font-size: 12px;
+}
+
+a {
+	color: var(--accent);
 }
 
 .modes {
@@ -76,6 +91,10 @@ select {
 
 #token {
 	margin-left: auto;
+}
+
+#versions {
+	font-size: 12px;
 }
 
 main {
@@ -177,4 +196,82 @@ dialog .buttons {
 	display: flex;
 	gap: 0.5rem;
 	margin-top: 0.8rem;
+}
+
+/* The index */
+
+main.index {
+	max-width: 72rem;
+}
+
+.index h1 {
+	margin: 0 0 0.6rem;
+	font-size: 18px;
+}
+
+.index .folder h2 {
+	margin: 0.8rem 0 0.2rem;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--muted);
+}
+
+.index ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.index li {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.3rem 0;
+	border-bottom: 1px solid var(--line);
+}
+
+.index li .muted {
+	font-size: 12px;
+}
+
+.index li .links {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	margin-left: auto;
+}
+
+.index .new {
+	margin-top: 1rem;
+}
+
+.routes {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.routes th,
+.routes td {
+	padding: 0.35rem 0.4rem;
+	border-bottom: 1px solid var(--line);
+	text-align: left;
+	vertical-align: top;
+}
+
+.routes th {
+	font-size: 12px;
+	color: var(--muted);
+}
+
+.routes tr.off code {
+	color: var(--muted);
+	text-decoration: line-through;
+}
+
+.badge {
+	margin-left: 0.4rem;
+	padding: 0 0.3rem;
+	font-size: 11px;
+	color: var(--muted);
+	border: 1px solid var(--line);
 }

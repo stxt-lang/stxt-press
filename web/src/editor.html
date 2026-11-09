@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>stxt-press</title>
+	<link rel="icon" href="data:,">
+	<link rel="stylesheet" href="/assets/editor.css">
+	<script src="/assets/editor.js" defer></script>
+</head>
+<body>
+	<header class="bar">
+		<a class="brand" href="/">stxt-press</a>
+		<nav class="modes" aria-label="Mode">
+			<button type="button" data-mode="document" aria-pressed="true">Document</button>
+			<button type="button" data-mode="template" aria-pressed="false">Templates</button>
+		</nav>
+		<button type="button" id="token" class="quiet">Token</button>
+	</header>
+	<main>
+		<section class="inputs" aria-label="Input">
+			<div id="document-mode" class="chooser">
+				<label>Document <select id="documents"></select></label>
+			</div>
+			<div id="template-mode" class="chooser" hidden>
+				<label>Template <select id="templates"></select></label>
+				<div class="print">
+					<code id="print-url"></code>
+					<button type="button" id="copy-curl" class="quiet">Copy curl</button>
+				</div>
+				<pre id="curl"></pre>
+			</div>
+			<div id="panels"></div>
+		</section>
+		<section class="output" aria-label="Output">
+			<div class="actions">
+				<button type="button" id="fill">Fill</button>
+				<button type="button" id="preview">Preview</button>
+				<button type="button" id="pdf">Download PDF</button>
+				<label><input type="checkbox" id="debug"> Outlines</label>
+			</div>
+			<div id="message" role="status"></div>
+			<div id="filled-panel" class="panel" hidden>
+				<h2>Filled document</h2>
+				<div id="filled"></div>
+			</div>
+			<div id="pages"></div>
+		</section>
+	</main>
+	<dialog id="token-dialog">
+		<p>The server asks for a token.</p>
+		<input type="password" id="token-input" autocomplete="off" aria-label="Token">
+		<div class="buttons">
+			<button type="button" id="token-ok">Use</button>
+			<button type="button" id="token-cancel" class="quiet">Cancel</button>
+		</div>
+	</dialog>
+</body>
+</html>

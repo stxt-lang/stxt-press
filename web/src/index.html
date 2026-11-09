@@ -4,46 +4,41 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>stxt-press</title>
-	<link rel="stylesheet" href="editor/editor.css">
-	<script src="editor/editor.js" defer></script>
+	<link rel="icon" href="data:,">
+	<link rel="stylesheet" href="/assets/editor.css">
+	<script src="/assets/index.js" defer></script>
 </head>
 <body>
 	<header class="bar">
-		<span class="brand">stxt-press</span>
-		<nav class="modes" aria-label="Mode">
-			<button type="button" data-mode="document" aria-pressed="true">Document</button>
-			<button type="button" data-mode="template" aria-pressed="false">Templates</button>
-		</nav>
+		<a class="brand" href="/">stxt-press</a>
+		<span id="versions" class="muted"></span>
 		<button type="button" id="token" class="quiet">Token</button>
 	</header>
-	<main>
-		<section class="inputs" aria-label="Input">
-			<div id="document-mode" class="chooser">
-				<label>Document <select id="documents"></select></label>
-			</div>
-			<div id="template-mode" class="chooser" hidden>
-				<label>Template <select id="templates"></select></label>
-				<div class="print">
-					<code id="print-url"></code>
-					<button type="button" id="copy-curl" class="quiet">Copy curl</button>
-				</div>
-				<pre id="curl"></pre>
-			</div>
-			<div id="panels"></div>
+	<main class="index">
+		<section aria-labelledby="templates-title">
+			<h1 id="templates-title">Templates</h1>
+			<p id="message" role="status"></p>
+			<div id="templates"></div>
+			<p class="new"><a href="/editor">New document</a>: a blank document, converted with <code>/render</code>.</p>
 		</section>
-		<section class="output" aria-label="Output">
-			<div class="actions">
-				<button type="button" id="fill">Fill</button>
-				<button type="button" id="preview">Preview</button>
-				<button type="button" id="pdf">Download PDF</button>
-				<label><input type="checkbox" id="debug"> Outlines</label>
-			</div>
-			<div id="message" role="status"></div>
-			<div id="filled-panel" class="panel" hidden>
-				<h2>Filled document</h2>
-				<div id="filled"></div>
-			</div>
-			<div id="pages"></div>
+		<section aria-labelledby="api-title">
+			<h1 id="api-title">API</h1>
+			<table class="routes">
+				<thead>
+					<tr><th>Route</th><th>What it does</th></tr>
+				</thead>
+				<tbody>
+					<tr><td><code>GET /print/{path}</code></td><td>A template filled with its sample data</td></tr>
+					<tr><td><code>POST /print/{path}</code></td><td>A template filled with the JSON data of the body</td></tr>
+					<tr><td><code>POST /render</code></td><td>Any document, with its styles, data and options</td></tr>
+					<tr id="route-templates"><td><code>GET /templates</code>, <code>GET /templates/{path}</code></td><td>The templates and their texts</td></tr>
+					<tr><td><code>GET /schema</code></td><td>The schema <code>dev.stxt.pdf</code> of the engine <button type="button" id="schema" class="quiet small">Open</button></td></tr>
+					<tr><td><code>GET /fonts</code>, <code>GET /fonts/{id}</code></td><td>The fonts of the server, for the previews of the editor</td></tr>
+					<tr><td><code>GET /health</code></td><td>The versions, without token <a href="/health">Open</a></td></tr>
+				</tbody>
+			</table>
+			<p class="muted"><code>/print</code> and <code>/render</code> take <code>?format=pdf|svg|stxt</code> and
+				<code>&amp;debug=true</code>.</p>
 		</section>
 	</main>
 	<dialog id="token-dialog">

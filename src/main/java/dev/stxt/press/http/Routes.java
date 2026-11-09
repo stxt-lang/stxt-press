@@ -53,7 +53,10 @@ import dev.stxt.press.templates.Templates;
  * <tr><td>{@code GET /fonts}</td><td>The font families of the server, and its faces with their files, for the editor</td></tr>
  * <tr><td>{@code GET /fonts/{id}}</td><td>The file of a face, by its SHA-256, for the editor</td></tr>
  * <tr><td>{@code GET /health}</td><td>That the service is alive, and its versions, without token</td></tr>
- * <tr><td>{@code GET /}, {@code GET /editor/{file}}</td><td>The web editor and its files, without token</td></tr>
+ * <tr><td>{@code GET /}</td><td>The index: the templates and the routes, without token</td></tr>
+ * <tr><td>{@code GET /editor}, {@code GET /editor/{path}}</td><td>The web editor, blank or on a template, without
+ * token</td></tr>
+ * <tr><td>{@code GET /assets/{file}}</td><td>The scripts and styles of the index and the editor, without token</td></tr>
  * </table>
  *
  * <p>{@code /print} and {@code /render} answer in the format of {@code ?format=}: {@code pdf} (by default),
@@ -79,8 +82,12 @@ final class Routes implements HttpHandler {
     private static final Set<String> CONVERT_PARAMETERS = Set.of("format", "debug");
     /** The id of a font: the SHA-256 of its file, in lowercase hexadecimal. */
     private static final Pattern FONT_ID = Pattern.compile("[0-9a-f]{64}");
-    /** Where the build of {@code web/} leaves the files of the editor, in the jar. */
-    private static final String EDITOR = "/editor/";
+    /** Where the build of {@code web/} leaves the files of the index and the editor, in the jar. */
+    private static final String WEB = "/editor/";
+    /** The URL of the editor, and the start of that of the editor on a template. */
+    private static final String EDITOR = "/editor";
+    /** Where the files of the index and the editor are served. */
+    private static final String ASSETS = "/assets/";
     /** The name of a file of the editor: no folders, no hidden files, with an extension. */
     private static final Pattern EDITOR_FILE = Pattern.compile("[A-Za-z0-9_-]+(\\.[A-Za-z0-9]+)+");
     /** The types of the files of the editor, by extension. */
@@ -167,12 +174,34 @@ final class Routes implements HttpHandler {
             sendJson(exchange, 200, health());
             return;
         }
-        if (config.editor() && (path.equals("/") || path.startsWith(EDITOR))) {
-            // Without token: the files of the page have nothing secret, and a browser cannot send the token when it
-            // opens a URL. The page asks for it when the API answers 401.
+        // The pages without token: their files have nothing secret, and a browser cannot send the token when it opens a
+        // URL. They ask for it when the API answers 401.
+        if (config.editor() && path.equals("/")) {
             method(exchange, "GET");
             parameters(exchange, Set.of());
-            editor(exchange, path.equals("/") ? "index.html" : path.substring(EDITOR.length()));
+            web(exchange, "index.html");
+            return;
+        }
+        if (config.editor() && (path.equals(EDITOR) || path.startsWith(EDITOR + "/"))) {
+            method(exchange, "GET");
+            mode(parameters(exchange, Set.of("mode")));
+            // The page is the same for every template, and whether it exists is not looked at: that would tell it
+            // without token. The page asks /templates/{path} for it, with the token.
+            if (!path.equals(EDITOR) && !Templates.isPath(path.substring(EDITOR.length() + 1))) {
+                throw new HttpError(404, NOT_FOUND, "There is no route " + path);
+            }
+            web(exchange, "editor.html");
+            return;
+        }
+        if (config.editor() && path.startsWith(ASSETS)) {
+            method(exchange, "GET");
+            parameters(exchange, Set.of());
+            String file = path.substring(ASSETS.length());
+            // A page has one URL: / or /editor.
+            if (file.endsWith(".html")) {
+                throw new HttpError(404, NOT_FOUND, "There is no file " + file + " in the assets");
+            }
+            web(exchange, file);
             return;
         }
         if (!authorized(exchange)) {
@@ -260,16 +289,24 @@ final class Routes implements HttpHandler {
         throw new HttpError(404, NOT_FOUND, "There is no font " + id);
     }
 
-    /** {@code GET /} and {@code GET /editor/{file}}: a file of the editor, from the jar. */
-    private static void editor(HttpExchange exchange, String file) throws IOException, HttpError {
+    /** {@code ?mode=} of the editor: {@code document} or {@code template}, which the page reads. */
+    private static void mode(Map<String, String> parameters) throws HttpError {
+        String mode = parameters.get("mode");
+        if (mode != null && !mode.equals("document") && !mode.equals("template")) {
+            throw new HttpError(400, PARAMETER_NOT_VALID, "Unknown mode " + mode + " (document, template)");
+        }
+    }
+
+    /** A file of the index or the editor, from the jar: a page, or one of {@code /assets/}. */
+    private static void web(HttpExchange exchange, String file) throws IOException, HttpError {
         if (!EDITOR_FILE.matcher(file).matches()) {
-            throw new HttpError(404, NOT_FOUND, "There is no file " + file + " in the editor");
+            throw new HttpError(404, NOT_FOUND, "There is no file " + file + " in the assets");
         }
         byte[] content;
-        try (InputStream in = Routes.class.getResourceAsStream(EDITOR + file)) {
+        try (InputStream in = Routes.class.getResourceAsStream(WEB + file)) {
             if (in == null) {
-                throw new HttpError(404, NOT_FOUND, file.equals("index.html")
-                        ? "The server was built without the editor" : "There is no file " + file + " in the editor");
+                throw new HttpError(404, NOT_FOUND, file.endsWith(".html")
+                        ? "The server was built without the editor" : "There is no file " + file + " in the assets");
             }
             content = in.readAllBytes();
         }

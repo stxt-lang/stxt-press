@@ -372,27 +372,52 @@ class PressServerTest {
         error(get("/fonts/IBM-Plex-Sans"), 404, Routes.NOT_FOUND);
     }
 
-    /** The editor is the build of {@code web/}, which Maven leaves in {@code target/classes/editor} before the tests. */
+    /**
+     * The index and the editor are the build of {@code web/}, which Maven leaves in {@code target/classes/editor} before
+     * the tests.
+     */
     @Test
-    void theEditorIsServedWithoutToken() throws Exception {
+    void theIndexAndTheEditorAreServedWithoutToken() throws Exception {
         start(ServerConfig.DEFAULT.withToken("s3cret"));
 
-        HttpResponse<byte[]> page = get("/");
-        HttpResponse<byte[]> script = get("/editor/editor.js");
+        HttpResponse<byte[]> index = get("/");
+        assertEquals(200, index.statusCode(), () -> text(index));
+        assertEquals("text/html; charset=utf-8", index.headers().firstValue("Content-Type").orElse(null));
+        assertTrue(index.headers().firstValue("Content-Security-Policy").orElse("").startsWith("default-src 'self'"));
+        assertTrue(text(index).contains("/assets/index.js"));
 
-        assertEquals(200, page.statusCode(), () -> text(page));
-        assertEquals("text/html; charset=utf-8", page.headers().firstValue("Content-Type").orElse(null));
-        assertTrue(page.headers().firstValue("Content-Security-Policy").orElse("").startsWith("default-src 'self'"));
-        assertTrue(text(page).contains("editor/editor.js"));
+        // One page for the blank document and for every template, which exists or not: that is not told without token.
+        for (String url : List.of("/editor", "/editor/hello", "/editor/catalogs/catalog", "/editor/missing/one",
+                "/editor/hello?mode=document", "/editor/hello?mode=template", "/editor?mode=document")) {
+            HttpResponse<byte[]> page = get(url);
+            assertEquals(200, page.statusCode(), url);
+            assertTrue(page.headers().firstValue("Content-Security-Policy").orElse("").startsWith("default-src 'self'"));
+            assertTrue(text(page).contains("/assets/editor.js"), url);
+        }
+        for (String url : List.of("/editor/", "/editor/a//b", "/editor/a/", "/editor/a.b", "/editor/..%2Fx",
+                "/editor/a%2Fb", "/editor/editor.js")) {
+            error(get(url), 404, Routes.NOT_FOUND);
+        }
+        error(get("/editor/hello?mode=pdf"), 400, Routes.PARAMETER_NOT_VALID);
+        error(get("/editor/hello?format=pdf"), 400, Routes.PARAMETER_NOT_VALID);
+
+        HttpResponse<byte[]> script = get("/assets/editor.js");
         assertEquals(200, script.statusCode());
         assertEquals("text/javascript; charset=utf-8", script.headers().firstValue("Content-Type").orElse(null));
-        assertEquals(200, get("/editor/editor.css").statusCode());
-        error(get("/editor/missing.js"), 404, Routes.NOT_FOUND);
-        error(get("/editor/.hidden"), 404, Routes.NOT_FOUND);
-        error(get("/editor/..%2Fstxt%2Fdev.stxt.press.stxt"), 404, Routes.NOT_FOUND);
-        error(get("/editor/"), 404, Routes.NOT_FOUND);
+        assertEquals(200, get("/assets/index.js").statusCode());
+        assertEquals(200, get("/assets/editor.css").statusCode());
+        error(get("/assets/missing.js"), 404, Routes.NOT_FOUND);
+        error(get("/assets/.hidden"), 404, Routes.NOT_FOUND);
+        error(get("/assets/..%2Fstxt%2Fdev.stxt.press.stxt"), 404, Routes.NOT_FOUND);
+        error(get("/assets/"), 404, Routes.NOT_FOUND);
+        // A page has one URL.
+        error(get("/assets/index.html"), 404, Routes.NOT_FOUND);
+        error(get("/assets/editor.html"), 404, Routes.NOT_FOUND);
+
         error(post("/", ""), 405, Routes.METHOD_NOT_ALLOWED);
+        error(post("/editor/hello", ""), 405, Routes.METHOD_NOT_ALLOWED);
         error(get("/schema"), 401, Routes.UNAUTHORIZED);
+        error(get("/templates/hello"), 401, Routes.UNAUTHORIZED);
     }
 
     @Test
@@ -400,7 +425,9 @@ class PressServerTest {
         start(ServerConfig.DEFAULT.withRoutes(false, true, true));
 
         error(get("/"), 404, Routes.NOT_FOUND);
-        error(get("/editor/editor.js"), 404, Routes.NOT_FOUND);
+        error(get("/editor"), 404, Routes.NOT_FOUND);
+        error(get("/editor/hello"), 404, Routes.NOT_FOUND);
+        error(get("/assets/editor.js"), 404, Routes.NOT_FOUND);
         // The fonts are only for the previews of the editor.
         error(get("/fonts"), 404, Routes.NOT_FOUND);
         error(get("/fonts/" + "0".repeat(64)), 404, Routes.NOT_FOUND);

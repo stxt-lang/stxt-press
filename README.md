@@ -25,7 +25,8 @@ java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice
 | `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file; for the editor |
 | `GET /fonts/{id}` | The file of a face, by its SHA-256; for the editor |
 | `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.1.0", "stxt-pdf": "0.13.0"}}`, without token |
-| `GET /` | The [web editor](#editor), without token |
+| `GET /` | The [index](#index-and-editor): the templates and the routes, without token |
+| `GET /editor`, `GET /editor/{path}` | The [web editor](#index-and-editor), blank or on a template, without token |
 
 `/print` and `/render` answer with a PDF (`?format=pdf`, the default), one SVG per page (`?format=svg`, as
 `{"pages": [...]}`, with `&debug=true` for the outlines of the boxes) or the filled document (`?format=stxt`).
@@ -63,12 +64,28 @@ styles document in `/render` (`styles[1]`) or the path of its file in a template
 
 The server has no TLS or users: it is meant to run behind a reverse proxy that adds them. `/render` converts any
 document and `/templates` shows the texts and the sample data of the templates, so both can be turned off. `/fonts`
-gives the files of the fonts to the SVG previews of the editor, and is turned off with it. With `/render`,
+gives the files of the fonts to the SVG previews of the editor, and is turned off with it, as are `/`, `/editor` and
+`/assets/`, the files of the pages. With `/render`,
 `/templates` and the editor off, the server has `/print`, `/schema` and `/health`.
 
-## Editor
+## Index and editor
 
-`GET /` is a page to try documents and templates against the server:
+`GET /` is the index: the templates of the server by folder, each with a link to the editor, a link to it as a
+document and a button that opens its PDF; a link to a new document; and the routes of the API.
+
+The editor is a page to try documents and templates against the server. What it shows is in its URL, so a reload shows
+it again, reading the template from the server, which reads its folder on every request: a template edited on disk is
+seen with a reload.
+
+| URL | What it shows |
+|---|---|
+| `/editor` | A blank document |
+| `/editor/{path}` | The template `{path}` in the templates mode: `/editor/catalogs/catalog` |
+| `/editor/{path}?mode=document` | The template `{path}` as a document |
+
+The list of templates and the mode buttons change the URL, in the history of the browser. With changes in the panels,
+leaving them (another template, back, a reload) asks first. The two modes:
+
 
 - **Document**: a layout document, its styles and its JSON data, sent to `/render`. The list has the templates of the
   server, each one filled with its sample data and with its chain of styles, one panel per file; the data panel
@@ -83,8 +100,9 @@ gives the files of the fonts to the SVG previews of the editor, and is turned of
 against the schema of `/schema` only while the data panel is empty: a document with Slots is validated by the server,
 once filled.
 
-The files of the page are served without token. With a token, the page asks for it when the API answers `401`, and
-keeps it in the `sessionStorage` of the tab.
+The pages and their files (`/assets/`) are served without token, the same page for every `{path}`, whether the template
+exists or not. With a token, the pages ask for it when the API answers `401`, and keep it in the `sessionStorage` of
+the tab.
 
 ## Command line
 
@@ -157,7 +175,7 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 | `Resource folder` | `resources` | The folder with `fonts/` and `images/` |
 | `Font folder`, `Image folder` | — | The fonts and the images in folders of their own, instead of `Resource folder`; each `Image folder` with its `Prefix` |
 | `Template folder` | none | The templates folder |
-| `Routes` | all on | `Editor`, `Render` and `Templates`: the editor (with `/fonts`), `/render` and `/templates` on or off |
+| `Routes` | all on | `Editor`, `Render` and `Templates`: the index and the editor (with `/fonts`), `/render` and `/templates` on or off |
 | `Limits` | — | `Max body size` (bytes, 2 MiB), `Timeout` (seconds, 30), `Concurrent conversions` (4), and the limits of the engine: `Max pages`, `Max image pixels`, `Max SVG elements`, `Max SVG depth`, `Max PDF bytes` |
 | `Template options` | — | `PDF UA` (`1` or `2`), `PDF A` (`A2B`, `A2A`, `A3B`, `A3A`) and one `Exclude` for each check not made, as the `options` of `/render` |
 

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { curl, fileName, isUnchanged, jsonErrorLine, parseData, request, target, validatesDocument } from "../src/model.ts";
+import { BLANK, byFolder, curl, fileName, isUnchanged, jsonErrorLine, parseData, parsePlace, placeUrl, request, samePlace, target, validatesDocument } from "../src/model.ts";
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
 
 const DOCUMENT: DocumentState = { mode: "document", document: "Document (dev.stxt.pdf):", styles: [{ path: "Styles", text: "" }], data: "" };
@@ -166,5 +166,47 @@ describe("curl", () => {
 	it("names the PDF after the template", () => {
 		assert.equal(fileName(template()), "invoice.pdf");
 		assert.equal(fileName(DOCUMENT), "document.pdf");
+	});
+});
+
+describe("parsePlace and placeUrl", () => {
+	it("reads a template, the same template as a document and the blank document", () => {
+		assert.deepEqual(parsePlace("/editor/catalogs/catalog", ""), { mode: "template", path: "catalogs/catalog" });
+		assert.deepEqual(parsePlace("/editor/catalogs/catalog", "?mode=document"), { mode: "document", path: "catalogs/catalog" });
+		assert.deepEqual(parsePlace("/editor/hello", "?mode=template"), { mode: "template", path: "hello" });
+		assert.deepEqual(parsePlace("/editor", ""), BLANK);
+		assert.deepEqual(parsePlace("/editor", "?mode=template"), BLANK);
+	});
+
+	it("is null for what is not a URL of the editor", () => {
+		for (const [pathname, search] of [["/", ""], ["/editor/", ""], ["/editor/a//b", ""], ["/editor/a/", ""],
+			["/editor/editor.js", ""], ["/editor/../x", ""], ["/editor/a%20b", ""], ["/editors/a", ""], ["/editor/a", "?mode=pdf"]]) {
+			assert.equal(parsePlace(pathname, search), null, pathname + search);
+		}
+	});
+
+	it("writes the URL that it reads", () => {
+		for (const place of [BLANK, { mode: "template" as const, path: "invoices/invoice" }, { mode: "document" as const, path: "menu" }]) {
+			const url = new URL(placeUrl(place), "http://localhost");
+			assert.deepEqual(parsePlace(url.pathname, url.search), place);
+		}
+		assert.equal(placeUrl({ mode: "template", path: "catalogs/catalog" }), "/editor/catalogs/catalog");
+		assert.equal(placeUrl({ mode: "document", path: "catalogs/catalog" }), "/editor/catalogs/catalog?mode=document");
+		assert.equal(placeUrl(BLANK), "/editor");
+	});
+
+	it("compares places", () => {
+		assert.ok(samePlace({ mode: "template", path: "a" }, { mode: "template", path: "a" }));
+		assert.ok(!samePlace({ mode: "template", path: "a" }, { mode: "document", path: "a" }));
+		assert.ok(!samePlace(BLANK, { mode: "document", path: "a" }));
+	});
+});
+
+describe("byFolder", () => {
+	it("groups the templates by folder, in the order they first appear", () => {
+		const groups = byFolder([{ path: "a/a1" }, { path: "a/b/y" }, { path: "a/c" }, { path: "root" }]);
+		assert.deepEqual(groups.map((g) => [g.folder, g.templates.map((t) => t.path)]),
+			[["a", ["a/a1", "a/c"]], ["a/b", ["a/b/y"]], ["", ["root"]]]);
+		assert.deepEqual(byFolder([]), []);
 	});
 });

@@ -62,6 +62,14 @@ public final class Templates {
         }
     }
 
+    /**
+     * {@return whether {@code path} has the form of the path of a template: segments of {@code [A-Za-z0-9_-]+} between
+     * {@code /}} It says nothing of whether the template exists.
+     */
+    public static boolean isPath(String path) {
+        return path != null && PATH.matcher(path).matches();
+    }
+
     /** {@return the templates folder, absolute and normalized} */
     public Path folder() {
         return folder;
@@ -76,7 +84,7 @@ public final class Templates {
      * @throws IOException if a file of it cannot be read or is not valid UTF-8
      */
     public Template get(String path) throws IOException {
-        if (path == null || !PATH.matcher(path).matches() || !isFile(path + DOCUMENT)) {
+        if (!isPath(path) || !isFile(path + DOCUMENT)) {
             throw new TemplateException(TemplateException.NOT_FOUND, path, "There is no template " + path);
         }
         String document = read(path + DOCUMENT, path);
