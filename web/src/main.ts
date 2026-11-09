@@ -392,7 +392,14 @@ function showServer(error: ServerError, asked: Request): void {
 	}
 }
 
+/**
+ * Runs a button on the panels and shows what the server answers. The list, the mode buttons, back and forward stay on
+ * while it runs: if they show another place before the answer comes, the answer is of panels that are not there any
+ * more, and nothing of it is shown, neither the output nor the error nor the message.
+ */
 async function run(format: Format): Promise<void> {
+	const seq = showing;
+	const left = () => seq !== showing;
 	for (const panel of [documentPanel, ...stylesPanels, ...(dataPanel ? [dataPanel] : [])]) {
 		panel.view.dispatch(setDiagnostics(panel.view.state, panel.local()));
 		panel.marked = false;
@@ -409,25 +416,43 @@ async function run(format: Format): Promise<void> {
 	say(format === "stxt" ? "Filling…" : "Converting…");
 	try {
 		const response = await call(asked.method, asked.url, asked.body, asked.contentType);
+		if (left()) {
+			return;
+		}
 		if (!response.ok) {
+			const error = await errorOf(response);
+			if (left()) {
+				return;
+			}
 			// The output of the last button is not that of these panels.
 			clearOutput();
-			showServer(await errorOf(response), asked);
+			showServer(error, asked);
 			return;
 		}
 		if (format === "stxt") {
-			showFilled(await response.text());
-			say("Filled.");
+			const filled = await response.text();
+			if (!left()) {
+				showFilled(filled);
+				say("Filled.");
+			}
 		} else if (format === "svg") {
 			const pages = ((await response.json()) as { pages: string[] }).pages;
 			await loadFonts();
-			showPages(pages);
+			if (!left()) {
+				showPages(pages);
+			}
 		} else {
-			showPdf(await response.blob(), fileName(state()));
+			const pdf = await response.blob();
+			if (!left()) {
+				showPdf(pdf, fileName(state()));
+			}
 		}
 	} catch (e) {
-		say(`The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`, true);
+		if (!left()) {
+			say(`The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`, true);
+		}
 	} finally {
+		// Always: they go with the panels the page shows now, which may be those of another place.
 		buttons.forEach((button) => (button.disabled = !hasPanels));
 	}
 }
@@ -435,23 +460,31 @@ async function run(format: Format): Promise<void> {
 /**
  * Registers the fonts of the server in the page, once: an SVG of the engine names its fonts and does not carry them,
  * so the preview needs them in the page. They are fetched with the token, as ArrayBuffers, and given to `FontFace`.
- * If they cannot be had, the preview shows the fonts of the browser instead.
+ * If they cannot be had, the preview shows the fonts of the browser instead, and the next one tries again: `/fonts`
+ * fails with the token dialog cancelled, or on a lazy server whose resources cannot be read yet. A face whose file
+ * fails is left out and not tried again, since the others are registered already.
  */
 function loadFonts(): Promise<void> {
 	fontsLoaded ??= (async () => {
 		const response = await call("GET", "/fonts");
 		if (!response.ok) {
-			return;
+			throw new Error(`/fonts answered ${response.status}`);
 		}
 		const faces = ((await response.json()) as { faces: { family: string; weight: number; style: string; id: string }[] }).faces;
 		await Promise.all(faces.map(async (face) => {
-			const file = await call("GET", `/fonts/${face.id}`);
-			if (file.ok) {
-				const font = new FontFace(face.family, await file.arrayBuffer(), { weight: String(face.weight), style: face.style });
-				document.fonts.add(await font.load());
+			try {
+				const file = await call("GET", `/fonts/${face.id}`);
+				if (file.ok) {
+					const font = new FontFace(face.family, await file.arrayBuffer(), { weight: String(face.weight), style: face.style });
+					document.fonts.add(await font.load());
+				}
+			} catch {
+				// This face is drawn with a font of the browser.
 			}
 		}));
-	})().catch(() => undefined);
+	})().catch(() => {
+		fontsLoaded = undefined;
+	});
 	return fontsLoaded;
 }
 

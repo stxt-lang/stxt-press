@@ -54,7 +54,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   file (the data, the document and each styles document), marked when it has an error or a warning; on the right, the
   output of the last button. Fill (in the templates mode), preview as SVG pages with or without outlines, and the PDF,
   shown in the viewer of the browser with a link that downloads it; the errors of the server are marked in their
-  panel, on their line, and their tab is shown. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
+  panel, on their line, and their tab is shown. An answer that comes after the page shows another template or mode is
+  not shown: neither its output, nor its error, nor its message. If `/fonts` fails, the next preview asks for the
+  fonts again. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
 - The index, at `GET /`, without token: the templates of the server by folder, each with links to the editor and a
   button that opens its PDF, a link to a new document, and the routes of the API. The files of the index and the
