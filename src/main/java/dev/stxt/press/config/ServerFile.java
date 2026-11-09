@@ -237,12 +237,21 @@ public final class ServerFile {
     }
 
     /**
-     * {@return the shared converter of the server: its resources and its limits}
-     *
-     * @throws dev.stxt.pdf.resources.ResourceException with {@link #warmUp()}, which reads the whole resources folder,
-     *         if the fonts cannot be read
+     * {@return a converter with the resources and the limits of this configuration, for jobs run one at a time, such as
+     * those of the commands {@code render} and {@code print}} It reads only the fonts and the images a document uses,
+     * when it converts it: the warm up, which reads the whole resources folder, is of the server ({@link #start()}).
      */
     public Converter converter() {
+        return Converter.builder().resources(resources).limits(limits).build();
+    }
+
+    /**
+     * {@return the shared converter of the server} With {@link #warmUp()} it reads the whole resources folder when it
+     * is created, so that the first request does not.
+     *
+     * @throws dev.stxt.pdf.resources.ResourceException with {@link #warmUp()}, if the fonts cannot be read
+     */
+    private Converter serverConverter() {
         return Converter.builder().resources(resources).limits(limits).preloadResources(warmUp).build();
     }
 
@@ -262,12 +271,12 @@ public final class ServerFile {
                     + FILE_NAME + ")");
         }
         if (lazyInit) {
-            return PressServer.startLazily(this::converter, templates, http);
+            return PressServer.startLazily(this::serverConverter, templates, http);
         }
         if (!warmUp) {
-            return PressServer.start(converter(), templates, http);
+            return PressServer.start(serverConverter(), templates, http);
         }
-        PressServer server = PressServer.startWarmingUp(this::converter, templates, http);
+        PressServer server = PressServer.startWarmingUp(this::serverConverter, templates, http);
         try {
             server.warmUp();
         } catch (RuntimeException e) {

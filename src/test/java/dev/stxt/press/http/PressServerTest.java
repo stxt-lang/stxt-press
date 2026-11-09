@@ -791,6 +791,28 @@ class PressServerTest {
         assertTrue(body.get("source").isNull());
     }
 
+    /**
+     * A fill ({@code ?format=stxt}) reads no resources, so on a lazy server it does not create the converter: with
+     * resources that cannot be read, a fill is answered and a conversion is not.
+     */
+    @Test
+    void aFillDoesNotNeedTheConverterOfALazyServer() throws Exception {
+        server = PressServer.startLazily(() -> {
+            throw new IllegalStateException("The resources cannot be read");
+        }, templates, ServerConfig.DEFAULT.withAddress("127.0.0.1", 0));
+
+        HttpResponse<byte[]> filled = post("/render?format=stxt", render(WITH_SLOTS, Map.of("data", JSON.readTree(SAMPLE))));
+        assertEquals(200, filled.statusCode(), () -> text(filled));
+        assertTrue(text(filled).contains("Title: Sample"), () -> text(filled));
+        HttpResponse<byte[]> print = post("/print/invoices/invoice?format=stxt", "{\"title\": \"Posted\", \"lines\": []}");
+        assertEquals(200, print.statusCode(), () -> text(print));
+        assertTrue(text(print).contains("Title: Posted"), () -> text(print));
+        assertEquals(200, get("/print/invoices/invoice?format=stxt").statusCode());
+
+        error(post("/render", render(DOCUMENT, Map.of())), 500, Routes.INTERNAL);
+        error(get("/fonts"), 500, Routes.INTERNAL);
+    }
+
     @Test
     void theConfigurationIsChecked() {
         for (Runnable bad : List.<Runnable>of(() -> ServerConfig.DEFAULT.withToken(" "),

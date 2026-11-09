@@ -70,8 +70,8 @@ public final class PressServer implements AutoCloseable {
 
     /**
      * Starts a server whose converter is created by the first request that needs it ({@code Lazy init} of
-     * {@code server.stxt}): a conversion, {@code /fonts} or a fill. If creating it fails, that request is answered with
-     * the error and the next one tries again.
+     * {@code server.stxt}): a conversion or {@code /fonts}; not a fill ({@code ?format=stxt}), which reads no resources.
+     * If creating it fails, that request is answered with the error and the next one tries again.
      *
      * @param shared what creates the converter of the server, with its resources and its limits; not {@code null}
      * @param templates the templates folder, or {@code null} if the server has none

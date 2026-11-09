@@ -102,3 +102,7 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   of `server.stxt`; any other, or none, is `403` with the code `HOST_NOT_ALLOWED`, on every route, `/health` too. Before,
   a page of another site could make its own name resolve to `127.0.0.1` (DNS rebinding) and read the templates or use
   `/render` from the browser of whoever runs the server.
+- `render` and `print` read only the fonts and images of their document, not the whole resources folder: the warm up
+  is of the server. The invoice of `server/` prints in 1.9–2.1 s instead of 2.3 s, with the same PDF. `Press.fill` is
+  static, so `fill` creates no converter, and a fill (`?format=stxt`) on a server with `Lazy init` does not create
+  its converter either: with resources that cannot be read, it is answered.

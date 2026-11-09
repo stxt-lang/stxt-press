@@ -176,7 +176,7 @@ class TemplatesTest {
 
         assertEquals(SAMPLE, invoice.data());
         assertTrue(isPdf(job));
-        assertTrue(PRESS.fill(job.document(), job.data()).contains("Title: Sample"));
+        assertTrue(Press.fill(job.document(), job.data()).contains("Title: Sample"));
     }
 
     @Test
@@ -184,7 +184,7 @@ class TemplatesTest {
         Job job = templates.get("invoices/2026/invoice").job(Options.DEFAULT,
                 "{\"title\": \"Posted\", \"margin\": 30, \"lines\": [{\"text\": \"Only.\"}]}");
 
-        String filled = PRESS.fill(job.document(), job.data());
+        String filled = Press.fill(job.document(), job.data());
         assertTrue(filled.contains("Title: Posted"), filled);
         assertFalse(filled.contains("Two."), filled);
         assertTrue(isPdf(job));

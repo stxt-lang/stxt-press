@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
-import dev.stxt.pdf.convert.Converter;
 import dev.stxt.pdf.model.Check;
 import dev.stxt.pdf.model.PdfA;
 import dev.stxt.pdf.model.StxtPdfException;
@@ -250,8 +249,7 @@ final class Cli {
         String json = read(data);
         String filled;
         try {
-            // Filling reads no resources: the converter is that of the defaults, which reads nothing until it converts.
-            filled = new Press(Converter.builder().build()).fill(text, json);
+            filled = Press.fill(text, json);
         } catch (PressException e) {
             throw failure(e, Map.of(PressException.DOCUMENT, document, PressException.DATA, data));
         }

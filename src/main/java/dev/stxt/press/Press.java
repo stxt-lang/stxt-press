@@ -117,7 +117,8 @@ public final class Press {
     /**
      * {@return the document filled with the data, as STXT text: the text a job with these data converts, so the lines
      * of its errors ({@link PressException#FILLED}) are the lines of this text} Neither the document with Slots nor the
-     * filled one is validated here: the engine validates the filled one when it converts it.
+     * filled one is validated here: the engine validates the filled one when it converts it. It needs no converter, so
+     * it is static: filling reads no resources.
      *
      * @param document the STXT text of a document with Slots; not {@code null}
      * @param data the JSON text that fills them; not {@code null}
@@ -125,7 +126,7 @@ public final class Press {
      *         read ({@link PressException#DATA}) or do not fit the Slots ({@link PressException#DOCUMENT}, at the line
      *         of the Slot)
      */
-    public String fill(String document, String data) {
+    public static String fill(String document, String data) {
         Objects.requireNonNull(data, "data");
         List<Node> nodes;
         try {

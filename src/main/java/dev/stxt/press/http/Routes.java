@@ -515,7 +515,8 @@ final class Routes implements HttpHandler {
     /** Converts {@code job} and answers with it in {@code format}; {@code name} names the PDF, if not {@code null}. */
     private void respond(HttpExchange exchange, Job job, Format format, String name) throws Exception {
         if (format == Format.STXT) {
-            String filled = job.data() == null ? job.document() : shared().press().fill(job.document(), job.data());
+            // Without the converter: a fill reads no resources, so it does not create that of a lazy server.
+            String filled = job.data() == null ? job.document() : Press.fill(job.document(), job.data());
             send(exchange, 200, STXT_TYPE, filled.getBytes(StandardCharsets.UTF_8));
             return;
         }

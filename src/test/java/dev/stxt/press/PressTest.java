@@ -115,7 +115,7 @@ class PressTest {
 
     @Test
     void fillGivesTheFilledText() {
-        String filled = PRESS.fill(WITH_SLOTS, DATA);
+        String filled = Press.fill(WITH_SLOTS, DATA);
 
         assertTrue(filled.contains("Title: Filled"), filled);
         assertTrue(filled.contains("Paragraph: Three."), filled);
@@ -123,8 +123,8 @@ class PressTest {
 
     @Test
     void aDocumentWithoutSlotsIsFilledAsItIs() {
-        assertEquals(PRESS.fill(DOCUMENT, "{}"), PRESS.fill(DOCUMENT, DATA));
-        assertTrue(PRESS.fill(DOCUMENT, DATA).contains("Paragraph: Hello."));
+        assertEquals(Press.fill(DOCUMENT, "{}"), Press.fill(DOCUMENT, DATA));
+        assertTrue(Press.fill(DOCUMENT, DATA).contains("Paragraph: Hello."));
     }
 
     @Test
@@ -152,7 +152,7 @@ class PressTest {
 
     @Test
     void dataThatAreNotJsonAreAnErrorOfTheData() {
-        PressException e = assertThrows(PressException.class, () -> PRESS.fill(WITH_SLOTS, "{\n\"title\": }"));
+        PressException e = assertThrows(PressException.class, () -> Press.fill(WITH_SLOTS, "{\n\"title\": }"));
 
         assertEquals(Kind.INVALID_DOCUMENT, e.kind());
         assertEquals("JSON_NOT_VALID", e.code());
@@ -178,7 +178,7 @@ class PressTest {
 
         assertEquals(Kind.INVALID_DOCUMENT, e.kind());
         assertEquals(PressException.FILLED, e.source());
-        assertEquals(PRESS.fill(document, DATA), e.filled());
+        assertEquals(Press.fill(document, DATA), e.filled());
         assertEquals(10, e.line(), "line 8 of the document with Slots, after two more paragraphs");
         assertTrue(e.filled().lines().toList().get(e.line() - 1).contains("Unknown: here"), e.filled());
     }
