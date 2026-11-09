@@ -47,10 +47,10 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - The web editor, without token, with what it shows in its URL, so that a reload shows it again: `GET /editor` (a
   blank document), `GET /editor/{path}` (a template in the templates mode) and `GET /editor/{path}?mode=document` (the
   template as a document); the list of templates and the mode buttons change the URL, and with changes in the panels
-  leaving them asks first. A document mode (a document, its styles and
-  its data to `/render`, starting from a template of the server filled with its sample data) and a templates mode (a template of the server with its sample
+  leaving them asks first. A document mode (a document and its styles to
+  `/render`, without data, starting from a template of the server filled with its sample data) and a templates mode (a template of the server with its sample
   data first and then its document and its chain of styles, printed with `/print` or, edited, rendered with
-  `/render`, and its `curl`). Fill,
+  `/render`, and its `curl`). Fill (in the templates mode),
   preview as SVG pages with or without outlines, and download the PDF; the errors of the server are marked in their
   panel, on their line. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.

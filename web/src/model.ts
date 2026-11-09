@@ -13,8 +13,9 @@ export interface StylesText {
 }
 
 /**
- * The panels of the document mode: a document, its styles documents in order (those of the chain of the template it
- * comes from, or one blank panel) and its data.
+ * The panels of the document mode: a document and its styles documents in order (those of the chain of the template it
+ * comes from, or one blank panel). The page has no data panel in this mode and gives `data` blank; `request` still
+ * sends data if there are any.
  */
 export interface DocumentState {
 	mode: "document";

@@ -42,7 +42,8 @@ let dirty = false;
 let hasPanels = false;
 let documentPanel: Panel;
 let stylesPanels: Panel[] = [];
-let dataPanel: Panel;
+/** The data panel of the templates mode; the document mode has none. */
+let dataPanel: Panel | undefined;
 let filledPanel: Panel | undefined;
 /** The names of the styles panels of the document mode: the paths of the chain of its template, or "Styles". */
 let documentStyles: string[] = [];
@@ -127,6 +128,7 @@ function clearPanels(): void {
 		panel?.destroy();
 	}
 	stylesPanels = [];
+	dataPanel = undefined;
 	hideFilled();
 	dirty = false;
 	setPanels(false);
@@ -143,34 +145,36 @@ function edited(): void {
 }
 
 /**
- * Shows the panels of a document: the document, its styles and its data, in this order, or with the data first
- * (`dataFirst`), for a template, whose data are what changes from one PDF to another.
+ * Shows the panels of a document: the document and its styles, without data (`data` `null`), for the document mode,
+ * which converts a document as it is; or the data first and then the document and its styles, for a template, whose
+ * data are what changes from one PDF to another.
  */
-function showPanels(text: string, styles: StylesText[], data: string, titles: { document: string; data: string },
-	dataFirst = false): void {
+function showPanels(text: string, styles: StylesText[], titles: { document: string }): void;
+function showPanels(text: string, styles: StylesText[], titles: { document: string; data: string }, data: string): void;
+function showPanels(text: string, styles: StylesText[], titles: { document: string; data?: string }, data?: string): void {
 	clearPanels();
 	documentPanel = stxtPanel(titles.document, text, { onChange: edited });
 	stylesPanels = styles.map((item) => stxtPanel(item.path, item.text, { onChange: edited }));
-	dataPanel = jsonPanel(titles.data, data, () => {
+	dataPanel = data === undefined ? undefined : jsonPanel(titles.data ?? "", data, () => {
 		edited();
 		dataChanged();
 	});
 	setPanels(true);
-	const order = [documentPanel, ...stylesPanels];
-	if (dataFirst) {
-		order.unshift(dataPanel);
-	} else {
-		order.push(dataPanel);
-	}
+	const order = [...(dataPanel ? [dataPanel] : []), documentPanel, ...stylesPanels];
 	$("panels").append(...order.map((panel) => panel.element));
 	dataChanged();
 }
 
+/** The text of the data panel: none in the document mode. */
+function dataText(): string {
+	return dataPanel?.text() ?? "";
+}
+
 function dataChanged(): void {
 	// The document panel validates only without data: see validatesDocument.
-	documentPanel.setValidation?.(validatesDocument(dataPanel.text()));
+	documentPanel.setValidation?.(validatesDocument(dataText()));
 	if (mode === "template" && original) {
-		$("curl").textContent = curl(location.origin, original.path, dataPanel.text(), token() !== null);
+		$("curl").textContent = curl(location.origin, original.path, dataText(), token() !== null);
 	}
 }
 
@@ -223,7 +227,7 @@ function state(): State {
 			path: original.path,
 			document: documentPanel.text(),
 			styles: stylesPanels.map((panel, i) => ({ path: original!.styles[i].path, text: panel.text() })),
-			data: dataPanel.text(),
+			data: dataText(),
 			original,
 		};
 	}
@@ -231,7 +235,7 @@ function state(): State {
 		mode: "document",
 		document: documentPanel.text(),
 		styles: stylesPanels.map((panel, i) => ({ path: documentStyles[i], text: panel.text() })),
-		data: dataPanel.text(),
+		data: "",
 	};
 }
 
@@ -268,7 +272,7 @@ function showServer(error: ServerError, asked: Request): void {
 }
 
 async function run(format: Format): Promise<void> {
-	for (const panel of [documentPanel, ...stylesPanels, dataPanel]) {
+	for (const panel of [documentPanel, ...stylesPanels, ...(dataPanel ? [dataPanel] : [])]) {
 		panel.view.dispatch(setDiagnostics(panel.view.state, panel.local()));
 	}
 	const asked = request(state(), format, $<HTMLInputElement>("debug").checked);
@@ -388,7 +392,7 @@ function showBlankDocument(text = "", styles: StylesText[] = []): void {
 	original = undefined;
 	const panels = styles.length > 0 ? styles : [{ path: "Styles", text: "" }];
 	documentStyles = panels.map((item) => item.path);
-	showPanels(text, panels, "", { document: "Document", data: "Data (JSON)" });
+	showPanels(text, panels, { document: "Document" });
 }
 
 async function showTemplate(path: string, seq: number): Promise<void> {
@@ -409,8 +413,8 @@ async function showTemplate(path: string, seq: number): Promise<void> {
 	}
 	original = { path: template.path, document: template.document, styles: template.styles, data: template.data };
 	$("print-url").textContent = `${location.origin}/print/${template.path}`;
-	showPanels(template.document, template.styles, template.data ?? "",
-		{ document: `${template.path}.stxt`, data: template.data === null ? "Data (JSON)" : `${template.path}.json` }, true);
+	showPanels(template.document, template.styles,
+		{ document: `${template.path}.stxt`, data: template.data === null ? "Data (JSON)" : `${template.path}.json` }, template.data ?? "");
 }
 
 /** Selects `value` in `select`, or nothing if it is not one of its options. */
@@ -432,6 +436,8 @@ async function show(place: Place): Promise<void> {
 	});
 	$("document-mode").hidden = place.mode !== "document";
 	$("template-mode").hidden = place.mode !== "template";
+	// A document is converted as it is: no data, so nothing to fill.
+	$("fill").hidden = place.mode === "document";
 	choose($<HTMLSelectElement>("documents"), place.mode === "document" ? place.path ?? "" : "");
 	choose($<HTMLSelectElement>("templates"), place.mode === "template" ? place.path ?? "" : "");
 	$("pages").replaceChildren();

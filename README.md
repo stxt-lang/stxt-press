@@ -87,18 +87,17 @@ The list of templates and the mode buttons change the URL, in the history of the
 leaving them (another template, back, a reload) asks first. The two modes:
 
 
-- **Document**: a layout document, its styles and its JSON data, sent to `/render`. The list has the templates of the
-  server, each one filled with its sample data and with its chain of styles, one panel per file; the data panel
-  starts empty.
+- **Document**: a layout document and its styles, sent to `/render` as they are, without data. The list has the
+  templates of the server, each one filled with its sample data and with its chain of styles, one panel per file.
 - **Templates**: a template of the server: its sample data first, the panel that changes from one PDF to another, then
   the document and its chain of styles, one panel per file. With the document and the styles as the server has them,
   it is printed with `/print` and the data of the panel; edited, with `/render` and the whole chain. Nothing is saved
   on the server. The page shows the URL of `/print` and a `curl` with the data of the panel.
 
-**Fill** shows the filled document, **Preview** the SVG pages (with **Outlines**, the outlines of the boxes) and
-**Download PDF** the PDF. An error of the server is marked in its panel, on its line. The document panel validates
-against the schema of `/schema` only while the data panel is empty: a document with Slots is validated by the server,
-once filled.
+**Preview** shows the SVG pages (with **Outlines**, the outlines of the boxes) and **Download PDF** the PDF; in the
+templates mode, **Fill** shows the filled document. An error of the server is marked in its panel, on its line. The
+document panel validates against the schema of `/schema`, in the templates mode only while the data panel is empty: a
+document with Slots is validated by the server, once filled.
 
 The pages and their files (`/assets/`) are served without token, the same page for every `{path}`, whether the template
 exists or not. With a token, the pages ask for it when the API answers `401`, and keep it in the `sessionStorage` of
