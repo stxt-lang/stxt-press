@@ -39,9 +39,10 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
           cache-dependency-path: stxt-press/pom.xml
+      # npm ci: the dependencies of the page exactly as web/package-lock.json has them.
       - name: Tests
         working-directory: stxt-press
-        run: mvn -B verify
+        run: mvn -B verify -Dnpm.install=ci
       - name: Reports
         if: always()
         uses: actions/upload-artifact@v4

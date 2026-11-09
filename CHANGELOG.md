@@ -111,3 +111,6 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   body of `POST /print` and of the stdin of the commands; and `Templates.files`, the file of each input of a template,
   for the errors of `print`. The `CONFIG_CONFLICT` of `PDF UA: 2` with `PDF A` in `server.stxt` has the message of
   `Options`, which names the PDF/A (`A2B`).
+- `-Dnpm.install=ci` runs `npm ci` instead of `npm install` for the dependencies of the page: exactly those of
+  `web/package-lock.json`, checked against their hashes, failing if the lock does not fit `package.json`. The CI uses
+  it, and so does the jar of a version (`mvn clean package -Dnpm.install=ci`).
