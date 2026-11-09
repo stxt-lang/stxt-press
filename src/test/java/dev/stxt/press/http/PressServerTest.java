@@ -401,6 +401,10 @@ class PressServerTest {
 
         error(get("/"), 404, Routes.NOT_FOUND);
         error(get("/editor/editor.js"), 404, Routes.NOT_FOUND);
+        // The fonts are only for the previews of the editor.
+        error(get("/fonts"), 404, Routes.NOT_FOUND);
+        error(get("/fonts/" + "0".repeat(64)), 404, Routes.NOT_FOUND);
+        assertEquals(200, get("/schema").statusCode());
         server.close();
         start(ServerConfig.DEFAULT.withRoutes(false, true, true).withToken("s3cret"));
 

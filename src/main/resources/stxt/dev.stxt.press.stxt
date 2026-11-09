@@ -77,7 +77,7 @@ Schema (@stxt.schema): dev.stxt.press
 				Max: 1
 	Node: Editor
 		Type: BOOLEAN
-		Description: Whether the web editor, GET / and its files under /editor/, is on. Its files are served without token; the page asks for the token when the API answers 401. By default true.
+		Description: Whether the web editor, GET / and its files under /editor/, is on, and with it /fonts, which only its previews use. Its files are served without token; the page asks for the token when the API answers 401. By default true.
 	Node: Render
 		Type: BOOLEAN
 		Description: Whether POST /render, which converts any document, is on. By default true.

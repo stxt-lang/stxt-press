@@ -50,8 +50,8 @@ import dev.stxt.press.templates.Templates;
  * <tr><td>{@code GET /templates}</td><td>The templates, with what files each one has</td></tr>
  * <tr><td>{@code GET /templates/{path}}</td><td>The texts of a template</td></tr>
  * <tr><td>{@code GET /schema}</td><td>The schema {@code dev.stxt.pdf} of the engine</td></tr>
- * <tr><td>{@code GET /fonts}</td><td>The font families of the server, and its faces with their files</td></tr>
- * <tr><td>{@code GET /fonts/{id}}</td><td>The file of a face, by its SHA-256</td></tr>
+ * <tr><td>{@code GET /fonts}</td><td>The font families of the server, and its faces with their files, for the editor</td></tr>
+ * <tr><td>{@code GET /fonts/{id}}</td><td>The file of a face, by its SHA-256, for the editor</td></tr>
  * <tr><td>{@code GET /health}</td><td>That the service is alive, and its versions, without token</td></tr>
  * <tr><td>{@code GET /}, {@code GET /editor/{file}}</td><td>The web editor and its files, without token</td></tr>
  * </table>
@@ -191,11 +191,11 @@ final class Routes implements HttpHandler {
             method(exchange, "GET");
             parameters(exchange, Set.of());
             send(exchange, 200, STXT_TYPE, schema);
-        } else if (path.equals("/fonts")) {
+        } else if (path.equals("/fonts") && config.editor()) {
             method(exchange, "GET");
             parameters(exchange, Set.of());
             fonts(exchange);
-        } else if (path.startsWith("/fonts/")) {
+        } else if (path.startsWith("/fonts/") && config.editor()) {
             method(exchange, "GET");
             parameters(exchange, Set.of());
             font(exchange, path.substring("/fonts/".length()));
@@ -221,7 +221,8 @@ final class Routes implements HttpHandler {
     /**
      * {@code GET /fonts}: the families, and each face (family, weight, style) with the SHA-256 of its file, which
      * {@code /fonts/{id}} gives. The editor registers them in the page to show the SVG previews with the fonts of the
-     * server, which an SVG names and does not carry.
+     * server, which an SVG names and does not carry. Only with the editor on: no other client needs the files of the
+     * fonts (a PDF carries them), and a server should not hand them out if it does not have to.
      */
     private void fonts(HttpExchange exchange) throws IOException {
         FontLibrary library = shared().converter().resources().fonts();

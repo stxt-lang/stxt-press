@@ -22,8 +22,8 @@ java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice
 | `GET /templates` | The templates, with the files each one has |
 | `GET /templates/{path}` | The document, the chain of styles and the sample data of a template |
 | `GET /schema` | The schema `dev.stxt.pdf` of the engine |
-| `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file |
-| `GET /fonts/{id}` | The file of a face, by its SHA-256 |
+| `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file; for the editor |
+| `GET /fonts/{id}` | The file of a face, by its SHA-256; for the editor |
 | `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.1.0", "stxt-pdf": "0.13.0"}}`, without token |
 | `GET /` | The [web editor](#editor), without token |
 
@@ -62,8 +62,9 @@ styles document in `/render` (`styles[1]`) or the path of its file in a template
 ```
 
 The server has no TLS or users: it is meant to run behind a reverse proxy that adds them. `/render` converts any
-document and `/templates` shows the texts and the sample data of the templates, so both can be turned off, leaving
-`/print`, `/schema`, `/fonts` and `/health`.
+document and `/templates` shows the texts and the sample data of the templates, so both can be turned off. `/fonts`
+gives the files of the fonts to the SVG previews of the editor, and is turned off with it. With `/render`,
+`/templates` and the editor off, the server has `/print`, `/schema` and `/health`.
 
 ## Editor
 
@@ -156,7 +157,7 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 | `Resource folder` | `resources` | The folder with `fonts/` and `images/` |
 | `Font folder`, `Image folder` | — | The fonts and the images in folders of their own, instead of `Resource folder`; each `Image folder` with its `Prefix` |
 | `Template folder` | none | The templates folder |
-| `Routes` | all on | `Editor`, `Render` and `Templates`: the editor, `/render` and `/templates` on or off |
+| `Routes` | all on | `Editor`, `Render` and `Templates`: the editor (with `/fonts`), `/render` and `/templates` on or off |
 | `Limits` | — | `Max body size` (bytes, 2 MiB), `Timeout` (seconds, 30), `Concurrent conversions` (4), and the limits of the engine: `Max pages`, `Max image pixels`, `Max SVG elements`, `Max SVG depth`, `Max PDF bytes` |
 | `Template options` | — | `PDF UA` (`1` or `2`), `PDF A` (`A2B`, `A2A`, `A3B`, `A3A`) and one `Exclude` for each check not made, as the `options` of `/render` |
 
