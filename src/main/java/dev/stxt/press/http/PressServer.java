@@ -5,6 +5,8 @@ import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.net.InetSocketAddress;
 import java.time.Duration;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,6 +29,18 @@ import dev.stxt.press.templates.Templates;
 public final class PressServer implements AutoCloseable {
 
     private static final Logger LOG = System.getLogger("dev.stxt.press");
+
+    /** The property of the JDK with the time a request has to arrive whole, its headers and its body, in seconds. */
+    static final String MAX_REQUEST_TIME = "sun.net.httpserver.maxReqTime";
+    /** The property of the JDK with the time from a request read whole to its response sent whole, in seconds. */
+    static final String MAX_RESPONSE_TIME = "sun.net.httpserver.maxRspTime";
+    /** The time a request has to arrive whole: 2 MiB, the largest body by default, at 70 KB/s. */
+    static final long REQUEST_SECONDS = 30;
+    /**
+     * What a response has on top of the timeout of a conversion: to read the template and fill it, to create the
+     * converter of a lazy server (reading the resources) and to send the PDF.
+     */
+    static final long RESPONSE_MARGIN_SECONDS = 30;
 
     private final HttpServer server;
     private final ExecutorService executor;
@@ -83,6 +97,45 @@ public final class PressServer implements AutoCloseable {
     public static PressServer startWarmingUp(Supplier<Converter> shared, Templates templates, ServerConfig config)
             throws IOException {
         return start(shared, templates, config, true);
+    }
+
+    /**
+     * Sets the time limits of the {@link HttpServer} of the JDK in the system properties of this JVM, each one only if
+     * it is not given already ({@code -D}): {@link #timeLimits}. Without them the JDK has none, and a client that sends
+     * the headers of a request and not its body, or sends them by halves, keeps a thread of the pool until it closes the
+     * connection: as many such clients as threads leave the server without answering, {@code /health} too. With them,
+     * the JDK closes the connection of a request that has not arrived whole in time, and of a response that has not been
+     * sent whole in time, and the thread is free again.
+     *
+     * <p>The JDK reads them once, when its first server is created, so this goes before it, in the process that runs
+     * the server ({@code start}); in a JVM that already has a server it changes nothing. A library that only creates a
+     * server does not call it: the system properties are of whoever owns the JVM.</p>
+     *
+     * @param timeout the time a conversion has ({@link ServerConfig#timeout()}); positive
+     */
+    public static void limitTimes(Duration timeout) {
+        timeLimits(timeout).forEach((property, value) -> {
+            if (System.getProperty(property) == null) {
+                System.setProperty(property, value);
+            }
+        });
+    }
+
+    /**
+     * {@return the time limits of {@link #limitTimes}, by property, in seconds} A request has {@value #REQUEST_SECONDS}
+     * seconds to arrive whole; the response, {@code timeout} and {@value #RESPONSE_MARGIN_SECONDS} more, so that a
+     * conversion in time is never cut. A request without body is read whole with its headers, and its response counts
+     * from then.
+     *
+     * @param timeout the time a conversion has; positive
+     */
+    static Map<String, String> timeLimits(Duration timeout) {
+        long response = timeout.getSeconds() + (timeout.getNano() > 0 ? 1 : 0) + RESPONSE_MARGIN_SECONDS;
+        Map<String, String> limits = new LinkedHashMap<>();
+        limits.put(MAX_REQUEST_TIME, Long.toString(REQUEST_SECONDS));
+        // A timeout too long for a long is no limit: the JDK takes a negative number as none.
+        limits.put(MAX_RESPONSE_TIME, Long.toString(response < 0 ? -1 : response));
+        return limits;
     }
 
     private static PressServer start(Supplier<Converter> shared, Templates templates, ServerConfig config,

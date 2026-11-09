@@ -16,11 +16,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.net.http.HttpTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.LinkedHashMap;
@@ -159,6 +161,8 @@ class PressServerTest {
     private static JsonNode error(HttpResponse<byte[]> response, int status, String code) throws IOException {
         assertEquals(status, response.statusCode(), () -> text(response));
         assertEquals("application/json", response.headers().firstValue("Content-Type").orElse(null));
+        // An error carries text of the request: the browser takes it as JSON and nothing else.
+        assertEquals("nosniff", response.headers().firstValue("X-Content-Type-Options").orElse(null));
         JsonNode body = json(response);
         assertEquals(code, body.get("code").asText(), body::toString);
         assertTrue(body.get("message").isTextual());
@@ -183,6 +187,7 @@ class PressServerTest {
 
         assertEquals(200, response.statusCode(), () -> text(response));
         assertEquals("application/pdf", response.headers().firstValue("Content-Type").orElse(null));
+        assertEquals("nosniff", response.headers().firstValue("X-Content-Type-Options").orElse(null));
         assertTrue(isPdf(response.body()));
     }
 
@@ -532,6 +537,74 @@ class PressServerTest {
         } finally {
             server = null;
         }
+    }
+
+    /**
+     * A client that sends the headers of a request and not its body keeps a thread of the pool while it waits for it.
+     * As many as the threads leave the server without answering, {@code /health} too, until the JDK closes their
+     * connections: after {@code sun.net.httpserver.maxReqTime}, which the pom sets to 3 s for the tests.
+     */
+    @Test
+    void aClientThatDoesNotSendTheBodyLosesItsThread() throws Exception {
+        assertEquals("3", System.getProperty(PressServer.MAX_REQUEST_TIME), "set by the argLine of surefire");
+        // One conversion at once: the pool has its 4 threads, the least.
+        start(ServerConfig.DEFAULT.withLimits(2 * 1024 * 1024, Duration.ofSeconds(30), 1));
+        List<Socket> slow = new ArrayList<>();
+        try {
+            for (int i = 0; i < 4; i++) {
+                Socket socket = new Socket("127.0.0.1", server.address().getPort());
+                slow.add(socket);
+                socket.getOutputStream().write(("POST /render HTTP/1.1\r\nHost: 127.0.0.1\r\n"
+                        + "Content-Type: application/json\r\nContent-Length: 100\r\n\r\n")
+                        .getBytes(StandardCharsets.US_ASCII));
+                socket.getOutputStream().flush();
+            }
+            long until = System.nanoTime() + Duration.ofSeconds(20).toNanos();
+            while (server.routes().active() < 4 && System.nanoTime() < until) {
+                Thread.sleep(10);
+            }
+            assertEquals(4, server.routes().active(), "every thread waits for a body");
+            assertThrows(HttpTimeoutException.class, () -> CLIENT.send(request("/health")
+                    .timeout(Duration.ofMillis(500)).GET().build(), BodyHandlers.ofByteArray()));
+
+            HttpResponse<byte[]> health = null;
+            while (health == null && System.nanoTime() < until) {
+                try {
+                    health = CLIENT.send(request("/health").timeout(Duration.ofSeconds(2)).GET().build(),
+                            BodyHandlers.ofByteArray());
+                } catch (IOException e) {
+                    // Still without threads, or the JDK closed this one too while it waited for a thread.
+                }
+            }
+            assertTrue(health != null && health.statusCode() == 200, "the server answers again");
+            for (Socket socket : slow) {
+                // Closed by the server: no response, since there is no one to give it to.
+                socket.setSoTimeout(5000);
+                try {
+                    assertEquals(-1, socket.getInputStream().read());
+                } catch (IOException e) {
+                    // Reset: the 100 bytes it was waiting for never came.
+                }
+            }
+        } finally {
+            for (Socket socket : slow) {
+                socket.close();
+            }
+        }
+    }
+
+    /**
+     * The time limits that {@code start} sets: the request has a fixed time, and the response the timeout of a
+     * conversion and a margin, so that a conversion in time is never cut.
+     */
+    @Test
+    void theTimeLimitsFollowTheTimeoutOfAConversion() {
+        assertEquals(Map.of(PressServer.MAX_REQUEST_TIME, "30", PressServer.MAX_RESPONSE_TIME, "60"),
+                PressServer.timeLimits(Duration.ofSeconds(30)));
+        assertEquals("32", PressServer.timeLimits(Duration.ofMillis(1500)).get(PressServer.MAX_RESPONSE_TIME));
+        // Too long to be counted: no limit, as the JDK takes a negative number.
+        assertEquals("-1", PressServer.timeLimits(Duration.ofSeconds(Long.MAX_VALUE))
+                .get(PressServer.MAX_RESPONSE_TIME));
     }
 
     @Test

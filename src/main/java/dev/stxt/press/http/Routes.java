@@ -389,7 +389,6 @@ final class Routes implements HttpHandler {
         }
         String type = EDITOR_TYPES.getOrDefault(file.substring(file.lastIndexOf('.') + 1), "application/octet-stream");
         exchange.getResponseHeaders().set("Cache-Control", "no-cache");
-        exchange.getResponseHeaders().set("X-Content-Type-Options", "nosniff");
         if (type.startsWith("text/html")) {
             exchange.getResponseHeaders().set("Content-Security-Policy", EDITOR_POLICY);
             exchange.getResponseHeaders().set("Referrer-Policy", "no-referrer");
@@ -639,7 +638,14 @@ final class Routes implements HttpHandler {
             }
         }
         // Without Content-Length (chunked), the limit is checked as it is read.
-        byte[] body = exchange.getRequestBody().readNBytes((int) Math.min(max + 1, Integer.MAX_VALUE - 8));
+        byte[] body;
+        try {
+            body = exchange.getRequestBody().readNBytes((int) Math.min(max + 1, Integer.MAX_VALUE - 8));
+        } catch (IOException e) {
+            // The connection was closed before the whole body came: by the client, or by the server when the request
+            // ran out of time (PressServer.limitTimes). A fault of the request, not of the server, so not for the log.
+            throw new HttpError(400, BODY_NOT_VALID, "The body did not arrive whole");
+        }
         if (body.length > max) {
             throw tooLarge(max);
         }
@@ -664,8 +670,17 @@ final class Routes implements HttpHandler {
         send(exchange, status, JSON_TYPE, RenderBody.JSON.writeValueAsBytes(body));
     }
 
+    /**
+     * The headers of every response: that the browser takes the {@code Content-Type} as it is, since an error carries
+     * text of the request.
+     */
+    private static void secure(HttpExchange exchange) {
+        exchange.getResponseHeaders().set("X-Content-Type-Options", "nosniff");
+    }
+
     private static void send(HttpExchange exchange, int status, String type, byte[] body) throws IOException {
         exchange.getResponseHeaders().set("Content-Type", type);
+        secure(exchange);
         exchange.sendResponseHeaders(status, body.length == 0 ? -1 : body.length);
         if (body.length > 0) {
             try (OutputStream out = exchange.getResponseBody()) {
@@ -690,6 +705,7 @@ final class Routes implements HttpHandler {
 
         private OutputStream out() throws IOException {
             if (out == null) {
+                secure(exchange);
                 exchange.sendResponseHeaders(200, 0);
                 out = exchange.getResponseBody();
             }

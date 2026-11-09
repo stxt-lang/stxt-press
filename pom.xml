@@ -182,8 +182,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <!-- JSVG, which stxt-pdf uses for SVG images, draws with AWT: the service never has a display. -->
-                    <argLine>-Djava.awt.headless=true</argLine>
+                    <!-- JSVG, which stxt-pdf uses for SVG images, draws with AWT: the service never has a display.
+                         The JDK closes a request that has not arrived whole in 3 s, so that PressServerTest sees a slow
+                         client lose its thread without waiting the 30 s of start (PressServer.limitTimes); the JDK reads
+                         it once per JVM, so it goes here and not in the test. -->
+                    <argLine>-Djava.awt.headless=true -Dsun.net.httpserver.maxReqTime=3</argLine>
                 </configuration>
             </plugin>
 

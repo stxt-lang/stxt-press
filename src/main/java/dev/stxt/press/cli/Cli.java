@@ -143,6 +143,8 @@ final class Cli {
     /** {@code start}: starts the server of the configuration and waits until the process is stopped. */
     private void startUntilStopped(List<String> args) throws UsageException, ConfigException, Failure {
         ServerFile config = config(Arguments.parse(args, Set.of(), Set.of("--config"), Set.of()).none());
+        // Before the first server of the JVM, which is when the JDK reads them: a slow client cannot keep a thread.
+        PressServer.limitTimes(config.http().timeout());
         PressServer server = startServer(config);
         // SIGTERM (docker stop) and Ctrl+C: the conversions in progress have the time of a conversion to finish, and
         // without any it stops at once.

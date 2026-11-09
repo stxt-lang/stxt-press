@@ -62,7 +62,17 @@ styles document in `/render` (`styles[1]`) or the path of its file in a template
 {"kind": "INVALID_DOCUMENT", "code": "JSON_NOT_VALID", "line": 2, "source": "data", "message": "..."}
 ```
 
-The server has no TLS or users: it is meant to run behind a reverse proxy that adds them. `/render` converts any
+The server has no TLS or users: it is meant to run behind a reverse proxy that adds them. `start` limits the time of
+each request, so that a client that sends a request by halves does not keep a thread of the server: the request, its
+headers and its body, has 30 seconds to arrive whole, and its response the `Timeout` of `server.stxt` and 30 seconds
+more to be sent whole; otherwise the connection is closed. They are the properties `sun.net.httpserver.maxReqTime`
+and `sun.net.httpserver.maxRspTime` of the JDK, in seconds, and a value given with `-D` wins:
+
+```bash
+java -Dsun.net.httpserver.maxReqTime=120 -jar stxt-press.jar start
+```
+
+`/render` converts any
 document and `/templates` shows the texts and the sample data of the templates, so both can be turned off. `/fonts`
 gives the files of the fonts to the SVG previews of the editor, and is turned off with it, as are `/`, `/editor` and
 `/assets/`, the files of the pages. With `/render`,

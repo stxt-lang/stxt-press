@@ -89,3 +89,10 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   requests, so a Ctrl+C of `start` took the whole `Timeout`.
 - `GET /health` gives the versions of the service and of the engine (`Converter.version()` of `stxt-pdf`), the first
   `null` outside the jar.
+- Time limits on the requests of `start`: a request, its headers and its body, has to arrive whole in 30 s, and its
+  response has to be sent whole in the `Timeout` of `server.stxt` and 30 s more, or the connection is closed. They are
+  `sun.net.httpserver.maxReqTime` and `sun.net.httpserver.maxRspTime` of the JDK, set by `PressServer.limitTimes`
+  unless given with `-D`. Without them, a client that sent the headers of a request and not its body kept a thread,
+  and eight such clients left a server with the default limits without answering, `/health` too. A body that does not
+  arrive whole is a `400` (`BODY_NOT_VALID`).
+- `X-Content-Type-Options: nosniff` on every response, not only on the files of `/assets/`.
