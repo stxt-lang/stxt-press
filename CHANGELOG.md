@@ -50,9 +50,11 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   leaving them asks first. A document mode (a document and its styles to
   `/render`, without data, starting from a template of the server filled with its sample data) and a templates mode (a template of the server with its sample
   data first and then its document and its chain of styles, printed with `/print` or, edited, rendered with
-  `/render`, and its `curl`). Fill (in the templates mode),
-  preview as SVG pages with or without outlines, and download the PDF; the errors of the server are marked in their
-  panel, on their line. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
+  `/render`, and its `curl`). The page fills the window, without a scroll of its own: on the left, one tab for each
+  file (the data, the document and each styles document), marked when it has an error or a warning; on the right, the
+  output of the last button. Fill (in the templates mode), preview as SVG pages with or without outlines, and the PDF,
+  shown in the viewer of the browser with a link that downloads it; the errors of the server are marked in their
+  panel, on their line, and their tab is shown. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
 - The index, at `GET /`, without token: the templates of the server by folder, each with links to the editor and a
   button that opens its PDF, a link to a new document, and the routes of the API. The files of the index and the

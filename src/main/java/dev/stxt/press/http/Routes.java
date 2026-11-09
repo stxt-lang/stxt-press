@@ -100,9 +100,9 @@ final class Routes implements HttpHandler {
             JSON_TYPE, "woff2", "font/woff2");
     /**
      * What the page of the editor may load: only its own files and the API of the server. The styles of CodeMirror
-     * are inline, and the previews are images of {@code blob:} URLs.
+     * are inline, and the PDF is shown in a frame of a {@code blob:} URL, made by the page from the answer of the API.
      */
-    private static final String EDITOR_POLICY = "default-src 'self'; img-src 'self' blob: data:; "
+    private static final String EDITOR_POLICY = "default-src 'self'; img-src 'self' blob: data:; frame-src blob:; "
             + "style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'; "
             + "frame-ancestors 'none'";
 

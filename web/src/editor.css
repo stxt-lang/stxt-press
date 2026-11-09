@@ -8,11 +8,17 @@
 	--line: #d0d7de;
 	--surface: #f6f8fa;
 	--error: #b42318;
+	--warning: #bf8700;
 	--font: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 * {
 	box-sizing: border-box;
+}
+
+/* Some rules below give a display to elements that are hidden by turns: hidden stays hidden. */
+[hidden] {
+	display: none !important;
 }
 
 body {
@@ -110,19 +116,60 @@ main {
 	}
 }
 
+/* The editor fills the window, without a scroll of the page: on the left the files of what is edited, a tab each, and
+   on the right the output (the filled document, the pages or the PDF). Each part scrolls inside. */
+
+body.editor {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	overflow: hidden;
+}
+
+body.editor .bar {
+	flex: none;
+}
+
+main.workspace {
+	flex: 1 1 0;
+	min-height: 0;
+	gap: 0.75rem;
+	padding: 0.75rem 1rem;
+}
+
+.workspace .inputs,
+.workspace .output {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: 0;
+}
+
+.workspace .inputs > *,
+.workspace .output > * {
+	flex: none;
+}
+
 .chooser {
-	margin-bottom: 0.8rem;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem 1rem;
+	margin-bottom: 0.6rem;
 }
 
 .print {
-	display: flex;
-	align-items: center;
-	gap: 0.6rem;
-	margin-top: 0.6rem;
+	min-width: 0;
+	max-width: 100%;
+}
+
+.print summary {
+	cursor: pointer;
+	overflow-wrap: anywhere;
 }
 
 #curl {
-	margin: 0.4rem 0 0;
+	margin: 0.4rem 0;
 	padding: 0.5rem;
 	background: var(--surface);
 	border: 1px solid var(--line);
@@ -133,24 +180,70 @@ main {
 	overflow: auto;
 }
 
-.panel {
-	margin-bottom: 1rem;
+/* The tabs of the files: the data, the document and each styles document, with the path the server gives them. */
+
+.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	border-bottom: 1px solid var(--line);
 }
 
-.panel h2 {
-	margin: 0 0 0.3rem;
-	font-size: 13px;
-	font-weight: 600;
+.tabs button {
+	margin-bottom: -1px;
+	padding: 0.3rem 0.7rem;
+	border: 1px solid transparent;
+	background: none;
 	color: var(--muted);
+	font-family: var(--stxt-font-mono, monospace);
+	font-size: 12px;
 }
 
+.tabs button:hover {
+	color: var(--text);
+}
+
+.tabs button[aria-selected="true"] {
+	border-color: var(--line);
+	border-bottom-color: #fff;
+	background: #fff;
+	color: var(--text);
+	font-weight: 600;
+}
+
+/* A file with an error (of the syntax or of the server) or a warning (of the schema). */
+.tabs button.error::after,
+.tabs button.warning::after {
+	content: "\25CF";
+	margin-left: 0.35rem;
+	color: var(--error);
+}
+
+.tabs button.warning::after {
+	color: var(--warning);
+}
+
+#panels {
+	flex: 1 1 0;
+	min-height: 0;
+}
+
+.panel {
+	height: 100%;
+}
+
+.panel > div,
 .panel .stxt-editor,
 .panel .cm-editor {
-	max-height: 26rem;
+	height: 100%;
+}
+
+#panels .cm-editor {
 	border: 1px solid var(--line);
+	border-top: none;
 }
 
 .panel .cm-editor .cm-scroller {
+	overflow: auto;
 	font-family: var(--stxt-font-mono, monospace);
 }
 
@@ -158,11 +251,17 @@ main {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	margin-bottom: 0.8rem;
+	margin-bottom: 0.6rem;
+}
+
+.actions .download {
+	margin-left: auto;
 }
 
 #message {
 	min-height: 1.4rem;
+	max-height: 20vh;
+	overflow: auto;
 	margin-bottom: 0.6rem;
 	color: var(--muted);
 	white-space: pre-wrap;
@@ -172,13 +271,79 @@ main {
 	color: var(--error);
 }
 
+#view {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0;
+	min-height: 0;
+}
+
+#view > * {
+	flex: 1 1 0;
+	min-height: 0;
+}
+
+#filled-panel {
+	display: flex;
+	flex-direction: column;
+}
+
+#filled-panel h2 {
+	flex: none;
+	margin: 0 0 0.3rem;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--muted);
+}
+
+#filled {
+	flex: 1 1 0;
+	min-height: 0;
+}
+
+#filled .cm-editor {
+	border: 1px solid var(--line);
+}
+
+#pages {
+	overflow: auto;
+	padding: 0.75rem;
+	background: var(--surface);
+	border: 1px solid var(--line);
+}
+
 #pages .page {
 	display: block;
 	width: fit-content;
 	max-width: 100%;
-	margin-bottom: 1rem;
+	margin: 0 auto 0.75rem;
+	background: #fff;
 	border: 1px solid var(--line);
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+#pdf-frame {
+	width: 100%;
+	border: 1px solid var(--line);
+}
+
+/* A narrow window: one column, and the page scrolls. */
+@media (max-width: 900px) {
+	body.editor {
+		display: block;
+		height: auto;
+		overflow: visible;
+	}
+
+	#panels {
+		flex: none;
+		height: 28rem;
+	}
+
+	#view {
+		flex: none;
+		height: 40rem;
+	}
 }
 
 dialog {

@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="/assets/editor.css">
 	<script src="/assets/editor.js" defer></script>
 </head>
-<body>
+<body class="editor">
 	<header class="bar">
 		<a class="brand" href="/">stxt-press</a>
 		<nav class="modes" aria-label="Mode">
@@ -17,34 +17,39 @@
 		</nav>
 		<button type="button" id="token" class="quiet">Token</button>
 	</header>
-	<main>
+	<main class="workspace">
 		<section class="inputs" aria-label="Input">
 			<div id="document-mode" class="chooser">
 				<label>Document <select id="documents"></select></label>
 			</div>
 			<div id="template-mode" class="chooser" hidden>
 				<label>Template <select id="templates"></select></label>
-				<div class="print">
-					<code id="print-url"></code>
-					<button type="button" id="copy-curl" class="quiet">Copy curl</button>
-				</div>
-				<pre id="curl"></pre>
+				<details class="print">
+					<summary><code id="print-url"></code></summary>
+					<pre id="curl"></pre>
+					<button type="button" id="copy-curl" class="quiet small">Copy curl</button>
+				</details>
 			</div>
+			<div id="tabs" class="tabs" role="tablist" aria-label="Files"></div>
 			<div id="panels"></div>
 		</section>
 		<section class="output" aria-label="Output">
 			<div class="actions">
 				<button type="button" id="fill">Fill</button>
 				<button type="button" id="preview">Preview</button>
-				<button type="button" id="pdf">Download PDF</button>
+				<button type="button" id="pdf">PDF</button>
 				<label><input type="checkbox" id="debug"> Outlines</label>
+				<a id="download" class="download" hidden>Download</a>
 			</div>
 			<div id="message" role="status"></div>
-			<div id="filled-panel" class="panel" hidden>
-				<h2>Filled document</h2>
-				<div id="filled"></div>
+			<div id="view">
+				<div id="filled-panel" hidden>
+					<h2>Filled document</h2>
+					<div id="filled"></div>
+				</div>
+				<div id="pages" hidden></div>
+				<iframe id="pdf-frame" title="PDF" hidden></iframe>
 			</div>
-			<div id="pages"></div>
 		</section>
 	</main>
 	<dialog id="token-dialog">

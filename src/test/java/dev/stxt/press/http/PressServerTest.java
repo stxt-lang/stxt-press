@@ -398,7 +398,10 @@ class PressServerTest {
                 "/editor/hello?mode=document", "/editor/hello?mode=template", "/editor?mode=document")) {
             HttpResponse<byte[]> page = get(url);
             assertEquals(200, page.statusCode(), url);
-            assertTrue(page.headers().firstValue("Content-Security-Policy").orElse("").startsWith("default-src 'self'"));
+            String policy = page.headers().firstValue("Content-Security-Policy").orElse("");
+            assertTrue(policy.startsWith("default-src 'self'"), policy);
+            // The PDF is shown in a frame of a blob: URL; nothing else is framed.
+            assertTrue(policy.contains("; frame-src blob:;"), policy);
             assertTrue(text(page).contains("/assets/editor.js"), url);
         }
         for (String url : List.of("/editor/", "/editor/a//b", "/editor/a/", "/editor/a.b", "/editor/..%2Fx",

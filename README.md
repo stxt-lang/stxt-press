@@ -94,10 +94,13 @@ leaving them (another template, back, a reload) asks first. The two modes:
   it is printed with `/print` and the data of the panel; edited, with `/render` and the whole chain. Nothing is saved
   on the server. The page shows the URL of `/print` and a `curl` with the data of the panel.
 
-**Preview** shows the SVG pages (with **Outlines**, the outlines of the boxes) and **Download PDF** the PDF; in the
-templates mode, **Fill** shows the filled document. An error of the server is marked in its panel, on its line. The
-document panel validates against the schema of `/schema`, in the templates mode only while the data panel is empty: a
-document with Slots is validated by the server, once filled.
+The editor fills the window: on the left, one tab for each file (the data, the document, each styles document), with a
+dot when the file has an error (red) or a warning of the schema (amber); on the right, the output of the last button.
+**Preview** shows the SVG pages (with **Outlines**, the outlines of the boxes) and **PDF** the PDF in the viewer of the
+browser, with a link that downloads it with its name; in the templates mode, **Fill** shows the filled document. An
+error of the server is marked in its panel, on its line, and its tab is shown. The document panel validates against
+the schema of `/schema`, in the templates mode only while the data panel is empty: a document with Slots is validated
+by the server, once filled. A window narrower than 900 px shows one column, and the page scrolls.
 
 The pages and their files (`/assets/`) are served without token, the same page for every `{path}`, whether the template
 exists or not. With a token, the pages ask for it when the API answers `401`, and keep it in the `sessionStorage` of

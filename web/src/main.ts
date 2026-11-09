@@ -16,7 +16,7 @@ import { $, askToken, call, errorOf, token } from "./api";
 import { BLANK, curl, fileName, parsePlace, placeUrl, request, samePlace, target, validatesDocument } from "./model";
 import type { Format, LocalError, Place, Request, ServerError, State, StylesText, Target } from "./model";
 
-/** A panel: a title and an editor, of STXT or of JSON. */
+/** A panel: an editor, of STXT or of JSON, and the tab that shows it, if it is one of the files of `#panels`. */
 interface Panel {
 	element: HTMLElement;
 	view: EditorView;
@@ -26,6 +26,9 @@ interface Panel {
 	/** Of an STXT panel: whether it validates against the schema. */
 	setValidation?(on: boolean): void;
 	destroy(): void;
+	tab?: HTMLButtonElement;
+	/** Whether it has an error of the server marked, until it changes. */
+	marked?: boolean;
 }
 
 let schema = "";
@@ -51,11 +54,13 @@ let documentStyles: string[] = [];
 let original: { path: string; document: string; styles: StylesText[]; data: string | null } | undefined;
 /** The fonts of the server, registered in the page by the first preview. */
 let fontsLoaded: Promise<void> | undefined;
+/** The URL of the PDF in the output, revoked when the output changes. */
+let pdfUrl: string | undefined;
 
 // ---- The panels
 
-function stxtPanel(title: string, value: string, options: { readOnly?: boolean; onChange?: () => void } = {}): Panel {
-	const element = section(title);
+function stxtPanel(value: string, options: { readOnly?: boolean; onChange?: () => void } = {}): Panel {
+	const element = section();
 	let ready = false;
 	const editor: Editor = mount(element.appendChild(document.createElement("div")), {
 		value,
@@ -64,26 +69,32 @@ function stxtPanel(title: string, value: string, options: { readOnly?: boolean; 
 		developerInfo: false,
 		onChange: () => {
 			if (ready) {
+				panel.marked = false;
+				refreshTab(panel);
 				options.onChange?.();
 			}
 		},
 	});
-	ready = true;
-	return {
+	const panel: Panel = {
 		element,
 		view: editor.view,
 		text: () => editor.getValue(),
 		local: () => toCmDiagnostics(editor.view.state.doc, editor.getDiagnostics()),
-		setValidation: (on) => editor.setValidation(on),
+		setValidation: (on) => {
+			editor.setValidation(on);
+			refreshTab(panel);
+		},
 		destroy: () => {
 			editor.destroy();
 			element.remove();
 		},
 	};
+	ready = true;
+	return panel;
 }
 
-function jsonPanel(title: string, value: string, onChange: () => void): Panel {
-	const element = section(title);
+function jsonPanel(value: string, onChange: () => void): Panel {
+	const element = section();
 	const view = new EditorView({
 		parent: element,
 		state: EditorState.create({
@@ -97,13 +108,15 @@ function jsonPanel(title: string, value: string, onChange: () => void): Panel {
 					if (update.docChanged) {
 						// An error of the server is of the text it was sent.
 						update.view.dispatch(setDiagnostics(update.view.state, []));
+						panel.marked = false;
+						refreshTab(panel);
 						onChange();
 					}
 				}),
 			],
 		}),
 	});
-	return {
+	const panel: Panel = {
 		element,
 		view,
 		text: () => view.state.doc.toString(),
@@ -113,13 +126,12 @@ function jsonPanel(title: string, value: string, onChange: () => void): Panel {
 			element.remove();
 		},
 	};
+	return panel;
 }
 
-function section(title: string): HTMLElement {
+function section(): HTMLElement {
 	const element = document.createElement("div");
 	element.className = "panel";
-	const heading = element.appendChild(document.createElement("h2"));
-	heading.textContent = title;
 	return element;
 }
 
@@ -129,9 +141,76 @@ function clearPanels(): void {
 	}
 	stylesPanels = [];
 	dataPanel = undefined;
-	hideFilled();
+	$("tabs").replaceChildren();
+	clearOutput();
 	dirty = false;
 	setPanels(false);
+}
+
+// ---- The tabs of the panels
+
+/** The panels with a tab, in the order of the tabs. */
+function tabbed(): Panel[] {
+	return [...(dataPanel ? [dataPanel] : []), documentPanel, ...stylesPanels].filter((panel) => panel?.tab);
+}
+
+/** Gives `panel` a tab named `title` in `#tabs`; the first panel with a tab is the one shown. */
+function addTab(panel: Panel, title: string, index: number): void {
+	const tab = document.createElement("button");
+	tab.type = "button";
+	tab.id = `tab-${index}`;
+	tab.textContent = title;
+	tab.setAttribute("role", "tab");
+	tab.setAttribute("aria-controls", `panel-${index}`);
+	tab.onclick = () => activate(panel);
+	tab.onkeydown = (event) => moveTab(panel, event);
+	panel.element.id = `panel-${index}`;
+	panel.element.setAttribute("role", "tabpanel");
+	panel.element.setAttribute("aria-labelledby", tab.id);
+	panel.tab = tab;
+	$("tabs").appendChild(tab);
+	refreshTab(panel);
+}
+
+/** Shows `panel` and hides the other panels with a tab. */
+function activate(panel: Panel): void {
+	for (const other of tabbed()) {
+		const on = other === panel;
+		other.element.hidden = !on;
+		other.tab!.setAttribute("aria-selected", String(on));
+		other.tab!.tabIndex = on ? 0 : -1;
+	}
+	// A hidden editor did not measure its lines.
+	panel.view.requestMeasure();
+}
+
+/** The arrow keys, Home and End move between the tabs, as in a tab list. */
+function moveTab(panel: Panel, event: KeyboardEvent): void {
+	const panels = tabbed();
+	const at = panels.indexOf(panel);
+	const to = { ArrowLeft: at - 1, ArrowRight: at + 1, Home: 0, End: panels.length - 1 }[event.key];
+	if (to === undefined) {
+		return;
+	}
+	event.preventDefault();
+	const next = panels[(to + panels.length) % panels.length];
+	activate(next);
+	next.tab!.focus();
+}
+
+/**
+ * Marks the tab of a panel with problems: an error of its own (the syntax) or of the server that is still marked, or
+ * a warning (the schema, which the STXT editor gives as warnings).
+ */
+function refreshTab(panel: Panel): void {
+	if (panel.tab) {
+		const local = panel.local();
+		const error = panel.marked === true || local.some((diagnostic) => diagnostic.severity === "error");
+		const warning = !error && local.length > 0;
+		panel.tab.classList.toggle("error", error);
+		panel.tab.classList.toggle("warning", warning);
+		panel.tab.title = error ? "Has errors" : warning ? "Has warnings" : "";
+	}
 }
 
 /** Turns the buttons on with panels, and off without them. */
@@ -153,15 +232,21 @@ function showPanels(text: string, styles: StylesText[], titles: { document: stri
 function showPanels(text: string, styles: StylesText[], titles: { document: string; data: string }, data: string): void;
 function showPanels(text: string, styles: StylesText[], titles: { document: string; data?: string }, data?: string): void {
 	clearPanels();
-	documentPanel = stxtPanel(titles.document, text, { onChange: edited });
-	stylesPanels = styles.map((item) => stxtPanel(item.path, item.text, { onChange: edited }));
-	dataPanel = data === undefined ? undefined : jsonPanel(titles.data ?? "", data, () => {
+	documentPanel = stxtPanel(text, { onChange: edited });
+	stylesPanels = styles.map((item) => stxtPanel(item.text, { onChange: edited }));
+	dataPanel = data === undefined ? undefined : jsonPanel(data, () => {
 		edited();
 		dataChanged();
 	});
 	setPanels(true);
-	const order = [...(dataPanel ? [dataPanel] : []), documentPanel, ...stylesPanels];
-	$("panels").append(...order.map((panel) => panel.element));
+	const order: [Panel, string][] = [
+		...(dataPanel ? [[dataPanel, titles.data ?? ""] as [Panel, string]] : []),
+		[documentPanel, titles.document],
+		...stylesPanels.map((panel, i): [Panel, string] => [panel, styles[i].path]),
+	];
+	order.forEach(([panel, title], i) => addTab(panel, title, i));
+	$("panels").append(...order.map(([panel]) => panel.element));
+	activate(order[0][0]);
 	dataChanged();
 }
 
@@ -178,8 +263,13 @@ function dataChanged(): void {
 	}
 }
 
-/** Marks the line of an error in its panel, until the panel changes. */
+/** Marks the line of an error in its panel, until the panel changes, and shows the panel. */
 function mark(panel: Panel, line: number, message: string): void {
+	if (panel.tab) {
+		activate(panel);
+	}
+	panel.marked = true;
+	refreshTab(panel);
 	const diagnostics = panel.local();
 	if (line > 0 && line <= panel.view.state.doc.lines) {
 		const at = panel.view.state.doc.line(line);
@@ -202,20 +292,51 @@ function panelOf(where: Target): Panel | undefined {
 	}
 }
 
+// ---- The output: the filled document, the SVG pages or the PDF, one at a time
+
+/** Empties the output: what the last button gave is not that of the panels any more. */
+function clearOutput(): void {
+	filledPanel?.destroy();
+	filledPanel = undefined;
+	$("pages").replaceChildren();
+	const frame = $<HTMLIFrameElement>("pdf-frame");
+	if (pdfUrl) {
+		frame.src = "about:blank";
+		URL.revokeObjectURL(pdfUrl);
+		pdfUrl = undefined;
+	}
+	const link = $<HTMLAnchorElement>("download");
+	link.removeAttribute("href");
+	link.hidden = true;
+	showOutput(null);
+}
+
+function showOutput(output: "filled" | "pages" | "pdf" | null): void {
+	$("filled-panel").hidden = output !== "filled";
+	$("pages").hidden = output !== "pages";
+	$("pdf-frame").hidden = output !== "pdf";
+}
+
 function showFilled(text: string): Panel {
-	hideFilled();
-	const host = $("filled");
-	filledPanel = stxtPanel("", text, { readOnly: true });
-	filledPanel.element.querySelector("h2")?.remove();
-	host.appendChild(filledPanel.element);
-	$("filled-panel").hidden = false;
+	clearOutput();
+	filledPanel = stxtPanel(text, { readOnly: true });
+	$("filled").appendChild(filledPanel.element);
+	showOutput("filled");
 	return filledPanel;
 }
 
-function hideFilled(): void {
-	filledPanel?.destroy();
-	filledPanel = undefined;
-	$("filled-panel").hidden = true;
+/** Shows the PDF in the viewer of the browser, with a link that downloads it with its name. */
+function showPdf(blob: Blob, name: string): void {
+	clearOutput();
+	pdfUrl = URL.createObjectURL(blob);
+	$<HTMLIFrameElement>("pdf-frame").src = pdfUrl;
+	const link = $<HTMLAnchorElement>("download");
+	link.href = pdfUrl;
+	link.download = name;
+	link.textContent = `Download ${name}`;
+	link.hidden = false;
+	showOutput("pdf");
+	say("");
 }
 
 // ---- The state of the panels
@@ -274,11 +395,12 @@ function showServer(error: ServerError, asked: Request): void {
 async function run(format: Format): Promise<void> {
 	for (const panel of [documentPanel, ...stylesPanels, ...(dataPanel ? [dataPanel] : [])]) {
 		panel.view.dispatch(setDiagnostics(panel.view.state, panel.local()));
+		panel.marked = false;
+		refreshTab(panel);
 	}
 	const asked = request(state(), format, $<HTMLInputElement>("debug").checked);
 	if (!("url" in asked)) {
-		hideFilled();
-		$("pages").replaceChildren();
+		clearOutput();
 		showLocal(asked);
 		return;
 	}
@@ -289,22 +411,19 @@ async function run(format: Format): Promise<void> {
 		const response = await call(asked.method, asked.url, asked.body, asked.contentType);
 		if (!response.ok) {
 			// The output of the last button is not that of these panels.
-			hideFilled();
-			$("pages").replaceChildren();
+			clearOutput();
 			showServer(await errorOf(response), asked);
 			return;
 		}
 		if (format === "stxt") {
-			$("pages").replaceChildren();
 			showFilled(await response.text());
 			say("Filled.");
 		} else if (format === "svg") {
-			hideFilled();
 			const pages = ((await response.json()) as { pages: string[] }).pages;
 			await loadFonts();
 			showPages(pages);
 		} else {
-			download(await response.blob(), fileName(state()));
+			showPdf(await response.blob(), fileName(state()));
 		}
 	} catch (e) {
 		say(`The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`, true);
@@ -341,6 +460,7 @@ function loadFonts(): Promise<void> {
  * apart, because the ids of the clips of one page are those of the next one too.
  */
 function showPages(pages: string[]): void {
+	clearOutput();
 	const host = $("pages");
 	host.replaceChildren(...pages.map((svg, i) => {
 		const page = document.createElement("div");
@@ -351,17 +471,8 @@ function showPages(pages: string[]): void {
 		page.attachShadow({ mode: "open" }).innerHTML = `<style>svg { display: block; max-width: 100%; height: auto; }</style>${svg}`;
 		return page;
 	}));
+	showOutput("pages");
 	say(pages.length === 1 ? "1 page." : `${pages.length} pages.`);
-}
-
-function download(blob: Blob, name: string): void {
-	const url = URL.createObjectURL(blob);
-	const link = document.createElement("a");
-	link.href = url;
-	link.download = name;
-	link.click();
-	setTimeout(() => URL.revokeObjectURL(url), 1000);
-	say(`Downloaded ${name}.`);
 }
 
 // ---- The places
@@ -440,7 +551,7 @@ async function show(place: Place): Promise<void> {
 	$("fill").hidden = place.mode === "document";
 	choose($<HTMLSelectElement>("documents"), place.mode === "document" ? place.path ?? "" : "");
 	choose($<HTMLSelectElement>("templates"), place.mode === "template" ? place.path ?? "" : "");
-	$("pages").replaceChildren();
+	clearOutput();
 	say("");
 	if (place.path === null) {
 		showBlankDocument();
