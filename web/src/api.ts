@@ -1,12 +1,20 @@
 /**
  * The calls to the API of the server, shared by the index and the editor: the token of the tab, the dialog that asks
- * for it on a 401, and the error body of the service. Both pages have the dialog (`#token-dialog`).
+ * for it on a 401, and the error body of the service; and the message line. Both pages have the dialog
+ * (`#token-dialog`) and the message line (`#message`).
  */
 import type { ServerError } from "./model";
 
 const TOKEN_KEY = "stxt-press-token";
 
 export const $ = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T;
+
+/** Writes `text` in the message line of the page (`#message`), as an error or not. */
+export function say(text: string, error = false): void {
+	const message = $("message");
+	message.textContent = text;
+	message.classList.toggle("error", error);
+}
 
 /** The token of the tab, or `null` without one. */
 export function token(): string | null {

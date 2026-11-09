@@ -2,19 +2,13 @@
  * The index of stxt-press, at GET /: the templates of the server, grouped by folder, each with links to the editor and
  * its PDF, and the routes of the API. It does not load the editors: they are in editor.js.
  */
-import { $, askToken, call, errorOf } from "./api";
-import { byFolder, placeUrl } from "./model";
+import { $, askToken, call, errorOf, say } from "./api";
+import { byFolder, placeUrl } from "./place";
 
 interface Entry {
 	path: string;
 	styles: boolean;
 	data: boolean;
-}
-
-function say(text: string, error = false): void {
-	const message = $("message");
-	message.textContent = text;
-	message.classList.toggle("error", error);
 }
 
 function element<K extends keyof HTMLElementTagNameMap>(tag: K, text?: string, className?: string): HTMLElementTagNameMap[K] {

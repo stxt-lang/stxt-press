@@ -1,6 +1,7 @@
 /**
- * What the editor decides without the DOM: which request a button makes, where an error of the server goes, the JSON
- * of the data and the curl of a template. The page (main.ts) only reads the panels and paints the answers.
+ * What the editor decides without the DOM: which request a button makes, where an error of the server goes and what
+ * it says, the JSON of the data, the panels of a place and their tabs, and the curl of a template; the places and their
+ * URLs are in place.ts. The page (main.ts, panels.ts, output.ts) only reads the panels and paints the answers.
  */
 
 /** The formats of `?format=`. */
@@ -14,14 +15,20 @@ export interface StylesText {
 
 /**
  * The panels of the document mode: a document and its styles documents in order (those of the chain of the template it
- * comes from, or one blank panel). The page has no data panel in this mode and gives `data` blank; `request` still
- * sends data if there are any.
+ * comes from, or one blank panel). It has no data: a document is converted as it is.
  */
 export interface DocumentState {
 	mode: "document";
 	document: string;
 	styles: StylesText[];
-	data: string;
+}
+
+/** A template as `GET /templates/{path}` gives it: its data as the text of its file, or `null` without one. */
+export interface ServerTemplate {
+	path: string;
+	document: string;
+	styles: StylesText[];
+	data: string | null;
 }
 
 /** The panels of the templates mode, and the template as the server gave it. */
@@ -105,11 +112,19 @@ export function validatesDocument(data: string): boolean {
 	return data.trim() === "";
 }
 
-/** Whether the panels of a template are still the template of the server, so that `/print` can convert it. */
+/**
+ * Whether the panels of a template are still the template of the server, so that `/print` can convert it. The line
+ * ends do not count: the server gives the files as they are, with CRLF in a Windows checkout, and the panels have LF.
+ */
 export function isUnchanged(state: TemplateState): boolean {
-	return state.document === state.original.document
+	return sameText(state.document, state.original.document)
 		&& state.styles.length === state.original.styles.length
-		&& state.styles.every((styles, i) => styles.text === state.original.styles[i].text);
+		&& state.styles.every((styles, i) => sameText(styles.text, state.original.styles[i].text));
+}
+
+/** Whether two texts are the same but for their line ends (CRLF, CR or LF). */
+function sameText(a: string, b: string): boolean {
+	return a.replace(/\r\n?/g, "\n") === b.replace(/\r\n?/g, "\n");
 }
 
 /**
@@ -131,7 +146,7 @@ export function request(state: State, format: Format, debug: boolean): Request |
 			return { method: "POST", url, body: state.data, contentType: "application/json", stylesNames: names };
 		}
 	}
-	const data = parseData(state.data);
+	const data: ReturnType<typeof parseData> = state.mode === "template" ? parseData(state.data) : {};
 	if (data.error) {
 		return data.error;
 	}
@@ -147,7 +162,7 @@ export function request(state: State, format: Format, debug: boolean): Request |
 	if (styles.length > 0) {
 		fields.push(`"styles":${JSON.stringify(styles)}`);
 	}
-	if (data.value !== undefined) {
+	if (state.mode === "template" && data.value !== undefined) {
 		// The text of the panel, not JSON.stringify of what JSON.parse read: 1.10 would arrive as 1.1.
 		fields.push(`"data":${state.data.trim()}`);
 	}
@@ -174,79 +189,76 @@ export function target(source: string | null | undefined, stylesNames: string[])
 	return null;
 }
 
+/** The message of an error of the server: its code, its line and source if it is of a panel (`where`), its message. */
+export function serverMessage(error: ServerError, where: Target | null): string {
+	const place = error.line && where ? ` (line ${error.line} of ${error.source})` : "";
+	return `${error.code}${place}: ${error.message}`;
+}
+
+/** A panel of a file: the title of its tab and its text. */
+export interface PanelText {
+	title: string;
+	text: string;
+}
+
+/**
+ * What the panels of a place show: the document and its styles documents (each titled by its path) and, only for a
+ * template, its data.
+ */
+export interface Panels {
+	data?: PanelText;
+	document: PanelText;
+	styles: StylesText[];
+}
+
+/**
+ * The panels of the document mode: the document and its styles, those of the chain of the template it comes from or,
+ * without any, one blank panel for the ones the user writes. No data: a document is converted as it is.
+ */
+export function documentPanels(text: string, styles: StylesText[]): Panels {
+	return {
+		document: { title: "Document", text },
+		styles: styles.length > 0 ? styles : [{ path: "Styles", text: "" }],
+	};
+}
+
+/** The panels of a template: its data (blank without sample data), its document and its chain of styles. */
+export function templatePanels(template: ServerTemplate): Panels {
+	return {
+		data: { title: template.data === null ? "Data (JSON)" : `${template.path}.json`, text: template.data ?? "" },
+		document: { title: `${template.path}.stxt`, text: template.document },
+		styles: template.styles,
+	};
+}
+
+/**
+ * The tabs of the panels, in order: the data first, since they are what changes from one PDF to another, then the
+ * document and its styles. The first one is the panel shown.
+ */
+export function tabs(panels: Panels): { target: Target; title: string }[] {
+	const list: { target: Target; title: string }[] = [];
+	if (panels.data) {
+		list.push({ target: { panel: "data" }, title: panels.data.title });
+	}
+	list.push({ target: { panel: "document" }, title: panels.document.title });
+	panels.styles.forEach((item, index) => list.push({ target: { panel: "styles", index }, title: item.path }));
+	return list;
+}
+
+/**
+ * What the tab of a panel shows: an error with an error of the server still marked or one of its own (the syntax), a
+ * warning with other problems of its own (the schema, which the STXT editor gives as warnings), or nothing.
+ */
+export function tabState(marked: boolean, severities: string[]): "error" | "warning" | null {
+	if (marked || severities.includes("error")) {
+		return "error";
+	}
+	return severities.length > 0 ? "warning" : null;
+}
+
 /** The name of the PDF that is downloaded. */
 export function fileName(state: State): string {
 	return state.mode === "template" ? `${state.path.slice(state.path.lastIndexOf("/") + 1)}.pdf` : "document.pdf";
-}
-
-/**
- * What the URL of the editor shows: a template of the server in the templates mode (`/editor/{path}`), as a document
- * (`/editor/{path}?mode=document`), or a blank document (`/editor`, `path` `null`).
- */
-export interface Place {
-	mode: "document" | "template";
-	path: string | null;
-}
-
-/** The blank document of `/editor`. */
-export const BLANK: Place = { mode: "document", path: null };
-
-/** The path of a template: segments of `[A-Za-z0-9_-]`, as the templates folder of the server names them. */
-const TEMPLATE_PATH = /^[A-Za-z0-9_-]+(\/[A-Za-z0-9_-]+)*$/;
-
-/**
- * The place of a URL of the editor, or `null` if it is not one: the server serves the page only for these, so `null`
- * is a URL the page was not opened with. Without a path there is no template to show, so `/editor?mode=template` is
- * the blank document too.
- */
-export function parsePlace(pathname: string, search: string): Place | null {
-	const mode = new URLSearchParams(search).get("mode");
-	if (mode !== null && mode !== "document" && mode !== "template") {
-		return null;
-	}
-	if (pathname === "/editor") {
-		return BLANK;
-	}
-	if (!pathname.startsWith("/editor/")) {
-		return null;
-	}
-	const path = pathname.slice("/editor/".length);
-	if (!TEMPLATE_PATH.test(path)) {
-		return null;
-	}
-	return { mode: mode === "document" ? "document" : "template", path };
-}
-
-/** The URL of a place, as `parsePlace` reads it. */
-export function placeUrl(place: Place): string {
-	if (place.path === null) {
-		return "/editor";
-	}
-	return `/editor/${place.path}${place.mode === "document" ? "?mode=document" : ""}`;
-}
-
-/** Whether two places are the same. */
-export function samePlace(a: Place, b: Place): boolean {
-	return a.mode === b.mode && a.path === b.path;
-}
-
-/**
- * The templates grouped by their folder (`""` for those at the root of the templates folder), the folders in the order
- * they first appear in the list, and the templates of each one in the order of the list.
- */
-export function byFolder<T extends { path: string }>(templates: T[]): { folder: string; templates: T[] }[] {
-	const groups = new Map<string, T[]>();
-	for (const template of templates) {
-		const slash = template.path.lastIndexOf("/");
-		const folder = slash < 0 ? "" : template.path.slice(0, slash);
-		const group = groups.get(folder);
-		if (group) {
-			group.push(template);
-		} else {
-			groups.set(folder, [template]);
-		}
-	}
-	return [...groups].map(([folder, list]) => ({ folder, templates: list }));
 }
 
 /** `text` between single quotes for a POSIX shell. */
