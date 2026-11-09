@@ -657,9 +657,11 @@ class PressServerTest {
                 assertTrue(body.get("message").asText().contains("localhost, 127.0.0.1, [::1]"), body::toString);
             }
         }
-        // Without Host, as HTTP/1.0 allows, or with two.
+        // Without Host, as HTTP/1.0 allows, or with two. Two are refused by the later updates of the JDK 17 too, with a
+        // 400 of their own before the handler (17.0.13 lets them through): refused either way.
         assertEquals(403, raw("GET /health HTTP/1.0").status());
-        assertEquals(403, raw("GET /health HTTP/1.1", "Host: localhost", "Host: evil.example").status());
+        int twoHosts = raw("GET /health HTTP/1.1", "Host: localhost", "Host: evil.example").status();
+        assertTrue(twoHosts == 403 || twoHosts == 400, () -> "two Host: " + twoHosts);
     }
 
     /** With a token, the page of another site cannot do anything: the server answers to any {@code Host}. */
