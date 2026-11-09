@@ -11,6 +11,18 @@ final class HttpError extends Exception {
 
     private static final long serialVersionUID = 1L;
 
+    static final String NOT_FOUND = "NOT_FOUND";
+    static final String METHOD_NOT_ALLOWED = "METHOD_NOT_ALLOWED";
+    static final String UNAUTHORIZED = "UNAUTHORIZED";
+    static final String PARAMETER_NOT_VALID = "PARAMETER_NOT_VALID";
+    static final String BODY_NOT_VALID = "BODY_NOT_VALID";
+    static final String BODY_TOO_LARGE = "BODY_TOO_LARGE";
+    static final String SERVER_BUSY = "SERVER_BUSY";
+    static final String SERVER_STARTING = "SERVER_STARTING";
+    static final String HOST_NOT_ALLOWED = "HOST_NOT_ALLOWED";
+    /** The code of an error that is not of the request: answered {@code 500}, without details. */
+    static final String INTERNAL = "INTERNAL";
+
     /** The HTTP status of the response. */
     final int status;
     /** The stable code of the error, in capitals. */

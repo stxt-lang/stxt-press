@@ -245,7 +245,7 @@ class PressServerTest {
                 "{\"document\": \"x\", \"options\": {\"pdfA\": \"A1B\"}}",
                 "{\"document\": \"x\", \"options\": {\"exclude\": [\"NONE\"]}}",
                 "{\"document\": \"x\", \"options\": {\"color\": true}}", "{\"document\": \"x\"} {}")) {
-            error(post("/render", body), 400, Routes.BODY_NOT_VALID);
+            error(post("/render", body), 400, HttpError.BODY_NOT_VALID);
         }
     }
 
@@ -383,8 +383,8 @@ class PressServerTest {
         assertEquals(200, file.statusCode());
         assertEquals("font/ttf", file.headers().firstValue("Content-Type").orElse(null));
         assertEquals(id, HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(file.body())));
-        error(get("/fonts/" + "0".repeat(64)), 404, Routes.NOT_FOUND);
-        error(get("/fonts/IBM-Plex-Sans"), 404, Routes.NOT_FOUND);
+        error(get("/fonts/" + "0".repeat(64)), 404, HttpError.NOT_FOUND);
+        error(get("/fonts/IBM-Plex-Sans"), 404, HttpError.NOT_FOUND);
     }
 
     /**
@@ -414,28 +414,28 @@ class PressServerTest {
         }
         for (String url : List.of("/editor/", "/editor/a//b", "/editor/a/", "/editor/a.b", "/editor/..%2Fx",
                 "/editor/a%2Fb", "/editor/editor.js")) {
-            error(get(url), 404, Routes.NOT_FOUND);
+            error(get(url), 404, HttpError.NOT_FOUND);
         }
-        error(get("/editor/hello?mode=pdf"), 400, Routes.PARAMETER_NOT_VALID);
-        error(get("/editor/hello?format=pdf"), 400, Routes.PARAMETER_NOT_VALID);
+        error(get("/editor/hello?mode=pdf"), 400, HttpError.PARAMETER_NOT_VALID);
+        error(get("/editor/hello?format=pdf"), 400, HttpError.PARAMETER_NOT_VALID);
 
         HttpResponse<byte[]> script = get("/assets/editor.js");
         assertEquals(200, script.statusCode());
         assertEquals("text/javascript; charset=utf-8", script.headers().firstValue("Content-Type").orElse(null));
         assertEquals(200, get("/assets/index.js").statusCode());
         assertEquals(200, get("/assets/editor.css").statusCode());
-        error(get("/assets/missing.js"), 404, Routes.NOT_FOUND);
-        error(get("/assets/.hidden"), 404, Routes.NOT_FOUND);
-        error(get("/assets/..%2Fstxt%2Fdev.stxt.press.stxt"), 404, Routes.NOT_FOUND);
-        error(get("/assets/"), 404, Routes.NOT_FOUND);
+        error(get("/assets/missing.js"), 404, HttpError.NOT_FOUND);
+        error(get("/assets/.hidden"), 404, HttpError.NOT_FOUND);
+        error(get("/assets/..%2Fstxt%2Fdev.stxt.press.stxt"), 404, HttpError.NOT_FOUND);
+        error(get("/assets/"), 404, HttpError.NOT_FOUND);
         // A page has one URL.
-        error(get("/assets/index.html"), 404, Routes.NOT_FOUND);
-        error(get("/assets/editor.html"), 404, Routes.NOT_FOUND);
+        error(get("/assets/index.html"), 404, HttpError.NOT_FOUND);
+        error(get("/assets/editor.html"), 404, HttpError.NOT_FOUND);
 
-        error(post("/", ""), 405, Routes.METHOD_NOT_ALLOWED);
-        error(post("/editor/hello", ""), 405, Routes.METHOD_NOT_ALLOWED);
-        error(get("/schema"), 401, Routes.UNAUTHORIZED);
-        error(get("/templates/hello"), 401, Routes.UNAUTHORIZED);
+        error(post("/", ""), 405, HttpError.METHOD_NOT_ALLOWED);
+        error(post("/editor/hello", ""), 405, HttpError.METHOD_NOT_ALLOWED);
+        error(get("/schema"), 401, HttpError.UNAUTHORIZED);
+        error(get("/templates/hello"), 401, HttpError.UNAUTHORIZED);
     }
 
     /** A server that warms up answers every request with 503, /health too, until the warm up ends. */
@@ -455,10 +455,10 @@ class PressServerTest {
         warmUp.start();
 
         HttpResponse<byte[]> health = get("/health");
-        error(health, 503, Routes.SERVER_STARTING);
+        error(health, 503, HttpError.SERVER_STARTING);
         assertEquals("1", health.headers().firstValue("Retry-After").orElse(null));
-        error(get("/print/hello"), 503, Routes.SERVER_STARTING);
-        error(get("/"), 503, Routes.SERVER_STARTING);
+        error(get("/print/hello"), 503, HttpError.SERVER_STARTING);
+        error(get("/"), 503, HttpError.SERVER_STARTING);
 
         release.countDown();
         warmUp.join(60_000);
@@ -515,10 +515,10 @@ class PressServerTest {
             out.write(body, 0, 10);
             out.flush();
             long until = System.nanoTime() + Duration.ofSeconds(10).toNanos();
-            while (closing.routes().active() == 0 && System.nanoTime() < until) {
+            while (closing.gate().active() == 0 && System.nanoTime() < until) {
                 Thread.sleep(10);
             }
-            assertEquals(1, closing.routes().active());
+            assertEquals(1, closing.gate().active());
 
             started = System.nanoTime();
             Thread close = new Thread(() -> closing.close(Duration.ofSeconds(30)));
@@ -527,7 +527,7 @@ class PressServerTest {
             while (refused.statusCode() == 200 && System.nanoTime() < until) {
                 refused = get("/health");
             }
-            error(refused, 503, Routes.SERVER_BUSY);
+            error(refused, 503, HttpError.SERVER_BUSY);
             assertTrue(close.isAlive(), "it waits for the request in progress");
 
             out.write(body, 10, body.length - 10);
@@ -563,10 +563,10 @@ class PressServerTest {
                 socket.getOutputStream().flush();
             }
             long until = System.nanoTime() + Duration.ofSeconds(20).toNanos();
-            while (server.routes().active() < 4 && System.nanoTime() < until) {
+            while (server.gate().active() < 4 && System.nanoTime() < until) {
                 Thread.sleep(10);
             }
-            assertEquals(4, server.routes().active(), "every thread waits for a body");
+            assertEquals(4, server.gate().active(), "every thread waits for a body");
             assertThrows(HttpTimeoutException.class, () -> CLIENT.send(request("/health")
                     .timeout(Duration.ofMillis(500)).GET().build(), BodyHandlers.ofByteArray()));
 
@@ -653,7 +653,7 @@ class PressServerTest {
                 Raw response = raw("GET " + path + " HTTP/1.1", "Host: " + host);
                 assertEquals(403, response.status(), host + " " + path);
                 JsonNode body = JSON.readTree(response.body());
-                assertEquals(Routes.HOST_NOT_ALLOWED, body.get("code").asText());
+                assertEquals(HttpError.HOST_NOT_ALLOWED, body.get("code").asText());
                 assertTrue(body.get("message").asText().contains("localhost, 127.0.0.1, [::1]"), body::toString);
             }
         }
@@ -681,47 +681,47 @@ class PressServerTest {
     @Test
     void theLocalNamesDependOnTheAddressAndTheToken() throws Exception {
         Set<String> local = Set.of("localhost", "127.0.0.1", "[::1]");
-        assertEquals(local, Routes.localHosts(ServerConfig.DEFAULT, InetAddress.getByName("127.0.0.1")));
-        assertEquals(local, Routes.localHosts(ServerConfig.DEFAULT.withAddress("::1", 0),
+        assertEquals(local, Gate.localHosts(ServerConfig.DEFAULT, InetAddress.getByName("127.0.0.1")));
+        assertEquals(local, Gate.localHosts(ServerConfig.DEFAULT.withAddress("::1", 0),
                 InetAddress.getByName("::1")));
         assertEquals(Set.of("localhost", "127.0.0.1", "[::1]", "127.0.0.2"),
-                Routes.localHosts(ServerConfig.DEFAULT.withAddress("127.0.0.2", 0), InetAddress.getByName("127.0.0.2")));
-        assertEquals(Set.of("localhost", "127.0.0.1", "[::1]", "[0:0:0:0:0:0:0:1]"), Routes.localHosts(
+                Gate.localHosts(ServerConfig.DEFAULT.withAddress("127.0.0.2", 0), InetAddress.getByName("127.0.0.2")));
+        assertEquals(Set.of("localhost", "127.0.0.1", "[::1]", "[0:0:0:0:0:0:0:1]"), Gate.localHosts(
                 ServerConfig.DEFAULT.withAddress("0:0:0:0:0:0:0:1", 0), InetAddress.getByName("::1")));
         // Any Host: on every address, or on another one, which is that of a proxy; or with a token.
-        assertNull(Routes.localHosts(ServerConfig.DEFAULT.withAddress("0.0.0.0", 0), InetAddress.getByName("0.0.0.0")));
-        assertNull(Routes.localHosts(ServerConfig.DEFAULT.withAddress("192.0.2.1", 0),
+        assertNull(Gate.localHosts(ServerConfig.DEFAULT.withAddress("0.0.0.0", 0), InetAddress.getByName("0.0.0.0")));
+        assertNull(Gate.localHosts(ServerConfig.DEFAULT.withAddress("192.0.2.1", 0),
                 InetAddress.getByName("192.0.2.1")));
-        assertNull(Routes.localHosts(ServerConfig.DEFAULT.withToken("s3cret"), InetAddress.getByName("127.0.0.1")));
+        assertNull(Gate.localHosts(ServerConfig.DEFAULT.withToken("s3cret"), InetAddress.getByName("127.0.0.1")));
     }
 
     @Test
     void theEditorCanBeTurnedOff() throws Exception {
         start(ServerConfig.DEFAULT.withRoutes(false, true, true));
 
-        error(get("/"), 404, Routes.NOT_FOUND);
-        error(get("/editor"), 404, Routes.NOT_FOUND);
-        error(get("/editor/hello"), 404, Routes.NOT_FOUND);
-        error(get("/assets/editor.js"), 404, Routes.NOT_FOUND);
+        error(get("/"), 404, HttpError.NOT_FOUND);
+        error(get("/editor"), 404, HttpError.NOT_FOUND);
+        error(get("/editor/hello"), 404, HttpError.NOT_FOUND);
+        error(get("/assets/editor.js"), 404, HttpError.NOT_FOUND);
         // The fonts are only for the previews of the editor.
-        error(get("/fonts"), 404, Routes.NOT_FOUND);
-        error(get("/fonts/" + "0".repeat(64)), 404, Routes.NOT_FOUND);
+        error(get("/fonts"), 404, HttpError.NOT_FOUND);
+        error(get("/fonts/" + "0".repeat(64)), 404, HttpError.NOT_FOUND);
         assertEquals(200, get("/schema").statusCode());
         server.close();
         start(ServerConfig.DEFAULT.withRoutes(false, true, true).withToken("s3cret"));
 
-        error(get("/"), 401, Routes.UNAUTHORIZED);
+        error(get("/"), 401, HttpError.UNAUTHORIZED);
     }
 
     @Test
     void theParametersAreChecked() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        error(get("/print/hello?format=docx"), 400, Routes.PARAMETER_NOT_VALID);
-        error(get("/print/hello?debug=yes"), 400, Routes.PARAMETER_NOT_VALID);
-        error(get("/print/hello?format=pdf&format=svg"), 400, Routes.PARAMETER_NOT_VALID);
-        error(get("/print/hello?page=1"), 400, Routes.PARAMETER_NOT_VALID);
-        error(get("/fonts?all=true"), 400, Routes.PARAMETER_NOT_VALID);
+        error(get("/print/hello?format=docx"), 400, HttpError.PARAMETER_NOT_VALID);
+        error(get("/print/hello?debug=yes"), 400, HttpError.PARAMETER_NOT_VALID);
+        error(get("/print/hello?format=pdf&format=svg"), 400, HttpError.PARAMETER_NOT_VALID);
+        error(get("/print/hello?page=1"), 400, HttpError.PARAMETER_NOT_VALID);
+        error(get("/fonts?all=true"), 400, HttpError.PARAMETER_NOT_VALID);
         assertEquals(200, get("/print/hello?format=svg&debug=true").statusCode());
     }
 
@@ -729,12 +729,12 @@ class PressServerTest {
     void aRouteOrAMethodThatDoesNotExist() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        error(get("/pdf"), 404, Routes.NOT_FOUND);
-        error(get("/fonts/a/b"), 404, Routes.NOT_FOUND);
+        error(get("/pdf"), 404, HttpError.NOT_FOUND);
+        error(get("/fonts/a/b"), 404, HttpError.NOT_FOUND);
         HttpResponse<byte[]> response = get("/render");
-        error(response, 405, Routes.METHOD_NOT_ALLOWED);
+        error(response, 405, HttpError.METHOD_NOT_ALLOWED);
         assertEquals("POST", response.headers().firstValue("Allow").orElse(null));
-        error(post("/templates", ""), 405, Routes.METHOD_NOT_ALLOWED);
+        error(post("/templates", ""), 405, HttpError.METHOD_NOT_ALLOWED);
     }
 
     @Test
@@ -743,11 +743,11 @@ class PressServerTest {
 
         assertEquals(200, get("/health").statusCode());
         HttpResponse<byte[]> without = get("/print/hello");
-        error(without, 401, Routes.UNAUTHORIZED);
+        error(without, 401, HttpError.UNAUTHORIZED);
         assertEquals("Bearer", without.headers().firstValue("WWW-Authenticate").orElse(null));
-        error(get("/missing"), 401, Routes.UNAUTHORIZED);
+        error(get("/missing"), 401, HttpError.UNAUTHORIZED);
         error(CLIENT.send(request("/fonts").header("Authorization", "Bearer s3cre").GET().build(),
-                BodyHandlers.ofByteArray()), 401, Routes.UNAUTHORIZED);
+                BodyHandlers.ofByteArray()), 401, HttpError.UNAUTHORIZED);
         assertEquals(200, CLIENT.send(request("/fonts").header("Authorization", "Bearer s3cret").GET().build(),
                 BodyHandlers.ofByteArray()).statusCode());
         assertEquals(200, CLIENT.send(request("/fonts").header("Authorization", "bearer s3cret").GET().build(),
@@ -758,9 +758,9 @@ class PressServerTest {
     void renderAndTemplatesCanBeTurnedOff() throws Exception {
         start(ServerConfig.DEFAULT.withRoutes(true, false, false));
 
-        error(post("/render", render(DOCUMENT, Map.of())), 404, Routes.NOT_FOUND);
-        error(get("/templates"), 404, Routes.NOT_FOUND);
-        error(get("/templates/hello"), 404, Routes.NOT_FOUND);
+        error(post("/render", render(DOCUMENT, Map.of())), 404, HttpError.NOT_FOUND);
+        error(get("/templates"), 404, HttpError.NOT_FOUND);
+        error(get("/templates/hello"), 404, HttpError.NOT_FOUND);
         assertEquals(200, get("/print/hello").statusCode());
     }
 
@@ -768,7 +768,7 @@ class PressServerTest {
     void aBodyLargerThanTheLimitIsA413() throws Exception {
         start(ServerConfig.DEFAULT.withLimits(100, Duration.ofSeconds(30), 4));
 
-        error(post("/render", render(DOCUMENT, Map.of())), 413, Routes.BODY_TOO_LARGE);
+        error(post("/render", render(DOCUMENT, Map.of())), 413, HttpError.BODY_TOO_LARGE);
     }
 
     @Test
@@ -809,8 +809,8 @@ class PressServerTest {
         assertTrue(text(print).contains("Title: Posted"), () -> text(print));
         assertEquals(200, get("/print/invoices/invoice?format=stxt").statusCode());
 
-        error(post("/render", render(DOCUMENT, Map.of())), 500, Routes.INTERNAL);
-        error(get("/fonts"), 500, Routes.INTERNAL);
+        error(post("/render", render(DOCUMENT, Map.of())), 500, HttpError.INTERNAL);
+        error(get("/fonts"), 500, HttpError.INTERNAL);
     }
 
     @Test

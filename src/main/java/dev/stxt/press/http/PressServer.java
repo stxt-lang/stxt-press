@@ -20,12 +20,13 @@ import dev.stxt.pdf.convert.Converter;
 import dev.stxt.press.templates.Templates;
 
 /**
- * The HTTP service (ROADMAP-PDF 2.4), on the {@link HttpServer} of the JDK: the routes of {@link Routes} on the shared
- * {@link Converter} of the server and its templates folder. The requests are answered by a fixed pool of threads, and
- * the conversions that run at once are limited by {@link ServerConfig#concurrentConversions()}.
+ * The HTTP service (ROADMAP-PDF 2.4), on the {@link HttpServer} of the JDK: the routes of {@link Routes}, behind its
+ * {@link Gate}, on the shared {@link Converter} of the server and its templates folder. The requests are answered by a
+ * fixed pool of threads, and the conversions that run at once are limited by
+ * {@link ServerConfig#concurrentConversions()}.
  *
  * <p>It has no TLS or users: for that, it is deployed behind what the one who runs it puts in front. Without a token, a
- * server on a loopback address answers only to the local names in {@code Host} ({@link Routes#localHosts}).</p>
+ * server on a loopback address answers only to the local names in {@code Host} ({@link Gate#localHosts}).</p>
  */
 public final class PressServer implements AutoCloseable {
 
@@ -45,11 +46,13 @@ public final class PressServer implements AutoCloseable {
 
     private final HttpServer server;
     private final ExecutorService executor;
+    private final Gate gate;
     private final Routes routes;
 
-    private PressServer(HttpServer server, ExecutorService executor, Routes routes) {
+    private PressServer(HttpServer server, ExecutorService executor, Gate gate, Routes routes) {
         this.server = server;
         this.executor = executor;
+        this.gate = gate;
         this.routes = routes;
     }
 
@@ -144,23 +147,23 @@ public final class PressServer implements AutoCloseable {
         Objects.requireNonNull(shared, "shared");
         Objects.requireNonNull(config, "config");
         HttpServer server = HttpServer.create(new InetSocketAddress(config.host(), config.port()), 0);
+        Routes routes = new Routes(shared, templates, config);
         // The address it got, not the name of the configuration, says whether the server is only local.
-        Routes routes = new Routes(shared, templates, config,
-                Routes.localHosts(config, server.getAddress().getAddress()));
-        routes.starting(starting);
+        Gate gate = new Gate(routes, Gate.localHosts(config, server.getAddress().getAddress()));
+        gate.starting(starting);
         // Enough threads to answer a 503 or a /health while every conversion is running.
         AtomicInteger count = new AtomicInteger();
         ExecutorService executor = Executors.newFixedThreadPool(Math.max(4, 2 * config.concurrentConversions()),
                 task -> new Thread(task, "stxt-press-http-" + count.incrementAndGet()));
         server.setExecutor(executor);
-        server.createContext("/", routes);
+        server.createContext("/", gate);
         server.start();
-        return new PressServer(server, executor, routes);
+        return new PressServer(server, executor, gate, routes);
     }
 
-    /** {@return the routes of the server, for the tests} */
-    Routes routes() {
-        return routes;
+    /** {@return the gate of the server, with the requests in progress, for the tests} */
+    Gate gate() {
+        return gate;
     }
 
     /**
@@ -184,7 +187,7 @@ public final class PressServer implements AutoCloseable {
         }
         LOG.log(Level.INFO, "Warmed up in " + result.elapsed().toMillis() + " ms: " + result.converted() + " converted, "
                 + result.failures().size() + " not");
-        routes.starting(false);
+        gate.starting(false);
     }
 
     /** {@return the address it listens on, with the port it got if the configuration asked for any free one} */
@@ -206,8 +209,8 @@ public final class PressServer implements AutoCloseable {
      * @param grace how long the requests in progress have, such as the timeout of a conversion; not negative
      */
     public void close(Duration grace) {
-        // Not HttpServer.stop(seconds), which on Java 17 waits all the seconds even without requests: see Routes.drain.
-        routes.drain(grace.isNegative() ? Duration.ZERO : grace);
+        // Not HttpServer.stop(seconds), which on Java 17 waits all the seconds even without requests: see Gate.drain.
+        gate.drain(grace.isNegative() ? Duration.ZERO : grace);
         server.stop(0);
         executor.shutdown();
         try {

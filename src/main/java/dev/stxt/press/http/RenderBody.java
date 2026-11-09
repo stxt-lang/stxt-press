@@ -8,11 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.cfg.JsonNodeFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import dev.stxt.pdf.model.Check;
 import dev.stxt.pdf.model.PdfA;
@@ -36,13 +32,6 @@ import dev.stxt.press.Options;
  */
 final class RenderBody {
 
-    /** The JSON of the service: the numbers are kept exact, as the fill of the Slots writes them. */
-    static final ObjectMapper JSON = JsonMapper.builder()
-            .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
-            .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
-            .configure(JsonNodeFeature.STRIP_TRAILING_BIGDECIMAL_ZEROES, false)
-            .build();
-
     private static final Set<String> FIELDS = Set.of("document", "styles", "data", "options");
     private static final Set<String> OPTIONS = Set.of("pdfUa", "pdfA", "debug", "exclude");
 
@@ -60,7 +49,7 @@ final class RenderBody {
     static Job job(byte[] body, boolean debug) throws HttpError {
         JsonNode root;
         try {
-            root = JSON.readTree(body);
+            root = Json.MAPPER.readTree(body);
         } catch (JacksonException e) {
             throw notValid("The body is not JSON: " + e.getOriginalMessage());
         } catch (IOException e) {
@@ -94,7 +83,7 @@ final class RenderBody {
         JsonNode value = root.get("data");
         if (value != null && !value.isNull()) {
             try {
-                data = JSON.writeValueAsString(value);
+                data = Json.MAPPER.writeValueAsString(value);
             } catch (IOException e) {
                 throw new IllegalStateException("A JSON value read cannot be written", e);
             }
@@ -179,6 +168,6 @@ final class RenderBody {
     }
 
     private static HttpError notValid(String message) {
-        return new HttpError(400, Routes.BODY_NOT_VALID, message);
+        return new HttpError(400, HttpError.BODY_NOT_VALID, message);
     }
 }

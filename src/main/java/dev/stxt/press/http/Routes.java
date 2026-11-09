@@ -2,53 +2,32 @@ package dev.stxt.press.http;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
-import java.net.InetAddress;
-import java.net.URLDecoder;
-import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
 import dev.stxt.pdf.convert.Converter;
-import dev.stxt.pdf.model.Cancellation;
 import dev.stxt.pdf.model.FontStyle;
-import dev.stxt.pdf.model.StxtPdfException;
-import dev.stxt.pdf.model.StxtPdfException.Kind;
 import dev.stxt.pdf.resources.FontFile;
 import dev.stxt.pdf.resources.FontLibrary;
 import dev.stxt.pdf.tree.DocumentSchema;
 import dev.stxt.press.Job;
 import dev.stxt.press.Options;
 import dev.stxt.press.Press;
-import dev.stxt.press.PressException;
+import dev.stxt.press.http.Requests.Format;
 import dev.stxt.press.templates.Template;
 import dev.stxt.press.templates.TemplateException;
 import dev.stxt.press.templates.Templates;
 
 /**
- * The routes of the service (ROADMAP-PDF 2.4), on one handler for the whole server.
+ * The routes of the service (ROADMAP-PDF 2.4), behind the {@link Gate} of the server.
  *
  * <table>
  * <caption>Routes</caption>
@@ -72,217 +51,96 @@ import dev.stxt.press.templates.Templates;
  * filled document). Every error is a JSON body with its {@code code} and its {@code message}; that of a job has also
  * {@code kind}, {@code line}, {@code source} and, if it is of the filled document, {@code filled}.</p>
  */
-final class Routes implements HttpHandler {
+final class Routes {
 
-    static final String NOT_FOUND = "NOT_FOUND";
-    static final String METHOD_NOT_ALLOWED = "METHOD_NOT_ALLOWED";
-    static final String UNAUTHORIZED = "UNAUTHORIZED";
-    static final String PARAMETER_NOT_VALID = "PARAMETER_NOT_VALID";
-    static final String BODY_NOT_VALID = "BODY_NOT_VALID";
-    static final String BODY_TOO_LARGE = "BODY_TOO_LARGE";
-    static final String SERVER_BUSY = "SERVER_BUSY";
-    static final String SERVER_STARTING = "SERVER_STARTING";
-    static final String HOST_NOT_ALLOWED = "HOST_NOT_ALLOWED";
-    static final String INTERNAL = "INTERNAL";
-
-    private static final Logger LOG = System.getLogger("dev.stxt.press");
-
-    private static final String JSON_TYPE = "application/json";
-    private static final String STXT_TYPE = "text/stxt; charset=utf-8";
+    private static final List<String> GET = List.of("GET");
+    private static final List<String> POST = List.of("POST");
+    private static final List<String> GET_POST = List.of("GET", "POST");
+    private static final Set<String> NONE = Set.of();
     private static final Set<String> CONVERT_PARAMETERS = Set.of("format", "debug");
     /** The id of a font: the SHA-256 of its file, in lowercase hexadecimal. */
     private static final Pattern FONT_ID = Pattern.compile("[0-9a-f]{64}");
-    /** Where the build of {@code web/} leaves the files of the index and the editor, in the jar. */
-    private static final String WEB = "/editor/";
-    /** The URL of the editor, and the start of that of the editor on a template. */
-    private static final String EDITOR = "/editor";
-    /** Where the files of the index and the editor are served. */
-    private static final String ASSETS = "/assets/";
-    /** The name of a file of the editor: no folders, no hidden files, with an extension. */
-    private static final Pattern EDITOR_FILE = Pattern.compile("[A-Za-z0-9_-]+(\\.[A-Za-z0-9]+)+");
-    /** The types of the files of the editor, by extension. */
-    private static final Map<String, String> EDITOR_TYPES = Map.of("html", "text/html; charset=utf-8", "js",
-            "text/javascript; charset=utf-8", "css", "text/css; charset=utf-8", "svg", "image/svg+xml", "json",
-            JSON_TYPE, "woff2", "font/woff2");
-    /**
-     * What the page of the editor may load: only its own files and the API of the server. The styles of CodeMirror
-     * are inline, and the PDF is shown in a frame of a {@code blob:} URL, made by the page from the answer of the API.
-     */
-    private static final String EDITOR_POLICY = "default-src 'self'; img-src 'self' blob: data:; frame-src blob:; "
-            + "style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'; "
-            + "frame-ancestors 'none'";
 
-    /** The names of the local machine that a server without token answers to, besides the address it listens on. */
-    private static final List<String> LOCAL_HOSTS = List.of("localhost", "127.0.0.1", "[::1]");
-    /** The value of a {@code Host} header: a name or an IPv4 address, or an IPv6 one in brackets, and the port. */
-    private static final Pattern HOST = Pattern.compile("(\\[[0-9A-Fa-f:.]+\\]|[^:\\[\\]]+)(?::[0-9]*)?");
-
-    /** The formats of {@code ?format=}. */
-    private enum Format {
-        PDF, SVG, STXT
+    /** Whether a route is a path, or every path that starts with it (and its handler gets the rest). */
+    private enum Match {
+        EXACT, PREFIX
     }
 
-    /** What creates the converter of the server, called once by the first request that needs it. */
-    private final Supplier<Converter> converter;
-    /** The converter of the server and the {@link Press} on it; {@code null} until a request needs them. */
-    private volatile Shared shared;
+    /** Whether a route answers without the token of the server. */
+    private enum Access {
+        OPEN, TOKEN
+    }
+
+    /** What answers a route, once its method and its parameters are checked. */
+    @FunctionalInterface
+    private interface Handler {
+        /**
+         * @param rest the path after that of a {@link Match#PREFIX} route, not decoded; empty for an exact one
+         */
+        void handle(HttpExchange exchange, String rest, Map<String, String> parameters) throws Exception;
+    }
+
+    /**
+     * A route of the table.
+     *
+     * @param on whether the configuration has it on: a route that is off is {@code 404}, as one that does not exist
+     */
+    private record Route(String path, Match match, Access access, boolean on, List<String> methods,
+            Set<String> parameters, Handler handler) {
+
+        boolean matches(String requested) {
+            return match == Match.EXACT ? requested.equals(path) : requested.startsWith(path);
+        }
+    }
+
+    /** The converter of the server and the conversions that run at once. */
+    private final Conversions conversions;
     /** The templates folder, or {@code null} if the server has none. */
     private final Templates templates;
     private final ServerConfig config;
-    /** The names a request may give in {@code Host}, in lowercase, or {@code null} for any: {@link #localHosts}. */
-    private final Set<String> hosts;
     /** The text of the schema of the engine, read once. */
     private final byte[] schema;
-    /** The conversions that can still start. */
-    private final Semaphore conversions;
-    /** The requests being answered, for {@link #drain}. */
-    private final AtomicInteger active = new AtomicInteger();
-    /** What {@link #drain} waits on, notified when the last request in progress ends. */
-    private final Object drained = new Object();
-    /** Whether the server is stopping: every new request is answered with {@code 503}. */
-    private volatile boolean closing;
-    /** Whether the server is warming up: every request, {@code /health} too, is answered with {@code 503}. */
-    private volatile boolean starting;
-
-    /** The converter of the server and the {@link Press} on it. */
-    private record Shared(Converter converter, Press press) {
-    }
+    /**
+     * The routes, in the order they are looked at. Those without token go first: a request for any other path needs the
+     * token before it is known whether its route exists, so that without it the server does not tell which routes it
+     * has ({@code 401}, not {@code 404}).
+     */
+    private final List<Route> table;
 
     /**
-     * @param hosts the names a request may give in {@code Host}, or {@code null} for any: {@link #localHosts}
+     * @param converter what creates the converter of the server, called once by the first request that needs it
      */
-    Routes(Supplier<Converter> converter, Templates templates, ServerConfig config, Set<String> hosts) {
-        this.converter = converter;
+    Routes(Supplier<Converter> converter, Templates templates, ServerConfig config) {
+        this.conversions = new Conversions(converter, config.concurrentConversions(), config.timeout());
         this.templates = templates;
         this.config = config;
-        this.hosts = hosts;
-        this.conversions = new Semaphore(config.concurrentConversions());
         this.schema = DocumentSchema.text().getBytes(StandardCharsets.UTF_8);
-    }
-
-    /**
-     * {@return the names a request may give in {@code Host} on a server with {@code config} listening on
-     * {@code address}, or {@code null} for any} A server without token on a loopback address answers only to
-     * {@code localhost}, {@code 127.0.0.1}, {@code [::1]} and the {@code Host} of its configuration: otherwise a page
-     * of another site, open in the browser of whoever runs it, could make its own name resolve to {@code 127.0.0.1}
-     * (DNS rebinding) and, being then of the same origin, read the templates and use {@code /render}. With a token that
-     * page cannot do anything, since it does not have it; on another address the server is meant to be behind a proxy,
-     * whose name is the one the requests give.
-     */
-    static Set<String> localHosts(ServerConfig config, InetAddress address) {
-        if (config.token() != null || address == null || !address.isLoopbackAddress()) {
-            return null;
-        }
-        Set<String> hosts = new LinkedHashSet<>(LOCAL_HOSTS);
-        String host = config.host().toLowerCase(Locale.ROOT);
-        hosts.add(host.contains(":") && !host.startsWith("[") ? "[" + host + "]" : host);
-        return Collections.unmodifiableSet(hosts);
-    }
-
-    /** That the request names the server by one of {@link #hosts}, if it has to. */
-    private void host(HttpExchange exchange) throws HttpError {
-        if (hosts == null) {
-            return;
-        }
-        List<String> values = exchange.getRequestHeaders().get("Host");
-        if (values != null && values.size() == 1) {
-            Matcher matcher = HOST.matcher(values.get(0).trim());
-            if (matcher.matches() && hosts.contains(matcher.group(1).toLowerCase(Locale.ROOT))) {
-                return;
-            }
-        }
-        throw new HttpError(403, HOST_NOT_ALLOWED, "A server without token on a local address answers only to the Host "
-                + String.join(", ", hosts) + ": with another name it needs a token (Token env in server.stxt)");
-    }
-
-    /**
-     * {@return the converter of the server and its {@link Press}, created by the first call} If creating them fails, the
-     * exception goes to that request and the next call tries again.
-     */
-    private Shared shared() {
-        Shared current = shared;
-        if (current == null) {
-            synchronized (this) {
-                current = shared;
-                if (current == null) {
-                    Converter created = converter.get();
-                    current = new Shared(created, new Press(created));
-                    shared = current;
-                }
-            }
-        }
-        return current;
-    }
-
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        // Counted before looking at closing: drain() either sees this request or this request sees closing.
-        active.incrementAndGet();
-        try {
-            try {
-                // Before anything else, /health and the 503 too: a request with a foreign Host gets nothing.
-                host(exchange);
-                if (closing) {
-                    throw new HttpError(503, SERVER_BUSY, "The server is stopping", Map.of("Connection", "close"));
-                }
-                if (starting) {
-                    throw new HttpError(503, SERVER_STARTING, "The server is warming up", Map.of("Retry-After", "1"));
-                }
-                route(exchange);
-            } catch (Exception e) {
-                if (exchange.getResponseCode() != -1) {
-                    // The response had started (a PDF being written): the exception drops the connection, so that the
-                    // client does not take a part of the PDF for the whole.
-                    LOG.log(Level.WARNING, "The response to " + exchange.getRequestURI() + " could not be finished", e);
-                    throw e instanceof IOException io ? io : new IOException(e);
-                }
-                fail(exchange, e);
-            }
-            exchange.close();
-        } finally {
-            if (active.decrementAndGet() == 0) {
-                synchronized (drained) {
-                    drained.notifyAll();
-                }
-            }
-        }
-    }
-
-    /**
-     * Answers every new request with {@code 503} and waits up to {@code grace} for those in progress, so that the server
-     * can stop without cutting them. {@code HttpServer.stop(seconds)} does this too, but on Java 17 it waits all the
-     * seconds even without requests (fixed in later JDKs), so a Ctrl+C took the whole timeout of a conversion.
-     *
-     * @return whether every request finished in time
-     */
-    boolean drain(Duration grace) {
-        closing = true;
-        long deadline = System.nanoTime() + grace.toNanos();
-        synchronized (drained) {
-            try {
-                while (active.get() > 0) {
-                    long left = deadline - System.nanoTime();
-                    if (left <= 0) {
-                        return false;
-                    }
-                    TimeUnit.NANOSECONDS.timedWait(drained, left);
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /** {@return the requests being answered} */
-    int active() {
-        return active.get();
-    }
-
-    /** Whether the server is warming up, and answers every request with {@code 503} until it is not. */
-    void starting(boolean starting) {
-        this.starting = starting;
+        boolean editor = config.editor();
+        this.table = List.of(
+                new Route("/health", Match.EXACT, Access.OPEN, true, GET, NONE,
+                        (exchange, rest, parameters) -> Responses.sendJson(exchange, 200, health())),
+                // The pages without token: their files have nothing secret, and a browser cannot send the token when
+                // it opens a URL. They ask for it when the API answers 401.
+                new Route("/", Match.EXACT, Access.OPEN, editor, GET, NONE,
+                        (exchange, rest, parameters) -> WebFiles.send(exchange, "index.html")),
+                new Route("/editor", Match.EXACT, Access.OPEN, editor, GET, Set.of("mode"),
+                        (exchange, rest, parameters) -> editor(exchange, null, parameters)),
+                new Route("/editor/", Match.PREFIX, Access.OPEN, editor, GET, Set.of("mode"), Routes::editor),
+                new Route("/assets/", Match.PREFIX, Access.OPEN, editor, GET, NONE,
+                        (exchange, rest, parameters) -> asset(exchange, rest)),
+                new Route("/print/", Match.PREFIX, Access.TOKEN, true, GET_POST, CONVERT_PARAMETERS, this::print),
+                new Route("/render", Match.EXACT, Access.TOKEN, config.render(), POST, CONVERT_PARAMETERS,
+                        (exchange, rest, parameters) -> render(exchange, parameters)),
+                new Route("/templates", Match.EXACT, Access.TOKEN, config.templates(), GET, NONE,
+                        (exchange, rest, parameters) -> list(exchange)),
+                new Route("/templates/", Match.PREFIX, Access.TOKEN, config.templates(), GET, NONE,
+                        (exchange, rest, parameters) -> template(exchange, rest)),
+                new Route("/schema", Match.EXACT, Access.TOKEN, true, GET, NONE,
+                        (exchange, rest, parameters) -> Responses.send(exchange, 200, Responses.STXT_TYPE, schema)),
+                new Route("/fonts", Match.EXACT, Access.TOKEN, editor, GET, NONE,
+                        (exchange, rest, parameters) -> fonts(exchange)),
+                new Route("/fonts/", Match.PREFIX, Access.TOKEN, editor, GET, NONE,
+                        (exchange, rest, parameters) -> font(exchange, rest)));
     }
 
     /**
@@ -292,76 +150,30 @@ final class Routes implements HttpHandler {
      * @throws dev.stxt.pdf.model.StxtPdfException if the converter cannot be created: its resources
      */
     WarmUp.Result warmUp() {
-        Shared current = shared();
-        String font = current.converter().resources().fonts().families().stream().findFirst().orElse(null);
-        return WarmUp.run(current.press(), templates, font, config.templateOptions(), config.timeout());
+        return conversions.warmUp(templates, config.templateOptions());
     }
 
-    private void route(HttpExchange exchange) throws Exception {
+    /** Answers the request with the first route of {@link #table} that it matches and that is on. */
+    void route(HttpExchange exchange) throws Exception {
         String path = exchange.getRequestURI().getRawPath();
-        if (path.equals("/health")) {
-            method(exchange, "GET");
-            parameters(exchange, Set.of());
-            sendJson(exchange, 200, health());
-            return;
-        }
-        // The pages without token: their files have nothing secret, and a browser cannot send the token when it opens a
-        // URL. They ask for it when the API answers 401.
-        if (config.editor() && path.equals("/")) {
-            method(exchange, "GET");
-            parameters(exchange, Set.of());
-            web(exchange, "index.html");
-            return;
-        }
-        if (config.editor() && (path.equals(EDITOR) || path.startsWith(EDITOR + "/"))) {
-            method(exchange, "GET");
-            mode(parameters(exchange, Set.of("mode")));
-            // The page is the same for every template, and whether it exists is not looked at: that would tell it
-            // without token. The page asks /templates/{path} for it, with the token.
-            if (!path.equals(EDITOR) && !Templates.isPath(path.substring(EDITOR.length() + 1))) {
-                throw new HttpError(404, NOT_FOUND, "There is no route " + path);
+        Route found = null;
+        for (Route route : table) {
+            if (route.on() && route.matches(path)) {
+                found = route;
+                break;
             }
-            web(exchange, "editor.html");
-            return;
         }
-        if (config.editor() && path.startsWith(ASSETS)) {
-            method(exchange, "GET");
-            parameters(exchange, Set.of());
-            String file = path.substring(ASSETS.length());
-            // A page has one URL: / or /editor.
-            if (file.endsWith(".html")) {
-                throw new HttpError(404, NOT_FOUND, "There is no file " + file + " in the assets");
-            }
-            web(exchange, file);
-            return;
-        }
-        if (!authorized(exchange)) {
-            throw new HttpError(401, UNAUTHORIZED, "The request has no valid token (Authorization: Bearer)",
+        if ((found == null || found.access() == Access.TOKEN) && !Requests.authorized(exchange, config.token())) {
+            throw new HttpError(401, HttpError.UNAUTHORIZED, "The request has no valid token (Authorization: Bearer)",
                     Map.of("WWW-Authenticate", "Bearer"));
         }
-        if (path.startsWith("/print/")) {
-            print(exchange, path.substring("/print/".length()));
-        } else if (path.equals("/render") && config.render()) {
-            render(exchange);
-        } else if (path.equals("/templates") && config.templates()) {
-            list(exchange);
-        } else if (path.startsWith("/templates/") && config.templates()) {
-            template(exchange, path.substring("/templates/".length()));
-        } else if (path.equals("/schema")) {
-            method(exchange, "GET");
-            parameters(exchange, Set.of());
-            send(exchange, 200, STXT_TYPE, schema);
-        } else if (path.equals("/fonts") && config.editor()) {
-            method(exchange, "GET");
-            parameters(exchange, Set.of());
-            fonts(exchange);
-        } else if (path.startsWith("/fonts/") && config.editor()) {
-            method(exchange, "GET");
-            parameters(exchange, Set.of());
-            font(exchange, path.substring("/fonts/".length()));
-        } else {
-            throw new HttpError(404, NOT_FOUND, "There is no route " + path);
+        if (found == null) {
+            throw new HttpError(404, HttpError.NOT_FOUND, "There is no route " + path);
         }
+        Requests.method(exchange, found.methods());
+        Map<String, String> parameters = Requests.parameters(exchange, found.parameters());
+        found.handler().handle(exchange, found.match() == Match.PREFIX ? path.substring(found.path().length()) : "",
+                parameters);
     }
 
     /**
@@ -379,13 +191,36 @@ final class Routes implements HttpHandler {
     }
 
     /**
+     * {@code GET /editor} ({@code path} {@code null}) and {@code GET /editor/{path}}: the page is the same for every
+     * template, and whether it exists is not looked at, since that would tell it without token. The page asks
+     * {@code /templates/{path}} for it, with the token.
+     */
+    private static void editor(HttpExchange exchange, String path, Map<String, String> parameters)
+            throws IOException, HttpError {
+        Requests.mode(parameters);
+        if (path != null && !Templates.isPath(path)) {
+            throw new HttpError(404, HttpError.NOT_FOUND, "There is no route /editor/" + path);
+        }
+        WebFiles.send(exchange, "editor.html");
+    }
+
+    /** {@code GET /assets/{file}}. */
+    private static void asset(HttpExchange exchange, String file) throws IOException, HttpError {
+        // A page has one URL: / or /editor.
+        if (file.endsWith(".html")) {
+            throw new HttpError(404, HttpError.NOT_FOUND, "There is no file " + file + " in the assets");
+        }
+        WebFiles.send(exchange, file);
+    }
+
+    /**
      * {@code GET /fonts}: the families, and each face (family, weight, style) with the SHA-256 of its file, which
      * {@code /fonts/{id}} gives. The editor registers them in the page to show the SVG previews with the fonts of the
      * server, which an SVG names and does not carry. Only with the editor on: no other client needs the files of the
      * fonts (a PDF carries them), and a server should not hand them out if it does not have to.
      */
     private void fonts(HttpExchange exchange) throws IOException {
-        FontLibrary library = shared().converter().resources().fonts();
+        FontLibrary library = conversions.converter().resources().fonts();
         List<Map<String, Object>> faces = new ArrayList<>();
         for (FontFile file : library.all()) {
             Map<String, Object> face = new LinkedHashMap<>();
@@ -398,13 +233,13 @@ final class Routes implements HttpHandler {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("families", List.copyOf(library.families()));
         body.put("faces", faces);
-        sendJson(exchange, 200, body);
+        Responses.sendJson(exchange, 200, body);
     }
 
     /** {@code GET /fonts/{id}}: the file of a face, by the SHA-256 of {@code /fonts}. */
     private void font(HttpExchange exchange, String id) throws IOException, HttpError {
         if (FONT_ID.matcher(id).matches()) {
-            for (FontFile file : shared().converter().resources().fonts().all()) {
+            for (FontFile file : conversions.converter().resources().fonts().all()) {
                 if (file.digest().equals(id)) {
                     byte[] content;
                     try (InputStream in = file.content()) {
@@ -412,70 +247,35 @@ final class Routes implements HttpHandler {
                     }
                     // The id is the content: the file of an id never changes.
                     exchange.getResponseHeaders().set("Cache-Control", "private, max-age=31536000, immutable");
-                    send(exchange, 200, file.cff() ? "font/otf" : "font/ttf", content);
+                    Responses.send(exchange, 200, file.cff() ? "font/otf" : "font/ttf", content);
                     return;
                 }
             }
         }
-        throw new HttpError(404, NOT_FOUND, "There is no font " + id);
-    }
-
-    /** {@code ?mode=} of the editor: {@code document} or {@code template}, which the page reads. */
-    private static void mode(Map<String, String> parameters) throws HttpError {
-        String mode = parameters.get("mode");
-        if (mode != null && !mode.equals("document") && !mode.equals("template")) {
-            throw new HttpError(400, PARAMETER_NOT_VALID, "Unknown mode " + mode + " (document, template)");
-        }
-    }
-
-    /** A file of the index or the editor, from the jar: a page, or one of {@code /assets/}. */
-    private static void web(HttpExchange exchange, String file) throws IOException, HttpError {
-        if (!EDITOR_FILE.matcher(file).matches()) {
-            throw new HttpError(404, NOT_FOUND, "There is no file " + file + " in the assets");
-        }
-        byte[] content;
-        try (InputStream in = Routes.class.getResourceAsStream(WEB + file)) {
-            if (in == null) {
-                throw new HttpError(404, NOT_FOUND, file.endsWith(".html")
-                        ? "The server was built without the editor" : "There is no file " + file + " in the assets");
-            }
-            content = in.readAllBytes();
-        }
-        String type = EDITOR_TYPES.getOrDefault(file.substring(file.lastIndexOf('.') + 1), "application/octet-stream");
-        exchange.getResponseHeaders().set("Cache-Control", "no-cache");
-        if (type.startsWith("text/html")) {
-            exchange.getResponseHeaders().set("Content-Security-Policy", EDITOR_POLICY);
-            exchange.getResponseHeaders().set("Referrer-Policy", "no-referrer");
-        }
-        send(exchange, 200, type, content);
+        throw new HttpError(404, HttpError.NOT_FOUND, "There is no font " + id);
     }
 
     /** {@code GET} and {@code POST /print/{path}}. */
-    private void print(HttpExchange exchange, String path) throws Exception {
-        method(exchange, "GET", "POST");
-        Map<String, String> parameters = parameters(exchange, CONVERT_PARAMETERS);
-        Format format = format(parameters);
+    private void print(HttpExchange exchange, String path, Map<String, String> parameters) throws Exception {
+        Format format = Requests.format(parameters);
         Template template = template(path);
-        Options options = debug(parameters) ? config.templateOptions().withDebug(true) : config.templateOptions();
+        Options options = Requests.debug(parameters) ? config.templateOptions().withDebug(true)
+                : config.templateOptions();
         Job job = exchange.getRequestMethod().equals("POST")
-                ? template.job(options, text(body(exchange)))
+                ? template.job(options, Requests.text(Requests.body(exchange, config.maxBodySize())))
                 : template.job(options);
-        respond(exchange, job, format, template.name());
+        conversions.respond(exchange, job, format, template.name());
     }
 
     /** {@code POST /render}. */
-    private void render(HttpExchange exchange) throws Exception {
-        method(exchange, "POST");
-        Map<String, String> parameters = parameters(exchange, CONVERT_PARAMETERS);
-        Format format = format(parameters);
-        Job job = RenderBody.job(body(exchange), debug(parameters));
-        respond(exchange, job, format, null);
+    private void render(HttpExchange exchange, Map<String, String> parameters) throws Exception {
+        Format format = Requests.format(parameters);
+        Job job = RenderBody.job(Requests.body(exchange, config.maxBodySize()), Requests.debug(parameters));
+        conversions.respond(exchange, job, format, null);
     }
 
     /** {@code GET /templates}. */
     private void list(HttpExchange exchange) throws Exception {
-        method(exchange, "GET");
-        parameters(exchange, Set.of());
         List<Map<String, Object>> list = new ArrayList<>();
         for (Templates.Entry entry : templates == null ? List.<Templates.Entry>of() : templates.list()) {
             Map<String, Object> item = new LinkedHashMap<>();
@@ -484,13 +284,11 @@ final class Routes implements HttpHandler {
             item.put("data", entry.data());
             list.add(item);
         }
-        sendJson(exchange, 200, Map.of("templates", list));
+        Responses.sendJson(exchange, 200, Map.of("templates", list));
     }
 
     /** {@code GET /templates/{path}}: the texts of a template, its data as the text of its file. */
     private void template(HttpExchange exchange, String path) throws Exception {
-        method(exchange, "GET");
-        parameters(exchange, Set.of());
         Template template = template(path);
         List<Map<String, Object>> styles = new ArrayList<>();
         for (Job.Styles item : template.styles()) {
@@ -501,7 +299,7 @@ final class Routes implements HttpHandler {
         body.put("document", template.document());
         body.put("styles", styles);
         body.put("data", template.data());
-        sendJson(exchange, 200, body);
+        Responses.sendJson(exchange, 200, body);
     }
 
     private Template template(String path) throws IOException, HttpError {
@@ -510,284 +308,5 @@ final class Routes implements HttpHandler {
                     + ": the server has no templates folder");
         }
         return templates.get(path);
-    }
-
-    /** Converts {@code job} and answers with it in {@code format}; {@code name} names the PDF, if not {@code null}. */
-    private void respond(HttpExchange exchange, Job job, Format format, String name) throws Exception {
-        if (format == Format.STXT) {
-            // Without the converter: a fill reads no resources, so it does not create that of a lazy server.
-            String filled = job.data() == null ? job.document() : Press.fill(job.document(), job.data());
-            send(exchange, 200, STXT_TYPE, filled.getBytes(StandardCharsets.UTF_8));
-            return;
-        }
-        if (!conversions.tryAcquire()) {
-            throw new HttpError(503, SERVER_BUSY, "The server is converting as many documents as it can at once",
-                    Map.of("Retry-After", "1"));
-        }
-        try {
-            Cancellation cancellation = Cancellation.timeout(config.timeout());
-            if (format == Format.SVG) {
-                List<String> pages = shared().press().svg(job, cancellation);
-                sendJson(exchange, 200, Map.of("pages", pages));
-            } else {
-                exchange.getResponseHeaders().set("Content-Type", "application/pdf");
-                if (name != null) {
-                    exchange.getResponseHeaders().set("Content-Disposition", "inline; filename=\"" + name + ".pdf\"");
-                }
-                // Not closed if the job fails: closing would end the body as if the PDF were whole.
-                ResponseBody body = new ResponseBody(exchange);
-                shared().press().pdf(job, body, cancellation);
-                body.close();
-            }
-        } finally {
-            conversions.release();
-        }
-    }
-
-    /** Answers {@code e}, an error found before the response started. */
-    private static void fail(HttpExchange exchange, Exception e) throws IOException {
-        // A header set for the response that failed (the Content-Type of a PDF) does not belong to the error.
-        exchange.getResponseHeaders().clear();
-        Map<String, Object> body = new LinkedHashMap<>();
-        int status;
-        if (e instanceof HttpError http) {
-            status = http.status;
-            http.headers.forEach(exchange.getResponseHeaders()::set);
-            body.put("code", http.code);
-            body.put("message", http.getMessage());
-        } else if (e instanceof PressException press) {
-            status = status(press.kind());
-            if (status == 500) {
-                LOG.log(Level.ERROR, "Error of " + exchange.getRequestURI(), e);
-            }
-            body.put("kind", press.kind().name());
-            body.put("code", press.code());
-            body.put("line", press.line());
-            body.put("source", press.source());
-            body.put("message", press.getMessage());
-            if (press.filled() != null) {
-                body.put("filled", press.filled());
-            }
-        } else if (e instanceof StxtPdfException engine) {
-            // The converter of a lazy server could not be created: its resources.
-            status = status(engine.kind());
-            LOG.log(status == 500 ? Level.ERROR : Level.WARNING, "Error of " + exchange.getRequestURI(), e);
-            body.put("kind", engine.kind().name());
-            body.put("code", engine.code());
-            body.put("message", engine.getMessage());
-        } else if (e instanceof TemplateException template) {
-            boolean notFound = template.code().equals(TemplateException.NOT_FOUND);
-            status = notFound ? 404 : 500;
-            if (!notFound) {
-                LOG.log(Level.ERROR, "Error of " + exchange.getRequestURI(), e);
-            }
-            body.put("code", template.code());
-            body.put("message", template.getMessage());
-        } else {
-            LOG.log(Level.ERROR, "Error of " + exchange.getRequestURI(), e);
-            status = 500;
-            body.put("code", INTERNAL);
-            body.put("message", "Internal error of the server");
-        }
-        sendJson(exchange, status, body);
-    }
-
-    /** {@return the status of an error of a job of this kind} */
-    private static int status(Kind kind) {
-        return switch (kind) {
-            case INVALID_DOCUMENT -> 422;
-            case LIMIT -> 413;
-            case CANCELLED -> 503;
-            case RESOURCE, INTERNAL -> 500;
-        };
-    }
-
-    /** {@return whether the request has the token of the server, if it has one} */
-    private boolean authorized(HttpExchange exchange) {
-        if (config.token() == null) {
-            return true;
-        }
-        String header = exchange.getRequestHeaders().getFirst("Authorization");
-        String scheme = "Bearer ";
-        if (header == null || !header.regionMatches(true, 0, scheme, 0, scheme.length())) {
-            return false;
-        }
-        // In constant time, so that the time of the answer does not tell how much of the token is right.
-        return MessageDigest.isEqual(header.substring(scheme.length()).getBytes(StandardCharsets.UTF_8),
-                config.token().getBytes(StandardCharsets.UTF_8));
-    }
-
-    /** That the method of the request is one of {@code allowed}. */
-    private static void method(HttpExchange exchange, String... allowed) throws HttpError {
-        for (String method : allowed) {
-            if (method.equals(exchange.getRequestMethod())) {
-                return;
-            }
-        }
-        throw new HttpError(405, METHOD_NOT_ALLOWED, "The method " + exchange.getRequestMethod() + " is not one of "
-                + String.join(", ", allowed), Map.of("Allow", String.join(", ", allowed)));
-    }
-
-    /** {@return the parameters of the query, which have to be some of {@code allowed}, each once} */
-    private static Map<String, String> parameters(HttpExchange exchange, Set<String> allowed) throws HttpError {
-        Map<String, String> parameters = new LinkedHashMap<>();
-        String query = exchange.getRequestURI().getRawQuery();
-        if (query == null || query.isEmpty()) {
-            return parameters;
-        }
-        for (String part : query.split("&")) {
-            if (part.isEmpty()) {
-                continue;
-            }
-            int equals = part.indexOf('=');
-            String key;
-            String value;
-            try {
-                key = URLDecoder.decode(equals < 0 ? part : part.substring(0, equals), StandardCharsets.UTF_8);
-                value = equals < 0 ? "" : URLDecoder.decode(part.substring(equals + 1), StandardCharsets.UTF_8);
-            } catch (IllegalArgumentException e) {
-                throw new HttpError(400, PARAMETER_NOT_VALID, "The query is not valid: " + e.getMessage());
-            }
-            if (!allowed.contains(key)) {
-                throw new HttpError(400, PARAMETER_NOT_VALID, "Unknown parameter " + key
-                        + (allowed.isEmpty() ? ": the route has none" : " (" + String.join(", ", allowed.stream()
-                                .sorted().toList()) + ")"));
-            }
-            if (parameters.put(key, value) != null) {
-                throw new HttpError(400, PARAMETER_NOT_VALID, "Repeated parameter " + key);
-            }
-        }
-        return parameters;
-    }
-
-    private static Format format(Map<String, String> parameters) throws HttpError {
-        String format = parameters.getOrDefault("format", "pdf");
-        return switch (format) {
-            case "pdf" -> Format.PDF;
-            case "svg" -> Format.SVG;
-            case "stxt" -> Format.STXT;
-            default -> throw new HttpError(400, PARAMETER_NOT_VALID, "Unknown format " + format + " (pdf, svg, stxt)");
-        };
-    }
-
-    private static boolean debug(Map<String, String> parameters) throws HttpError {
-        String debug = parameters.getOrDefault("debug", "false");
-        return switch (debug) {
-            case "true" -> true;
-            case "false" -> false;
-            default -> throw new HttpError(400, PARAMETER_NOT_VALID, "debug is " + debug + ", not true or false");
-        };
-    }
-
-    /** {@return the body of the request, if it is not larger than the limit of the server} */
-    private byte[] body(HttpExchange exchange) throws IOException, HttpError {
-        long max = config.maxBodySize();
-        String length = exchange.getRequestHeaders().getFirst("Content-Length");
-        if (length != null) {
-            try {
-                if (Long.parseLong(length.trim()) > max) {
-                    throw tooLarge(max);
-                }
-            } catch (NumberFormatException e) {
-                throw new HttpError(400, BODY_NOT_VALID, "Content-Length is not a number: " + length);
-            }
-        }
-        // Without Content-Length (chunked), the limit is checked as it is read.
-        byte[] body;
-        try {
-            body = exchange.getRequestBody().readNBytes((int) Math.min(max + 1, Integer.MAX_VALUE - 8));
-        } catch (IOException e) {
-            // The connection was closed before the whole body came: by the client, or by the server when the request
-            // ran out of time (PressServer.limitTimes). A fault of the request, not of the server, so not for the log.
-            throw new HttpError(400, BODY_NOT_VALID, "The body did not arrive whole");
-        }
-        if (body.length > max) {
-            throw tooLarge(max);
-        }
-        return body;
-    }
-
-    private static HttpError tooLarge(long max) {
-        return new HttpError(413, BODY_TOO_LARGE, "The body is larger than the " + max + " bytes the server accepts");
-    }
-
-    /** {@return {@code body} as UTF-8 text, strictly decoded} */
-    private static String text(byte[] body) throws HttpError {
-        try {
-            return StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT)
-                    .onUnmappableCharacter(CodingErrorAction.REPORT).decode(ByteBuffer.wrap(body)).toString();
-        } catch (CharacterCodingException e) {
-            throw new HttpError(400, BODY_NOT_VALID, "The body is not UTF-8 text");
-        }
-    }
-
-    private static void sendJson(HttpExchange exchange, int status, Object body) throws IOException {
-        send(exchange, status, JSON_TYPE, RenderBody.JSON.writeValueAsBytes(body));
-    }
-
-    /**
-     * The headers of every response: that the browser takes the {@code Content-Type} as it is, since an error carries
-     * text of the request.
-     */
-    private static void secure(HttpExchange exchange) {
-        exchange.getResponseHeaders().set("X-Content-Type-Options", "nosniff");
-    }
-
-    private static void send(HttpExchange exchange, int status, String type, byte[] body) throws IOException {
-        exchange.getResponseHeaders().set("Content-Type", type);
-        secure(exchange);
-        exchange.sendResponseHeaders(status, body.length == 0 ? -1 : body.length);
-        if (body.length > 0) {
-            try (OutputStream out = exchange.getResponseBody()) {
-                out.write(body);
-            }
-        }
-    }
-
-    /**
-     * The body of a {@code 200} that is sent as it is written, with the status and the headers sent at the first write.
-     * {@link Press#pdf} lays out the document before writing anything, so an error of the job is still answered with its
-     * status.
-     */
-    private static final class ResponseBody extends OutputStream {
-
-        private final HttpExchange exchange;
-        private OutputStream out;
-
-        ResponseBody(HttpExchange exchange) {
-            this.exchange = exchange;
-        }
-
-        private OutputStream out() throws IOException {
-            if (out == null) {
-                secure(exchange);
-                exchange.sendResponseHeaders(200, 0);
-                out = exchange.getResponseBody();
-            }
-            return out;
-        }
-
-        @Override
-        public void write(int b) throws IOException {
-            out().write(b);
-        }
-
-        @Override
-        public void write(byte[] b, int off, int len) throws IOException {
-            out().write(b, off, len);
-        }
-
-        @Override
-        public void flush() throws IOException {
-            if (out != null) {
-                out.flush();
-            }
-        }
-
-        /** Ends the body of a job that finished, sending the status and the headers if nothing was written. */
-        @Override
-        public void close() throws IOException {
-            out().close();
-        }
     }
 }
