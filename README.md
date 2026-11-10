@@ -24,12 +24,13 @@ java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice
 | `GET /schema` | The schema `dev.stxt.pdf` of the engine |
 | `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file; for the editor |
 | `GET /fonts/{id}` | The file of a face, by its SHA-256; for the editor |
-| `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.1.0", "stxt-pdf": "0.13.0"}}`, without token |
+| `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.1.0", "stxt-pdf": "0.14.0"}}`, without token |
 | `GET /` | The [index](#index-and-editor): the templates and the routes, without token |
 | `GET /editor`, `GET /editor/{path}` | The [web editor](#index-and-editor), blank or on a template, without token |
 
 `/print` and `/render` answer with a PDF (`?format=pdf`, the default), one SVG per page (`?format=svg`, as
 `{"pages": [...]}`, with `&debug=true` for the outlines of the boxes) or the filled document (`?format=stxt`).
+Every PDF names its producer, `stxt-press 0.1.0 (stxt-pdf 0.14.0)`, in its document information and its XMP.
 
 ```bash
 curl -o invoice.pdf http://127.0.0.1:8080/print/invoices/invoice
@@ -238,7 +239,7 @@ The editor is in `web/` (TypeScript, bundled with esbuild). Maven installs Node 
 | Dependency | Version |
 |---|---|
 | [`dev.stxt:stxt-core`](https://github.com/stxt-lang/stxt-java) | 1.0.3 |
-| [`dev.stxt:stxt-pdf`](https://github.com/stxt-lang/stxt-pdf) | 0.13.0 |
+| [`dev.stxt:stxt-pdf`](https://github.com/stxt-lang/stxt-pdf) | 0.14.0 |
 | [`dev.stxt:stxt-transform`](https://github.com/stxt-lang/stxt-java-transform) | 0.1.0 |
 | [`com.fasterxml.jackson.core:jackson-databind`](https://github.com/FasterXML/jackson-databind) | 2.22.4 |
 

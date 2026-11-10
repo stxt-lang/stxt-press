@@ -58,6 +58,16 @@ public final class Press {
     }
 
     /**
+     * {@return the producer of the PDFs of the service, with its version and that of the engine:
+     * {@code stxt-press 0.1.0 (stxt-pdf 0.14.0)}} Without a jar (the tests), {@code stxt-press (stxt-pdf 0.14.0)}.
+     */
+    public static String producer() {
+        String press = version();
+        String engine = Converter.version();
+        return "stxt-press" + (press == null ? "" : " " + press) + (engine == null ? "" : " (stxt-pdf " + engine + ")");
+    }
+
+    /**
      * {@return {@code bytes} as UTF-8 text, decoded strictly, as {@code stxt-core} reads a file: bytes that are not UTF-8
      * are an error, never a U+FFFD} A BOM is kept.
      *

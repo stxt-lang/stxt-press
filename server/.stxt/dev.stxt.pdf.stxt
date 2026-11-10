@@ -10,7 +10,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 
 	Node: Document
 		Type: GROUP
-		Description: Box document: the medium (the one of the sections that do not declare their own), the title and the language (required), the subject (optional), the reusable rules (also the base typography, with For element: Document), the Page overlay of all the sections and one or more Section with the content, in order.
+		Description: Box document: the medium (the one of the sections that do not declare their own), the title and the language (required), the subject and the author (optional), the reusable rules (also the base typography, with For element: Document), the Page overlay of all the sections and one or more Section with the content, in order.
 		Children:
 			Child: Page
 				Min: 1
@@ -19,6 +19,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Min: 1
 				Max: 1
 			Child: Subject
+				Max: 1
+			Child: Author
 				Max: 1
 			Child: Language
 				Min: 1
@@ -68,6 +70,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Footnote number format
 				Max: 1
+			Child: Trim margins
+				Max: 1
 			Child: Block
 			Child: Stack
 			Child: Grid
@@ -108,6 +112,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Break
 				Max: 1
 			Child: Isolate margins
+				Max: 1
+			Child: Trim margins
 				Max: 1
 			Child: Rotate
 				Max: 1
@@ -416,6 +422,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Marker image
 				Max: 1
+			Child: Trim margins
+				Max: 1
 			Child: Block
 			Child: Stack
 			Child: Grid
@@ -518,6 +526,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Break
 				Max: 1
 			Child: Isolate margins
+				Max: 1
+			Child: Trim margins
 				Max: 1
 			Child: Offset
 				Max: 1
@@ -824,6 +834,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Row header
 				Max: 1
+			Child: Trim margins
+				Max: 1
 			Child: Block
 			Child: Stack
 			Child: Grid
@@ -1083,6 +1095,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Isolate margins
 				Max: 1
+			Child: Trim margins
+				Max: 1
 			Child: Bullet markers
 				Max: 1
 			Child: Number markers
@@ -1174,6 +1188,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Isolate margins
 				Max: 1
+			Child: Trim margins
+				Max: 1
 			Child: Bullet markers
 				Max: 1
 			Child: Number markers
@@ -1264,6 +1280,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Clear
 				Max: 1
 			Child: Isolate margins
+				Max: 1
+			Child: Trim margins
 				Max: 1
 			Child: Bullet markers
 				Max: 1
@@ -1406,6 +1424,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Title of the document: the one the PDF viewer shows. Required.
 	Node: Subject
 		Description: What the document is about, in a sentence: the subject of the PDF, which the viewer shows in the document properties and which document managers and search engines index. Optional.
+	Node: Author
+		Description: Who writes the document: the person or the organization that the PDF names as its author, which the viewer shows in the document properties. Optional.
 	Node: Language
 		Description: Language, as a BCP 47 tag (es, en-US, ca...). In Document, the one of the content and of the tagged PDF (required). In Typography, the one of a box whose text is in another language (inherited): a screen reader reads it (Lang of the tagged PDF) and it sets the letter rules of Case. Not valid in For element: Document, which uses the one of Document.
 
@@ -1423,6 +1443,14 @@ Schema (@stxt.schema): dev.stxt.pdf
 	Node: Isolate margins
 		Type: BOOLEAN
 		Description: Whether the box isolates the margins of its children: with true, those of the first and the last stay inside and do not merge with its own. By default, false.
+	Node: Trim margins
+		Type: ENUM
+		Description: Which of the margins that touch the box from inside it drops: top, the top margin of its first child; bottom, the bottom margin of its last child; both, the two of them; none (by default), neither. With them go those of their own first and last children that would merge with them. A dropped margin is not applied: it neither stays inside the box nor comes out of it.
+		Values:
+			Value: none
+			Value: both
+			Value: top
+			Value: bottom
 	Node: Offset
 		Description: Offset: top, right, bottom, left (1 to 4 values).
 	Node: Layer

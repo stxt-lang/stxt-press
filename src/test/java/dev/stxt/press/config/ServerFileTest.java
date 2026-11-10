@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -38,6 +40,7 @@ import dev.stxt.pdf.model.Limits;
 import dev.stxt.pdf.model.PdfA;
 import dev.stxt.pdf.model.StxtPdfException;
 import dev.stxt.press.Options;
+import dev.stxt.press.Press;
 import dev.stxt.press.http.PressServer;
 import dev.stxt.press.http.ServerConfig;
 
@@ -399,6 +402,24 @@ class ServerFileTest {
 
             assertEquals(200, fonts.statusCode());
             assertTrue(new String(fonts.body(), StandardCharsets.UTF_8).contains("IBM Plex Sans"));
+        }
+    }
+
+    @Test
+    void itsPdfsNameTheServiceAsProducer() throws Exception {
+        String document = "Document (dev.stxt.pdf):\\n    Language: en\\n    Title: Producer\\n    Page:\\n"
+                + "        Paper: A4\\n    Section:\\n        Paragraph: Hello\\n            Typography:\\n"
+                + "                Font: IBM Plex Sans\\n                Size: 11\\n";
+        try (PressServer server = read(server("")).start()) {
+            HttpRequest request = HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + server.address().getPort()
+                    + "/render")).POST(HttpRequest.BodyPublishers.ofString("{\"document\": \"" + document + "\"}"))
+                    .build();
+            HttpResponse<byte[]> response = HttpClient.newHttpClient().send(request, BodyHandlers.ofByteArray());
+
+            assertEquals(200, response.statusCode(), () -> new String(response.body(), StandardCharsets.UTF_8));
+            try (PDDocument pdf = Loader.loadPDF(response.body())) {
+                assertEquals(Press.producer(), pdf.getDocumentInformation().getProducer());
+            }
         }
     }
 

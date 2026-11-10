@@ -28,6 +28,7 @@ import dev.stxt.pdf.model.Limits;
 import dev.stxt.pdf.model.PdfA;
 import dev.stxt.pdf.resources.Resources;
 import dev.stxt.press.Options;
+import dev.stxt.press.Press;
 import dev.stxt.press.http.PressServer;
 import dev.stxt.press.http.ServerConfig;
 import dev.stxt.press.templates.Templates;
@@ -240,19 +241,22 @@ public final class ServerFile {
      * {@return a converter with the resources and the limits of this configuration, for jobs run one at a time, such as
      * those of the commands {@code render} and {@code print}} It reads only the fonts and the images a document uses,
      * when it converts it: the warm up, which reads the whole resources folder, is of the server ({@link #start()}).
+     * Its PDFs name the service as their producer ({@link Press#producer()}), as those of the server do.
      */
     public Converter converter() {
-        return Converter.builder().resources(resources).limits(limits).build();
+        return Converter.builder().resources(resources).limits(limits).producer(Press.producer()).build();
     }
 
     /**
      * {@return the shared converter of the server} With {@link #warmUp()} it reads the whole resources folder when it
      * is created, so that the first request does not.
+     * Its PDFs name the service as their producer ({@link Press#producer()}).
      *
      * @throws dev.stxt.pdf.resources.ResourceException with {@link #warmUp()}, if the fonts cannot be read
      */
     private Converter serverConverter() {
-        return Converter.builder().resources(resources).limits(limits).preloadResources(warmUp).build();
+        return Converter.builder().resources(resources).limits(limits).preloadResources(warmUp)
+                .producer(Press.producer()).build();
     }
 
     /**

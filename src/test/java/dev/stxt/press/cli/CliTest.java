@@ -22,14 +22,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import dev.stxt.pdf.convert.Converter;
 import dev.stxt.pdf.model.Check;
 import dev.stxt.pdf.model.PdfA;
+import dev.stxt.pdf.resources.Resources;
+import dev.stxt.pdf.stxt.DocumentReader;
+import dev.stxt.press.Press;
 import dev.stxt.press.http.PressServer;
 
 /**
@@ -66,6 +72,18 @@ class CliTest {
                 new PrintStream(err, true, StandardCharsets.UTF_8), Map.of(), dir);
     }
 
+    /**
+     * {@return the PDF of the letter of {@code stxt-pdf} as the engine writes it with the producer of the service} It
+     * is its {@code output.pdf} but for the producer, which the examples of the engine do not have.
+     */
+    private static byte[] engineLetter() throws Exception {
+        Converter converter = Converter.builder().resources(new Resources(RESOURCES)).producer(Press.producer())
+                .styles(Files.readString(LETTER.resolve("styles.stxt"))).build();
+        ByteArrayOutputStream pdf = new ByteArrayOutputStream();
+        converter.toPdf(new DocumentReader().read(Files.readString(LETTER.resolve("en/input.stxt"))), pdf);
+        return pdf.toByteArray();
+    }
+
     private String err() {
         return err.toString(StandardCharsets.UTF_8);
     }
@@ -82,9 +100,21 @@ class CliTest {
                 LETTER.resolve("styles.stxt").toString(), "-o", "letter.pdf");
 
         assertEquals(Cli.OK, code, this::err);
-        assertArrayEquals(Files.readAllBytes(LETTER.resolve("en/output.pdf")),
-                Files.readAllBytes(dir.resolve("letter.pdf")));
+        assertArrayEquals(engineLetter(), Files.readAllBytes(dir.resolve("letter.pdf")));
         assertEquals("", out());
+    }
+
+    @Test
+    void renderNamesTheServiceAsProducer() throws Exception {
+        int code = run("render", LETTER.resolve("en/input.stxt").toString(), "--styles",
+                LETTER.resolve("styles.stxt").toString(), "-o", "letter.pdf");
+
+        assertEquals(Cli.OK, code, this::err);
+        try (PDDocument pdf = Loader.loadPDF(dir.resolve("letter.pdf").toFile())) {
+            assertEquals(Press.producer(), pdf.getDocumentInformation().getProducer());
+        }
+        String engine = Pattern.quote("(stxt-pdf " + Converter.version() + ")");
+        assertTrue(Press.producer().matches("stxt-press( \\S+)? " + engine), Press.producer());
     }
 
     @Test
@@ -94,7 +124,7 @@ class CliTest {
         int code = run("render", "-", "--styles", LETTER.resolve("styles.stxt").toString(), "--output", "-");
 
         assertEquals(Cli.OK, code, this::err);
-        assertArrayEquals(Files.readAllBytes(LETTER.resolve("en/output.pdf")), out.toByteArray());
+        assertArrayEquals(engineLetter(), out.toByteArray());
     }
 
     @Test
