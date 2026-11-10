@@ -84,9 +84,10 @@ public final class ServerFile {
     private final boolean warmUp;
     private final boolean lazyInit;
     private final Path templateFolder;
+    private final String producer;
 
     private ServerFile(Path file, ServerConfig http, Resources resources, Limits limits, boolean warmUp,
-            boolean lazyInit, Path templateFolder) {
+            boolean lazyInit, Path templateFolder, String producer) {
         this.file = file;
         this.http = http;
         this.resources = resources;
@@ -94,6 +95,7 @@ public final class ServerFile {
         this.warmUp = warmUp;
         this.lazyInit = lazyInit;
         this.templateFolder = templateFolder;
+        this.producer = producer;
     }
 
     /**
@@ -162,7 +164,8 @@ public final class ServerFile {
      */
     public static ServerFile defaults(Path workingDirectory) {
         return new ServerFile(null, ServerConfig.DEFAULT,
-                new Resources(workingDirectory.resolve(Resources.DEFAULT_ROOT)), Limits.DEFAULT, true, false, null);
+                new Resources(workingDirectory.resolve(Resources.DEFAULT_ROOT)), Limits.DEFAULT, true, false, null,
+                Press.producer());
     }
 
     /**
@@ -238,25 +241,33 @@ public final class ServerFile {
     }
 
     /**
+     * {@return the producer that the PDFs of this configuration name: {@code Producer}, or by default
+     * {@link Press#producer()}}
+     */
+    public String producer() {
+        return producer;
+    }
+
+    /**
      * {@return a converter with the resources and the limits of this configuration, for jobs run one at a time, such as
      * those of the commands {@code render} and {@code print}} It reads only the fonts and the images a document uses,
      * when it converts it: the warm up, which reads the whole resources folder, is of the server ({@link #start()}).
-     * Its PDFs name the service as their producer ({@link Press#producer()}), as those of the server do.
+     * Its PDFs name {@link #producer()} as their producer, as those of the server do.
      */
     public Converter converter() {
-        return Converter.builder().resources(resources).limits(limits).producer(Press.producer()).build();
+        return Converter.builder().resources(resources).limits(limits).producer(producer).build();
     }
 
     /**
      * {@return the shared converter of the server} With {@link #warmUp()} it reads the whole resources folder when it
      * is created, so that the first request does not.
-     * Its PDFs name the service as their producer ({@link Press#producer()}).
+     * Its PDFs name {@link #producer()} as their producer.
      *
      * @throws dev.stxt.pdf.resources.ResourceException with {@link #warmUp()}, if the fonts cannot be read
      */
     private Converter serverConverter() {
         return Converter.builder().resources(resources).limits(limits).preloadResources(warmUp)
-                .producer(Press.producer()).build();
+                .producer(producer).build();
     }
 
     /**
@@ -293,7 +304,8 @@ public final class ServerFile {
     @Override
     public String toString() {
         return "ServerFile[file=" + file + ", http=" + http + ", limits=" + limits + ", warmUp="
-                + warmUp + ", lazyInit=" + lazyInit + ", templateFolder=" + templateFolder + "]";
+                + warmUp + ", lazyInit=" + lazyInit + ", templateFolder=" + templateFolder + ", producer=" + producer
+                + "]";
     }
 
     private static SchemaProviderMemory loadSchema() {
@@ -364,7 +376,7 @@ public final class ServerFile {
             }
             Node templates = server.getChild("Template folder");
             return new ServerFile(file, http, resources(server), limits, warmUp, lazyInit,
-                    templates == null ? null : folder(templates));
+                    templates == null ? null : folder(templates), text(server, "Producer", Press.producer()));
         }
 
         /** {@return the token of the variable {@code Token env} names, or {@code null} without {@code Token env}} */

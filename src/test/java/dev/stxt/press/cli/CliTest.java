@@ -118,6 +118,20 @@ class CliTest {
     }
 
     @Test
+    void renderNamesTheProducerOfServerStxt() throws Exception {
+        Files.writeString(dir.resolve("server.stxt"), "Server (dev.stxt.press):\n    Resource folder: " + RESOURCES
+                + "\n    Producer: ACME invoicing\n");
+
+        int code = run("render", LETTER.resolve("en/input.stxt").toString(), "--styles",
+                LETTER.resolve("styles.stxt").toString(), "-o", "letter.pdf");
+
+        assertEquals(Cli.OK, code, this::err);
+        try (PDDocument pdf = Loader.loadPDF(dir.resolve("letter.pdf").toFile())) {
+            assertEquals("ACME invoicing", pdf.getDocumentInformation().getProducer());
+        }
+    }
+
+    @Test
     void renderReadsStdinAndWritesStdout() throws Exception {
         stdin = Files.readAllBytes(LETTER.resolve("en/input.stxt"));
 

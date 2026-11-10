@@ -31,6 +31,8 @@ Schema (@stxt.schema): dev.stxt.press
 				Max: 1
 			Child: Template options
 				Max: 1
+			Child: Producer
+				Max: 1
 	Node: Host
 		Type: INLINE
 		Description: The address the server listens on. By default 127.0.0.1, only this machine; 0.0.0.0 for every address of the machine.
@@ -64,6 +66,9 @@ Schema (@stxt.schema): dev.stxt.press
 	Node: Template folder
 		Type: INLINE
 		Description: The templates folder of /print and /templates. Without it, the server has no templates.
+	Node: Producer
+		Type: INLINE
+		Description: The software that the PDFs of the server and of the commands render and print name as their producer, in their document information and their XMP. By default stxt-press and stxt-pdf with their versions, such as stxt-press 0.1.0 (stxt-pdf 0.14.0).
 
 	Node: Routes
 		Type: GROUP

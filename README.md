@@ -30,7 +30,8 @@ java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice
 
 `/print` and `/render` answer with a PDF (`?format=pdf`, the default), one SVG per page (`?format=svg`, as
 `{"pages": [...]}`, with `&debug=true` for the outlines of the boxes) or the filled document (`?format=stxt`).
-Every PDF names its producer, `stxt-press 0.1.0 (stxt-pdf 0.14.0)`, in its document information and its XMP.
+Every PDF names its producer in its document information and its XMP: `stxt-press 0.1.0 (stxt-pdf 0.14.0)`, or the
+`Producer` of `server.stxt`.
 
 ```bash
 curl -o invoice.pdf http://127.0.0.1:8080/print/invoices/invoice
@@ -205,6 +206,7 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 | `Routes` | all on | `Editor`, `Render` and `Templates`: the index and the editor (with `/fonts`), `/render` and `/templates` on or off |
 | `Limits` | — | `Max body size` (bytes, 2 MiB), `Timeout` (seconds, 30), `Concurrent conversions` (4), and the limits of the engine: `Max pages`, `Max image pixels`, `Max SVG elements`, `Max SVG depth`, `Max PDF bytes` |
 | `Template options` | — | `PDF UA` (`1` or `2`), `PDF A` (`A2B`, `A2A`, `A3B`, `A3A`) and one `Exclude` for each check not made, as the `options` of `/render` |
+| `Producer` | `stxt-press 0.1.0 (stxt-pdf 0.14.0)` | The producer that the PDFs of the server and of `render` and `print` name |
 
 Relative paths are relative to the folder of `server.stxt`, so a server moves with its configuration. The token is not
 written in the file, only the name of its variable.

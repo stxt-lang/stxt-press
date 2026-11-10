@@ -127,6 +127,7 @@ class ServerFileTest {
         assertTrue(defaults.warmUp());
         assertFalse(defaults.lazyInit());
         assertNull(defaults.templateFolder());
+        assertEquals(Press.producer(), defaults.producer());
     }
 
     @Test
@@ -140,6 +141,7 @@ class ServerFileTest {
         assertTrue(file.warmUp());
         assertFalse(file.lazyInit());
         assertNull(file.templateFolder());
+        assertEquals(Press.producer(), file.producer());
     }
 
     @Test
@@ -165,6 +167,7 @@ class ServerFileTest {
                     Warm up: false
                     Resource folder: res
                     Template folder: templates
+                    Producer: ACME invoicing
                     Routes:
                         Editor: false
                         Render: false
@@ -192,6 +195,7 @@ class ServerFileTest {
         assertFalse(file.warmUp());
         assertEquals(config.resolve("res").toAbsolutePath().normalize(), file.resources().root());
         assertEquals(config.resolve("templates").toAbsolutePath().normalize(), file.templateFolder());
+        assertEquals("ACME invoicing", file.producer());
     }
 
     @Test
@@ -255,6 +259,7 @@ class ServerFileTest {
             number too large for a long      | CONFIG_VALUE_NOT_VALID   | 3 | '    Limits:\\n        Timeout: 99999999999999999999'
             limit of 0                       | CONFIG_VALUE_NOT_VALID   | 3 | '    Limits:\\n        Max pages: 0'
             empty host                       | CONFIG_VALUE_NOT_VALID   | 2 | '    Host:'
+            empty producer                   | CONFIG_VALUE_NOT_VALID   | 2 | '    Producer:'
             PDF UA that does not exist       | INVALID_VALUE            | 3 | '    Template options:\\n        PDF UA: 3'
             PDF UA 2 with PDF A              | CONFIG_CONFLICT          | 4 | '    Template options:\\n        PDF UA: 2\\n        PDF A: A2B'
             repeated Exclude                 | CONFIG_VALUE_NOT_VALID   | 4 | '    Template options:\\n        Exclude: CONTRAST\\n        Exclude: CONTRAST'
@@ -407,10 +412,22 @@ class ServerFileTest {
 
     @Test
     void itsPdfsNameTheServiceAsProducer() throws Exception {
+        assertEquals(Press.producer(), producerOfRender(read(server(""))));
+    }
+
+    @Test
+    void itsPdfsNameTheProducerOfTheFile() throws Exception {
+        assertEquals("ACME invoicing", producerOfRender(read(server("    Producer: ACME invoicing\n"))));
+    }
+
+    // ---- Helpers
+
+    /** {@return the producer of the PDF that {@code POST /render} gives for a short document, on a server of {@code file}} */
+    private static String producerOfRender(ServerFile file) throws Exception {
         String document = "Document (dev.stxt.pdf):\\n    Language: en\\n    Title: Producer\\n    Page:\\n"
                 + "        Paper: A4\\n    Section:\\n        Paragraph: Hello\\n            Typography:\\n"
                 + "                Font: IBM Plex Sans\\n                Size: 11\\n";
-        try (PressServer server = read(server("")).start()) {
+        try (PressServer server = file.start()) {
             HttpRequest request = HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + server.address().getPort()
                     + "/render")).POST(HttpRequest.BodyPublishers.ofString("{\"document\": \"" + document + "\"}"))
                     .build();
@@ -418,12 +435,10 @@ class ServerFileTest {
 
             assertEquals(200, response.statusCode(), () -> new String(response.body(), StandardCharsets.UTF_8));
             try (PDDocument pdf = Loader.loadPDF(response.body())) {
-                assertEquals(Press.producer(), pdf.getDocumentInformation().getProducer());
+                return pdf.getDocumentInformation().getProducer();
             }
         }
     }
-
-    // ---- Helpers
 
     /** {@return a server on any free port of 127.0.0.1, with the fonts of the engine and {@code more}} */
     private static String server(String more) {
