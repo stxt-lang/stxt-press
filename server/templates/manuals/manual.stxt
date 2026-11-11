@@ -179,7 +179,7 @@ Document (dev.stxt.pdf):
 				Style: code
 				Text:
 					Typography:
-						Preformatted: true
+						Preformatted: keep
 					Content >>
 						> Settings > Service > Terminals
 

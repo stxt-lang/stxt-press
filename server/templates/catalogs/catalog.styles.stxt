@@ -92,7 +92,7 @@ Styles (dev.stxt.pdf):
 			Padding: 10 12 12 12
 	For style: spread
 		Horizontal: justify
-		Vertical: end
+		Vertical: bottom
 	For style: product
 		Typography:
 			Size: 13

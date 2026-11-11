@@ -162,7 +162,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Direction
 				Max: 1
-			Child: Wrap
+			Child: Wrap items
 				Max: 1
 			Child: Gap
 				Max: 1
@@ -467,7 +467,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Separator color
 				Max: 1
-			Child: Balance
+			Child: Balance columns
 				Max: 1
 			Child: Block
 			Child: Stack
@@ -1033,7 +1033,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Direction
 				Max: 1
-			Child: Wrap
+			Child: Wrap items
 				Max: 1
 			Child: Gap
 				Max: 1
@@ -1065,7 +1065,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Separator color
 				Max: 1
-			Child: Balance
+			Child: Balance columns
 				Max: 1
 			Child: Marker
 				Max: 1
@@ -1126,7 +1126,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Direction
 				Max: 1
-			Child: Wrap
+			Child: Wrap items
 				Max: 1
 			Child: Gap
 				Max: 1
@@ -1158,7 +1158,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Separator color
 				Max: 1
-			Child: Balance
+			Child: Balance columns
 				Max: 1
 			Child: Marker
 				Max: 1
@@ -1219,7 +1219,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Direction
 				Max: 1
-			Child: Wrap
+			Child: Wrap items
 				Max: 1
 			Child: Gap
 				Max: 1
@@ -1251,7 +1251,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Separator color
 				Max: 1
-			Child: Balance
+			Child: Balance columns
 				Max: 1
 			Child: Marker
 				Max: 1
@@ -1552,7 +1552,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: landscape
 	Node: Content
 		Type: BLOCK
-		Description: Block text. A single line break counts as a space; a blank line is an error, except in a preformatted Text (Preformatted: true or wrap). In a Barcode, the data, with its lines as they are.
+		Description: Block text. A single line break counts as a space; a blank line is an error, except in a preformatted Text (Preformatted: keep or wrap). In a Barcode, the data, with its lines as they are.
 
 	# Box
 
@@ -1631,8 +1631,12 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Type: BOOLEAN
 		Description: Whether the line breaking may split a word at the end of a line with a hyphen, following the hyphenation patterns of the language of Language (the engine has them for es, ca, en-US, en-GB, de, fr, it, nl and pt; any other language is an error). By default, false. Inherited. A soft hyphen (U+00AD) in the text is always a break point, with or without Hyphenate, and is only painted where the word is split. So is a hyphen written between two letters or digits (REF-2026-0098): the line may end after it, with no other hyphen.
 	Node: Break long words
-		Type: BOOLEAN
-		Description: Whether a part of a word that cannot be split further (it has no hyphen, written or soft, and Hyphenate does not split it) and is wider than a whole line of its box is cut at the last character that fits, with no hyphen, as many times as needed. By default, false: such a word is an error. Inherited. It is a last resort: a word that fits in a line of its own moves to the next line and is never cut. It does not change the narrowest width of the text. It has no effect on a preformatted text, where it is an error if the text itself declares it.
+		Type: ENUM
+		Description: What is done with a part of a word that cannot be split further (it has no hyphen, written or soft, and Hyphenate does not split it) and is wider than a whole line of its box: never (by default; such a word is an error), new-line (it is cut at the last character that fits, with no hyphen, as many times as needed, and starts a line of its own) or same-line (cut the same way, it starts in the current line, after the words before it). Inherited. It is a last resort: a word that fits in a line of its own moves to the next line and is never cut. It does not change the narrowest width of the text. It has no effect on a preformatted text, where it is an error if the text itself declares it.
+		Values:
+			Value: never
+			Value: new-line
+			Value: same-line
 	Node: First line indent
 		Description: How much later the first line of the text starts, a length (without percentages): that line is that much shorter, and the text is aligned in what is left of it. By default, 0. Inherited: it is usually given with For element: Paragraph, which leaves headings and cells alone. Only the first line of the paragraph is indented: not the one after a forced line break, nor the first one of the part of a paragraph that goes on in another page or column. It can be negative (a hanging indent): the first line starts that much before the others, in the left Padding of its box, which has to be at least as large. It does not go in a Paragraph with Drop cap.
 	Node: Markup
@@ -1662,14 +1666,14 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Whether the text is measured and painted with the kerning pairs of the font, which adjust the space between two letters (AV, To). By default, false. Inherited. The pairs come from the kern feature of the GPOS table or, in a font without it, from the kern table; a pair does not cross a space or the boundary between two runs. It does not change the text that is read or copied.
 	Node: Preformatted
 		Type: ENUM
-		Description: Preformatted text: false (by default; spaces and line breaks count as a space), true (keeps the spaces and line breaks, and does not break lines: one wider than the box is an error) or wrap (like true, but breaks lines that are too wide between words). Preformatted lines are not justified.
+		Description: Preformatted text: none (by default; spaces and line breaks count as a space), keep (keeps the spaces and line breaks, and does not break lines: one wider than the box is an error) or wrap (like keep, but breaks lines that are too wide between words). Preformatted lines are not justified.
 		Values:
-			Value: false
-			Value: true
+			Value: none
+			Value: keep
 			Value: wrap
 	Node: Tab size
 		Type: INTEGER
-		Description: With Preformatted: true or wrap, the width of a tab: each one leads to the next column that is a multiple of this number of characters. By default, 4.
+		Description: With Preformatted: keep or wrap, the width of a tab: each one leads to the next column that is a multiple of this number of characters. By default, 4.
 	Node: Numbered
 		Type: BOOLEAN
 		Description: Whether the headings carry a number (1, 1.1, 1.1.1...), which is written before the title and is given by {number of: id}, the tables of contents and the PDF bookmarks. By default, false. Inherited: For element: Document turns it on in all of them, a For element rule in those of one level and, in the Typography of a heading, only in that one. Headings whose Numbered is false are neither numbered nor counted. A Figure is numbered by default, and only Numbered: false declared in it, or in a rule that reaches it, leaves it without a number.
@@ -1731,7 +1735,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Values:
 			Value: horizontal
 			Value: vertical
-	Node: Wrap
+	Node: Wrap items
 		Type: BOOLEAN
 		Description: Whether the items that do not fit in a line go to the next one, so that they are distributed over several lines. By default, false.
 	Node: Split items
@@ -1741,13 +1745,15 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Spacing: in Stack and Grid, one value, or two (rows columns); in Columns, one value, the gap between columns.
 	Node: Line distribution
 		Type: ENUM
-		Description: Distribution of the lines in the container: start, end, center, justify (the first and the last at the edges), around or stretch. Only with Wrap: true.
+		Description: Distribution of the lines in the container: at one of its sides (top or bottom in a horizontal Stack, whose lines go from top to bottom; left or right in a vertical one, whose lines go from left to right), center, justify (the first and the last at the edges), distribute (equal gaps, also at the edges) or stretch. Only with Wrap items: true.
 		Values:
-			Value: start
-			Value: end
+			Value: top
+			Value: bottom
+			Value: left
+			Value: right
 			Value: center
 			Value: justify
-			Value: around
+			Value: distribute
 			Value: stretch
 	Node: Grow
 		Description: Share of the leftover space that the item receives.
@@ -1779,25 +1785,23 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Only in a Table (from a rule of Styles, the other boxes ignore it): with true, the border between two cells is drawn once, centered on the line between them, with the wider of their two borders (and its color); the outer border of the table goes inside it. False by default.
 	Node: Horizontal
 		Type: ENUM
-		Description: Horizontal alignment or distribution. In a Grid, the alignment of all the items in their area, and in an Area, that of one (start, end, center or stretch). In a Stack, if its main axis is the horizontal one, the distribution of the leftover space (start, end, center, justify, around or distribute); if not, the alignment of all the items (start, end, center or stretch). In an Item, the alignment of one, only if it is the cross axis of its Stack.
+		Description: Horizontal alignment or distribution. In a Grid, the alignment of all the items in their area, and in an Area, that of one (left, right, center or stretch). In a Stack, if its main axis is the horizontal one, the distribution of the leftover space (left, right, center, justify or distribute); if not, the alignment of all the items (left, right, center or stretch). In an Item, the alignment of one, only if it is the cross axis of its Stack.
 		Values:
-			Value: start
-			Value: end
+			Value: left
+			Value: right
 			Value: center
 			Value: stretch
 			Value: justify
-			Value: around
 			Value: distribute
 	Node: Vertical
 		Type: ENUM
-		Description: Vertical alignment or distribution, like Horizontal: in a Grid and in an Area, the alignment in the area; in a Stack, the distribution if its main axis is the vertical one and, if not, the alignment of the items; in an Item, the alignment of one, only if it is the cross axis of its Stack. In a Cell, where its content goes in the height its row leaves over, like the distribution of a vertical Stack: start (by default), center or end; the box of the cell stays stretched to its row.
+		Description: Vertical alignment or distribution, like Horizontal: in a Grid and in an Area, the alignment in the area; in a Stack, the distribution if its main axis is the vertical one and, if not, the alignment of the items; in an Item, the alignment of one, only if it is the cross axis of its Stack. In a Cell, where its content goes in the height its row leaves over, like the distribution of a vertical Stack: top (by default), center or bottom; the box of the cell stays stretched to its row.
 		Values:
-			Value: start
-			Value: end
+			Value: top
+			Value: bottom
 			Value: center
 			Value: stretch
 			Value: justify
-			Value: around
 			Value: distribute
 
 	# List
@@ -1851,7 +1855,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Width of the line between the columns of a Columns, centered in Gap, which must be at least as wide.
 	Node: Separator color
 		Description: Color of the line between columns. By default, the Color of the text.
-	Node: Balance
+	Node: Balance columns
 		Type: BOOLEAN
 		Description: Distribution among the columns of a Columns: with true (by default) the columns of the last fragment are balanced; with false they are filled in order.
 
