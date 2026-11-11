@@ -121,7 +121,7 @@ Document (dev.stxt.pdf):
 					Cell: Qty
 					Cell: Price
 					Cell: Amount
-			Body:
+			Body rows:
 				Row: [lines]
 					Cell: <ref>
 					Cell: <description>

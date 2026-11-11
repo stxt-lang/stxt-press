@@ -184,7 +184,7 @@ Document (dev.stxt.pdf):
 				Style: lead
 			Columns:
 				Id: community
-				Count: 2
+				Column count: 2
 				Gap: 26
 				Separator: 0.5
 				Separator color: rule
@@ -220,7 +220,7 @@ Document (dev.stxt.pdf):
 						Cell: ${year}
 						Cell: ${previous_year}
 						Cell: Change
-				Body:
+				Body rows:
 					Row: [accounts]
 						Cell: <item>
 							Row header: true
@@ -245,7 +245,7 @@ Document (dev.stxt.pdf):
 						Cell: Project
 						Cell: Investment (€k)
 						Cell: Capacity
-				Body:
+				Body rows:
 					Row: [investments]
 						Cell: <project>
 						Cell: <amount>
@@ -285,7 +285,7 @@ Document (dev.stxt.pdf):
 					Row:
 						Cell: Indicator
 						Cell: [years]
-				Body:
+				Body rows:
 					Row: [rows]
 						Cell: <name>
 							Row header: true
@@ -308,7 +308,7 @@ Document (dev.stxt.pdf):
 						Cell: Name
 						Cell: Position
 						Cell: In office since
-				Body:
+				Body rows:
 					Row: [board]
 						Cell: <name>
 							Row header: true
@@ -336,7 +336,7 @@ Document (dev.stxt.pdf):
 						Cell: Q2
 						Cell: Q3
 						Cell: Q4
-				Body:
+				Body rows:
 					Row: [schedule]
 						Cell: <activity>
 							Row header: true

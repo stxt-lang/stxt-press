@@ -208,7 +208,7 @@ Document (dev.stxt.pdf):
 							Cell: Terminal
 							Cell: Function
 							Cell: Usual wire
-					Body:
+					Body rows:
 						Row:
 							Cell: L
 								Row header: true
@@ -284,7 +284,7 @@ Document (dev.stxt.pdf):
 							Cell: Time slot
 							Cell: Monday to Friday
 							Cell: Weekend
-					Body:
+					Body rows:
 						Row: [schedule]
 							Cell: <slot>
 								Row header: true
@@ -293,7 +293,7 @@ Document (dev.stxt.pdf):
 			Heading 2:
 				Text: Troubleshooting
 			Markdown:
-				Table columns: auto
+				Table column sizes: auto
 				Content >>
 					| Symptom | Probable cause | What to do |
 					|---------|----------------|-----------|
@@ -311,7 +311,7 @@ Document (dev.stxt.pdf):
 				Table:
 					Id: specs
 					Column sizes: 150 *
-					Body:
+					Body rows:
 						Row: [specifications]
 							Cell: <name>
 								Row header: true
@@ -322,7 +322,7 @@ Document (dev.stxt.pdf):
 			Heading 2:
 				Text: Warranty and support
 			Columns:
-				Count: 2
+				Column count: 2
 				Gap: 26
 				Separator: 0.5
 				Separator color: #BFD9D7
@@ -393,9 +393,9 @@ Document (dev.stxt.pdf):
 				Style: list-label
 			Table of contents:
 				Id: figures
-				Of: figures
+				Entries: figures
 			Text: Tables
 				Style: list-label
 			Table of contents:
 				Id: tables
-				Of: tables
+				Entries: tables

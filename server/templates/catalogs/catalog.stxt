@@ -168,7 +168,7 @@ Document (dev.stxt.pdf):
 						Cell: Character
 						Cell: Origin
 						Cell: Finishes
-				Body:
+				Body rows:
 					Row: [woods]
 						Cell: <wood>
 							Row header: true

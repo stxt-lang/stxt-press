@@ -35,7 +35,7 @@ Styles (dev.stxt.pdf):
 		Box:
 			Margin: 0 0 6 0
 	For element: Image
-		Fit: fill
+		Fit: crop
 	For element: Cell
 		Box:
 			Padding: 6 8

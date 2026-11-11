@@ -99,7 +99,7 @@ Document (dev.stxt.pdf):
 			Id: clauses
 			Number markers: decimal lower-alpha lower-roman
 			Typography:
-				Line breaking: balanced
+				Line breaking: optimal
 			Content >>
 				1. **Purpose.** The Studio undertakes to design and deliver to the Client ${purpose}, in accordance with the technical proposal of ${proposal_date}, which forms part of this contract as Appendix {number of: annex-title}.
 
@@ -157,7 +157,7 @@ Document (dev.stxt.pdf):
 						Cell: Milestone and deliverable
 						Cell: Expected date
 						Cell: Amount
-				Body:
+				Body rows:
 					Row: [milestones]
 						Cell: <number>
 						Cell: <milestone>

@@ -60,7 +60,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Page number format
 				Max: 1
-			Child: Start
+			Child: First number
 				Max: 1
 			Child: Inherit page overlays
 				Max: 1
@@ -119,7 +119,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Side
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Block
 			Child: Stack
@@ -199,9 +199,9 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Gap
 				Max: 1
-			Child: Areas
+			Child: Area map
 				Max: 1
-			Child: Flow
+			Child: Fill order
 				Max: 1
 			Child: Horizontal
 				Max: 1
@@ -232,7 +232,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Rotate
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 	Node: Paragraph
 		Type: INLINE
@@ -254,7 +254,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Rotate
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Drop cap
 				Max: 1
@@ -274,7 +274,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Typography
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Text
 				Min: 1
@@ -294,7 +294,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Typography
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Text
 				Min: 1
@@ -314,7 +314,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Typography
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Text
 				Min: 1
@@ -334,7 +334,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Typography
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Text
 				Min: 1
@@ -354,7 +354,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Typography
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Text
 				Min: 1
@@ -374,7 +374,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Typography
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Text
 				Min: 1
@@ -398,7 +398,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Marker image
 				Max: 1
-			Child: Start
+			Child: First number
 				Max: 1
 			Child: List item
 				Min: 1
@@ -443,7 +443,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Footnote
 	Node: Columns
 		Type: GROUP
-		Description: Block in columns: its content fills the first column, continues in the next one and, at the end of the page, continues in the first column of the next page. Count, Min column width or both set the columns.
+		Description: Block in columns: its content fills the first column, continues in the next one and, at the end of the page, continues in the first column of the next page. Column count, Min column width or both set the columns.
 		Children:
 			Child: Id
 				Max: 1
@@ -457,7 +457,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Break
 				Max: 1
-			Child: Count
+			Child: Column count
 				Max: 1
 			Child: Min column width
 				Max: 1
@@ -753,7 +753,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 	Node: Table
 		Type: GROUP
-		Description: Table: its rows (Row) in Header rows, Body and Footer rows, in that order, over the columns of Column sizes, its own or from a rule of Styles, which is required. When it breaks, Header rows and Footer rows are repeated on each page.
+		Description: Table: its rows (Row) in Header rows, Body rows and Footer rows, in that order, over the columns of Column sizes, its own or from a rule of Styles, which is required. When it breaks, Header rows and Footer rows are repeated on each page.
 		Children:
 			Child: Id
 				Max: 1
@@ -777,7 +777,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Header rows
 				Max: 1
-			Child: Body
+			Child: Body rows
 				Min: 1
 				Max: 1
 			Child: Footer rows
@@ -788,7 +788,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Children:
 			Child: Row
 				Min: 1
-	Node: Body
+	Node: Body rows
 		Type: GROUP
 		Description: Body rows of a Table.
 		Children:
@@ -836,6 +836,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Trim margins
 				Max: 1
+			Child: Vertical
+				Max: 1
 			Child: Block
 			Child: Stack
 			Child: Grid
@@ -872,16 +874,16 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Number markers
 				Max: 1
-			Child: Table columns
+			Child: Table column sizes
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Content
 				Min: 1
 				Max: 1
 	Node: Table of contents
 		Type: GROUP
-		Description: Automatic table of contents: one entry per heading of the levels in Levels or, with Of, per figure or per table (the Figure elements of that counter), in document order, with its title, a leader and the page. A block; the entries are styled with the For element rules 'TOC 1' to 'TOC 6' (those of figures and tables, 'TOC 1').
+		Description: Automatic table of contents: one entry per heading of the levels in Levels or, with Entries, per figure or per table (the Figure elements of that counter), in document order, with its title, a leader and the page. A block; the entries are styled with the For element rules 'TOC 1' to 'TOC 6' (those of figures and tables, 'TOC 1').
 		Children:
 			Child: Id
 				Max: 1
@@ -893,7 +895,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Break
 				Max: 1
-			Child: Of
+			Child: Entries
 				Max: 1
 			Child: Levels
 				Max: 1
@@ -901,7 +903,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 	Node: Figure
 		Type: GROUP
-		Description: A figure with a caption: exactly one element (an Image, a Barcode, a Table or a Block) and its Caption, below it (above a Table) or where Caption position says. A block that is not split across pages (a Table inside is, with the caption on its first or last part). It is numbered with the counter of the figures or, with a Table inside, of the tables (Figure counter changes it): the number, or its Number label, goes before the caption, {number of: id} gives it and a Table of contents with Of: figures or tables lists it. Numbered: false in its Typography, or in a rule that reaches it, leaves it without a number. The image inside carries its Alt; with a Block, the Figure carries its own.
+		Description: A figure with a caption: exactly one element (an Image, a Barcode, a Table or a Block) and its Caption, below it (above a Table) or where Caption position says. A block that is not split across pages (a Table inside is, with the caption on its first or last part). It is numbered with the counter of the figures or, with a Table inside, of the tables (Figure counter changes it): the number, or its Number label, goes before the caption, {number of: id} gives it and a Table of contents with Entries: figures or tables lists it. Numbered: false in its Typography, or in a rule that reaches it, leaves it without a number. The image inside carries its Alt; with a Block, the Figure carries its own.
 		Children:
 			Child: Id
 				Max: 1
@@ -923,7 +925,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Side
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Caption
 				Min: 1
@@ -964,17 +966,17 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Fit
 				Max: 1
-			Child: Pdf page
+			Child: PDF page
 				Max: 1
 			Child: Rotate
 				Max: 1
 			Child: Side
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 	Node: Barcode
 		Type: INLINE
-		Description: QR code or barcode that the engine generates from its data, in the Format qr (by default), code-128 or ean-13. The data goes in the value (Barcode: https://example.com/verify/1234) or, if it has several lines, in a Content >> block, one of the two. It is laid out as an Image: its natural size comes from its modules (0.5 mm in a QR code; 0.33 mm by 22.85 mm in the others), with the quiet zone (Quiet zone) included; a QR code is drawn square and centered, and the others are stretched to the box. Alt is required. The modules have the Color of the Typography (only Color is allowed in its Typography) and the background is that of the Box.
+		Description: QR code or barcode that the engine generates from its data, in the Barcode format qr (by default), code-128 or ean-13. The data goes in the value (Barcode: https://example.com/verify/1234) or, if it has several lines, in a Content >> block, one of the two. It is laid out as an Image: its natural size comes from its modules (0.5 mm in a QR code; 0.33 mm by 22.85 mm in the others), with the quiet zone (Quiet zone) included; a QR code is drawn square and centered, and the others are stretched to the box. Alt is required. The modules have the Color of the Typography (only Color is allowed in its Typography) and the background is that of the Box.
 		Children:
 			Child: Id
 				Max: 1
@@ -990,7 +992,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Alt
 				Max: 1
-			Child: Format
+			Child: Barcode format
 				Max: 1
 			Child: Error correction
 				Max: 1
@@ -1000,7 +1002,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Side
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Content
 				Max: 1
@@ -1021,7 +1023,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Color with a name: the name and the color separated by a space (Named color: brand #12315A). The name, in lowercase letters and digits with words joined by hyphens, is then written wherever a color goes (Color, Border color, Background, also inside linear, and Separator color). If the document and the separate styles document declare the same name, the document wins.
 	Node: For element
 		Type: INLINE
-		Description: Rule for all the elements of a type; the value is its name (Text, Block, Heading 1...), one generated by the engine (Code block, the code block of a Markdown; TOC 1 to 6, the entries of a Table of contents; Footnotes, the footnote area at the bottom of the page), a position within a table (Header cell, Body cell, Footer cell, Odd row cell, Even row cell) or Document, which only accepts Typography and is the typography that all boxes inherit. Besides the groups, it accepts the properties of how an element looks and distributes its content (Gap, Column sizes, Fit, Marker...) that the element of its type can declare; Grow, Shrink and Base size are those of the Item that wraps the element. A For element, For style or For column written inside it is a nested rule: it applies to the elements it names that are inside an element this rule applies to.
+		Description: Rule for all the elements of a type; the value is its name (Text, Block, Heading 1...), one generated by the engine (Code block, Block quote and Divider, the code blocks, the block quotes and the horizontal rules of a Markdown; TOC 1 to 6, the entries of a Table of contents; Footnote area, the area of the notes at the bottom of the page), a position within a table (Header cell, Body cell, Footer cell, Odd row cell, Even row cell) or Document, which only accepts Typography and is the typography that all boxes inherit. Besides the groups, it accepts the properties of how an element looks and distributes its content (Gap, Column sizes, Fit, Marker...) that the element of its type can declare; Grow, Shrink and Base size are those of the Item that wraps the element. A For element, For style or For column written inside it is a nested rule: it applies to the elements it names that are inside an element this rule applies to.
 		Children:
 			Child: Box
 				Max: 1
@@ -1047,15 +1049,15 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Row sizes
 				Max: 1
-			Child: Areas
+			Child: Area map
 				Max: 1
-			Child: Flow
+			Child: Fill order
 				Max: 1
 			Child: Split rows
 				Max: 1
 			Child: Column align
 				Max: 1
-			Child: Count
+			Child: Column count
 				Max: 1
 			Child: Min column width
 				Max: 1
@@ -1071,7 +1073,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Fit
 				Max: 1
-			Child: Format
+			Child: Barcode format
 				Max: 1
 			Child: Error correction
 				Max: 1
@@ -1091,7 +1093,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Side
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Isolate margins
 				Max: 1
@@ -1101,7 +1103,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Number markers
 				Max: 1
-			Child: Table columns
+			Child: Table column sizes
 				Max: 1
 			Child: Grow
 				Max: 1
@@ -1140,15 +1142,15 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Row sizes
 				Max: 1
-			Child: Areas
+			Child: Area map
 				Max: 1
-			Child: Flow
+			Child: Fill order
 				Max: 1
 			Child: Split rows
 				Max: 1
 			Child: Column align
 				Max: 1
-			Child: Count
+			Child: Column count
 				Max: 1
 			Child: Min column width
 				Max: 1
@@ -1164,7 +1166,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Fit
 				Max: 1
-			Child: Format
+			Child: Barcode format
 				Max: 1
 			Child: Error correction
 				Max: 1
@@ -1184,7 +1186,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Side
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Isolate margins
 				Max: 1
@@ -1194,7 +1196,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Number markers
 				Max: 1
-			Child: Table columns
+			Child: Table column sizes
 				Max: 1
 			Child: Grow
 				Max: 1
@@ -1233,15 +1235,15 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Row sizes
 				Max: 1
-			Child: Areas
+			Child: Area map
 				Max: 1
-			Child: Flow
+			Child: Fill order
 				Max: 1
 			Child: Split rows
 				Max: 1
 			Child: Column align
 				Max: 1
-			Child: Count
+			Child: Column count
 				Max: 1
 			Child: Min column width
 				Max: 1
@@ -1257,7 +1259,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Fit
 				Max: 1
-			Child: Format
+			Child: Barcode format
 				Max: 1
 			Child: Error correction
 				Max: 1
@@ -1277,7 +1279,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Side
 				Max: 1
-			Child: Clear
+			Child: Below side boxes
 				Max: 1
 			Child: Isolate margins
 				Max: 1
@@ -1287,7 +1289,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Number markers
 				Max: 1
-			Child: Table columns
+			Child: Table column sizes
 				Max: 1
 			Child: Grow
 				Max: 1
@@ -1307,6 +1309,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Typography
 				Max: 1
 			Child: Break
+				Max: 1
+			Child: Vertical
 				Max: 1
 
 	# Groups
@@ -1372,6 +1376,10 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Line breaking
 				Max: 1
 			Child: Hyphenate
+				Max: 1
+			Child: Break long words
+				Max: 1
+			Child: First line indent
 				Max: 1
 			Child: Markup
 				Max: 1
@@ -1452,10 +1460,10 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: top
 			Value: bottom
 	Node: Offset
-		Description: Offset: top, right, bottom, left (1 to 4 values).
+		Description: Top, right, bottom, left (1 to 4 values). In a Frame, how far the box is shifted from its place in the flow. In an Overlay or a Page overlay, the distance from each edge of its reference container to the box; auto leaves that side free.
 	Node: Layer
 		Type: INTEGER
-		Description: Stacking order within its context. Not declared = auto.
+		Description: Stacking order within its context: the lower ones are painted first, the negative ones beneath the content in flow. Without it, the box is painted in document order, like Layer: 0.
 	Node: Pages
 		Type: ENUM
 		Description: Pages on which a Page overlay appears, counting from 1 within its scope (those of the document if it is a Page overlay of Document, those of the section if it is of a Section): all, every page; first, only the first; not-first, all but the first; odd, the odd ones; even, the even ones; last, only the last.
@@ -1518,7 +1526,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Values:
 			Value: left
 			Value: right
-	Node: Clear
+	Node: Below side boxes
 		Type: BOOLEAN
 		Description: Whether the box goes below the side boxes (Side) before it, instead of running beside them. By default, false. Without a side box before it, it is an error.
 	Node: Drop cap
@@ -1615,13 +1623,18 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Color of the text.
 	Node: Line breaking
 		Type: ENUM
-		Description: Line breaking of the text: simple (greedy, by default: each line is filled as much as it can) or balanced (Knuth-Plass, which balances the lines of the paragraph).
+		Description: Line breaking of the text: simple (greedy, by default: each line is filled as much as it can) or optimal (Knuth-Plass, which chooses the breaks of the whole paragraph at once).
 		Values:
 			Value: simple
-			Value: balanced
+			Value: optimal
 	Node: Hyphenate
 		Type: BOOLEAN
-		Description: Whether the line breaking may split a word at the end of a line with a hyphen, following the hyphenation patterns of the language of Language (the engine has them for es, ca, en-US, en-GB, de, fr, it, nl and pt; any other language is an error). By default, false. Inherited. A soft hyphen (U+00AD) in the text is always a break point, with or without Hyphenate, and is only painted where the word is split.
+		Description: Whether the line breaking may split a word at the end of a line with a hyphen, following the hyphenation patterns of the language of Language (the engine has them for es, ca, en-US, en-GB, de, fr, it, nl and pt; any other language is an error). By default, false. Inherited. A soft hyphen (U+00AD) in the text is always a break point, with or without Hyphenate, and is only painted where the word is split. So is a hyphen written between two letters or digits (REF-2026-0098): the line may end after it, with no other hyphen.
+	Node: Break long words
+		Type: BOOLEAN
+		Description: Whether a part of a word that cannot be split further (it has no hyphen, written or soft, and Hyphenate does not split it) and is wider than a whole line of its box is cut at the last character that fits, with no hyphen, as many times as needed. By default, false: such a word is an error. Inherited. It is a last resort: a word that fits in a line of its own moves to the next line and is never cut. It does not change the narrowest width of the text. It has no effect on a preformatted text, where it is an error if the text itself declares it.
+	Node: First line indent
+		Description: How much later the first line of the text starts, a length (without percentages): that line is that much shorter, and the text is aligned in what is left of it. By default, 0. Inherited: it is usually given with For element: Paragraph, which leaves headings and cells alone. Only the first line of the paragraph is indented: not the one after a forced line break, nor the first one of the part of a paragraph that goes on in another page or column. It can be negative (a hanging indent): the first line starts that much before the others, in the left Padding of its box, which has to be at least as large. It does not go in a Paragraph with Drop cap.
 	Node: Markup
 		Type: ENUM
 		Description: Inline formatting of the text: none (by default; the text is literal) or markdown (interprets **bold**, *italic*, ++underline++, ~~strikethrough~~ and [links](target), with the CommonMark escapes; it does nothing inside a Markdown).
@@ -1720,7 +1733,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: vertical
 	Node: Wrap
 		Type: BOOLEAN
-		Description: Allows the items to be distributed over several lines.
+		Description: Whether the items that do not fit in a line go to the next one, so that they are distributed over several lines. By default, false.
 	Node: Split items
 		Type: BOOLEAN
 		Description: With true (by default), a line of a Stack (in vertical, an item) that does not fit in what is left of the page is broken on that page, each item on its own; with false it moves whole to the next page, and is only broken if it does not fit on a whole page either.
@@ -1749,15 +1762,15 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Size of each column: one track per column.
 	Node: Row sizes
 		Description: Size of each row: one track per row.
-	Node: Areas
+	Node: Area map
 		Type: TEXT
 		Description: One row of the grid per line; names separated by spaces and . for empty cells.
-	Node: Flow
+	Node: Fill order
 		Type: ENUM
-		Description: Direction of the automatic placement of a Grid: horizontal (by default) fills the rows one by one; vertical, the columns.
+		Description: Order of the automatic placement of a Grid: rows (by default) fills the rows one by one; columns, the columns.
 		Values:
-			Value: horizontal
-			Value: vertical
+			Value: rows
+			Value: columns
 	Node: Split rows
 		Type: BOOLEAN
 		Description: With true (by default), a row of a Grid or a Table that does not fit in what is left of the page is broken on that page, each item on its own; with false it moves whole to the next page, and is only broken if it does not fit on a whole page either.
@@ -1777,7 +1790,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: distribute
 	Node: Vertical
 		Type: ENUM
-		Description: Vertical alignment or distribution, like Horizontal: in a Grid and in an Area, the alignment in the area; in a Stack, the distribution if its main axis is the vertical one and, if not, the alignment of the items; in an Item, the alignment of one, only if it is the cross axis of its Stack.
+		Description: Vertical alignment or distribution, like Horizontal: in a Grid and in an Area, the alignment in the area; in a Stack, the distribution if its main axis is the vertical one and, if not, the alignment of the items; in an Item, the alignment of one, only if it is the cross axis of its Stack. In a Cell, where its content goes in the height its row leaves over, like the distribution of a vertical Stack: start (by default), center or end; the box of the cell stays stretched to its row.
 		Values:
 			Value: start
 			Value: end
@@ -1810,7 +1823,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Height
 				Max: 1
-	Node: Start
+	Node: First number
 		Type: INTEGER
 		Description: Number a numbering starts with: that of the first item of a numbered list or, in a Section with Page numbering: restart, that of its first page. By default, 1.
 	Node: Number
@@ -1824,14 +1837,16 @@ Schema (@stxt.schema): dev.stxt.pdf
 	Node: Row header
 		Type: BOOLEAN
 		Description: The cell is the header of its row (the item of an invoice, the time of a timetable): in the tagged PDF it is a TH with Scope Row, and a screen reader announces it with each cell of the row. By default, false. Not valid in Header rows, whose cells are already column headers.
+	Node: Column align
+		Description: Alignment of each column of a Table (left, center, right or justify), one per column: it is the default value of its cells, which the Styles rules and what the cell declares override.
 
 	# Columns
 
-	Node: Count
+	Node: Column count
 		Type: INTEGER
 		Description: Number of columns of a Columns (at least 1); with Min column width, the maximum.
 	Node: Min column width
-		Description: Minimum width of the columns: as many fit as the width allows, up to Count if it is declared.
+		Description: Minimum width of the columns: as many fit as the width allows, up to Column count if it is declared.
 	Node: Separator
 		Description: Width of the line between the columns of a Columns, centered in Gap, which must be at least as wide.
 	Node: Separator color
@@ -1846,18 +1861,18 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Alternative text of an Image or a Barcode: with it, the image is a figure (Figure) of the tagged PDF; without it, an Image is decorative. A Barcode requires it, and so does the image of a Figure. In a Figure with a Block, the alternative text of the whole figure, required.
 	Node: Fit
 		Type: ENUM
-		Description: How an Image fills its box if they have different proportions: inside (by default) fits whole and centered; fill fills the box, centered and clipped; stretch stretches it to the box and distorts it.
+		Description: How an Image fills its box if they have different proportions: inside (by default) fits whole and centered; crop fills the box, centered, and crops what is left over; stretch stretches it to the box and distorts it.
 		Values:
 			Value: inside
-			Value: fill
+			Value: crop
 			Value: stretch
-	Node: Pdf page
+	Node: PDF page
 		Type: INTEGER
 		Description: Page drawn by an Image of a PDF, from 1 (by default, the first). In an image that is not a PDF, or a page the PDF does not have, it is an error.
 
 	# Barcode
 
-	Node: Format
+	Node: Barcode format
 		Type: ENUM
 		Description: Symbology of a Barcode: qr (by default), a QR code; code-128, printable ASCII characters, up to 80; ean-13, 12 digits (the check digit is added) or 13 (it is checked).
 		Values:
@@ -1866,7 +1881,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: ean-13
 	Node: Error correction
 		Type: ENUM
-		Description: Error correction of a QR code, the part of its modules that can be damaged and it can still be read: low (7 %), medium (15 %, by default), quartile (25 %) or high (30 %). In another Format, it is an error.
+		Description: Error correction of a QR code, the part of its modules that can be damaged and it can still be read: low (7 %), medium (15 %, by default), quartile (25 %) or high (30 %). In another Barcode format, it is an error.
 		Values:
 			Value: low
 			Value: medium
@@ -1882,9 +1897,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Markers of the bulleted lists (-, *, +) of a Markdown, one per nesting level (the last one serves the deeper levels): bullet, dash or none.
 	Node: Number markers
 		Description: Markers of the numbered lists (1., 1)) of a Markdown, one per nesting level (the last one serves the deeper levels): decimal, lower-alpha, upper-alpha, lower-roman or upper-roman.
-	Node: Column align
-		Description: Alignment of each column of a Table (left, center, right or justify), one per column: it is the default value of its cells, which the Styles rules and what the cell declares override.
-	Node: Table columns
+	Node: Table column sizes
 		Type: ENUM
 		Description: Columns of the tables of a Markdown: equal, all of the same width (repeat(n, *)); auto, each according to its content (repeat(n, auto)).
 		Values:
@@ -1908,7 +1921,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 
 	# Table of contents
 
-	Node: Of
+	Node: Entries
 		Type: ENUM
 		Description: What a Table of contents lists: headings (by default), the headings of its Levels; figures or tables, the Figure elements numbered with that counter, with the text of their caption. With figures or tables, Levels has no effect and is an error.
 		Values:
@@ -1916,7 +1929,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: figures
 			Value: tables
 	Node: Levels
-		Description: Heading levels listed by a Table of contents with Of: headings: the first and the last, from 1 to 6 (by default, 1 3).
+		Description: Heading levels listed by a Table of contents with Entries: headings: the first and the last, from 1 to 6 (by default, 1 3).
 	Node: Leader
 		Type: ENUM
 		Description: Leader between the title and the page of the entries of a Table of contents: dots (by default), line (a line) or none.

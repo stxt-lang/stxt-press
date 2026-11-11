@@ -60,7 +60,7 @@ Styles (dev.stxt.pdf):
 			Markup: markdown
 		Box:
 			Margin: 0 0 7 0
-	For element: Footnotes
+	For element: Footnote area
 		Typography:
 			Size: 8
 			Line height: 11

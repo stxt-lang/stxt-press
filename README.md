@@ -24,13 +24,13 @@ java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice
 | `GET /schema` | The schema `dev.stxt.pdf` of the engine |
 | `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file; for the editor |
 | `GET /fonts/{id}` | The file of a face, by its SHA-256; for the editor |
-| `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.1.0", "stxt-pdf": "0.14.0"}}`, without token |
+| `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.1.0", "stxt-pdf": "0.15.0"}}`, without token |
 | `GET /` | The [index](#index-and-editor): the templates and the routes, without token |
 | `GET /editor`, `GET /editor/{path}` | The [web editor](#index-and-editor), blank or on a template, without token |
 
 `/print` and `/render` answer with a PDF (`?format=pdf`, the default), one SVG per page (`?format=svg`, as
 `{"pages": [...]}`, with `&debug=true` for the outlines of the boxes) or the filled document (`?format=stxt`).
-Every PDF names its producer in its document information and its XMP: `stxt-press 0.1.0 (stxt-pdf 0.14.0)`, or the
+Every PDF names its producer in its document information and its XMP: `stxt-press 0.1.0 (stxt-pdf 0.15.0)`, or the
 `Producer` of `server.stxt`.
 
 ```bash
@@ -206,7 +206,7 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 | `Routes` | all on | `Editor`, `Render` and `Templates`: the index and the editor (with `/fonts`), `/render` and `/templates` on or off |
 | `Limits` | — | `Max body size` (bytes, 2 MiB), `Timeout` (seconds, 30), `Concurrent conversions` (4), and the limits of the engine: `Max pages`, `Max image pixels`, `Max SVG elements`, `Max SVG depth`, `Max PDF bytes` |
 | `Template options` | — | `PDF UA` (`1` or `2`), `PDF A` (`A2B`, `A2A`, `A3B`, `A3A`) and one `Exclude` for each check not made, as the `options` of `/render` |
-| `Producer` | `stxt-press 0.1.0 (stxt-pdf 0.14.0)` | The producer that the PDFs of the server and of `render` and `print` name |
+| `Producer` | `stxt-press 0.1.0 (stxt-pdf 0.15.0)` | The producer that the PDFs of the server and of `render` and `print` name |
 
 Relative paths are relative to the folder of `server.stxt`, so a server moves with its configuration. The token is not
 written in the file, only the name of its variable.
@@ -241,7 +241,7 @@ The editor is in `web/` (TypeScript, bundled with esbuild). Maven installs Node 
 | Dependency | Version |
 |---|---|
 | [`dev.stxt:stxt-core`](https://github.com/stxt-lang/stxt-java) | 1.0.3 |
-| [`dev.stxt:stxt-pdf`](https://github.com/stxt-lang/stxt-pdf) | 0.14.0 |
+| [`dev.stxt:stxt-pdf`](https://github.com/stxt-lang/stxt-pdf) | 0.15.0 |
 | [`dev.stxt:stxt-transform`](https://github.com/stxt-lang/stxt-java-transform) | 0.1.0 |
 | [`com.fasterxml.jackson.core:jackson-databind`](https://github.com/FasterXML/jackson-databind) | 2.22.4 |
 

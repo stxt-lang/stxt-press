@@ -62,7 +62,7 @@ Document (dev.stxt.pdf):
 			Bullet markers: dash
 			Typography:
 				Align: justify
-				Line breaking: balanced
+				Line breaking: optimal
 			Content >>
 				${salutation}
 
