@@ -26,4 +26,4 @@ Server (dev.stxt.press):
 	# Template options:
 	#     PDF UA: 1
 	# The producer the PDFs name; by default stxt-press and stxt-pdf with their versions.
-	# Producer: stxt-press 0.1.0 (stxt-pdf 0.16.0)
+	# Producer: stxt-press 0.1.0 (stxt-pdf 0.17.0)

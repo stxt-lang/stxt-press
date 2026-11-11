@@ -36,21 +36,23 @@ Document (dev.stxt.pdf):
 					Box:
 						Width: 172
 			Item:
-				Block:
-					Text: Invoice
-						Typography:
-							Size: 28
-							Bold: true
-							Color: #3B2A1E
-							Align: right
-							Line height: 30
-							Case: uppercase
-							Letter spacing: 2
-					Text: No. ${number}
-						Typography:
-							Size: 12
-							Color: #A65C1B
-							Align: right
+				Stack:
+					Gap: 10
+					Vertical: baseline
+					Item:
+						Text: Invoice
+							Typography:
+								Size: 28
+								Bold: true
+								Color: #3B2A1E
+								Line height: 30
+								Case: uppercase
+								Letter spacing: 2
+					Item:
+						Text: No. ${number}
+							Typography:
+								Size: 12
+								Color: #A65C1B
 		Grid:
 			Id: parties
 			Column sizes: * *

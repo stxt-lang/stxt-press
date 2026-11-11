@@ -68,7 +68,7 @@ Schema (@stxt.schema): dev.stxt.press
 		Description: The templates folder of /print and /templates. Without it, the server has no templates.
 	Node: Producer
 		Type: INLINE
-		Description: The software that the PDFs of the server and of the commands render and print name as their producer, in their document information and their XMP. By default stxt-press and stxt-pdf with their versions, such as stxt-press 0.1.0 (stxt-pdf 0.16.0).
+		Description: The software that the PDFs of the server and of the commands render and print name as their producer, in their document information and their XMP. By default stxt-press and stxt-pdf with their versions, such as stxt-press 0.1.0 (stxt-pdf 0.17.0).
 
 	Node: Routes
 		Type: GROUP

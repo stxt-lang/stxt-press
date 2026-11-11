@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
-- The Maven project, on `dev.stxt:stxt-core` 1.0.3, `dev.stxt:stxt-pdf` 0.16.0 and `dev.stxt:stxt-transform` 0.1.0,
+- The Maven project, on `dev.stxt:stxt-core` 1.0.3, `dev.stxt:stxt-pdf` 0.17.0 and `dev.stxt:stxt-transform` 0.1.0,
   with Java 17.
 - `EngineJobsTest`: the jobs of the service (convert with a separate styles document, fill the Slots and convert,
   preview as one SVG per page) and their errors (in the styles, in the document, in the data, a limit, a cancellation),
@@ -92,7 +92,7 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - `GET /health` gives the versions of the service and of the engine (`Converter.version()` of `stxt-pdf`), the first
   `null` outside the jar.
 - The PDFs of the server and of `render` and `print` name the service and the engine as their producer
-  (`stxt-press 0.1.0 (stxt-pdf 0.16.0)`, `Press.producer()`), in the document information and in the XMP, with
+  (`stxt-press 0.1.0 (stxt-pdf 0.17.0)`, `Press.producer()`), in the document information and in the XMP, with
   `Converter.Builder.producer` of `stxt-pdf` 0.14.0, or the `Producer` of `server.stxt` (`ServerFile.producer()`). A
   `Press` built on a `Converter` of its own writes what that one writes.
 - Time limits on the requests of `start`: a request, its headers and its body, has to arrive whole in 30 s, and its

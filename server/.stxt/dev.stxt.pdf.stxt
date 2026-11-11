@@ -10,7 +10,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 
 	Node: Document
 		Type: GROUP
-		Description: Box document: the medium (the one of the sections that do not declare their own), the title and the language (required), the subject and the author (optional), the reusable rules (also the base typography, with For element: Document), the Page overlay of all the sections and one or more Section with the content, in order.
+		Description: Box document: the medium (the one of the sections that do not declare their own), the title and the language (required), the subject, the author and the keywords (optional), the reusable rules (also the base typography, with For element: Document), the Page overlay of all the sections and one or more Section with the content, in order.
 		Children:
 			Child: Page
 				Min: 1
@@ -21,6 +21,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Subject
 				Max: 1
 			Child: Author
+				Max: 1
+			Child: Keywords
 				Max: 1
 			Child: Language
 				Min: 1
@@ -69,6 +71,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Footnote numbering
 				Max: 1
 			Child: Footnote number format
+				Max: 1
+			Child: Figure numbering
 				Max: 1
 			Child: Trim margins
 				Max: 1
@@ -396,6 +400,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Marker
 				Max: 1
+			Child: Marker suffix
+				Max: 1
 			Child: Marker image
 				Max: 1
 			Child: First number
@@ -467,6 +473,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Separator color
 				Max: 1
+			Child: Separator style
+				Max: 1
 			Child: Balance columns
 				Max: 1
 			Child: Block
@@ -537,6 +545,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Rotate origin
 				Max: 1
+			Child: Opacity
+				Max: 1
 			Child: Block
 			Child: Stack
 			Child: Grid
@@ -581,6 +591,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Rotate
 				Max: 1
 			Child: Rotate origin
+				Max: 1
+			Child: Opacity
 				Max: 1
 			Child: Block
 			Child: Stack
@@ -627,6 +639,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Rotate
 				Max: 1
 			Child: Rotate origin
+				Max: 1
+			Child: Opacity
 				Max: 1
 			Child: Block
 			Child: Stack
@@ -802,7 +816,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Min: 1
 	Node: Row
 		Type: GROUP
-		Description: Row of a table: its cells (Cell), from left to right. It is not a layout box: its Box only accepts the appearance (Background, Border, Border color and Corner radius), which is painted as a band beneath its cells, and its Id is a link target. Its Typography is inherited by its cells, and the For style rules of its Style and For id rules of its Id apply to each of them.
+		Description: Row of a table: its cells (Cell), from left to right. It is not a layout box: its Box only accepts the appearance (Background, Border, Border color, Border style and Corner radius), which is painted as a band beneath its cells, and its Id is a link target. Its Typography is inherited by its cells, and the For style rules of its Style and For id rules of its Id apply to each of them.
 		Children:
 			Child: Id
 				Max: 1
@@ -966,6 +980,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Fit
 				Max: 1
+			Child: Opacity
+				Max: 1
 			Child: PDF page
 				Max: 1
 			Child: Rotate
@@ -976,7 +992,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 	Node: Barcode
 		Type: INLINE
-		Description: QR code or barcode that the engine generates from its data, in the Barcode format qr (by default), code-128 or ean-13. The data goes in the value (Barcode: https://example.com/verify/1234) or, if it has several lines, in a Content >> block, one of the two. It is laid out as an Image: its natural size comes from its modules (0.5 mm in a QR code; 0.33 mm by 22.85 mm in the others), with the quiet zone (Quiet zone) included; a QR code is drawn square and centered, and the others are stretched to the box. Alt is required. The modules have the Color of the Typography (only Color is allowed in its Typography) and the background is that of the Box.
+		Description: QR code or barcode that the engine generates from its data, in the Barcode format qr (by default), data-matrix, gs1-data-matrix, pdf417, code-128, gs1-128 or ean-13. The data goes in the value (Barcode: https://example.com/verify/1234) or, if it has several lines, in a Content >> block, one of the two. It is laid out as an Image: its natural size comes from its modules (0.5 mm in a QR code and a Data Matrix; 0.33 mm by 1 mm in a PDF417; 0.33 mm by 22.85 mm in the barcodes of one row), with the quiet zone (Quiet zone) included; a QR code, a Data Matrix and a PDF417 are drawn whole and centered, and the barcodes of one row are stretched to the box. Readable text puts the data as text under the bars of a barcode of one row. Alt is required. The modules have the Color of the Typography and the background is that of the Box; of its Typography, only Color is allowed and, with Readable text, also Font, Size, Bold, Weight and Italic, those of that text.
 		Children:
 			Child: Id
 				Max: 1
@@ -997,6 +1013,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Error correction
 				Max: 1
 			Child: Quiet zone
+				Max: 1
+			Child: Readable text
 				Max: 1
 			Child: Rotate
 				Max: 1
@@ -1065,19 +1083,27 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Separator color
 				Max: 1
+			Child: Separator style
+				Max: 1
 			Child: Balance columns
 				Max: 1
 			Child: Marker
 				Max: 1
+			Child: Marker suffix
+				Max: 1
 			Child: Marker image
 				Max: 1
 			Child: Fit
+				Max: 1
+			Child: Opacity
 				Max: 1
 			Child: Barcode format
 				Max: 1
 			Child: Error correction
 				Max: 1
 			Child: Quiet zone
+				Max: 1
+			Child: Readable text
 				Max: 1
 			Child: Caption position
 				Max: 1
@@ -1158,19 +1184,27 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Separator color
 				Max: 1
+			Child: Separator style
+				Max: 1
 			Child: Balance columns
 				Max: 1
 			Child: Marker
 				Max: 1
+			Child: Marker suffix
+				Max: 1
 			Child: Marker image
 				Max: 1
 			Child: Fit
+				Max: 1
+			Child: Opacity
 				Max: 1
 			Child: Barcode format
 				Max: 1
 			Child: Error correction
 				Max: 1
 			Child: Quiet zone
+				Max: 1
+			Child: Readable text
 				Max: 1
 			Child: Caption position
 				Max: 1
@@ -1251,19 +1285,27 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Separator color
 				Max: 1
+			Child: Separator style
+				Max: 1
 			Child: Balance columns
 				Max: 1
 			Child: Marker
 				Max: 1
+			Child: Marker suffix
+				Max: 1
 			Child: Marker image
 				Max: 1
 			Child: Fit
+				Max: 1
+			Child: Opacity
 				Max: 1
 			Child: Barcode format
 				Max: 1
 			Child: Error correction
 				Max: 1
 			Child: Quiet zone
+				Max: 1
+			Child: Readable text
 				Max: 1
 			Child: Caption position
 				Max: 1
@@ -1317,7 +1359,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 
 	Node: Box
 		Type: GROUP
-		Description: Box model: size, margins, padding, border and background, and what is done with what does not fit (Overflow). Not inherited.
+		Description: Box model: size, margins, padding, border (with its color and its style) and background, and what is done with what does not fit (Overflow). Not inherited.
 		Children:
 			Child: Width
 				Max: 1
@@ -1340,6 +1382,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Child: Border
 				Max: 1
 			Child: Border color
+				Max: 1
+			Child: Border style
 				Max: 1
 			Child: Corner radius
 				Max: 1
@@ -1389,6 +1433,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 				Max: 1
 			Child: Small caps
 				Max: 1
+			Child: Position
+				Max: 1
 			Child: Ligatures
 				Max: 1
 			Child: Kerning
@@ -1434,6 +1480,8 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: What the document is about, in a sentence: the subject of the PDF, which the viewer shows in the document properties and which document managers and search engines index. Optional.
 	Node: Author
 		Description: Who writes the document: the person or the organization that the PDF names as its author, which the viewer shows in the document properties. Optional.
+	Node: Keywords
+		Description: Keywords of the document, separated by commas: the keywords of the PDF, which the viewer shows in the document properties and which document managers and search engines index. None empty. Optional.
 	Node: Language
 		Description: Language, as a BCP 47 tag (es, en-US, ca...). In Document, the one of the content and of the tagged PDF (required). In Typography, the one of a box whose text is in another language (inherited): a screen reader reads it (Lang of the tagged PDF) and it sets the letter rules of Case. Not valid in For element: Document, which uses the one of Document.
 
@@ -1483,9 +1531,11 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: none
 	Node: Page number format
 		Type: ENUM
-		Description: How the page numbers of a Section are written: decimal (1, by default), lower-roman (i) or upper-roman (I), in {page}, {pages}, {page of: id}, the tables of contents and the viewer. Not valid with Page numbering: none.
+		Description: How the page numbers of a Section are written: decimal (1, by default), lower-alpha (a), upper-alpha (A), lower-roman (i) or upper-roman (I), in {page}, {pages}, {page of: id}, the tables of contents and the viewer. Not valid with Page numbering: none.
 		Values:
 			Value: decimal
+			Value: lower-alpha
+			Value: upper-alpha
 			Value: lower-roman
 			Value: upper-roman
 	Node: Inherit page overlays
@@ -1506,20 +1556,29 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Values:
 			Value: continue
 			Value: restart
+	Node: Figure numbering
+		Type: ENUM
+		Description: How a Section numbers its figures and its tables with a caption: continue (by default) follows the counters of the document (1, 2, 3) and chapter starts again in each chapter and writes its number first (2.3).
+		Values:
+			Value: continue
+			Value: chapter
 	Node: Footnote number format
 		Type: ENUM
-		Description: How the footnotes of a Section are numbered, in the call and in the note: decimal (1, by default), lower-alpha (a), upper-alpha (A), lower-roman (i) or upper-roman (I).
+		Description: How the footnotes of a Section are numbered, in the call and in the note: decimal (1, by default), lower-alpha (a), upper-alpha (A), lower-roman (i), upper-roman (I) or symbols (*, †, ‡, §, and then doubled).
 		Values:
 			Value: decimal
 			Value: lower-alpha
 			Value: upper-alpha
 			Value: lower-roman
 			Value: upper-roman
+			Value: symbols
 	Node: Rotate
 		Type: NUMBER
 		Description: Rotation of the box, in degrees clockwise (from -360 to 360, without 0). In Block, Text, Paragraph, Image and Barcode, which are in flow, it rotates about its center and the box takes the rectangle that encloses it rotated; without Width, it measures its content without breaking lines. In Frame, Overlay and Page overlay it rotates when painting, around Rotate origin, and does not change the layout. What is rotated must fit on the page and does not break across pages.
 	Node: Rotate origin
 		Description: Point around which the border box rotates with Rotate: one or two keywords out of top, bottom, left, right and center (top left, bottom...), or two measures from its top left corner, as lengths or as a percentage of its width and its height (20 50%). By default, center.
+	Node: Opacity
+		Description: How opaque the box is painted, with everything it contains, as a percentage from 0% to 100% (Opacity: 15%): what lies beneath shows through it. With 100% the box is opaque, as without it, and with 0% nothing of it is seen. In an Image, the image with the background and the border of its box; in a Frame, an Overlay and a Page overlay, the box with its content, painted as a whole: what overlaps inside does not show through. Painting only: it does not change the layout. Without it, the box is opaque; the opacity of a single color goes in the color (#RRGGBBAA).
 	Node: Side
 		Type: ENUM
 		Description: Side box: an Image, a Barcode or a Block (with Width or Max width) in block flow that goes to the left or to the right of its container, at its place in the flow, and the text of the siblings that follow it shortens its lines beside it; its Margin is the separation. A sibling that is not text (a Table, a Stack, a List) goes below it. It is not split across pages: if it does not fit, it moves to the next page with the first line that runs beside it. Not on an item of a Stack or a Grid, nor on a cell.
@@ -1578,6 +1637,13 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Border width: top, right, bottom, left (1 to 4 values).
 	Node: Border color
 		Description: Border color: top, right, bottom, left (1 to 4 colors). By default, the Color of the text.
+	Node: Border style
+		Type: ENUM
+		Description: How the border is drawn, the same on its four sides: solid (by default), dashed or dotted. The dashes are three times as long as the border is wide and the dots as wide as it, and they are spaced so that each side starts and ends with one. With Corner radius the pattern follows the curve, and the four sides of Border must be equally wide. With Merge borders, the line between two cells takes the style of the wider of their two borders. Painting only.
+		Values:
+			Value: solid
+			Value: dashed
+			Value: dotted
 	Node: Corner radius
 		Description: Rounded corners: top left, top right, bottom right, bottom left (1 to 4 values, number or %). Painting only: it rounds the background, the border and the clipping of an Image or a Barcode.
 	Node: Background
@@ -1658,6 +1724,13 @@ Schema (@stxt.schema): dev.stxt.pdf
 	Node: Small caps
 		Type: BOOLEAN
 		Description: Small caps: lowercase letters are painted as uppercase at 80 % of the size. By default, false.
+	Node: Position
+		Type: ENUM
+		Description: Position of a styled run on its line: normal (by default), superscript or subscript. A superscript and a subscript are painted at 70 % of the size, raised or lowered from the baseline, without changing the height of the line. Only in the For style rule of a styled run ([text]{name}): in a box it is an error.
+		Values:
+			Value: normal
+			Value: superscript
+			Value: subscript
 	Node: Ligatures
 		Type: BOOLEAN
 		Description: Whether the text is measured and painted with the ligatures of the font (fi, fl, ffi...). By default, false: one glyph per character. Inherited. With Letter spacing other than 0 there are no ligatures. It only matters in the fonts that have them (IBM Plex Sans and Serif; Plex Mono does not).
@@ -1795,12 +1868,13 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: distribute
 	Node: Vertical
 		Type: ENUM
-		Description: Vertical alignment or distribution, like Horizontal: in a Grid and in an Area, the alignment in the area; in a Stack, the distribution if its main axis is the vertical one and, if not, the alignment of the items; in an Item, the alignment of one, only if it is the cross axis of its Stack. In a Cell, where its content goes in the height its row leaves over, like the distribution of a vertical Stack: top (by default), center or bottom; the box of the cell stays stretched to its row.
+		Description: Vertical alignment or distribution, like Horizontal: in a Grid and in an Area, the alignment in the area; in a Stack, the distribution if its main axis is the vertical one and, if not, the alignment of the items; in an Item, the alignment of one, only if it is the cross axis of its Stack. baseline is only for the cross axis of a Stack with Direction: horizontal and its Item: the items are aligned by the baseline of their first line of text, and an item without text rests its bottom on it. In a Cell, where its content goes in the height its row leaves over, like the distribution of a vertical Stack: top (by default), center or bottom; the box of the cell stays stretched to its row.
 		Values:
 			Value: top
 			Value: bottom
 			Value: center
 			Value: stretch
+			Value: baseline
 			Value: justify
 			Value: distribute
 
@@ -1808,7 +1882,7 @@ Schema (@stxt.schema): dev.stxt.pdf
 
 	Node: Marker
 		Type: ENUM
-		Description: Marker of the items: bullet (•), dash (–) or none, an image (the Marker image of the list or of each item), or a numbering (1., a., A., i., I.).
+		Description: Marker of the items: bullet (•), dash (–) or none, an image (the Marker image of the list or of each item), or a numbering (1., a., A., i., I.; with Marker suffix: parenthesis, 1), a)...).
 		Values:
 			Value: bullet
 			Value: dash
@@ -1819,6 +1893,12 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: upper-alpha
 			Value: lower-roman
 			Value: upper-roman
+	Node: Marker suffix
+		Type: ENUM
+		Description: What follows the number in the markers of a numbered List: period (1., a.), the default, or parenthesis (1), a)). Only with a Marker that numbers.
+		Values:
+			Value: period
+			Value: parenthesis
 	Node: Marker image
 		Type: INLINE
 		Description: Image of the marker, with Marker: image, in the List (for all its items) or in a List item (its own, which replaces that of the list); the value is its path, relative to images/, as in an Image. As tall as the Size of the item unless it declares Height, as wide as its proportion gives, centered on the capitals of the first line of the item and followed by a space. With Alt it is read as a figure; without it, it is decorative.
@@ -1855,6 +1935,13 @@ Schema (@stxt.schema): dev.stxt.pdf
 		Description: Width of the line between the columns of a Columns, centered in Gap, which must be at least as wide.
 	Node: Separator color
 		Description: Color of the line between columns. By default, the Color of the text.
+	Node: Separator style
+		Type: ENUM
+		Description: How the line between columns is drawn: solid (by default), dashed or dotted, like Border style. Only with Separator.
+		Values:
+			Value: solid
+			Value: dashed
+			Value: dotted
 	Node: Balance columns
 		Type: BOOLEAN
 		Description: Distribution among the columns of a Columns: with true (by default) the columns of the last fragment are balanced; with false they are filled in order.
@@ -1878,14 +1965,18 @@ Schema (@stxt.schema): dev.stxt.pdf
 
 	Node: Barcode format
 		Type: ENUM
-		Description: Symbology of a Barcode: qr (by default), a QR code; code-128, printable ASCII characters, up to 80; ean-13, 12 digits (the check digit is added) or 13 (it is checked).
+		Description: Symbology of a Barcode: qr (by default), a QR code; data-matrix, a square Data Matrix; pdf417, a PDF417; code-128, printable ASCII characters, up to 80; ean-13, 12 digits (the check digit is added) or 13 (it is checked); gs1-128 and gs1-data-matrix, a Code 128 and a Data Matrix with GS1 data, a list of application identifiers in parentheses, each one before its value, as in (01)09501101530003(10)AB-123.
 		Values:
 			Value: qr
+			Value: data-matrix
+			Value: gs1-data-matrix
+			Value: pdf417
 			Value: code-128
+			Value: gs1-128
 			Value: ean-13
 	Node: Error correction
 		Type: ENUM
-		Description: Error correction of a QR code, the part of its modules that can be damaged and it can still be read: low (7 %), medium (15 %, by default), quartile (25 %) or high (30 %). In another Barcode format, it is an error.
+		Description: Error correction of a QR code, the part of its modules that can be damaged and it can still be read: low (7 %), medium (15 %, by default), quartile (25 %) or high (30 %). In another Barcode format, it is an error: a Data Matrix has its own, and a PDF417 takes the level its standard recommends for its data.
 		Values:
 			Value: low
 			Value: medium
@@ -1893,14 +1984,17 @@ Schema (@stxt.schema): dev.stxt.pdf
 			Value: high
 	Node: Quiet zone
 		Type: INTEGER
-		Description: Light modules on each side of a Barcode, which the reader needs around the code, from 0 to 40. By default, those of its standard: 4 in a QR code, 10 in a Code 128, and 11 on the left and 7 on the right in an EAN-13. They are part of its natural size, so in a box of a given size fewer modules of quiet zone give wider modules.
+		Description: Light modules on each side of a Barcode, which the reader needs around the code, from 0 to 40. By default, those of its standard: 4 in a QR code, 1 in a Data Matrix, 2 in a PDF417, 10 in a Code 128 and a GS1-128, and 11 on the left and 7 on the right in an EAN-13. They are part of its natural size, so in a box of a given size fewer modules of quiet zone give wider modules.
+	Node: Readable text
+		Type: BOOLEAN
+		Description: Whether a barcode of one row (code-128, gs1-128 or ean-13) has its data as text under its bars, in the font, the size and the color of its Typography. By default, false. In an EAN-13 it is laid out as on a product: the first digit at the left of the bars, each of the others under its seven modules and the guard bars going down between them; in the others, one centered line (in a GS1-128, with the parentheses of its application identifiers). Its height is added to the natural height of the code and, in a box of a given height, taken from the bars. A text that does not fit under its bars is an error. In another Barcode format, it is an error.
 
 	# Markdown
 
 	Node: Bullet markers
 		Description: Markers of the bulleted lists (-, *, +) of a Markdown, one per nesting level (the last one serves the deeper levels): bullet, dash or none.
 	Node: Number markers
-		Description: Markers of the numbered lists (1., 1)) of a Markdown, one per nesting level (the last one serves the deeper levels): decimal, lower-alpha, upper-alpha, lower-roman or upper-roman.
+		Description: Markers of the numbered lists (1., 1)) of a Markdown, one per nesting level (the last one serves the deeper levels): decimal, lower-alpha, upper-alpha, lower-roman or upper-roman. A list written with 1) has Marker suffix: parenthesis.
 	Node: Table column sizes
 		Type: ENUM
 		Description: Columns of the tables of a Markdown: equal, all of the same width (repeat(n, *)); auto, each according to its content (repeat(n, auto)).
