@@ -42,17 +42,17 @@ class ServerFolderTest {
 
     /** The template made from each example of stxt-pdf, from its English version. */
     private static final Map<String, String> TEMPLATE_OF_EXAMPLE = Map.ofEntries(
-            Map.entry("01-invoice", "invoices/invoice"),
-            Map.entry("02-letter", "letters/letter"),
-            Map.entry("03-resume", "resumes/resume"),
-            Map.entry("04-annual-report", "reports/annual-report"),
-            Map.entry("05-newsletter", "newsletters/newsletter"),
-            Map.entry("06-menu", "menus/menu"),
-            Map.entry("07-contract", "contracts/contract"),
-            Map.entry("08-manual", "manuals/manual"),
-            Map.entry("09-catalog", "catalogs/catalog"),
-            Map.entry("10-certificate", "certificates/certificate"),
-            Map.entry("11-timetable", "timetables/timetable"));
+            Map.entry("01-invoice", "examples/invoice"),
+            Map.entry("02-letter", "examples/letter"),
+            Map.entry("03-resume", "examples/resume"),
+            Map.entry("04-annual-report", "examples/annual-report"),
+            Map.entry("05-newsletter", "examples/newsletter"),
+            Map.entry("06-menu", "examples/menu"),
+            Map.entry("07-contract", "examples/contract"),
+            Map.entry("08-manual", "examples/manual"),
+            Map.entry("09-catalog", "examples/catalog"),
+            Map.entry("10-certificate", "examples/certificate"),
+            Map.entry("11-timetable", "examples/timetable"));
 
     private static ServerFile server() throws ConfigException, IOException {
         return ServerFile.read(FOLDER.resolve(ServerFile.FILE_NAME), Map.of());

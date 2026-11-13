@@ -73,7 +73,7 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   `GET /fonts/{id}` gives the file of a face: the SVG pages name their fonts and do not carry them. Both are for the
   previews of the editor and are turned off with it (`Editor: false`): no other client needs the files of the fonts.
 - `server/`, a server folder to start a project from: its `server.stxt`, the fonts IBM Plex Sans, Serif and Mono and
-  the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/`: one for each
+  the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/examples/`: one for each
   example of `stxt-pdf` (an invoice, a letter, a resume, an annual report, a newsletter, a menu, a contract, a manual,
   a catalog, a certificate and a timetable), with Slots for what changes from one document to another, its styles and
   its sample data, which give the pages of the example; and documents in `documents/`: complete examples of other

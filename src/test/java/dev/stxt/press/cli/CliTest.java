@@ -172,7 +172,7 @@ class CliTest {
 
     @Test
     void printConvertsATemplateWithItsSampleData() throws Exception {
-        int code = run("print", "invoices/invoice", "--templates", TEMPLATES.toString(), "-o", "invoice.pdf");
+        int code = run("print", "examples/invoice", "--templates", TEMPLATES.toString(), "-o", "invoice.pdf");
 
         assertEquals(Cli.OK, code, this::err);
         assertTrue(new String(Files.readAllBytes(dir.resolve("invoice.pdf")), 0, 5, StandardCharsets.ISO_8859_1)
@@ -184,7 +184,7 @@ class CliTest {
         Files.writeString(dir.resolve("press.stxt"), "Server (dev.stxt.press):\n    Resource folder: " + RESOURCES
                 + "\n    Template folder: " + TEMPLATES + "\n");
 
-        assertEquals(Cli.OK, run("print", "invoices/invoice", "--config", "press.stxt", "-o", "-"), this::err);
+        assertEquals(Cli.OK, run("print", "examples/invoice", "--config", "press.stxt", "-o", "-"), this::err);
         assertTrue(out().startsWith("%PDF-"));
     }
 
@@ -192,17 +192,17 @@ class CliTest {
     void anErrorOfTheDataOfATemplateIsOfTheLineOfItsSlot() throws Exception {
         Files.writeString(dir.resolve("data.json"), "{\"number\": \"1\"}");
 
-        int code = run("print", "invoices/invoice", "--templates", TEMPLATES.toString(), "--data", "data.json", "-o",
+        int code = run("print", "examples/invoice", "--templates", TEMPLATES.toString(), "--data", "data.json", "-o",
                 "x.pdf");
 
         assertEquals(Cli.FAILED, code);
-        assertTrue(err().startsWith("stxt-press: " + TEMPLATES.resolve("invoices/invoice.stxt") + ":"), err());
+        assertTrue(err().startsWith("stxt-press: " + TEMPLATES.resolve("examples/invoice.stxt") + ":"), err());
         assertTrue(err().contains("SLOT_NO_DATA"), err());
     }
 
     @Test
     void printWithoutTemplatesFolderOrWithATemplateThatDoesNotExist() {
-        assertEquals(Cli.USAGE, run("print", "invoices/invoice", "-o", "x.pdf"));
+        assertEquals(Cli.USAGE, run("print", "examples/invoice", "-o", "x.pdf"));
         assertTrue(err().contains("No templates folder"), err());
         assertEquals(Cli.USAGE, run("print", "nothing", "--templates", TEMPLATES.toString(), "-o", "x.pdf"));
         assertTrue(err().contains("TEMPLATE_NOT_FOUND"), err());
@@ -212,8 +212,8 @@ class CliTest {
 
     @Test
     void fillWritesTheFilledDocumentToStdout() {
-        int code = run("fill", TEMPLATES.resolve("invoices/invoice.stxt").toString(), "--data",
-                TEMPLATES.resolve("invoices/invoice.json").toString());
+        int code = run("fill", TEMPLATES.resolve("examples/invoice.stxt").toString(), "--data",
+                TEMPLATES.resolve("examples/invoice.json").toString());
 
         assertEquals(Cli.OK, code, this::err);
         assertTrue(out().contains("Title: Invoice 2025-0147"), out());
@@ -224,7 +224,7 @@ class CliTest {
     void fillWithDataThatAreNotJsonIsAnErrorOfTheirLine() throws Exception {
         Files.writeString(dir.resolve("data.json"), "{\n  \"a\": \n}");
 
-        int code = run("fill", TEMPLATES.resolve("invoices/invoice.stxt").toString(), "--data", "data.json");
+        int code = run("fill", TEMPLATES.resolve("examples/invoice.stxt").toString(), "--data", "data.json");
 
         assertEquals(Cli.FAILED, code);
         assertTrue(err().startsWith("stxt-press: data.json:3: JSON_NOT_VALID: "), err());

@@ -45,9 +45,9 @@ Every PDF names its producer in its document information and its XMP: `stxt-pres
 `Producer` of `server.stxt`.
 
 ```bash
-curl -o invoice.pdf http://127.0.0.1:8080/print/invoices/invoice
-curl -o invoice.pdf -d @data.json http://127.0.0.1:8080/print/invoices/invoice
-curl -o blue-hour.pdf http://127.0.0.1:8080/documents/examples/poster/blue-hour
+curl -o invoice.pdf http://127.0.0.1:8080/print/examples/invoice
+curl -o invoice.pdf -d @data.json http://127.0.0.1:8080/print/examples/invoice
+curl -o blue-hour.pdf http://127.0.0.1:8080/documents/examples/blue-hour
 ```
 
 A template is a `<name>.stxt` of the templates folder, named by its path without extension
@@ -116,8 +116,8 @@ version writes nothing, so that it does not undo a change made since, on disk or
 
 ```bash
 curl -X PUT -H 'Content-Type: application/json' -H 'If-Match: "<the ETag of the GET>"' \
-    --data-binary '{"document": "Document (dev.stxt.pdf): ...", "styles": [{"path": "invoices/invoice.styles.stxt", "text": "..."}], "data": "{...}"}' \
-    http://127.0.0.1:8080/files/templates/invoices/invoice
+    --data-binary '{"document": "Document (dev.stxt.pdf): ...", "styles": [{"path": "examples/invoice.styles.stxt", "text": "..."}], "data": "{...}"}' \
+    http://127.0.0.1:8080/files/templates/examples/invoice
 ```
 
 Only `document` is required; a styles file left out is not touched, nor are the data without `data`. Only the files
@@ -146,8 +146,8 @@ on disk is seen with a reload.
 | URL | What it shows |
 |---|---|
 | `/editor` | A blank document |
-| `/editor/documents/{path}` | The document `{path}` of the documents folder: `/editor/documents/examples/poster/blue-hour` |
-| `/editor/templates/{path}` | The template `{path}` of the templates folder: `/editor/templates/catalogs/catalog` |
+| `/editor/documents/{path}` | The document `{path}` of the documents folder: `/editor/documents/examples/blue-hour` |
+| `/editor/templates/{path}` | The template `{path}` of the templates folder: `/editor/templates/examples/catalog` |
 
 With changes in the panels, leaving the page (the index, back, a reload) asks first. With `Save` on in the server,
 **Save** (or Ctrl+S) writes the files that changed ([Saving](#saving)); a `.styles.stxt` of a folder, which applies to
@@ -195,7 +195,7 @@ every option.
 An error of a job is written to stderr with its file and its line:
 
 ```
-stxt-press: server/templates/invoices/invoice.stxt:73: SLOT_NO_DATA: Node 'Block': No data for {customer}
+stxt-press: server/templates/examples/invoice.stxt:73: SLOT_NO_DATA: Node 'Block': No data for {customer}
 ```
 
 | Exit code | When |
@@ -269,16 +269,16 @@ The folder [`server/`](server/) is a whole server, to copy anywhere and to start
 `start.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
 `127.0.0.1:8080`, turns `Save` on (for the editor of this machine) and shows the other nodes commented with their
 defaults; the fonts IBM Plex Sans, Serif and Mono and
-the images of the examples of stxt-pdf in `resources/`; and in `templates/`, one template for each example of
-stxt-pdf (`invoices/invoice`, `letters/letter`, `resumes/resume`, `reports/annual-report`, `newsletters/newsletter`,
-`menus/menu`, `contracts/contract`, `manuals/manual`, `catalogs/catalog`, `certificates/certificate` and
-`timetables/timetable`), with Slots for what changes from one document to another, its styles and its sample data,
+the images of the examples of stxt-pdf in `resources/`; and side by side in `templates/examples/`, one template for
+each example of stxt-pdf (`invoice`, `letter`, `resume`, `annual-report`, `newsletter`, `menu`, `contract`, `manual`,
+`catalog`, `certificate` and `timetable`), with Slots for what changes from one document to another, its styles and its sample data,
 which give the example; and in `documents/`, documents printed as they are: complete examples of other kinds of
-documents in `documents/examples/`, and in `documents/reference/` a reference of the layout language, one small
+documents side by side in `documents/examples/`, and in `documents/reference/` a reference of the layout language, one small
 document for each use, with a line that says what it shows. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, so that an editor
 with discovery (VS Code with the STXT extension) checks and completes every file of the folder. `server/start.sh`
 starts it, from any working directory, and
-`java -jar server/stxt-press.jar print invoices/invoice -o invoice.pdf --config server/server.stxt` prints its template.
+`java -jar server/stxt-press.jar print examples/invoice -o invoice.pdf --config server/server.stxt` prints its
+template.
 
 ## Build
 
