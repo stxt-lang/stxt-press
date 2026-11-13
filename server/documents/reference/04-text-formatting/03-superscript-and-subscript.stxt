@@ -45,7 +45,7 @@ Document (dev.stxt.pdf):
 			Style: result
 		Text: With more in the rule and in the marks: [a]{note-mark} and **[2]{sub}**
 			Style: source
-		Text: A red note mark[a]{note-mark} and a bold subscript N**[2]{sub}**.
+		Text: A red note mark[a]{note-mark} and a bold subscript N[**2**]{sub}.
 			Style: result
 		Text: The line keeps its height: a paragraph with superscripts in several lines
 			Style: label
