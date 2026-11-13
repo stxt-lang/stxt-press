@@ -12,7 +12,7 @@ On Windows, `start.bat`. The server listens on `http://127.0.0.1:8080/`, where t
 | Path | What it has |
 |---|---|
 | `start.sh`, `start.bat` | The scripts that start the server: `java -jar stxt-press.jar start --config server.stxt`, in this folder |
-| `stxt-press.jar` | The server, with every dependency inside. In the project of stxt-press, `mvn package` puts it here |
+| `stxt-press.jar` | The server, with every dependency inside, ready to start. In the project of stxt-press, `mvn package` puts it here |
 | `server.stxt` | The configuration: address, port, folders, routes, limits. Relative paths are relative to this folder |
 | `resources/fonts/` | IBM Plex Sans, Serif and Mono, each with its license (`OFL.txt`) |
 | `resources/images/examples/` | The images of the examples of stxt-pdf, the ones the templates use |

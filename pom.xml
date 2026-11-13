@@ -245,6 +245,16 @@
                                         <exclude>META-INF/DEPENDENCIES</exclude>
                                     </excludes>
                                 </filter>
+                                <filter>
+                                    <!-- The Maven descriptor of the project itself: Eclipse (m2e) rewrites its
+                                         pom.properties in target/classes with the date and the path of the project,
+                                         which would change the jar of server/, kept in git, on every build. Nothing
+                                         reads it: the version is that of the manifest. -->
+                                    <artifact>dev.stxt:stxt-press</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/maven/**</exclude>
+                                    </excludes>
+                                </filter>
                             </filters>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
@@ -263,9 +273,9 @@
                 </executions>
             </plugin>
 
-            <!-- The single jar, without version, into the server folder (server/stxt-press.jar, in .gitignore), so that
-                 the folder is a whole server: copied anywhere, its start.sh or start.bat starts it. After the shade,
-                 which is declared before in the same phase. -->
+            <!-- The single jar, without version, into the server folder (server/stxt-press.jar), so that the folder is
+                 a whole server: copied anywhere, its start.sh or start.bat starts it. It is kept in git, for those who
+                 download the folder. After the shade, which is declared before in the same phase. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>

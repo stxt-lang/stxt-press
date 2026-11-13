@@ -285,7 +285,8 @@ Relative paths are relative to the folder of `server.stxt`, so a server moves wi
 written in the file, only the name of its variable.
 
 The folder [`server/`](server/) is a whole server, to copy anywhere and to start a project from: `start.sh` and
-`start.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
+`start.bat`, which start it; `stxt-press.jar`, the server, which comes with the folder and which `mvn package`
+replaces with the one built; its `server.stxt`, which listens on
 `127.0.0.1:8080`, turns `Save` on (for the editor of this machine) and shows the other nodes commented with their
 defaults; the fonts IBM Plex Sans, Serif and Mono and
 the images of the examples of stxt-pdf in `resources/`; side by side in `templates/examples/`, complete examples as
