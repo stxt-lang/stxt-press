@@ -26,11 +26,13 @@ export interface DocumentState {
 	original?: { document: string; styles: StylesText[] };
 }
 
-/** A document as `GET /documents/{path}` gives it. */
+/** A document as `GET /documents/{path}` gives it, with whether the server saves it (`Save` of `server.stxt`). */
 export interface ServerDocument {
 	path: string;
 	document: string;
 	styles: StylesText[];
+	writable?: boolean;
+	written?: string[];
 }
 
 /** A template as `GET /templates/{path}` gives it: its data as the text of its file, or `null` without one. */
@@ -39,6 +41,8 @@ export interface ServerTemplate {
 	document: string;
 	styles: StylesText[];
 	data: string | null;
+	writable?: boolean;
+	written?: string[];
 }
 
 /** The panels of the templates mode, and the template as the server gave it. */
@@ -276,6 +280,70 @@ export function tabState(marked: boolean, severities: string[]): "error" | "warn
 		return "error";
 	}
 	return severities.length > 0 ? "warning" : null;
+}
+
+/**
+ * What a save sends, and what it asks first: the body of `PUT /templates/{path}` or `PUT /documents/{path}` with the
+ * files that changed, their names, and those of them that are the `.styles.stxt` of a folder, shared by every template
+ * or document below it.
+ */
+export interface SaveRequest {
+	url: string;
+	body: string;
+	changed: string[];
+	shared: string[];
+}
+
+/**
+ * The save of the panels of a template or a document of the server: only the styles and data whose text changed (the
+ * line ends do not count), and the document always, which the server writes only if it changed. Text in the blank
+ * styles panel of a document without styles goes to its own `<name>.styles.stxt`, which the server creates; text in
+ * the data panel of a template without sample data, to its `<name>.json`. `null` for a blank document, which is no file
+ * of the server.
+ */
+export function saveRequest(state: State): SaveRequest | null {
+	if (state.path === null || state.original === undefined) {
+		return null;
+	}
+	const original = state.original;
+	const changed: string[] = [];
+	if (!sameText(state.document, original.document)) {
+		changed.push(`${state.path}.stxt`);
+	}
+	const styles: StylesText[] = [];
+	state.styles.forEach((panel, i) => {
+		const before = original.styles[i];
+		if (before !== undefined) {
+			if (!sameText(panel.text, before.text)) {
+				styles.push({ path: before.path, text: panel.text });
+			}
+		} else if (panel.text.trim() !== "") {
+			styles.push({ path: `${state.path}.styles.stxt`, text: panel.text });
+		}
+	});
+	changed.push(...styles.map((item) => item.path));
+	const fields = [`"document":${JSON.stringify(state.document)}`];
+	if (styles.length > 0) {
+		fields.push(`"styles":${JSON.stringify(styles)}`);
+	}
+	if (state.mode === "template") {
+		const before = state.original.data;
+		if (before === null ? state.data.trim() !== "" : !sameText(state.data, before)) {
+			changed.push(`${state.path}.json`);
+			fields.push(`"data":${JSON.stringify(state.data)}`);
+		}
+	}
+	return {
+		url: `/${state.mode === "template" ? "templates" : "documents"}/${state.path}`,
+		body: `{${fields.join(",")}}`,
+		changed,
+		shared: changed.filter((name) => name === ".styles.stxt" || name.endsWith("/.styles.stxt")),
+	};
+}
+
+/** The message of something that took `ms` milliseconds: `Converted in 312 ms.`, `Converted in 1.4 s.` */
+export function took(what: string, ms: number): string {
+	return `${what} in ${ms < 1000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`}.`;
 }
 
 /** The name of the PDF that is downloaded: that of the template or the document, or `document.pdf` for a blank one. */

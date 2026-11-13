@@ -20,6 +20,10 @@ final class HttpError extends Exception {
     static final String SERVER_BUSY = "SERVER_BUSY";
     static final String SERVER_STARTING = "SERVER_STARTING";
     static final String HOST_NOT_ALLOWED = "HOST_NOT_ALLOWED";
+    /** A save without the JSON body it takes ({@code 415}). */
+    static final String CONTENT_TYPE_NOT_VALID = "CONTENT_TYPE_NOT_VALID";
+    /** A save without {@code If-Match}, the version it starts from ({@code 428}). */
+    static final String VERSION_REQUIRED = "VERSION_REQUIRED";
     /** The code of an error that is not of the request: answered {@code 500}, without details. */
     static final String INTERNAL = "INTERNAL";
 

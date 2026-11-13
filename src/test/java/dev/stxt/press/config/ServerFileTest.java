@@ -178,6 +178,7 @@ class ServerFileTest {
                         Render: false
                         Templates: false
                         Documents: false
+                        Save: true
                     Limits:
                         Max body size: 1000
                         Timeout: 5
@@ -194,7 +195,8 @@ class ServerFileTest {
                         Exclude: BARCODE_SIZE
                 """, Map.of("PRESS_TOKEN", " secret "));
 
-        assertEquals(new ServerConfig("0.0.0.0", 9090, "secret", false, false, false, false, 1000, Duration.ofSeconds(5), 2,
+        assertEquals(new ServerConfig("0.0.0.0", 9090, "secret", false, false, false, false, true, 1000,
+                Duration.ofSeconds(5), 2,
                 new Options(1, PdfA.A3B, false, Set.of(Check.CONTRAST, Check.BARCODE_SIZE))), file.http());
         assertEquals(new Limits(10, 11, 12, 13, 14), file.limits());
         assertTrue(file.lazyInit());
@@ -361,6 +363,8 @@ class ServerFileTest {
             assertEquals(404, get(noDocuments, "/documents", null).statusCode());
             assertEquals(200, get(noDocuments, "/templates", null).statusCode());
             assertEquals(200, get(noTemplates, "/documents", null).statusCode());
+            // Save is off unless the file says so.
+            assertFalse(read(server(folder)).http().save());
             assertEquals(404, get(noEditor, "/", null).statusCode());
             assertEquals(405, get(noEditor, "/render", null).statusCode());
             assertEquals(404, get(noRender, "/render", null).statusCode());

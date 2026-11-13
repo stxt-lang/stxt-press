@@ -7,6 +7,8 @@
  * shows it again. It does not load the editors: they are in editor.js.
  */
 import { $, askToken, call, errorOf, say } from "./api";
+import { maximizable } from "./maximize";
+import { took } from "./model";
 import { ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, parseIndexHash, placeUrl, visibleRows } from "./place";
 import type { FolderRow, IndexPlace, Place } from "./place";
 
@@ -102,6 +104,7 @@ async function preview(tab: ListTab, path: string): Promise<void> {
 	const title = $("preview-title");
 	title.textContent = `${path} · converting…`;
 	title.classList.remove("error");
+	const started = performance.now();
 	const response = await call("GET", `/print/${tab}/${path}`);
 	if (seq !== previews) {
 		return;
@@ -115,6 +118,7 @@ async function preview(tab: ListTab, path: string): Promise<void> {
 		return;
 	}
 	const pdf = await response.blob();
+	const ms = performance.now() - started;
 	if (seq !== previews) {
 		return;
 	}
@@ -122,7 +126,7 @@ async function preview(tab: ListTab, path: string): Promise<void> {
 		URL.revokeObjectURL(previewUrl);
 	}
 	previewUrl = URL.createObjectURL(pdf);
-	title.textContent = path;
+	title.textContent = `${path} · ${took("PDF", ms)}`;
 	const frame = $<HTMLIFrameElement>("preview-frame");
 	frame.src = previewUrl;
 	frame.hidden = false;
@@ -303,6 +307,7 @@ async function start(): Promise<void> {
 		b.onclick = () => go({ tab, folder: tab === "api" ? null : lastFolder[tab] });
 	});
 	window.addEventListener("hashchange", show);
+	maximizable(document.querySelector<HTMLElement>(".preview")!);
 	void versions();
 	show();
 	// One after the other: with a token, the first 401 asks for it, and the second call uses it. The documents first,

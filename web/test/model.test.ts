@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
-	curl, documentPanels, fileName, isUnchanged, jsonErrorLine, parseData, request, serverMessage, tabState, tabs, target,
-	templatePanels, validatesDocument,
+	curl, documentPanels, fileName, isUnchanged, jsonErrorLine, parseData, request, saveRequest, serverMessage, tabState, tabs,
+	target, templatePanels, took, validatesDocument,
 } from "../src/model.ts";
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
 import {
@@ -397,5 +397,68 @@ describe("the folders of the index", () => {
 		assert.equal(paths.filter((path) => isUnder(path, "")).length, 7);
 		assert.equal(folderOf("a/b/c"), "a/b");
 		assert.equal(folderOf("c"), "");
+	});
+});
+
+describe("the save", () => {
+	it("sends the document and only the styles and the data that changed, with their names", () => {
+		const t = template({ data: "{\"a\": 2}" });
+		t.styles[1].text = "own changed";
+
+		const s = saveRequest(t)!;
+
+		assert.equal(s.url, "/templates/invoices/invoice");
+		assert.deepEqual(JSON.parse(s.body), {
+			document: "doc",
+			styles: [{ path: "invoices/invoice.styles.stxt", text: "own changed" }],
+			data: "{\"a\": 2}",
+		});
+		assert.deepEqual(s.changed, ["invoices/invoice.styles.stxt", "invoices/invoice.json"]);
+		assert.deepEqual(s.shared, []);
+	});
+
+	it("says nothing changed when the panels are the files but for their line ends", () => {
+		const t = template({ document: "doc\n" });
+		t.original = { ...t.original, document: "doc\r\n" };
+
+		const s = saveRequest(t)!;
+
+		assert.deepEqual(s.changed, []);
+		assert.deepEqual(JSON.parse(s.body), { document: "doc\n" });
+	});
+
+	it("tells the styles of a folder, shared by everything below it", () => {
+		const t = template({ document: "edited" });
+		t.styles[0].text = "root changed";
+
+		const s = saveRequest(t)!;
+
+		assert.deepEqual(s.changed, ["invoices/invoice.stxt", ".styles.stxt"]);
+		assert.deepEqual(s.shared, [".styles.stxt"]);
+	});
+
+	it("creates the own styles of a document from its blank panel, and the data of a template without them", () => {
+		const d = serverDocument({ styles: [{ path: "Styles", text: "mine" }], original: { document: "doc", styles: [] } });
+		const doc = saveRequest(d)!;
+		assert.equal(doc.url, "/documents/reference/tables/basic");
+		assert.deepEqual(JSON.parse(doc.body).styles, [{ path: "reference/tables/basic.styles.stxt", text: "mine" }]);
+
+		const blank = saveRequest(serverDocument({ styles: [{ path: "Styles", text: " " }], original: { document: "doc", styles: [] } }))!;
+		assert.deepEqual(blank.changed, []);
+
+		const t = template({ data: "{}" });
+		t.original.data = null;
+		assert.deepEqual(saveRequest(t)!.changed, ["invoices/invoice.json"]);
+		t.data = "  ";
+		assert.deepEqual(saveRequest(t)!.changed, []);
+	});
+
+	it("is none for a blank document, which is no file of the server", () => {
+		assert.equal(saveRequest(DOCUMENT), null);
+	});
+
+	it("says how long something took", () => {
+		assert.equal(took("PDF", 312.4), "PDF in 312 ms.");
+		assert.equal(took("Saved a.stxt", 1440), "Saved a.stxt in 1.4 s.");
 	});
 });

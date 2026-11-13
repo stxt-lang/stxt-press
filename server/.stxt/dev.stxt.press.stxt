@@ -87,6 +87,8 @@ Schema (@stxt.schema): dev.stxt.press
 				Max: 1
 			Child: Documents
 				Max: 1
+			Child: Save
+				Max: 1
 	Node: Editor
 		Type: BOOLEAN
 		Description: Whether the index (GET /) and the web editor (GET /editor, /editor/templates/{path} and /editor/documents/{path}) are on, with their files under /assets/ and /fonts, which only the previews of the editor use. The pages are served without token; they ask for the token when the API answers 401. By default true.
@@ -99,6 +101,9 @@ Schema (@stxt.schema): dev.stxt.press
 	Node: Documents
 		Type: BOOLEAN
 		Description: Whether /documents, which shows the texts of the documents, is on. By default true.
+	Node: Save
+		Type: BOOLEAN
+		Description: Whether PUT /templates/{path} and PUT /documents/{path} are on: they write the files of a template or a document, the save of the editor. They need Templates or Documents on. By default false: a server does not change its own files unless its configuration says so.
 
 	Node: Limits
 		Type: GROUP

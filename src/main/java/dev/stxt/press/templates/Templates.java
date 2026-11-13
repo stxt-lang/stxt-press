@@ -1,11 +1,14 @@
 package dev.stxt.press.templates;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,6 +44,9 @@ import dev.stxt.utils.FileUtils;
  * <p>A documents folder has the same rules, without sample data: a document is converted as it is, and a
  * {@code <name>.json} beside it is not read. Its errors have their own codes ({@link TemplateException#DOCUMENT_NOT_FOUND},
  * {@link TemplateException#DOCUMENT_LINK_OUTSIDE}).</p>
+ *
+ * <p>{@link #save} writes the files of a template or a document, under the same rules: only those of its chain, and
+ * never through a link that leaves the folder.</p>
  */
 public final class Templates {
 
@@ -84,7 +90,7 @@ public final class Templates {
 
         /** {@return the error of a path that is not one of the folder, for whoever has none} */
         public TemplateException notFound(String path, String why) {
-            return new TemplateException(notFound, true, path, "There is no " + noun + " " + path
+            return new TemplateException(notFound, TemplateException.Reason.NOT_FOUND, path, "There is no " + noun + " " + path
                     + (why == null ? "" : ": " + why));
         }
     }
@@ -185,6 +191,140 @@ public final class Templates {
     }
 
     /**
+     * The texts a save writes: the document, the styles files by their name (the path {@link #get} gives them) and, of a
+     * template, its sample data. A styles file left out, or the data as {@code null}, is not touched.
+     *
+     * @param document the text of {@code <name>.stxt}; not {@code null}
+     * @param styles the texts of the styles files, by their name; not {@code null}
+     * @param data the text of {@code <name>.json}, or {@code null} to leave it as it is; always {@code null} for a
+     *        document
+     */
+    public record Change(String document, Map<String, String> styles, String data) {
+
+        public Change {
+            Objects.requireNonNull(document, "document");
+            styles = Map.copyOf(styles);
+        }
+    }
+
+    /**
+     * What a save did.
+     *
+     * @param template the template or the document as it is now, read again from its files
+     * @param written the files written, by their path in the folder, in the order of the chain; empty if none changed
+     */
+    public record Saved(Template template, List<String> written) {
+
+        public Saved {
+            written = List.copyOf(written);
+        }
+    }
+
+    /**
+     * Writes the files of the template or the document of {@code path}, if they are still those of {@code version}: the
+     * {@link Template#version()} the change starts from, so that a save does not undo one made by someone else (or on the
+     * disk) since. Only the files whose text changes are written, each one whole (to a file beside it that then takes
+     * its place), with the line ends it had: CRLF if it had them, LF otherwise. A file of the chain that does not exist
+     * is created only if it is the own styles ({@code <name>.styles.stxt}) or the sample data ({@code <name>.json}) of
+     * the template and its text is not blank; the {@code .styles.stxt} of a folder is never created, and no file is
+     * deleted. A file that is a link inside the folder is written where the link goes.
+     *
+     * @param path the path of the template or the document
+     * @param version the version the change starts from; not {@code null}
+     * @param change the texts to write; not {@code null}
+     * @return the template or the document as it is now, and the files written
+     * @throws TemplateException if there is no template at {@code path}, if a file of it is a link that leaves the folder,
+     *         or if its files are not those of {@code version} ({@link TemplateException#FILES_CHANGED})
+     * @throws IllegalArgumentException if {@code change} names a styles file that is not of the chain or its own, or has
+     *         data for a document
+     * @throws IOException if a file cannot be read or written
+     */
+    public synchronized Saved save(String path, String version, Change change) throws IOException {
+        Objects.requireNonNull(version, "version");
+        Objects.requireNonNull(change, "change");
+        Template current = get(path);
+        if (!current.version().equals(version)) {
+            throw new TemplateException(TemplateException.FILES_CHANGED, TemplateException.Reason.CHANGED, path,
+                    "The files of the " + kind.noun + " " + path + " changed since they were read");
+        }
+        if (change.data() != null && kind != Kind.TEMPLATE) {
+            throw new IllegalArgumentException("A document has no data");
+        }
+        Map<String, String> existing = new LinkedHashMap<>();
+        for (Job.Styles styles : current.styles()) {
+            existing.put(styles.name(), styles.text());
+        }
+        String own = path + STYLES;
+        for (String name : change.styles().keySet()) {
+            if (!existing.containsKey(name) && !name.equals(own)) {
+                throw new IllegalArgumentException("The styles file " + name + " is not of the chain of " + path);
+            }
+        }
+
+        // Everything checked before writing anything: the document, then the chain in order, then the data.
+        Map<String, String> targets = new LinkedHashMap<>();
+        targets.put(path + DOCUMENT, change.document());
+        for (String name : existing.keySet()) {
+            if (change.styles().containsKey(name)) {
+                targets.put(name, change.styles().get(name));
+            }
+        }
+        if (!existing.containsKey(own) && change.styles().containsKey(own)) {
+            targets.put(own, change.styles().get(own));
+        }
+        if (change.data() != null) {
+            targets.put(path + DATA, change.data());
+        }
+        List<String> written = new ArrayList<>();
+        for (Map.Entry<String, String> target : targets.entrySet()) {
+            if (write(target.getKey(), target.getValue(), path)) {
+                written.add(target.getKey());
+            }
+        }
+        return new Saved(get(path), written);
+    }
+
+    /**
+     * Writes {@code text} in the file {@code relative} if it changes it; {@return whether it was written}. A file that
+     * does not exist is created only if the text is not blank.
+     */
+    private boolean write(String relative, String text, String template) throws IOException {
+        Path file = folder.resolve(relative);
+        Path parent = file.getParent();
+        if (!Files.isDirectory(parent) || !parent.toRealPath().startsWith(real)) {
+            throw linkOutside(relative, template);
+        }
+        Path target = file;
+        String before = null;
+        if (Files.exists(file)) {
+            target = file.toRealPath();
+            if (!target.startsWith(real) || !Files.isRegularFile(target)) {
+                throw linkOutside(relative, template);
+            }
+            before = Files.readString(target, StandardCharsets.UTF_8);
+        } else if (text.isBlank()) {
+            return false;
+        }
+        String lf = text.replace("\r\n", "\n").replace('\r', '\n');
+        if (before != null && before.replace("\r\n", "\n").replace('\r', '\n').equals(lf)) {
+            return false;
+        }
+        String out = before != null && before.contains("\r\n") ? lf.replace("\n", "\r\n") : lf;
+        Path temporary = Files.createTempFile(target.getParent(), "." + target.getFileName() + ".", ".tmp");
+        try {
+            Files.writeString(temporary, out, StandardCharsets.UTF_8);
+            try {
+                Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } finally {
+            Files.deleteIfExists(temporary);
+        }
+        return true;
+    }
+
+    /**
      * {@return the templates of the folder, ordered by their path} Links to folders are not gone into, and a template
      * that is a link leaving the folder is left out ({@link #get} reports it).
      *
@@ -243,10 +383,15 @@ public final class Templates {
     private String read(String relative, String template) throws IOException {
         Path file = folder.resolve(relative);
         if (!file.toRealPath().startsWith(real)) {
-            throw new TemplateException(kind.linkOutside, false, template, "The file " + relative + " of the "
-                    + kind.noun + " " + template + " is a link that leaves the " + kind.folderNoun + " folder");
+            throw linkOutside(relative, template);
         }
         return FileUtils.readFileContent(file.toFile());
+    }
+
+    private TemplateException linkOutside(String relative, String template) {
+        return new TemplateException(kind.linkOutside, TemplateException.Reason.LINK_OUTSIDE, template, "The file "
+                + relative + " of the " + kind.noun + " " + template + " is a link that leaves the " + kind.folderNoun
+                + " folder");
     }
 
     /** {@return the path of {@code file} from the folder, with {@code /} between segments} */

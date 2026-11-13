@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -38,6 +39,8 @@ import dev.stxt.press.templates.Templates;
  * <tr><td>{@code GET /templates/{path}}</td><td>The texts of a template</td></tr>
  * <tr><td>{@code GET /documents}</td><td>The documents, with what files each one has</td></tr>
  * <tr><td>{@code GET /documents/{path}}</td><td>The texts of a document</td></tr>
+ * <tr><td>{@code PUT /templates/{path}}, {@code PUT /documents/{path}}</td><td>Saves the texts of a template or a
+ * document in its files, with {@code Save} on</td></tr>
  * <tr><td>{@code GET /schema}</td><td>The schema {@code dev.stxt.pdf} of the engine</td></tr>
  * <tr><td>{@code GET /fonts}</td><td>The font families of the server, and its faces with their files, for the editor</td></tr>
  * <tr><td>{@code GET /fonts/{id}}</td><td>The file of a face, by its SHA-256, for the editor</td></tr>
@@ -58,6 +61,7 @@ final class Routes {
     private static final List<String> GET = List.of("GET");
     private static final List<String> POST = List.of("POST");
     private static final List<String> GET_POST = List.of("GET", "POST");
+    private static final List<String> GET_PUT = List.of("GET", "PUT");
     private static final Set<String> NONE = Set.of();
     private static final Set<String> CONVERT_PARAMETERS = Set.of("format", "debug");
     /** The id of a font: the SHA-256 of its file, in lowercase hexadecimal. */
@@ -123,6 +127,8 @@ final class Routes {
         this.config = config;
         this.schema = DocumentSchema.text().getBytes(StandardCharsets.UTF_8);
         boolean editor = config.editor();
+        // The texts of a template or a document are saved with PUT only with Save on: without it, PUT is a 405.
+        List<String> texts = config.save() ? GET_PUT : GET;
         this.table = List.of(
                 new Route("/health", Match.EXACT, Access.OPEN, true, GET, NONE,
                         (exchange, rest, parameters) -> Responses.sendJson(exchange, 200, health())),
@@ -146,11 +152,11 @@ final class Routes {
                         (exchange, rest, parameters) -> render(exchange, parameters)),
                 new Route("/templates", Match.EXACT, Access.TOKEN, config.templates(), GET, NONE,
                         (exchange, rest, parameters) -> list(exchange, templates, Templates.Kind.TEMPLATE)),
-                new Route("/templates/", Match.PREFIX, Access.TOKEN, config.templates(), GET, NONE,
+                new Route("/templates/", Match.PREFIX, Access.TOKEN, config.templates(), texts, NONE,
                         (exchange, rest, parameters) -> texts(exchange, templates, Templates.Kind.TEMPLATE, rest)),
                 new Route("/documents", Match.EXACT, Access.TOKEN, config.documents(), GET, NONE,
                         (exchange, rest, parameters) -> list(exchange, documents, Templates.Kind.DOCUMENT)),
-                new Route("/documents/", Match.PREFIX, Access.TOKEN, config.documents(), GET, NONE,
+                new Route("/documents/", Match.PREFIX, Access.TOKEN, config.documents(), texts, NONE,
                         (exchange, rest, parameters) -> texts(exchange, documents, Templates.Kind.DOCUMENT, rest)),
                 new Route("/schema", Match.EXACT, Access.TOKEN, true, GET, NONE,
                         (exchange, rest, parameters) -> Responses.send(exchange, 200, Responses.STXT_TYPE, schema)),
@@ -321,11 +327,61 @@ final class Routes {
 
     /**
      * {@code GET /templates/{path}} and {@code GET /documents/{path}}: the texts of a template, its data as the text of
-     * its file, or of a document, without data.
+     * its file, or of a document, without data; with its version as {@code ETag}, and whether it can be saved
+     * ({@code writable}). With {@code PUT}, the save ({@link #save}).
      */
-    private static void texts(HttpExchange exchange, Templates folder, Templates.Kind kind, String path)
-            throws Exception {
-        Template template = get(folder, kind, path);
+    private void texts(HttpExchange exchange, Templates folder, Templates.Kind kind, String path) throws Exception {
+        if (exchange.getRequestMethod().equals("PUT")) {
+            save(exchange, folder, kind, path);
+            return;
+        }
+        sendTexts(exchange, kind, get(folder, kind, path), null);
+    }
+
+    /**
+     * {@code PUT /templates/{path}} and {@code PUT /documents/{path}}, with {@code Save} on: writes the files of the
+     * body ({@link SaveBody}) if they are still those of the version of {@code If-Match}, the {@code ETag} of the
+     * {@code GET} they come from. It answers as the {@code GET}, with the new version, and the files it wrote
+     * ({@code written}). A JSON body is required, so that a form of another site cannot send one without the preflight
+     * of CORS, which the server does not answer.
+     */
+    private void save(HttpExchange exchange, Templates folder, Templates.Kind kind, String path) throws Exception {
+        String type = exchange.getRequestHeaders().getFirst("Content-Type");
+        if (type == null || !type.toLowerCase(Locale.ROOT).startsWith(Responses.JSON_TYPE)) {
+            throw new HttpError(415, HttpError.CONTENT_TYPE_NOT_VALID, "A save takes a body of type "
+                    + Responses.JSON_TYPE);
+        }
+        String match = exchange.getRequestHeaders().getFirst("If-Match");
+        if (match == null || match.isBlank()) {
+            throw new HttpError(428, HttpError.VERSION_REQUIRED, "A save takes If-Match with the ETag of the GET of the "
+                    + kind.noun() + ", so that it does not undo a change made since");
+        }
+        Templates.Change change = SaveBody.change(Requests.body(exchange, config.maxBodySize()), kind);
+        if (folder == null) {
+            throw kind.notFound(path, "the server has no " + kind.noun() + "s folder");
+        }
+        Templates.Saved saved;
+        try {
+            saved = folder.save(path, unquote(match), change);
+        } catch (IllegalArgumentException e) {
+            throw new HttpError(400, HttpError.BODY_NOT_VALID, e.getMessage());
+        }
+        sendTexts(exchange, kind, saved.template(), saved.written());
+    }
+
+    /** {@return the version of an {@code If-Match}: without its quotes and without a weak {@code W/}} */
+    private static String unquote(String match) {
+        String value = match.trim();
+        if (value.startsWith("W/")) {
+            value = value.substring(2);
+        }
+        return value.length() >= 2 && value.startsWith("\"") && value.endsWith("\"")
+                ? value.substring(1, value.length() - 1) : value;
+    }
+
+    /** Answers with the texts of {@code template}, its version and, after a save, the files written. */
+    private void sendTexts(HttpExchange exchange, Templates.Kind kind, Template template, List<String> written)
+            throws IOException {
         List<Map<String, Object>> styles = new ArrayList<>();
         for (Job.Styles item : template.styles()) {
             styles.add(Map.of("path", item.name(), "text", item.text()));
@@ -337,6 +393,11 @@ final class Routes {
         if (kind == Templates.Kind.TEMPLATE) {
             body.put("data", template.data());
         }
+        body.put("writable", config.save());
+        if (written != null) {
+            body.put("written", written);
+        }
+        exchange.getResponseHeaders().set("ETag", "\"" + template.version() + "\"");
         Responses.sendJson(exchange, 200, body);
     }
 

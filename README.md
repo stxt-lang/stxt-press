@@ -24,6 +24,7 @@ java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice
 | `GET /templates/{path}` | The document, the chain of styles and the sample data of a template |
 | `GET /documents` | The documents, with the files each one has |
 | `GET /documents/{path}` | The document and the chain of styles of a document |
+| `PUT /templates/{path}`, `PUT /documents/{path}` | Writes the files of a template or a document, with [`Save`](#saving) on |
 | `GET /schema` | The schema `dev.stxt.pdf` of the engine |
 | `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file; for the editor |
 | `GET /fonts/{id}` | The file of a face, by its SHA-256; for the editor |
@@ -37,9 +38,9 @@ Every PDF names its producer in its document information and its XMP: `stxt-pres
 `Producer` of `server.stxt`.
 
 ```bash
-curl -o invoice.pdf http://127.0.0.1:8080/print/templates/invoices/invoice
-curl -o invoice.pdf -d @data.json http://127.0.0.1:8080/print/templates/invoices/invoice
-curl -o blue-hour.pdf http://127.0.0.1:8080/print/documents/examples/poster/blue-hour
+curl -o invoice.pdf http://127.0.0.1:8082/print/templates/invoices/invoice
+curl -o invoice.pdf -d @data.json http://127.0.0.1:8082/print/templates/invoices/invoice
+curl -o blue-hour.pdf http://127.0.0.1:8082/print/documents/examples/poster/blue-hour
 ```
 
 A template is a `<name>.stxt` of the templates folder, named by its path without extension
@@ -59,6 +60,7 @@ An error is a JSON body with its `code` and its `message`:
 | `403` | The server has no token, listens on a loopback address and the `Host` of the request is not a local name (`HOST_NOT_ALLOWED`) |
 | `404` | The route, the template or the document does not exist (`NOT_FOUND`, `TEMPLATE_NOT_FOUND`, `DOCUMENT_NOT_FOUND`) |
 | `405` | The method is not one of the route, which the `Allow` header lists |
+| `409` | A save from a version that is not that of the files any more (`FILES_CHANGED`) |
 | `413` | The body is larger than the server accepts (`BODY_TOO_LARGE`), or the document exceeds a limit of the engine |
 | `422` | The document, its styles or its data are not valid |
 | `503` | The conversion ran out of time (`CANCELLED`), the server is converting as many as it can or stopping (`SERVER_BUSY`), or it is warming up (`SERVER_STARTING`, `/health` too) |
@@ -95,6 +97,28 @@ the texts of the documents, so the three can be turned off. `/fonts` gives the f
 of the editor, and is turned off with it, as are `/`, `/editor` and `/assets/`, the files of the pages. With
 `/render`, `/templates`, `/documents` and the editor off, the server has `/print`, `/schema` and `/health`.
 
+### Saving
+
+With `Save: true` in the `Routes` of `server.stxt` (off by default), `PUT /templates/{path}` and
+`PUT /documents/{path}` write the files of a template or a document: the Save of the editor. The body has the shape of
+the `GET`, with the texts to write; `If-Match` has the `ETag` of the `GET` they come from, and a save from another
+version writes nothing, so that it does not undo a change made since, on disk or by someone else (`409`,
+`FILES_CHANGED`).
+
+```bash
+curl -X PUT -H 'Content-Type: application/json' -H 'If-Match: "<the ETag of the GET>"' \
+    --data-binary '{"document": "Document (dev.stxt.pdf): ...", "styles": [{"path": "invoices/invoice.styles.stxt", "text": "..."}], "data": "{...}"}' \
+    http://127.0.0.1:8082/templates/invoices/invoice
+```
+
+Only `document` is required; a styles file left out is not touched, nor are the data without `data`. Only the files
+of the chain of the template or the document are written, each one only if its text changes, whole (to a file beside
+it that then takes its place) and with the line ends it had. The own styles (`<name>.styles.stxt`) and the sample data
+(`<name>.json`) are created if they do not exist and their text is not blank; the `.styles.stxt` of a folder is never
+created, and no file is deleted. The answer is that of the `GET`, with the new `ETag` and the files written
+(`"written"`). A save needs `Content-Type: application/json` (`415`, `CONTENT_TYPE_NOT_VALID`) and `If-Match` (`428`,
+`VERSION_REQUIRED`). Without `Save`, `PUT` is a `405`. A server that others reach should have a token with `Save` on.
+
 ## Index and editor
 
 `GET /` is the index, which fills the window in two halves, as the editor. On the left, a tab for the documents (the
@@ -116,7 +140,10 @@ on disk is seen with a reload.
 | `/editor/documents/{path}` | The document `{path}` of the documents folder: `/editor/documents/examples/poster/blue-hour` |
 | `/editor/templates/{path}` | The template `{path}` of the templates folder: `/editor/templates/catalogs/catalog` |
 
-With changes in the panels, leaving the page (the index, back, a reload) asks first. Nothing is saved on the server.
+With changes in the panels, leaving the page (the index, back, a reload) asks first. With `Save` on in the server,
+**Save** (or Ctrl+S) writes the files that changed ([Saving](#saving)); a `.styles.stxt` of a folder, which applies to
+everything below it, is saved only after a confirmation. Without `Save`, there is no button: what the panels change is
+tried with the buttons and lost on leaving.
 
 - **A document**: the document and its chain of styles, without data, one panel per file. As the server has them, it
   is printed with `/print/documents`; edited, or a blank one, with `/render`.
@@ -129,7 +156,8 @@ The editor fills the window. The bar has the path of what it shows and the butto
 file (the data, the document, each styles document), with a dot when the file has an error (red) or a warning of the
 schema (amber); on the right, the output of the last button. **Preview** shows the SVG pages (with **Outlines**, the
 outlines of the boxes) and **PDF** the PDF in the viewer of the browser, with a link that downloads it with its name;
-for a template, **Fill** shows the filled document. An
+for a template, **Fill** shows the filled document. Each one says how long it took. Each half has a button, at its
+bottom right, that puts it over the whole window, and Esc puts it back; the PDF of the index has it too. An
 error of the server is marked in its panel, on its line, and its tab is shown. The document panel validates against
 the schema of `/schema`, for a template only while the data panel is empty: a document with Slots is validated
 by the server, once filled. A window narrower than 900 px shows one column, and the page scrolls.
@@ -189,6 +217,7 @@ Server (dev.stxt.press):
     Document folder: documents
     Routes:
         Render: false
+        Save: true
     Limits:
         Timeout: 20
         Max pages: 500
@@ -218,7 +247,7 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 | `Font folder`, `Image folder` | — | The fonts and the images in folders of their own, instead of `Resource folder`; each `Image folder` with its `Prefix` |
 | `Template folder` | none | The templates folder |
 | `Document folder` | none | The documents folder |
-| `Routes` | all on | `Editor`, `Render`, `Templates` and `Documents`: the index and the editor (with `/fonts`), `/render`, `/templates` and `/documents` on or off |
+| `Routes` | all on but `Save` | `Editor`, `Render`, `Templates` and `Documents`: the index and the editor (with `/fonts`), `/render`, `/templates` and `/documents` on or off; `Save`, the `PUT` of `/templates` and `/documents` ([Saving](#saving)), off by default |
 | `Limits` | — | `Max body size` (bytes, 2 MiB), `Timeout` (seconds, 30), `Concurrent conversions` (4), and the limits of the engine: `Max pages`, `Max image pixels`, `Max SVG elements`, `Max SVG depth`, `Max PDF bytes` |
 | `Template options` | — | `PDF UA` (`1` or `2`), `PDF A` (`A2B`, `A2A`, `A3B`, `A3A`) and one `Exclude` for each check not made, as the `options` of `/render`; for the templates and the documents of `/print` |
 | `Producer` | `stxt-press 0.1.0 (stxt-pdf 0.17.0)` | The producer that the PDFs of the server and of `render` and `print` name |
@@ -228,7 +257,8 @@ written in the file, only the name of its variable.
 
 The folder [`server/`](server/) is a whole server, to copy anywhere and to start a project from: `start.sh` and
 `start.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
-`127.0.0.1:8080` and shows the other nodes commented with their defaults; the fonts IBM Plex Sans, Serif and Mono and
+`127.0.0.1:8082`, turns `Save` on (for the editor of this machine) and shows the other nodes commented with their
+defaults; the fonts IBM Plex Sans, Serif and Mono and
 the images of the examples of stxt-pdf in `resources/`; and in `templates/`, one template for each example of
 stxt-pdf (`invoices/invoice`, `letters/letter`, `resumes/resume`, `reports/annual-report`, `newsletters/newsletter`,
 `menus/menu`, `contracts/contract`, `manuals/manual`, `catalogs/catalog`, `certificates/certificate` and

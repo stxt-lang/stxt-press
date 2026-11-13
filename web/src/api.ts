@@ -56,10 +56,14 @@ export function askToken(): Promise<string | null> {
 	});
 }
 
-/** Calls the API with the token of the page; on a 401, asks for the token and tries again. */
-export async function call(method: string, url: string, body?: string, contentType?: string): Promise<Response> {
+/**
+ * Calls the API with the token of the page; on a 401, asks for the token and tries again. `more` are other headers,
+ * such as the `If-Match` of a save.
+ */
+export async function call(method: string, url: string, body?: string, contentType?: string,
+	more: Record<string, string> = {}): Promise<Response> {
 	for (;;) {
-		const headers: Record<string, string> = {};
+		const headers: Record<string, string> = { ...more };
 		const current = token();
 		if (current) {
 			headers.Authorization = `Bearer ${current}`;

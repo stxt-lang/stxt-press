@@ -2,12 +2,16 @@
  * The web editor of stxt-press: the panels of a document or of a template of the server, and the buttons that fill it,
  * preview it as SVG pages and show its PDF. It is opened from the index, and what it shows is in its URL
  * (`/editor/templates/{path}`, `/editor/documents/{path}` or `/editor`, see `parsePlace`), so a reload shows the same
- * template or document, read again from the server. What a button asks for and where an error goes is in model.ts,
- * what a URL shows in place.ts, the panels and their tabs in panels.ts, and what the buttons give in output.ts; here
- * are the place, the buttons and the start.
+ * template or document, read again from the server. With `Save` on in the server, the Save button (or Ctrl+S) writes
+ * the files that changed. What a button asks for and where an error goes is in model.ts, what a URL shows in place.ts,
+ * the panels and their tabs in panels.ts, what the buttons give in output.ts and the full window of each half in
+ * maximize.ts; here are the place, the buttons and the start.
  */
 import { $, askToken, call, errorOf, say, token } from "./api";
-import { curl, documentPanels, fileName, request, serverMessage, target, templatePanels, validatesDocument } from "./model";
+import { maximizable } from "./maximize";
+import {
+	curl, documentPanels, fileName, request, saveRequest, serverMessage, target, templatePanels, took, validatesDocument,
+} from "./model";
 import type { Format, LocalError, Panels, Request, ServerDocument, ServerError, ServerTemplate, State, Target } from "./model";
 import { clearOutput, filled, loadFonts, showFilled, showPages, showPdf } from "./output";
 import { clearPanels, mark, panelOf, setSchema, showPanels, texts, unmarkAll, validateDocument } from "./panels";
@@ -25,6 +29,10 @@ let original: ServerTemplate | undefined;
 let originalDocument: ServerDocument | undefined;
 /** What the panels show; `undefined` without panels (a template that cannot be read), and then the buttons are off. */
 let shown: Panels | undefined;
+/** The version of the files on the panels (the `ETag` of the server), which a save starts from. */
+let version: string | undefined;
+/** Whether the server saves what the page shows (`Save` of `server.stxt`): without it there is no Save button. */
+let writable = false;
 
 // ---- The panels
 
@@ -49,13 +57,19 @@ function display(panels: Panels): void {
 	dataChanged();
 }
 
-/** Turns the buttons on with panels, and off without them. */
+/** Turns the buttons on with panels, and off without them; Save, only with changes since the last save. */
 function setButtons(): void {
 	["fill", "preview", "pdf"].forEach((id) => ($<HTMLButtonElement>(id).disabled = shown === undefined));
+	const save = $<HTMLButtonElement>("save");
+	save.hidden = !writable;
+	save.disabled = shown === undefined || !dirty;
 }
 
 function edited(): void {
-	dirty = true;
+	if (!dirty) {
+		dirty = true;
+		setButtons();
+	}
 }
 
 function dataChanged(): void {
@@ -124,6 +138,7 @@ async function run(format: Format): Promise<void> {
 	const buttons = ["fill", "preview", "pdf"].map((id) => $<HTMLButtonElement>(id));
 	buttons.forEach((button) => (button.disabled = true));
 	say(format === "stxt" ? "Filling…" : "Converting…");
+	const started = performance.now();
 	try {
 		const response = await call(asked.method, asked.url, asked.body, asked.contentType);
 		if (!response.ok) {
@@ -134,14 +149,21 @@ async function run(format: Format): Promise<void> {
 			return;
 		}
 		if (format === "stxt") {
-			showFilled(await response.text());
-			say("Filled.");
+			const text = await response.text();
+			const ms = performance.now() - started;
+			showFilled(text);
+			say(took("Filled", ms));
 		} else if (format === "svg") {
 			const pages = ((await response.json()) as { pages: string[] }).pages;
+			const ms = performance.now() - started;
 			await loadFonts();
 			showPages(pages);
+			say(took(pages.length === 1 ? "1 page" : `${pages.length} pages`, ms));
 		} else {
-			showPdf(await response.blob(), fileName(state()));
+			const pdf = await response.blob();
+			const ms = performance.now() - started;
+			showPdf(pdf, fileName(state()));
+			say(took("PDF", ms));
 		}
 	} catch (e) {
 		say(`The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`, true);
@@ -150,7 +172,72 @@ async function run(format: Format): Promise<void> {
 	}
 }
 
+/**
+ * Saves the files that changed (`PUT`), if they are still those the page read: with someone else's save in between,
+ * the server answers `FILES_CHANGED` and nothing is written. A `.styles.stxt` of a folder, shared by everything below
+ * it, is saved only if the user says so. Afterwards the panels are those of the server: unchanged, so the buttons print
+ * them with `/print`.
+ */
+async function save(): Promise<void> {
+	const asked = saveRequest(state());
+	if (!asked || version === undefined) {
+		return;
+	}
+	if (asked.changed.length === 0) {
+		dirty = false;
+		setButtons();
+		say("Nothing to save: the files are as they were.");
+		return;
+	}
+	if (asked.shared.length > 0 && !window.confirm(`${asked.shared.join(", ")} ${asked.shared.length === 1 ? "is" : "are"}`
+		+ " the styles of a whole folder: saving changes everything below it too. Save?")) {
+		return;
+	}
+	$<HTMLButtonElement>("save").disabled = true;
+	say("Saving…");
+	const started = performance.now();
+	try {
+		const response = await call("PUT", asked.url, asked.body, "application/json", { "If-Match": version });
+		if (!response.ok) {
+			const error = await errorOf(response);
+			say(error.code === "FILES_CHANGED"
+				? `${serverMessage(error, null)}. Nothing was saved. Copy the changes of the panels, and reload to see the files.`
+				: serverMessage(error, null), true);
+			return;
+		}
+		const saved = (await response.json()) as ServerTemplate & ServerDocument;
+		const ms = performance.now() - started;
+		version = response.headers.get("ETag") ?? undefined;
+		const before = mode === "template" ? original : originalDocument;
+		// A file it created (the own styles of a document without any, the data of a template without them) changes
+		// the files of the panels: they are shown again, as the server has them now.
+		const newFiles = !before || saved.styles.length !== before.styles.length
+			|| (mode === "template" && original?.data === null && saved.data !== null);
+		if (mode === "template") {
+			original = saved;
+		} else {
+			originalDocument = saved;
+		}
+		if (newFiles) {
+			display(mode === "template" ? templatePanels(saved) : documentPanels(saved));
+		}
+		dirty = false;
+		const written = saved.written ?? [];
+		say(written.length === 0 ? "Nothing to save: the files are as they were." : took(`Saved ${written.join(", ")}`, ms));
+	} catch (e) {
+		say(`The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`, true);
+	} finally {
+		setButtons();
+	}
+}
+
 // ---- The place
+
+/** Keeps what the server says of the files it gave: their version, and whether it saves them. */
+function served(response: Response, body: { writable?: boolean }): void {
+	version = response.headers.get("ETag") ?? undefined;
+	writable = body.writable === true && version !== undefined;
+}
 
 /** A document of the documents folder of the server, with its chain of styles. */
 async function showDocument(path: string): Promise<void> {
@@ -161,6 +248,7 @@ async function showDocument(path: string): Promise<void> {
 		return;
 	}
 	originalDocument = (await response.json()) as ServerDocument;
+	served(response, originalDocument);
 	display(documentPanels(originalDocument));
 }
 
@@ -173,6 +261,7 @@ async function showTemplate(path: string): Promise<void> {
 		return;
 	}
 	original = (await response.json()) as ServerTemplate;
+	served(response, original);
 	$("print-url").textContent = `${location.origin}/print/templates/${original.path}`;
 	$("print").hidden = false;
 	display(templatePanels(original));
@@ -200,6 +289,7 @@ async function show(place: Place): Promise<void> {
 }
 
 async function start(): Promise<void> {
+	$("save").onclick = () => void save();
 	$("fill").onclick = () => void run("stxt");
 	$("preview").onclick = () => void run("svg");
 	$("pdf").onclick = () => void run("pdf");
@@ -213,12 +303,23 @@ async function start(): Promise<void> {
 		await navigator.clipboard.writeText($("curl").textContent ?? "");
 		say("curl copied.");
 	};
+	// Ctrl+S (Cmd+S on a Mac) saves, instead of saving the page in the browser.
+	document.addEventListener("keydown", (event) => {
+		if ((event.ctrlKey || event.metaKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "s") {
+			event.preventDefault();
+			const button = $<HTMLButtonElement>("save");
+			if (!button.hidden && !button.disabled) {
+				void save();
+			}
+		}
+	});
 	window.addEventListener("beforeunload", (event) => {
 		if (dirty) {
 			event.preventDefault();
 			event.returnValue = "";
 		}
 	});
+	document.querySelectorAll<HTMLElement>(".workspace > section").forEach(maximizable);
 	setButtons();
 
 	const schemaResponse = await call("GET", "/schema");

@@ -84,9 +84,12 @@ final class Responses {
             body.put("code", engine.code());
             body.put("message", engine.getMessage());
         } else if (e instanceof TemplateException template) {
-            boolean notFound = template.notFound();
-            status = notFound ? 404 : 500;
-            if (!notFound) {
+            status = switch (template.reason()) {
+                case NOT_FOUND -> 404;
+                case CHANGED -> 409;
+                case LINK_OUTSIDE -> 500;
+            };
+            if (status == 500) {
                 LOG.log(Level.ERROR, "Error of " + exchange.getRequestURI(), e);
             }
             body.put("code", template.code());

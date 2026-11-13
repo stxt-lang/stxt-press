@@ -1,5 +1,9 @@
 package dev.stxt.press.templates;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +28,36 @@ public record Template(String path, String document, List<Job.Styles> styles, St
         Objects.requireNonNull(path, "path");
         Objects.requireNonNull(document, "document");
         styles = List.copyOf(styles);
+    }
+
+    /**
+     * {@return the version of its files: the SHA-256, in lowercase hexadecimal, of the name and the text of each one, in
+     * the order of the chain} Any change in a file, a styles file that appears or goes, or sample data that appear or
+     * go, gives another version. {@link Templates#save} takes it to know that the files are still those that were read.
+     */
+    public String version() {
+        MessageDigest digest;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Every Java has SHA-256", e);
+        }
+        add(digest, path + ".stxt", document);
+        for (Job.Styles item : styles) {
+            add(digest, item.name(), item.text());
+        }
+        if (data != null) {
+            add(digest, path + ".json", data);
+        }
+        return HexFormat.of().formatHex(digest.digest());
+    }
+
+    /** Adds a file to the digest: its name and its text, each one ended by a zero, which no text has. */
+    private static void add(MessageDigest digest, String name, String text) {
+        digest.update(name.getBytes(StandardCharsets.UTF_8));
+        digest.update((byte) 0);
+        digest.update(text.getBytes(StandardCharsets.UTF_8));
+        digest.update((byte) 0);
     }
 
     /** {@return the name of the template: the last segment of its path, which names its PDF} */

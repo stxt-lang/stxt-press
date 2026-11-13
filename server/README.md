@@ -7,7 +7,7 @@ script. It needs Java 17 or later: that of `JAVA_HOME` if it is set, or the `jav
 ./start.sh
 ```
 
-On Windows, `start.bat`. The server listens on `http://127.0.0.1:8080/`, where the editor is, and Ctrl+C stops it.
+On Windows, `start.bat`. The server listens on `http://127.0.0.1:8082/`, where the editor is, and Ctrl+C stops it.
 
 | Path | What it has |
 |---|---|

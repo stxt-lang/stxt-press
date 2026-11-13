@@ -273,7 +273,6 @@ main.workspace {
 #message.error {
 	color: var(--error);
 }
-
 #view {
 	display: flex;
 	flex-direction: column;
@@ -617,4 +616,57 @@ main.index {
 	font-size: 11px;
 	color: var(--muted);
 	border: 1px solid var(--line);
+}
+
+/* Full window for a part (maximize.ts): the button shows when the mouse is over the part, at its bottom right, out of
+   the scroll bars (at the top it would hide the menu of the PDF viewer); the part over the window has a strip at the
+   top for the button, so that it hides nothing. */
+.maximizable {
+	position: relative;
+}
+
+.maximize {
+	position: absolute;
+	right: 1.4rem;
+	bottom: 1.2rem;
+	z-index: 5;
+	padding: 0 0.45rem;
+	font-size: 15px;
+	line-height: 1.6;
+	background: #fff;
+	color: var(--text);
+	border: 1px solid var(--line);
+	opacity: 0;
+}
+
+.maximizable:hover > .maximize,
+.maximize:focus-visible,
+.maximized > .maximize {
+	opacity: 1;
+}
+
+@media (hover: none) {
+	.maximize {
+		opacity: 1;
+	}
+}
+
+.maximized {
+	position: fixed !important;
+	inset: 0;
+	z-index: 1000;
+	height: auto !important;
+	margin: 0;
+	padding: 2.4rem 0.75rem 0.75rem !important;
+	background: #fff;
+}
+
+.maximized > .maximize {
+	top: 0.4rem;
+	bottom: auto;
+	right: 0.75rem;
+}
+
+body.with-maximized {
+	overflow: hidden;
 }

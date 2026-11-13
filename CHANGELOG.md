@@ -135,3 +135,15 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   and give their texts, and `Documents: false` in `Routes` turns them off. In the editor, `/editor/{path}` became
   `/editor/templates/{path}`, and `/editor/{path}?mode=document` (a template filled with its sample data, as a
   document) gave way to `/editor/documents/{path}`.
+- The save of the templates and the documents (`Save: true` in the `Routes` of `server.stxt`, off by default):
+  `PUT /templates/{path}` and `PUT /documents/{path}` write the files of the body, which has the shape of the `GET`,
+  if `If-Match` has the version they are at (the `ETag` of the `GET`, the SHA-256 of their names and texts,
+  `Template.version()`); from another version nothing is written (`409`, `FILES_CHANGED`). Only the files of the chain
+  are written, those whose text changes, whole and with the line ends they had; the own styles and the sample data are
+  created if their text is not blank, and nothing is deleted (`Templates.save`). A save needs
+  `Content-Type: application/json` (`415`, `CONTENT_TYPE_NOT_VALID`) and `If-Match` (`428`, `VERSION_REQUIRED`). The
+  `GET` of a template or a document gives its `ETag` and whether it is saved (`writable`).
+- In the editor, **Save** and Ctrl+S, with `Save` on: the files that changed, asking first for a `.styles.stxt` of a
+  folder. Each half of the editor, and the PDF of the index, has a button that puts it over the whole window, and Esc
+  puts it back (the idea of the editor of `pdf_gen`). The buttons say how long they took (`PDF in 312 ms.`).
+- The `server.stxt` of `server/` listens on `127.0.0.1:8082`, and has `Save: true`.

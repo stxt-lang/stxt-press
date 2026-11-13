@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -335,5 +337,124 @@ class TemplatesTest {
         assertEquals(TemplateException.DOCUMENT_LINK_OUTSIDE, link.code());
         assertFalse(link.notFound());
         assertTrue(link.getMessage().contains("documents folder"), link.getMessage());
+    }
+
+    // ---- The save
+
+    private static Templates.Change change(String document, Map<String, String> styles, String data) {
+        return new Templates.Change(document, styles, data);
+    }
+
+    @Test
+    void aSaveWritesOnlyWhatChangedAndGivesTheNewVersion() throws IOException {
+        Template before = templates.get("invoices/2026/invoice");
+        Path shared = folder.resolve(".styles.stxt");
+        long sharedTime = Files.getLastModifiedTime(shared).toMillis();
+
+        Templates.Saved saved = templates.save("invoices/2026/invoice", before.version(),
+                change(INVOICE.replace("Paper: A4", "Paper: A5"), Map.of(".styles.stxt", before.styles().get(0).text(),
+                        "invoices/2026/invoice.styles.stxt", styles("#444444", false)), "{\"a\": 1}"));
+
+        assertEquals(List.of("invoices/2026/invoice.stxt", "invoices/2026/invoice.styles.stxt",
+                "invoices/2026/invoice.json"), saved.written());
+        assertTrue(Files.readString(folder.resolve("invoices/2026/invoice.stxt")).contains("Paper: A5"));
+        assertEquals("{\"a\": 1}", Files.readString(folder.resolve("invoices/2026/invoice.json")));
+        // The shared styles came as they were: not written.
+        assertEquals(sharedTime, Files.getLastModifiedTime(shared).toMillis());
+        assertEquals(templates.get("invoices/2026/invoice"), saved.template());
+        assertFalse(before.version().equals(saved.template().version()));
+        // No file of its own is left beside them.
+        try (var list = Files.list(folder.resolve("invoices/2026"))) {
+            assertEquals(3, list.count());
+        }
+    }
+
+    @Test
+    void aSaveFromAnotherVersionWritesNothing() throws IOException {
+        Template before = templates.get("invoices/receipt");
+        write("invoices/receipt.stxt", RECEIPT.replace("Paid.", "Changed on disk."));
+
+        TemplateException e = assertThrows(TemplateException.class, () -> templates.save("invoices/receipt",
+                before.version(), change(RECEIPT.replace("Paid.", "Mine."), Map.of(), null)));
+
+        assertEquals(TemplateException.FILES_CHANGED, e.code());
+        assertEquals(TemplateException.Reason.CHANGED, e.reason());
+        assertTrue(Files.readString(folder.resolve("invoices/receipt.stxt")).contains("Changed on disk."));
+    }
+
+    @Test
+    void aSaveKeepsTheLineEndsOfEachFile() throws IOException {
+        write("invoices/receipt.stxt", RECEIPT.replace("\n", "\r\n"));
+        Template before = templates.get("invoices/receipt");
+
+        templates.save("invoices/receipt", before.version(),
+                change(RECEIPT.replace("Paid.", "Mine."), Map.of("invoices/.styles.stxt", "Styles (dev.stxt.pdf):\r\n"),
+                        null));
+
+        String receipt = Files.readString(folder.resolve("invoices/receipt.stxt"));
+        assertTrue(receipt.contains("Mine.\r\n"), receipt);
+        assertFalse(receipt.replace("\r\n", "").contains("\n"), "every line end is CRLF");
+        // A file with LF stays with LF.
+        assertEquals("Styles (dev.stxt.pdf):\n", Files.readString(folder.resolve("invoices/.styles.stxt")));
+    }
+
+    @Test
+    void aSaveCreatesTheOwnStylesAndTheDataOnlyWithText() throws IOException {
+        Template before = templates.get("invoices/receipt");
+
+        Templates.Saved blank = templates.save("invoices/receipt", before.version(),
+                change(RECEIPT, Map.of("invoices/receipt.styles.stxt", " \n"), " "));
+        assertEquals(List.of(), blank.written());
+        assertFalse(Files.exists(folder.resolve("invoices/receipt.styles.stxt")));
+        assertFalse(Files.exists(folder.resolve("invoices/receipt.json")));
+
+        Templates.Saved created = templates.save("invoices/receipt", before.version(),
+                change(RECEIPT, Map.of("invoices/receipt.styles.stxt", styles("#555555", false)), "{}"));
+        assertEquals(List.of("invoices/receipt.styles.stxt", "invoices/receipt.json"), created.written());
+        assertEquals(List.of(".styles.stxt", "invoices/.styles.stxt", "invoices/receipt.styles.stxt"),
+                names(created.template()));
+        assertEquals("{}", created.template().data());
+    }
+
+    @Test
+    void aSaveTakesOnlyTheFilesOfTheChain() throws IOException {
+        Template before = templates.get("invoices/receipt");
+
+        for (String name : List.of("own.styles.stxt", "invoices/2026/.styles.stxt", "../outside.stxt", "invoices/x")) {
+            assertThrows(IllegalArgumentException.class, () -> templates.save("invoices/receipt", before.version(),
+                    change(RECEIPT, Map.of(name, "x"), null)), name);
+        }
+        // A folder .styles.stxt that does not exist is not created.
+        assertFalse(Files.exists(folder.resolve("invoices/2026/.styles.stxt")));
+        Templates documents = new Templates(folder, Templates.Kind.DOCUMENT);
+        assertThrows(IllegalArgumentException.class, () -> documents.save("invoices/receipt",
+                documents.get("invoices/receipt").version(), change(RECEIPT, Map.of(), "{}")));
+        assertEquals(TemplateException.DOCUMENT_NOT_FOUND, assertThrows(TemplateException.class,
+                () -> documents.save("missing", "x", change(RECEIPT, Map.of(), null))).code());
+    }
+
+    @Test
+    void aSaveWritesWhereALinkInsideTheFolderGoes() throws IOException {
+        link(folder.resolve("alias.stxt"), folder.resolve("invoices/receipt.stxt"));
+
+        templates.save("alias", templates.get("alias").version(), change(RECEIPT.replace("Paid.", "Linked."),
+                Map.of(), null));
+
+        assertTrue(Files.isSymbolicLink(folder.resolve("alias.stxt")));
+        assertTrue(Files.readString(folder.resolve("invoices/receipt.stxt")).contains("Linked."));
+    }
+
+    @Test
+    void theVersionChangesWithAnyFile() throws IOException {
+        String version = templates.get("invoices/receipt").version();
+        assertEquals(version, templates.get("invoices/receipt").version());
+        assertEquals(64, version.length());
+
+        write("invoices/receipt.json", "{}");
+        String withData = templates.get("invoices/receipt").version();
+        write("invoices/.styles.stxt", styles("#999999", false));
+        String withStyles = templates.get("invoices/receipt").version();
+
+        assertEquals(3, Set.of(version, withData, withStyles).size());
     }
 }

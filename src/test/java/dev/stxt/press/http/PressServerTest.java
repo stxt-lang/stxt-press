@@ -47,6 +47,7 @@ import dev.stxt.pdf.model.Limits;
 import dev.stxt.pdf.resources.Resources;
 import dev.stxt.press.Options;
 import dev.stxt.press.Press;
+import dev.stxt.press.templates.TemplateException;
 import dev.stxt.press.templates.Templates;
 
 /**
@@ -998,5 +999,99 @@ class PressServerTest {
             assertThrows(IllegalArgumentException.class, bad::run);
         }
         assertFalse(ServerConfig.DEFAULT.withToken("s3cret").toString().contains("s3cret"));
+    }
+
+    // ---- The save
+
+    /** A {@code PUT} with a body of {@code type} and, if not {@code null}, {@code If-Match}. */
+    private HttpResponse<byte[]> put(String path, String body, String type, String match) throws Exception {
+        HttpRequest.Builder builder = request(path).PUT(BodyPublishers.ofString(body)).header("Content-Type", type);
+        if (match != null) {
+            builder.header("If-Match", match);
+        }
+        return CLIENT.send(builder.build(), BodyHandlers.ofByteArray());
+    }
+
+    private static String etag(HttpResponse<byte[]> response) {
+        return response.headers().firstValue("ETag").orElseThrow();
+    }
+
+    @Test
+    void theTextsHaveTheirVersionAndSayWhetherTheyAreSaved() throws Exception {
+        start(ServerConfig.DEFAULT);
+
+        HttpResponse<byte[]> invoice = get("/templates/invoices/invoice");
+        HttpResponse<byte[]> letter = get("/documents/letters/letter");
+
+        assertTrue(etag(invoice).matches("\"[0-9a-f]{64}\""), etag(invoice));
+        assertEquals("\"" + templates.get("invoices/invoice").version() + "\"", etag(invoice));
+        assertFalse(json(invoice).get("writable").asBoolean());
+        assertFalse(json(letter).get("writable").asBoolean());
+        // Off by default: the method is not one of the route.
+        HttpResponse<byte[]> refused = put("/templates/hello", "{\"document\": \"x\"}", "application/json", etag(invoice));
+        error(refused, 405, HttpError.METHOD_NOT_ALLOWED);
+        assertEquals("GET", refused.headers().firstValue("Allow").orElse(null));
+        assertEquals(DOCUMENT, Files.readString(templates.folder().resolve("hello.stxt")));
+    }
+
+    @Test
+    void aSaveWritesTheFilesOfItsVersion() throws Exception {
+        start(ServerConfig.DEFAULT.withSave(true));
+        HttpResponse<byte[]> before = get("/templates/invoices/invoice");
+        assertTrue(json(before).get("writable").asBoolean());
+        String edited = WITH_SLOTS.replace("Paper: A4", "Paper: A5");
+
+        HttpResponse<byte[]> saved = put("/templates/invoices/invoice",
+                JSON.writeValueAsString(Map.of("document", edited, "styles", List.of(Map.of("path", ".styles.stxt",
+                        "text", STYLES)))), "application/json; charset=utf-8", etag(before));
+
+        assertEquals(200, saved.statusCode(), () -> text(saved));
+        assertEquals("[\"invoices/invoice.stxt\"]", json(saved).get("written").toString());
+        assertEquals(edited, json(saved).get("document").asText());
+        assertEquals(edited, Files.readString(templates.folder().resolve("invoices/invoice.stxt")));
+        assertFalse(etag(saved).equals(etag(before)));
+        assertEquals(etag(saved), etag(get("/templates/invoices/invoice")));
+
+        // From the version before, someone else's save would be undone: nothing is written.
+        JsonNode stale = error(put("/templates/invoices/invoice", JSON.writeValueAsString(Map.of("document", WITH_SLOTS)),
+                "application/json", etag(before)), 409, TemplateException.FILES_CHANGED);
+        assertTrue(stale.get("message").asText().contains("invoices/invoice"));
+        assertEquals(edited, Files.readString(templates.folder().resolve("invoices/invoice.stxt")));
+    }
+
+    @Test
+    void aSaveOfADocument() throws Exception {
+        start(ServerConfig.DEFAULT.withSave(true));
+        String version = etag(get("/documents/letters/letter"));
+
+        HttpResponse<byte[]> saved = put("/documents/letters/letter", JSON.writeValueAsString(Map.of("document",
+                DOCUMENT.replace("Hello.", "Saved."))), "application/json", "W/" + version);
+
+        assertEquals(200, saved.statusCode(), () -> text(saved));
+        assertTrue(Files.readString(documents.folder().resolve("letters/letter.stxt")).contains("Saved."));
+        assertFalse(json(saved).has("data"));
+        error(put("/documents/letters/letter", JSON.writeValueAsString(Map.of("document", DOCUMENT, "data", "{}")),
+                "application/json", etag(saved)), 400, HttpError.BODY_NOT_VALID);
+    }
+
+    @Test
+    void aSaveThatIsNotValidWritesNothing() throws Exception {
+        start(ServerConfig.DEFAULT.withSave(true).withToken("s3cret"));
+        String body = JSON.writeValueAsString(Map.of("document", "changed"));
+        String version = "\"" + templates.get("hello").version() + "\"";
+
+        error(put("/templates/hello", body, "application/json", version), 401, HttpError.UNAUTHORIZED);
+        server.close();
+        start(ServerConfig.DEFAULT.withSave(true));
+        error(put("/templates/hello", body, "text/plain", version), 415, HttpError.CONTENT_TYPE_NOT_VALID);
+        error(put("/templates/hello", body, "application/json", null), 428, HttpError.VERSION_REQUIRED);
+        error(put("/templates/hello", "{\"styles\": []}", "application/json", version), 400, HttpError.BODY_NOT_VALID);
+        error(put("/templates/hello", "{\"document\": \"x\", \"colour\": 1}", "application/json", version), 400,
+                HttpError.BODY_NOT_VALID);
+        error(put("/templates/hello", JSON.writeValueAsString(Map.of("document", "x", "styles",
+                List.of(Map.of("path", "../outside.stxt", "text", "x")))), "application/json", version), 400,
+                HttpError.BODY_NOT_VALID);
+        error(put("/templates/missing", body, "application/json", version), 404, TemplateException.NOT_FOUND);
+        assertEquals(DOCUMENT, Files.readString(templates.folder().resolve("hello.stxt")));
     }
 }
