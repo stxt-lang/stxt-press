@@ -353,7 +353,7 @@ public final class ServerFile {
             InlineNode routes = group(server, "Routes");
             if (routes != null) {
                 http = http.withRoutes(bool(routes, "Editor", http.editor()), bool(routes, "Render", http.render()),
-                        bool(routes, "Templates", http.templates()), bool(routes, "Documents", http.documents()))
+                        bool(routes, "Files", http.files()))
                         .withSave(bool(routes, "Save", http.save()));
             }
 

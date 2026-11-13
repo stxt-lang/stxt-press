@@ -29,14 +29,15 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   leaving the folder is not read (`TEMPLATE_LINK_OUTSIDE`). The folder is read on every call.
 - The HTTP service, in `dev.stxt.press.http`, on the `HttpServer` of the JDK: `PressServer` with a `ServerConfig`
   (address, token, routes on, limits, options of the templates and the documents). Routes:
-  `GET`/`POST /print/templates/{path}` (a template, filled with its sample data or with the body),
-  `GET /print/documents/{path}` (a document of the documents folder, as it is), `POST /render` (any document, with its
-  styles, its data as a JSON value and its options), `GET /templates`, `GET /templates/{path}`, `GET /documents`,
-  `GET /documents/{path}`, `GET /schema`, `GET /fonts` and `GET /health`.
-  `?format=pdf|svg|stxt` and `&debug=true` on `/print` and `/render`. Errors as JSON with `code` and `message`, and
+  for the clients, `GET`/`POST /print/{path}` (a template, filled with its sample data or with the body),
+  `GET /documents/{path}` (a document of the documents folder, as it is), `POST /render` (any document, with its
+  styles, its data as a JSON value and its options), `GET /schema` and `GET /health`; for the editor,
+  `GET /files/templates`, `GET /files/templates/{path}`, `GET /files/documents`, `GET /files/documents/{path}` (the
+  lists and the texts of the templates and the documents) and `GET /fonts`.
+  `?format=pdf|svg|stxt` and `&debug=true` on `/print`, `/documents` and `/render`. Errors as JSON with `code` and `message`, and
   `kind`, `line`, `source` and `filled` for those of a conversion: `400`, `401`, `404`, `405`, `413`, `422`, `503`
   (a conversion out of time, `CANCELLED`, or the server busy, `SERVER_BUSY`) and `500`. With a token, every route but
-  `/health` asks for `Authorization: Bearer`. `/render`, `/templates` and `/documents` can be turned off.
+  `/health` asks for `Authorization: Bearer`. `/render` and the routes under `/files/` can be turned off.
 - `jackson-databind` 2.22.4, for the JSON of the HTTP service.
 - The configuration of a server, `server.stxt`, in `dev.stxt.press.config`: `ServerFile` finds it (`--config`, then
   `STXT_PRESS_CONFIG`, then `server.stxt` in the working directory), validates it with the schema `dev.stxt.press` of
@@ -51,8 +52,8 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   again: `GET /editor` (a blank document), `GET /editor/documents/{path}` (a document of the documents folder) and
   `GET /editor/templates/{path}` (a template); with changes in the panels, leaving the page asks first. A document (its
   styles, without data: a blank one, rendered with `/render`, or one of the documents folder, printed with
-  `/print/documents` or, edited, rendered with `/render`) or a template (its sample data first and then its document
-  and its chain of styles, printed with `/print/templates` or, edited, rendered with `/render`, and its `curl`). The
+  `/documents` or, edited, rendered with `/render`) or a template (its sample data first and then its document
+  and its chain of styles, printed with `/print` or, edited, rendered with `/render`, and its `curl`). The
   page fills the window, without a scroll of its own: the bar has the path of what it shows, which links back to its
   folder in the index, and the buttons; on the left, one tab for each file (the data, the document and each styles
   document), marked when it has an error or a warning; on the right, the output of the last button. Fill (for a
@@ -130,13 +131,15 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - The documents folder (`Document folder` in `server.stxt`), beside the templates folder: layout documents printed as
   they are, with the rules of the templates folder (a path of `[A-Za-z0-9_-]+` segments, the chain of `.styles.stxt`
   from the root, links that leave the folder not read) and without data, whose errors are `DOCUMENT_NOT_FOUND` and
-  `DOCUMENT_LINK_OUTSIDE`. `Templates` reads either kind of folder (`Templates.Kind`). `/print/{path}` became
-  `/print/templates/{path}`, beside `/print/documents/{path}`; `GET /documents` and `GET /documents/{path}` list them
-  and give their texts, and `Documents: false` in `Routes` turns them off. In the editor, `/editor/{path}` became
+  `DOCUMENT_LINK_OUTSIDE`. `Templates` reads either kind of folder (`Templates.Kind`). `GET /documents/{path}` prints
+  them, beside `/print/{path}` for the templates. The routes of the editor moved under `/files/`: `GET /templates` and
+  `GET /templates/{path}` became `GET /files/templates` and `GET /files/templates/{path}`, and the documents are listed
+  and give their texts in `GET /files/documents` and `GET /files/documents/{path}`. `Templates: false` in the `Routes`
+  of `server.stxt` gave way to `Files: false`, which turns off the four. In the editor, `/editor/{path}` became
   `/editor/templates/{path}`, and `/editor/{path}?mode=document` (a template filled with its sample data, as a
   document) gave way to `/editor/documents/{path}`.
 - The save of the templates and the documents (`Save: true` in the `Routes` of `server.stxt`, off by default):
-  `PUT /templates/{path}` and `PUT /documents/{path}` write the files of the body, which has the shape of the `GET`,
+  `PUT /files/templates/{path}` and `PUT /files/documents/{path}` write the files of the body, which has the shape of the `GET`,
   if `If-Match` has the version they are at (the `ETag` of the `GET`, the SHA-256 of their names and texts,
   `Template.version()`); from another version nothing is written (`409`, `FILES_CHANGED`). Only the files of the chain
   are written, those whose text changes, whole and with the line ends they had; the own styles and the sample data are
@@ -146,4 +149,4 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - In the editor, **Save** and Ctrl+S, with `Save` on: the files that changed, asking first for a `.styles.stxt` of a
   folder. Each half of the editor, and the PDF of the index, has a button that puts it over the window, under the bar,
   which keeps its buttons and gets a cross that puts it back, as Esc does (the idea of the editor of `pdf_gen`). The buttons say how long they took (`PDF in 312 ms.`).
-- The `server.stxt` of `server/` listens on `127.0.0.1:8082`, and has `Save: true`.
+- The `server.stxt` of `server/` has `Save: true`.

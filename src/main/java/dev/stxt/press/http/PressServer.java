@@ -63,10 +63,10 @@ public final class PressServer implements AutoCloseable {
      * Starts a server.
      *
      * @param shared the converter of the server, with its resources and its limits; not {@code null}
-     * @param templates the templates folder, or {@code null} if the server has none ({@code /print/templates} is then
+     * @param templates the templates folder, or {@code null} if the server has none ({@code /print} is then
      *        always {@code 404})
      * @param documents the documents folder ({@link Templates.Kind#DOCUMENT}), or {@code null} if the server has none
-     *        ({@code /print/documents} is then always {@code 404})
+     *        ({@code /documents} is then always {@code 404})
      * @param config where it listens and its token, routes and limits; not {@code null}
      * @return the server, already answering
      * @throws IOException if it cannot listen on the address of {@code config}

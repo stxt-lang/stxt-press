@@ -26,7 +26,7 @@ export interface DocumentState {
 	original?: { document: string; styles: StylesText[] };
 }
 
-/** A document as `GET /documents/{path}` gives it, with whether the server saves it (`Save` of `server.stxt`). */
+/** A document as `GET /files/documents/{path}` gives it, with whether the server saves it (`Save` of `server.stxt`). */
 export interface ServerDocument {
 	path: string;
 	document: string;
@@ -35,7 +35,7 @@ export interface ServerDocument {
 	written?: string[];
 }
 
-/** A template as `GET /templates/{path}` gives it: its data as the text of its file, or `null` without one. */
+/** A template as `GET /files/templates/{path}` gives it: its data as the text of its file, or `null` without one. */
 export interface ServerTemplate {
 	path: string;
 	document: string;
@@ -147,8 +147,8 @@ function sameText(a: string, b: string): boolean {
 }
 
 /**
- * The request of a button. A document of the server goes to `/print/documents` while its document and its styles are
- * those of the server; edited, or a blank one, to `/render`. A template goes to `/print/templates` while its document
+ * The request of a button. A document of the server goes to `/documents` while its document and its styles are
+ * those of the server; edited, or a blank one, to `/render`. A template goes to `/print` while its document
  * and its styles are those of the server, with the data of the panel; edited, to `/render` with the whole chain of
  * styles, as the server would apply them.
  */
@@ -156,10 +156,10 @@ export function request(state: State, format: Format, debug: boolean): Request |
 	const query = `?format=${format}${debug && format === "svg" ? "&debug=true" : ""}`;
 	if (state.mode === "document" && state.path !== null && isUnchanged(state)) {
 		const names = state.styles.map((styles, i) => i < state.original!.styles.length ? styles.path : "");
-		return { method: "GET", url: `/print/documents/${state.path}${query}`, stylesNames: names };
+		return { method: "GET", url: `/documents/${state.path}${query}`, stylesNames: names };
 	}
 	if (state.mode === "template" && isUnchanged(state)) {
-		const url = `/print/templates/${state.path}${query}`;
+		const url = `/print/${state.path}${query}`;
 		const names = state.styles.map((styles) => styles.path);
 		if (state.data.trim() === "") {
 			// Without data in the panel, GET: the template as it is, if it has no sample data.
@@ -283,9 +283,9 @@ export function tabState(marked: boolean, severities: string[]): "error" | "warn
 }
 
 /**
- * What a save sends, and what it asks first: the body of `PUT /templates/{path}` or `PUT /documents/{path}` with the
- * files that changed, their names, and those of them that are the `.styles.stxt` of a folder, shared by every template
- * or document below it.
+ * What a save sends, and what it asks first: the body of `PUT /files/templates/{path}` or
+ * `PUT /files/documents/{path}` with the files that changed, their names, and those of them that are the `.styles.stxt`
+ * of a folder, shared by every template or document below it.
  */
 export interface SaveRequest {
 	url: string;
@@ -334,7 +334,7 @@ export function saveRequest(state: State): SaveRequest | null {
 		}
 	}
 	return {
-		url: `/${state.mode === "template" ? "templates" : "documents"}/${state.path}`,
+		url: `/files/${state.mode === "template" ? "templates" : "documents"}/${state.path}`,
 		body: `{${fields.join(",")}}`,
 		changed,
 		shared: changed.filter((name) => name === ".styles.stxt" || name.endsWith("/.styles.stxt")),
@@ -369,6 +369,6 @@ export function curl(origin: string, path: string, data: string, token: boolean)
 	if (data.trim() !== "") {
 		parts.push("-H", "'Content-Type: application/json'", "--data-binary", shellQuote(data.trim()));
 	}
-	parts.push(`${origin}/print/templates/${path}`);
+	parts.push(`${origin}/print/${path}`);
 	return parts.join(" ");
 }

@@ -314,8 +314,8 @@ class PressServerTest {
     void getPrintFillsTheTemplateWithItsSampleData() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        HttpResponse<byte[]> pdf = get("/print/templates/invoices/invoice");
-        HttpResponse<byte[]> stxt = get("/print/templates/invoices/invoice?format=stxt");
+        HttpResponse<byte[]> pdf = get("/print/invoices/invoice");
+        HttpResponse<byte[]> stxt = get("/print/invoices/invoice?format=stxt");
 
         assertEquals(200, pdf.statusCode(), () -> text(pdf));
         assertTrue(isPdf(pdf.body()));
@@ -327,9 +327,9 @@ class PressServerTest {
     void postPrintFillsTheTemplateWithTheBody() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        HttpResponse<byte[]> stxt = post("/print/templates/invoices/invoice?format=stxt",
+        HttpResponse<byte[]> stxt = post("/print/invoices/invoice?format=stxt",
                 "{\"title\": \"Posted\", \"lines\": [{\"text\": \"Only.\"}]}");
-        HttpResponse<byte[]> pdf = post("/print/templates/invoices/invoice", SAMPLE);
+        HttpResponse<byte[]> pdf = post("/print/invoices/invoice", SAMPLE);
 
         assertTrue(text(stxt).contains("Title: Posted"), text(stxt));
         assertFalse(text(stxt).contains("Two."));
@@ -340,7 +340,7 @@ class PressServerTest {
     void dataOfPrintThatAreNotJsonAreAnErrorOfTheData() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        JsonNode body = error(post("/print/templates/invoices/invoice", "{\n\"title\": }"), 422, "JSON_NOT_VALID");
+        JsonNode body = error(post("/print/invoices/invoice", "{\n\"title\": }"), 422, "JSON_NOT_VALID");
 
         assertEquals("data", body.get("source").asText());
         assertEquals(2, body.get("line").asInt());
@@ -350,23 +350,24 @@ class PressServerTest {
     void aTemplateThatDoesNotExistIsA404() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        for (String path : List.of("/print/templates/missing", "/print/templates/invoices/../hello",
-                "/print/templates/invoices/invoice.json", "/print/templates/%2E%2E/hello", "/print/templates/",
-                "/templates/missing", "/print/templates/letters/letter")) {
+        for (String path : List.of("/print/missing", "/print/invoices/../hello",
+                "/print/invoices/invoice.json", "/print/%2E%2E/hello", "/print/",
+                "/files/templates/missing", "/print/letters/letter")) {
             error(get(path), 404, "TEMPLATE_NOT_FOUND");
         }
-        // /print is /print/templates or /print/documents.
-        error(get("/print/hello"), 404, HttpError.NOT_FOUND);
-        error(get("/print/"), 404, HttpError.NOT_FOUND);
+        // A route without a path is no route, and the files of the editor are under /files/.
+        for (String path : List.of("/print", "/documents", "/files", "/files/", "/templates", "/templates/hello")) {
+            error(get(path), 404, HttpError.NOT_FOUND);
+        }
     }
 
     @Test
     void aDocumentThatDoesNotExistIsA404() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        for (String path : List.of("/print/documents/missing", "/print/documents/letters/../hello",
-                "/print/documents/letters/letter.json", "/print/documents/.styles", "/print/documents/",
-                "/documents/missing", "/print/documents/invoices/invoice")) {
+        for (String path : List.of("/documents/missing", "/documents/letters/../hello",
+                "/documents/letters/letter.json", "/documents/.styles", "/documents/",
+                "/files/documents/missing", "/documents/invoices/invoice")) {
             error(get(path), 404, "DOCUMENT_NOT_FOUND");
         }
     }
@@ -375,9 +376,9 @@ class PressServerTest {
     void printConvertsADocumentAsItIsWithItsChainOfStyles() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        HttpResponse<byte[]> pdf = get("/print/documents/letters/letter");
-        HttpResponse<byte[]> svg = get("/print/documents/letters/letter?format=svg");
-        HttpResponse<byte[]> stxt = get("/print/documents/letters/letter?format=stxt");
+        HttpResponse<byte[]> pdf = get("/documents/letters/letter");
+        HttpResponse<byte[]> svg = get("/documents/letters/letter?format=svg");
+        HttpResponse<byte[]> stxt = get("/documents/letters/letter?format=stxt");
 
         assertEquals(200, pdf.statusCode(), () -> text(pdf));
         assertTrue(isPdf(pdf.body()));
@@ -387,15 +388,15 @@ class PressServerTest {
                 () -> text(svg));
         // Without data the document is as it is: the letter.json beside it is not read.
         assertEquals(DOCUMENT, text(stxt));
-        error(post("/print/documents/letters/letter", SAMPLE), 405, HttpError.METHOD_NOT_ALLOWED);
+        error(post("/documents/letters/letter", SAMPLE), 405, HttpError.METHOD_NOT_ALLOWED);
     }
 
     @Test
     void theDocumentsAreListedWithTheirFiles() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        JsonNode list = json(get("/documents")).get("documents");
-        JsonNode letter = json(get("/documents/letters/letter"));
+        JsonNode list = json(get("/files/documents")).get("documents");
+        JsonNode letter = json(get("/files/documents/letters/letter"));
 
         assertEquals("[{\"path\":\"hello\",\"styles\":false},{\"path\":\"letters/letter\",\"styles\":true}]",
                 list.toString());
@@ -409,11 +410,11 @@ class PressServerTest {
     void aServerWithoutFoldersHasNoTemplatesOrDocuments() throws Exception {
         server = PressServer.start(SHARED, null, null, ServerConfig.DEFAULT.withAddress("127.0.0.1", 0));
 
-        assertEquals("{\"templates\":[]}", text(get("/templates")));
-        assertEquals("{\"documents\":[]}", text(get("/documents")));
-        error(get("/print/templates/hello"), 404, "TEMPLATE_NOT_FOUND");
-        error(get("/print/documents/hello"), 404, "DOCUMENT_NOT_FOUND");
+        assertEquals("{\"templates\":[]}", text(get("/files/templates")));
+        assertEquals("{\"documents\":[]}", text(get("/files/documents")));
+        error(get("/print/hello"), 404, "TEMPLATE_NOT_FOUND");
         error(get("/documents/hello"), 404, "DOCUMENT_NOT_FOUND");
+        error(get("/files/documents/hello"), 404, "DOCUMENT_NOT_FOUND");
     }
 
     @Test
@@ -428,8 +429,8 @@ class PressServerTest {
     void theTemplatesAreListedWithTheirFiles() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        JsonNode list = json(get("/templates")).get("templates");
-        JsonNode invoice = json(get("/templates/invoices/invoice"));
+        JsonNode list = json(get("/files/templates")).get("templates");
+        JsonNode invoice = json(get("/files/templates/invoices/invoice"));
 
         assertEquals("[{\"path\":\"hello\",\"styles\":false,\"data\":false},"
                 + "{\"path\":\"invoices/invoice\",\"styles\":false,\"data\":true}]", list.toString());
@@ -437,7 +438,7 @@ class PressServerTest {
         assertEquals(".styles.stxt", invoice.get("styles").get(0).get("path").asText());
         assertEquals(STYLES, invoice.get("styles").get(0).get("text").asText());
         assertEquals(SAMPLE, invoice.get("data").asText());
-        assertTrue(json(get("/templates/hello")).get("data").isNull());
+        assertTrue(json(get("/files/templates/hello")).get("data").isNull());
     }
 
     @Test
@@ -528,8 +529,8 @@ class PressServerTest {
         error(post("/", ""), 405, HttpError.METHOD_NOT_ALLOWED);
         error(post("/editor/templates/hello", ""), 405, HttpError.METHOD_NOT_ALLOWED);
         error(get("/schema"), 401, HttpError.UNAUTHORIZED);
-        error(get("/templates/hello"), 401, HttpError.UNAUTHORIZED);
-        error(get("/documents/hello"), 401, HttpError.UNAUTHORIZED);
+        error(get("/files/templates/hello"), 401, HttpError.UNAUTHORIZED);
+        error(get("/files/documents/hello"), 401, HttpError.UNAUTHORIZED);
     }
 
     /** A server that warms up answers every request with 503, /health too, until the warm up ends. */
@@ -551,14 +552,14 @@ class PressServerTest {
         HttpResponse<byte[]> health = get("/health");
         error(health, 503, HttpError.SERVER_STARTING);
         assertEquals("1", health.headers().firstValue("Retry-After").orElse(null));
-        error(get("/print/templates/hello"), 503, HttpError.SERVER_STARTING);
+        error(get("/print/hello"), 503, HttpError.SERVER_STARTING);
         error(get("/"), 503, HttpError.SERVER_STARTING);
 
         release.countDown();
         warmUp.join(60_000);
         assertFalse(warmUp.isAlive());
         assertEquals(200, get("/health").statusCode());
-        assertEquals(200, get("/print/templates/hello").statusCode());
+        assertEquals(200, get("/print/hello").statusCode());
     }
 
     /**
@@ -698,9 +699,9 @@ class PressServerTest {
             HttpResponse<byte[]> busy = post("/render", render(DOCUMENT, Map.of()));
             error(busy, 503, HttpError.SERVER_BUSY);
             assertEquals("1", busy.headers().firstValue("Retry-After").orElse(null));
-            error(get("/print/templates/hello?format=svg"), 503, HttpError.SERVER_BUSY);
+            error(get("/print/hello?format=svg"), 503, HttpError.SERVER_BUSY);
 
-            HttpResponse<byte[]> filled = get("/print/templates/invoices/invoice?format=stxt");
+            HttpResponse<byte[]> filled = get("/print/invoices/invoice?format=stxt");
             assertEquals(200, filled.statusCode(), () -> text(filled));
             assertEquals(200, get("/health").statusCode());
         } finally {
@@ -816,11 +817,11 @@ class PressServerTest {
 
         for (String host : List.of("localhost:" + port, "127.0.0.1:" + port, "[::1]:" + port, "LocalHost", "127.0.0.1",
                 "localhost:")) {
-            assertEquals(200, raw("GET /templates HTTP/1.1", "Host: " + host).status(), host);
+            assertEquals(200, raw("GET /files/templates HTTP/1.1", "Host: " + host).status(), host);
         }
         for (String host : List.of("evil.example:" + port, "evil.example", "localhost.evil.example",
                 "127.0.0.1.nip.io:" + port, "localhost.", "localhost:80:80", "[::1", "[::2]:" + port)) {
-            for (String path : List.of("/templates", "/templates/hello", "/health", "/", "/editor", "/print/templates/hello")) {
+            for (String path : List.of("/files/templates", "/files/templates/hello", "/health", "/", "/editor", "/print/hello")) {
                 Raw response = raw("GET " + path + " HTTP/1.1", "Host: " + host);
                 assertEquals(403, response.status(), host + " " + path);
                 JsonNode body = JSON.readTree(response.body());
@@ -841,8 +842,8 @@ class PressServerTest {
         start(ServerConfig.DEFAULT.withToken("s3cret"));
 
         assertEquals(200, raw("GET /health HTTP/1.1", "Host: evil.example").status());
-        assertEquals(401, raw("GET /templates HTTP/1.1", "Host: evil.example").status());
-        assertEquals(200, raw("GET /templates HTTP/1.1", "Host: evil.example", "Authorization: Bearer s3cret").status());
+        assertEquals(401, raw("GET /files/templates HTTP/1.1", "Host: evil.example").status());
+        assertEquals(200, raw("GET /files/templates HTTP/1.1", "Host: evil.example", "Authorization: Bearer s3cret").status());
     }
 
     /**
@@ -868,7 +869,7 @@ class PressServerTest {
 
     @Test
     void theEditorCanBeTurnedOff() throws Exception {
-        start(ServerConfig.DEFAULT.withRoutes(false, true, true, true));
+        start(ServerConfig.DEFAULT.withRoutes(false, true, true));
 
         error(get("/"), 404, HttpError.NOT_FOUND);
         error(get("/editor"), 404, HttpError.NOT_FOUND);
@@ -880,7 +881,7 @@ class PressServerTest {
         error(get("/fonts/" + "0".repeat(64)), 404, HttpError.NOT_FOUND);
         assertEquals(200, get("/schema").statusCode());
         server.close();
-        start(ServerConfig.DEFAULT.withRoutes(false, true, true, true).withToken("s3cret"));
+        start(ServerConfig.DEFAULT.withRoutes(false, true, true).withToken("s3cret"));
 
         error(get("/"), 401, HttpError.UNAUTHORIZED);
     }
@@ -889,12 +890,12 @@ class PressServerTest {
     void theParametersAreChecked() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        error(get("/print/templates/hello?format=docx"), 400, HttpError.PARAMETER_NOT_VALID);
-        error(get("/print/templates/hello?debug=yes"), 400, HttpError.PARAMETER_NOT_VALID);
-        error(get("/print/templates/hello?format=pdf&format=svg"), 400, HttpError.PARAMETER_NOT_VALID);
-        error(get("/print/templates/hello?page=1"), 400, HttpError.PARAMETER_NOT_VALID);
+        error(get("/print/hello?format=docx"), 400, HttpError.PARAMETER_NOT_VALID);
+        error(get("/print/hello?debug=yes"), 400, HttpError.PARAMETER_NOT_VALID);
+        error(get("/print/hello?format=pdf&format=svg"), 400, HttpError.PARAMETER_NOT_VALID);
+        error(get("/print/hello?page=1"), 400, HttpError.PARAMETER_NOT_VALID);
         error(get("/fonts?all=true"), 400, HttpError.PARAMETER_NOT_VALID);
-        assertEquals(200, get("/print/templates/hello?format=svg&debug=true").statusCode());
+        assertEquals(200, get("/print/hello?format=svg&debug=true").statusCode());
     }
 
     @Test
@@ -906,7 +907,7 @@ class PressServerTest {
         HttpResponse<byte[]> response = get("/render");
         error(response, 405, HttpError.METHOD_NOT_ALLOWED);
         assertEquals("POST", response.headers().firstValue("Allow").orElse(null));
-        error(post("/templates", ""), 405, HttpError.METHOD_NOT_ALLOWED);
+        error(post("/files/templates", ""), 405, HttpError.METHOD_NOT_ALLOWED);
     }
 
     @Test
@@ -914,7 +915,7 @@ class PressServerTest {
         start(ServerConfig.DEFAULT.withToken("s3cret"));
 
         assertEquals(200, get("/health").statusCode());
-        HttpResponse<byte[]> without = get("/print/templates/hello");
+        HttpResponse<byte[]> without = get("/print/hello");
         error(without, 401, HttpError.UNAUTHORIZED);
         assertEquals("Bearer", without.headers().firstValue("WWW-Authenticate").orElse(null));
         error(get("/missing"), 401, HttpError.UNAUTHORIZED);
@@ -927,17 +928,17 @@ class PressServerTest {
     }
 
     @Test
-    void renderTemplatesAndDocumentsCanBeTurnedOff() throws Exception {
-        start(ServerConfig.DEFAULT.withRoutes(true, false, false, false));
+    void renderAndTheFilesCanBeTurnedOff() throws Exception {
+        start(ServerConfig.DEFAULT.withRoutes(true, false, false));
 
         error(post("/render", render(DOCUMENT, Map.of())), 404, HttpError.NOT_FOUND);
-        error(get("/templates"), 404, HttpError.NOT_FOUND);
-        error(get("/templates/hello"), 404, HttpError.NOT_FOUND);
-        error(get("/documents"), 404, HttpError.NOT_FOUND);
-        error(get("/documents/hello"), 404, HttpError.NOT_FOUND);
-        // /print is always on.
-        assertEquals(200, get("/print/templates/hello").statusCode());
-        assertEquals(200, get("/print/documents/hello").statusCode());
+        error(get("/files/templates"), 404, HttpError.NOT_FOUND);
+        error(get("/files/templates/hello"), 404, HttpError.NOT_FOUND);
+        error(get("/files/documents"), 404, HttpError.NOT_FOUND);
+        error(get("/files/documents/hello"), 404, HttpError.NOT_FOUND);
+        // /print and /documents are always on.
+        assertEquals(200, get("/print/hello").statusCode());
+        assertEquals(200, get("/documents/hello").statusCode());
     }
 
     @Test
@@ -980,10 +981,10 @@ class PressServerTest {
         HttpResponse<byte[]> filled = post("/render?format=stxt", render(WITH_SLOTS, Map.of("data", JSON.readTree(SAMPLE))));
         assertEquals(200, filled.statusCode(), () -> text(filled));
         assertTrue(text(filled).contains("Title: Sample"), () -> text(filled));
-        HttpResponse<byte[]> print = post("/print/templates/invoices/invoice?format=stxt", "{\"title\": \"Posted\", \"lines\": []}");
+        HttpResponse<byte[]> print = post("/print/invoices/invoice?format=stxt", "{\"title\": \"Posted\", \"lines\": []}");
         assertEquals(200, print.statusCode(), () -> text(print));
         assertTrue(text(print).contains("Title: Posted"), () -> text(print));
-        assertEquals(200, get("/print/templates/invoices/invoice?format=stxt").statusCode());
+        assertEquals(200, get("/print/invoices/invoice?format=stxt").statusCode());
 
         error(post("/render", render(DOCUMENT, Map.of())), 500, HttpError.INTERNAL);
         error(get("/fonts"), 500, HttpError.INTERNAL);
@@ -1020,15 +1021,15 @@ class PressServerTest {
     void theTextsHaveTheirVersionAndSayWhetherTheyAreSaved() throws Exception {
         start(ServerConfig.DEFAULT);
 
-        HttpResponse<byte[]> invoice = get("/templates/invoices/invoice");
-        HttpResponse<byte[]> letter = get("/documents/letters/letter");
+        HttpResponse<byte[]> invoice = get("/files/templates/invoices/invoice");
+        HttpResponse<byte[]> letter = get("/files/documents/letters/letter");
 
         assertTrue(etag(invoice).matches("\"[0-9a-f]{64}\""), etag(invoice));
         assertEquals("\"" + templates.get("invoices/invoice").version() + "\"", etag(invoice));
         assertFalse(json(invoice).get("writable").asBoolean());
         assertFalse(json(letter).get("writable").asBoolean());
         // Off by default: the method is not one of the route.
-        HttpResponse<byte[]> refused = put("/templates/hello", "{\"document\": \"x\"}", "application/json", etag(invoice));
+        HttpResponse<byte[]> refused = put("/files/templates/hello", "{\"document\": \"x\"}", "application/json", etag(invoice));
         error(refused, 405, HttpError.METHOD_NOT_ALLOWED);
         assertEquals("GET", refused.headers().firstValue("Allow").orElse(null));
         assertEquals(DOCUMENT, Files.readString(templates.folder().resolve("hello.stxt")));
@@ -1037,11 +1038,11 @@ class PressServerTest {
     @Test
     void aSaveWritesTheFilesOfItsVersion() throws Exception {
         start(ServerConfig.DEFAULT.withSave(true));
-        HttpResponse<byte[]> before = get("/templates/invoices/invoice");
+        HttpResponse<byte[]> before = get("/files/templates/invoices/invoice");
         assertTrue(json(before).get("writable").asBoolean());
         String edited = WITH_SLOTS.replace("Paper: A4", "Paper: A5");
 
-        HttpResponse<byte[]> saved = put("/templates/invoices/invoice",
+        HttpResponse<byte[]> saved = put("/files/templates/invoices/invoice",
                 JSON.writeValueAsString(Map.of("document", edited, "styles", List.of(Map.of("path", ".styles.stxt",
                         "text", STYLES)))), "application/json; charset=utf-8", etag(before));
 
@@ -1050,10 +1051,10 @@ class PressServerTest {
         assertEquals(edited, json(saved).get("document").asText());
         assertEquals(edited, Files.readString(templates.folder().resolve("invoices/invoice.stxt")));
         assertFalse(etag(saved).equals(etag(before)));
-        assertEquals(etag(saved), etag(get("/templates/invoices/invoice")));
+        assertEquals(etag(saved), etag(get("/files/templates/invoices/invoice")));
 
         // From the version before, someone else's save would be undone: nothing is written.
-        JsonNode stale = error(put("/templates/invoices/invoice", JSON.writeValueAsString(Map.of("document", WITH_SLOTS)),
+        JsonNode stale = error(put("/files/templates/invoices/invoice", JSON.writeValueAsString(Map.of("document", WITH_SLOTS)),
                 "application/json", etag(before)), 409, TemplateException.FILES_CHANGED);
         assertTrue(stale.get("message").asText().contains("invoices/invoice"));
         assertEquals(edited, Files.readString(templates.folder().resolve("invoices/invoice.stxt")));
@@ -1062,15 +1063,15 @@ class PressServerTest {
     @Test
     void aSaveOfADocument() throws Exception {
         start(ServerConfig.DEFAULT.withSave(true));
-        String version = etag(get("/documents/letters/letter"));
+        String version = etag(get("/files/documents/letters/letter"));
 
-        HttpResponse<byte[]> saved = put("/documents/letters/letter", JSON.writeValueAsString(Map.of("document",
+        HttpResponse<byte[]> saved = put("/files/documents/letters/letter", JSON.writeValueAsString(Map.of("document",
                 DOCUMENT.replace("Hello.", "Saved."))), "application/json", "W/" + version);
 
         assertEquals(200, saved.statusCode(), () -> text(saved));
         assertTrue(Files.readString(documents.folder().resolve("letters/letter.stxt")).contains("Saved."));
         assertFalse(json(saved).has("data"));
-        error(put("/documents/letters/letter", JSON.writeValueAsString(Map.of("document", DOCUMENT, "data", "{}")),
+        error(put("/files/documents/letters/letter", JSON.writeValueAsString(Map.of("document", DOCUMENT, "data", "{}")),
                 "application/json", etag(saved)), 400, HttpError.BODY_NOT_VALID);
     }
 
@@ -1080,18 +1081,18 @@ class PressServerTest {
         String body = JSON.writeValueAsString(Map.of("document", "changed"));
         String version = "\"" + templates.get("hello").version() + "\"";
 
-        error(put("/templates/hello", body, "application/json", version), 401, HttpError.UNAUTHORIZED);
+        error(put("/files/templates/hello", body, "application/json", version), 401, HttpError.UNAUTHORIZED);
         server.close();
         start(ServerConfig.DEFAULT.withSave(true));
-        error(put("/templates/hello", body, "text/plain", version), 415, HttpError.CONTENT_TYPE_NOT_VALID);
-        error(put("/templates/hello", body, "application/json", null), 428, HttpError.VERSION_REQUIRED);
-        error(put("/templates/hello", "{\"styles\": []}", "application/json", version), 400, HttpError.BODY_NOT_VALID);
-        error(put("/templates/hello", "{\"document\": \"x\", \"colour\": 1}", "application/json", version), 400,
+        error(put("/files/templates/hello", body, "text/plain", version), 415, HttpError.CONTENT_TYPE_NOT_VALID);
+        error(put("/files/templates/hello", body, "application/json", null), 428, HttpError.VERSION_REQUIRED);
+        error(put("/files/templates/hello", "{\"styles\": []}", "application/json", version), 400, HttpError.BODY_NOT_VALID);
+        error(put("/files/templates/hello", "{\"document\": \"x\", \"colour\": 1}", "application/json", version), 400,
                 HttpError.BODY_NOT_VALID);
-        error(put("/templates/hello", JSON.writeValueAsString(Map.of("document", "x", "styles",
+        error(put("/files/templates/hello", JSON.writeValueAsString(Map.of("document", "x", "styles",
                 List.of(Map.of("path", "../outside.stxt", "text", "x")))), "application/json", version), 400,
                 HttpError.BODY_NOT_VALID);
-        error(put("/templates/missing", body, "application/json", version), 404, TemplateException.NOT_FOUND);
+        error(put("/files/templates/missing", body, "application/json", version), 404, TemplateException.NOT_FOUND);
         assertEquals(DOCUMENT, Files.readString(templates.folder().resolve("hello.stxt")));
     }
 }

@@ -67,25 +67,23 @@ Schema (@stxt.schema): dev.stxt.press
 		Description: The first segments of the paths of the images of the folder: with logos, Image: logos/a.png is its file a.png.
 	Node: Template folder
 		Type: INLINE
-		Description: The templates folder of /print/templates and /templates. Without it, the server has no templates.
+		Description: The templates folder of /print and /files/templates. Without it, the server has no templates.
 	Node: Document folder
 		Type: INLINE
-		Description: The documents folder of /print/documents and /documents: layout documents converted as they are, with their chain of styles as in the templates folder and without data. Without it, the server has no documents.
+		Description: The documents folder of /documents and /files/documents: layout documents converted as they are, with their chain of styles as in the templates folder and without data. Without it, the server has no documents.
 	Node: Producer
 		Type: INLINE
 		Description: The software that the PDFs of the server and of the commands render and print name as their producer, in their document information and their XMP. By default stxt-press and stxt-pdf with their versions, such as stxt-press 0.1.0 (stxt-pdf 0.17.0).
 
 	Node: Routes
 		Type: GROUP
-		Description: Which routes are on, besides /print, /schema, /fonts and /health, which always are. A route that is off answers 404.
+		Description: Which routes are on, besides /print, /documents, /schema and /health, which always are. A route that is off answers 404.
 		Children:
 			Child: Editor
 				Max: 1
 			Child: Render
 				Max: 1
-			Child: Templates
-				Max: 1
-			Child: Documents
+			Child: Files
 				Max: 1
 			Child: Save
 				Max: 1
@@ -95,15 +93,12 @@ Schema (@stxt.schema): dev.stxt.press
 	Node: Render
 		Type: BOOLEAN
 		Description: Whether POST /render, which converts any document, is on. By default true.
-	Node: Templates
+	Node: Files
 		Type: BOOLEAN
-		Description: Whether /templates, which shows the texts and the sample data of the templates, is on. By default true.
-	Node: Documents
-		Type: BOOLEAN
-		Description: Whether /documents, which shows the texts of the documents, is on. By default true.
+		Description: Whether the routes of the editor under /files/ are on: /files/templates and /files/documents, the lists of the templates and the documents, and /files/templates/{path} and /files/documents/{path}, the texts of each one, with the sample data of a template. Off, the templates and the documents are still printed by /print and /documents, without showing their files. By default true.
 	Node: Save
 		Type: BOOLEAN
-		Description: Whether PUT /templates/{path} and PUT /documents/{path} are on: they write the files of a template or a document, the save of the editor. They need Templates or Documents on. By default false: a server does not change its own files unless its configuration says so.
+		Description: Whether PUT /files/templates/{path} and PUT /files/documents/{path} are on: they write the files of a template or a document, the save of the editor. They need Files on. By default false: a server does not change its own files unless its configuration says so.
 
 	Node: Limits
 		Type: GROUP
@@ -152,7 +147,7 @@ Schema (@stxt.schema): dev.stxt.press
 
 	Node: Template options
 		Type: GROUP
-		Description: The options of the engine for every template and every document of /print, the same as the options of a body of /render.
+		Description: The options of the engine for every template of /print and every document of /documents, the same as the options of a body of /render.
 		Children:
 			Child: PDF UA
 				Max: 1

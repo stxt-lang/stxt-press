@@ -93,7 +93,7 @@ describe("request", () => {
 		const r = asRequest(request(template({ data: "{\"a\": 1.10}" }), "pdf", false));
 
 		assert.equal(r.method, "POST");
-		assert.equal(r.url, "/print/templates/invoices/invoice?format=pdf");
+		assert.equal(r.url, "/print/invoices/invoice?format=pdf");
 		assert.equal(r.body, "{\"a\": 1.10}");
 		assert.deepEqual(r.stylesNames, [".styles.stxt", "invoices/invoice.styles.stxt"]);
 	});
@@ -126,11 +126,11 @@ describe("request", () => {
 		assert.deepEqual(JSON.parse(r.body!), { document: "doc", styles: ["root", "own"] });
 	});
 
-	it("prints an unchanged document of the server with a GET of /print/documents, its styles by their files", () => {
+	it("prints an unchanged document of the server with a GET of /documents, its styles by their files", () => {
 		const r = asRequest(request(serverDocument(), "svg", true));
 
 		assert.equal(r.method, "GET");
-		assert.equal(r.url, "/print/documents/reference/tables/basic?format=svg&debug=true");
+		assert.equal(r.url, "/documents/reference/tables/basic?format=svg&debug=true");
 		assert.equal(r.body, undefined);
 		assert.deepEqual(r.stylesNames, ["reference/.styles.stxt"]);
 	});
@@ -140,7 +140,7 @@ describe("request", () => {
 
 		const r = asRequest(request(d, "pdf", false));
 
-		assert.equal(r.url, "/print/documents/reference/tables/basic?format=pdf");
+		assert.equal(r.url, "/documents/reference/tables/basic?format=pdf");
 		assert.deepEqual(r.stylesNames, [""]);
 	});
 
@@ -189,7 +189,7 @@ describe("the panels", () => {
 		t.styles[0].text = "root\n";
 
 		assert.equal(isUnchanged(t), true);
-		assert.equal(asRequest(request(t, "pdf", false)).url, "/print/templates/invoices/invoice?format=pdf");
+		assert.equal(asRequest(request(t, "pdf", false)).url, "/print/invoices/invoice?format=pdf");
 		assert.equal(isUnchanged({ ...t, document: "doc\n\tother\n" }), false);
 	});
 
@@ -278,12 +278,12 @@ describe("curl", () => {
 	it("prints the template with the data of the panel, quoted for the shell", () => {
 		assert.equal(curl("http://h:8080", "invoices/invoice", "{\"name\": \"O'Brien\"}\n", false),
 			"curl -f -o invoice.pdf -H 'Content-Type: application/json' --data-binary '{\"name\": \"O'\\''Brien\"}' "
-			+ "http://h:8080/print/templates/invoices/invoice");
+			+ "http://h:8080/print/invoices/invoice");
 	});
 
 	it("takes the token from a variable, and without data is a GET", () => {
 		assert.equal(curl("http://h", "a", "", true),
-			"curl -f -o a.pdf -H \"Authorization: Bearer $STXT_PRESS_TOKEN\" http://h/print/templates/a");
+			"curl -f -o a.pdf -H \"Authorization: Bearer $STXT_PRESS_TOKEN\" http://h/print/a");
 	});
 
 	it("names the PDF after the template or the document", () => {
@@ -407,7 +407,7 @@ describe("the save", () => {
 
 		const s = saveRequest(t)!;
 
-		assert.equal(s.url, "/templates/invoices/invoice");
+		assert.equal(s.url, "/files/templates/invoices/invoice");
 		assert.deepEqual(JSON.parse(s.body), {
 			document: "doc",
 			styles: [{ path: "invoices/invoice.styles.stxt", text: "own changed" }],
@@ -440,7 +440,7 @@ describe("the save", () => {
 	it("creates the own styles of a document from its blank panel, and the data of a template without them", () => {
 		const d = serverDocument({ styles: [{ path: "Styles", text: "mine" }], original: { document: "doc", styles: [] } });
 		const doc = saveRequest(d)!;
-		assert.equal(doc.url, "/documents/reference/tables/basic");
+		assert.equal(doc.url, "/files/documents/reference/tables/basic");
 		assert.deepEqual(JSON.parse(doc.body).styles, [{ path: "reference/tables/basic.styles.stxt", text: "mine" }]);
 
 		const blank = saveRequest(serverDocument({ styles: [{ path: "Styles", text: " " }], original: { document: "doc", styles: [] } }))!;

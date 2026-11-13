@@ -7,7 +7,7 @@ script. It needs Java 17 or later: that of `JAVA_HOME` if it is set, or the `jav
 ./start.sh
 ```
 
-On Windows, `start.bat`. The server listens on `http://127.0.0.1:8082/`, where the editor is, and Ctrl+C stops it.
+On Windows, `start.bat`. The server listens on `http://127.0.0.1:8080/`, where the editor is, and Ctrl+C stops it.
 
 | Path | What it has |
 |---|---|
@@ -18,8 +18,8 @@ On Windows, `start.bat`. The server listens on `http://127.0.0.1:8082/`, where t
 | `resources/images/examples/` | The images of the examples of stxt-pdf, the ones the templates use |
 | `resources/images/documents/` | The images of the documents of `documents/`, small hand-written SVGs |
 | `.stxt/` | The schemas `dev.stxt.pdf` (layout documents and styles) and `dev.stxt.press` (`server.stxt`), found by the editors that support [discovery](https://stxt.dev/stxt-discovery-ref) for every file of the folder: VS Code with the STXT extension, the `stxt` command |
-| `templates/` | The templates of `/print/templates`, one for each example of stxt-pdf, in a folder for each kind of document (`invoices/invoice`, `letters/letter`, `reports/annual-report`…), each one with its styles and its sample data |
-| `documents/examples/` | Documents of `/print/documents` of other kinds than the templates, complete, each with its styles |
+| `templates/` | The templates of `/print`, one for each example of stxt-pdf, in a folder for each kind of document (`invoices/invoice`, `letters/letter`, `reports/annual-report`…), each one with its styles and its sample data |
+| `documents/examples/` | Documents of `/documents` of other kinds than the templates, complete, each with its styles |
 | `documents/reference/` | A reference of the layout language: one small document for each use, by topic (`14-tables/`, `20-barcodes/`…), each starting with what it shows |
 
 The fonts and the images of `resources/images/examples/` are copies of those of `../stxt-pdf/resources`, and the

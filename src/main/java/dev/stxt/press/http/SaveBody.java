@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import dev.stxt.press.templates.Templates;
 
 /**
- * The body of {@code PUT /templates/{path}} and {@code PUT /documents/{path}}: the texts of the files to write, in the
- * shape {@code GET} gives them.
+ * The body of {@code PUT /files/templates/{path}} and {@code PUT /files/documents/{path}}: the texts of the files to
+ * write, in the shape {@code GET} gives them.
  *
  * <pre>
  * {"document": "Document (dev.stxt.pdf): ...",

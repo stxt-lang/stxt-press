@@ -19,26 +19,26 @@ import dev.stxt.press.Options;
  *        {@code /editor/templates/{path}} and {@code /editor/documents/{path}}) are on, with their files under
  *        {@code /assets/} and {@code /fonts}, which only the previews of the editor use
  * @param render whether {@code POST /render}, which converts any document, is on
- * @param templates whether {@code /templates}, which shows the texts and the sample data of the templates, is on
- * @param documents whether {@code /documents}, which shows the texts of the documents, is on
- * @param save whether {@code PUT /templates/{path}} and {@code PUT /documents/{path}}, which write the files of a
- *        template or a document (the save of the editor), are on; off by default, since they change the server
+ * @param files whether the routes under {@code /files/} are on: the lists of the templates and the documents, and the
+ *        texts of each one, with the sample data of a template
+ * @param save whether {@code PUT /files/templates/{path}} and {@code PUT /files/documents/{path}}, which write the
+ *        files of a template or a document (the save of the editor), are on; off by default, since they change the
+ *        server
  * @param maxBodySize the largest body of a request, in bytes; at least 1
  * @param timeout the time a conversion has; positive
  * @param concurrentConversions how many PDF or SVG conversions run at once: one more is answered with {@code 503};
  *        at least 1
- * @param templateOptions the options of the engine for every template and every document of {@code /print}; not
- *        {@code null}
+ * @param templateOptions the options of the engine for every template of {@code /print} and every document of
+ *        {@code /documents}; not {@code null}
  */
-public record ServerConfig(String host, int port, String token, boolean editor, boolean render, boolean templates,
-        boolean documents, boolean save, long maxBodySize, Duration timeout, int concurrentConversions,
-        Options templateOptions) {
+public record ServerConfig(String host, int port, String token, boolean editor, boolean render, boolean files,
+        boolean save, long maxBodySize, Duration timeout, int concurrentConversions, Options templateOptions) {
 
     /**
      * The configuration of a server without {@code server.stxt}: local, without token, with every route on but those that
      * write files.
      */
-    public static final ServerConfig DEFAULT = new ServerConfig("127.0.0.1", 8080, null, true, true, true, true, false,
+    public static final ServerConfig DEFAULT = new ServerConfig("127.0.0.1", 8080, null, true, true, true, false,
             2 * 1024 * 1024, Duration.ofSeconds(30), 4, Options.DEFAULT);
 
     public ServerConfig {
@@ -63,37 +63,37 @@ public record ServerConfig(String host, int port, String token, boolean editor, 
 
     /** {@return this configuration listening on {@code host} and {@code port}} */
     public ServerConfig withAddress(String host, int port) {
-        return new ServerConfig(host, port, token, editor, render, templates, documents, save, maxBodySize, timeout,
+        return new ServerConfig(host, port, token, editor, render, files, save, maxBodySize, timeout,
                 concurrentConversions, templateOptions);
     }
 
     /** {@return this configuration with {@code token}, or without token with {@code null}} */
     public ServerConfig withToken(String token) {
-        return new ServerConfig(host, port, token, editor, render, templates, documents, save, maxBodySize, timeout,
+        return new ServerConfig(host, port, token, editor, render, files, save, maxBodySize, timeout,
                 concurrentConversions, templateOptions);
     }
 
-    /** {@return this configuration with the editor, {@code /render}, {@code /templates} and {@code /documents} on or off} */
-    public ServerConfig withRoutes(boolean editor, boolean render, boolean templates, boolean documents) {
-        return new ServerConfig(host, port, token, editor, render, templates, documents, save, maxBodySize, timeout,
+    /** {@return this configuration with the editor, {@code /render} and the routes under {@code /files/} on or off} */
+    public ServerConfig withRoutes(boolean editor, boolean render, boolean files) {
+        return new ServerConfig(host, port, token, editor, render, files, save, maxBodySize, timeout,
                 concurrentConversions, templateOptions);
     }
 
     /** {@return this configuration with the routes that write the files of the templates and the documents on or off} */
     public ServerConfig withSave(boolean save) {
-        return new ServerConfig(host, port, token, editor, render, templates, documents, save, maxBodySize, timeout,
+        return new ServerConfig(host, port, token, editor, render, files, save, maxBodySize, timeout,
                 concurrentConversions, templateOptions);
     }
 
     /** {@return this configuration with these limits} */
     public ServerConfig withLimits(long maxBodySize, Duration timeout, int concurrentConversions) {
-        return new ServerConfig(host, port, token, editor, render, templates, documents, save, maxBodySize, timeout,
+        return new ServerConfig(host, port, token, editor, render, files, save, maxBodySize, timeout,
                 concurrentConversions, templateOptions);
     }
 
     /** {@return this configuration with {@code templateOptions} for every template and every document} */
     public ServerConfig withTemplateOptions(Options templateOptions) {
-        return new ServerConfig(host, port, token, editor, render, templates, documents, save, maxBodySize, timeout,
+        return new ServerConfig(host, port, token, editor, render, files, save, maxBodySize, timeout,
                 concurrentConversions, templateOptions);
     }
 
@@ -101,8 +101,8 @@ public record ServerConfig(String host, int port, String token, boolean editor, 
     @Override
     public String toString() {
         return "ServerConfig[host=" + host + ", port=" + port + ", token=" + (token == null ? "none" : "set")
-                + ", editor=" + editor + ", render=" + render + ", templates=" + templates + ", documents="
-                + documents + ", save=" + save + ", maxBodySize=" + maxBodySize + ", timeout=" + timeout
-                + ", concurrentConversions=" + concurrentConversions + ", templateOptions=" + templateOptions + "]";
+                + ", editor=" + editor + ", render=" + render + ", files=" + files + ", save=" + save
+                + ", maxBodySize=" + maxBodySize + ", timeout=" + timeout + ", concurrentConversions="
+                + concurrentConversions + ", templateOptions=" + templateOptions + "]";
     }
 }

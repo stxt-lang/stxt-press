@@ -12,7 +12,7 @@ import { took } from "./model";
 import { ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, parseIndexHash, placeUrl, visibleRows } from "./place";
 import type { FolderRow, IndexPlace, Place } from "./place";
 
-/** An entry of `GET /templates` or `GET /documents`: a document has no `data`. */
+/** An entry of `GET /files/templates` or `GET /files/documents`: a document has no `data`. */
 interface Entry {
 	path: string;
 	styles: boolean;
@@ -21,10 +21,10 @@ interface Entry {
 
 type ListTab = "templates" | "documents";
 
-/** What each list tab shows, and what it needs of the server. */
-const LISTS: Record<ListTab, { mode: Place["mode"]; node: string; route: string }> = {
-	templates: { mode: "template", node: "Templates", route: "route-templates" },
-	documents: { mode: "document", node: "Documents", route: "route-documents" },
+/** What each list tab shows, its title, and the route of the PDF of one of its entries. */
+const LISTS: Record<ListTab, { mode: Place["mode"]; title: string; print: string }> = {
+	templates: { mode: "template", title: "Templates", print: "/print" },
+	documents: { mode: "document", title: "Documents", print: "/documents" },
 };
 
 /** The entries of each list tab once the server gave them, or why it did not. */
@@ -105,7 +105,7 @@ async function preview(tab: ListTab, path: string): Promise<void> {
 	title.textContent = `${path} · converting…`;
 	title.classList.remove("error");
 	const started = performance.now();
-	const response = await call("GET", `/print/${tab}/${path}`);
+	const response = await call("GET", `${LISTS[tab].print}/${path}`);
 	if (seq !== previews) {
 		return;
 	}
@@ -243,7 +243,7 @@ function show(): void {
 	const list = lists[tab];
 	$("folders").replaceChildren();
 	$("entries").replaceChildren();
-	$("folder-title").textContent = LISTS[tab].node;
+	$("folder-title").textContent = LISTS[tab].title;
 	if (!list.entries) {
 		say(list.problem ?? "Loading…", list.error === true);
 		return;
@@ -268,9 +268,12 @@ function show(): void {
 	showEntries(tab, list.entries, folder);
 }
 
-/** Marks a route of the table as off in this server. */
+/** Marks a route of the table as off in this server, once. */
 function off(id: string): void {
 	const row = $<HTMLTableRowElement>(id);
+	if (row.classList.contains("off")) {
+		return;
+	}
 	row.classList.add("off");
 	row.cells[1].appendChild(element("span", "off in this server", "badge"));
 }
@@ -287,12 +290,13 @@ async function versions(): Promise<void> {
 
 /** Asks the server for the entries of a list tab, or says why they are not listed. */
 async function load(tab: ListTab): Promise<void> {
-	const listed = await call("GET", `/${tab}`);
+	const listed = await call("GET", `/files/${tab}`);
 	if (listed.ok) {
 		lists[tab] = { entries: ((await listed.json()) as Record<string, Entry[]>)[tab] };
 	} else if (listed.status === 404) {
-		off(LISTS[tab].route);
-		lists[tab] = { problem: `The ${tab} are not listed in this server (${LISTS[tab].node}: false).` };
+		off("route-files");
+		off("route-files-texts");
+		lists[tab] = { problem: `The ${tab} are not listed in this server (Files: false).` };
 	} else {
 		const error = await errorOf(listed);
 		lists[tab] = { problem: `${error.code}: ${error.message}`, error: true };

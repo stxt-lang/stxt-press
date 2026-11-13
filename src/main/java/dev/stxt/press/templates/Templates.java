@@ -61,9 +61,9 @@ public final class Templates {
 
     /** What a folder has: templates, with their sample data, or documents, converted as they are. */
     public enum Kind {
-        /** The templates of {@code /print/templates}, with their sample data. */
+        /** The templates of {@code /print}, with their sample data. */
         TEMPLATE("template", "templates", TemplateException.NOT_FOUND, TemplateException.LINK_OUTSIDE),
-        /** The documents of {@code /print/documents}, without data. */
+        /** The documents of {@code /documents}, without data. */
         DOCUMENT("document", "documents", TemplateException.DOCUMENT_NOT_FOUND, TemplateException.DOCUMENT_LINK_OUTSIDE);
 
         private final String noun;

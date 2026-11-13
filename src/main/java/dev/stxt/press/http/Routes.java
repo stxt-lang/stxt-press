@@ -30,17 +30,16 @@ import dev.stxt.press.templates.Templates;
  *
  * <table>
  * <caption>Routes</caption>
- * <tr><td>{@code GET /print/templates/{path}}</td><td>The template filled with its sample data</td></tr>
- * <tr><td>{@code POST /print/templates/{path}}</td><td>The template filled with the body, the JSON data as they
- * are</td></tr>
- * <tr><td>{@code GET /print/documents/{path}}</td><td>A document of the documents folder, as it is</td></tr>
+ * <tr><td>{@code GET /print/{path}}</td><td>The template filled with its sample data</td></tr>
+ * <tr><td>{@code POST /print/{path}}</td><td>The template filled with the body, the JSON data as they are</td></tr>
+ * <tr><td>{@code GET /documents/{path}}</td><td>A document of the documents folder, as it is</td></tr>
  * <tr><td>{@code POST /render}</td><td>Any document ({@link RenderBody})</td></tr>
- * <tr><td>{@code GET /templates}</td><td>The templates, with what files each one has</td></tr>
- * <tr><td>{@code GET /templates/{path}}</td><td>The texts of a template</td></tr>
- * <tr><td>{@code GET /documents}</td><td>The documents, with what files each one has</td></tr>
- * <tr><td>{@code GET /documents/{path}}</td><td>The texts of a document</td></tr>
- * <tr><td>{@code PUT /templates/{path}}, {@code PUT /documents/{path}}</td><td>Saves the texts of a template or a
- * document in its files, with {@code Save} on</td></tr>
+ * <tr><td>{@code GET /files/templates}</td><td>The templates, with what files each one has, for the editor</td></tr>
+ * <tr><td>{@code GET /files/templates/{path}}</td><td>The texts of a template, for the editor</td></tr>
+ * <tr><td>{@code GET /files/documents}</td><td>The documents, with what files each one has, for the editor</td></tr>
+ * <tr><td>{@code GET /files/documents/{path}}</td><td>The texts of a document, for the editor</td></tr>
+ * <tr><td>{@code PUT /files/templates/{path}}, {@code PUT /files/documents/{path}}</td><td>Saves the texts of a
+ * template or a document in its files, with {@code Save} on</td></tr>
  * <tr><td>{@code GET /schema}</td><td>The schema {@code dev.stxt.pdf} of the engine</td></tr>
  * <tr><td>{@code GET /fonts}</td><td>The font families of the server, and its faces with their files, for the editor</td></tr>
  * <tr><td>{@code GET /fonts/{id}}</td><td>The file of a face, by its SHA-256, for the editor</td></tr>
@@ -51,9 +50,10 @@ import dev.stxt.press.templates.Templates;
  * <tr><td>{@code GET /assets/{file}}</td><td>The scripts and styles of the index and the editor, without token</td></tr>
  * </table>
  *
- * <p>{@code /print} and {@code /render} answer in the format of {@code ?format=}: {@code pdf} (by default),
- * {@code svg} ({@code {"pages": [...]}}, with {@code &debug=true} for the outlines of the boxes) or {@code stxt} (the
- * filled document). Every error is a JSON body with its {@code code} and its {@code message}; that of a job has also
+ * <p>{@code /print}, {@code /documents} and {@code /render}, the routes of the clients, answer in the format of
+ * {@code ?format=}: {@code pdf} (by default), {@code svg} ({@code {"pages": [...]}}, with {@code &debug=true} for the
+ * outlines of the boxes) or {@code stxt} (the filled document). The routes under {@code /files/} are those of the
+ * editor. Every error is a JSON body with its {@code code} and its {@code message}; that of a job has also
  * {@code kind}, {@code line}, {@code source} and, if it is of the filled document, {@code filled}.</p>
  */
 final class Routes {
@@ -144,19 +144,20 @@ final class Routes {
                         (exchange, rest, parameters) -> editor(exchange, rest)),
                 new Route("/assets/", Match.PREFIX, Access.OPEN, editor, GET, NONE,
                         (exchange, rest, parameters) -> asset(exchange, rest)),
-                new Route("/print/templates/", Match.PREFIX, Access.TOKEN, true, GET_POST, CONVERT_PARAMETERS,
-                        this::print),
-                new Route("/print/documents/", Match.PREFIX, Access.TOKEN, true, GET, CONVERT_PARAMETERS,
+                // The routes of the clients: short, and never off.
+                new Route("/print/", Match.PREFIX, Access.TOKEN, true, GET_POST, CONVERT_PARAMETERS, this::print),
+                new Route("/documents/", Match.PREFIX, Access.TOKEN, true, GET, CONVERT_PARAMETERS,
                         this::printDocument),
                 new Route("/render", Match.EXACT, Access.TOKEN, config.render(), POST, CONVERT_PARAMETERS,
                         (exchange, rest, parameters) -> render(exchange, parameters)),
-                new Route("/templates", Match.EXACT, Access.TOKEN, config.templates(), GET, NONE,
+                // The routes of the editor: the files of the templates and the documents, which Files turns off.
+                new Route("/files/templates", Match.EXACT, Access.TOKEN, config.files(), GET, NONE,
                         (exchange, rest, parameters) -> list(exchange, templates, Templates.Kind.TEMPLATE)),
-                new Route("/templates/", Match.PREFIX, Access.TOKEN, config.templates(), texts, NONE,
+                new Route("/files/templates/", Match.PREFIX, Access.TOKEN, config.files(), texts, NONE,
                         (exchange, rest, parameters) -> texts(exchange, templates, Templates.Kind.TEMPLATE, rest)),
-                new Route("/documents", Match.EXACT, Access.TOKEN, config.documents(), GET, NONE,
+                new Route("/files/documents", Match.EXACT, Access.TOKEN, config.files(), GET, NONE,
                         (exchange, rest, parameters) -> list(exchange, documents, Templates.Kind.DOCUMENT)),
-                new Route("/documents/", Match.PREFIX, Access.TOKEN, config.documents(), texts, NONE,
+                new Route("/files/documents/", Match.PREFIX, Access.TOKEN, config.files(), texts, NONE,
                         (exchange, rest, parameters) -> texts(exchange, documents, Templates.Kind.DOCUMENT, rest)),
                 new Route("/schema", Match.EXACT, Access.TOKEN, true, GET, NONE,
                         (exchange, rest, parameters) -> Responses.send(exchange, 200, Responses.STXT_TYPE, schema)),
@@ -216,8 +217,8 @@ final class Routes {
     /**
      * {@code GET /editor} ({@code path} {@code null}), {@code GET /editor/templates/{path}} and
      * {@code GET /editor/documents/{path}}: the page is the same for every template and document, and whether it exists
-     * is not looked at, since that would tell it without token. The page asks {@code /templates/{path}} or
-     * {@code /documents/{path}} for it, with the token.
+     * is not looked at, since that would tell it without token. The page asks {@code /files/templates/{path}} or
+     * {@code /files/documents/{path}} for it, with the token.
      */
     private static void editor(HttpExchange exchange, String path) throws IOException, HttpError {
         if (path != null && !Templates.isPath(path)) {
@@ -277,7 +278,7 @@ final class Routes {
         throw new HttpError(404, HttpError.NOT_FOUND, "There is no font " + id);
     }
 
-    /** {@code GET} and {@code POST /print/templates/{path}}. */
+    /** {@code GET} and {@code POST /print/{path}}: a template. */
     private void print(HttpExchange exchange, String path, Map<String, String> parameters) throws Exception {
         Format format = Requests.format(parameters);
         Template template = get(templates, Templates.Kind.TEMPLATE, path);
@@ -288,7 +289,7 @@ final class Routes {
         conversions.respond(exchange, job, format, template.name());
     }
 
-    /** {@code GET /print/documents/{path}}: the document as it is, with its chain of styles. */
+    /** {@code GET /documents/{path}}: the document as it is, with its chain of styles. */
     private void printDocument(HttpExchange exchange, String path, Map<String, String> parameters) throws Exception {
         Format format = Requests.format(parameters);
         Template document = get(documents, Templates.Kind.DOCUMENT, path);
@@ -308,7 +309,7 @@ final class Routes {
     }
 
     /**
-     * {@code GET /templates} and {@code GET /documents}: the paths, each with whether it has its own styles and, a
+     * {@code GET /files/templates} and {@code GET /files/documents}: the paths, each with whether it has its own styles and, a
      * template, sample data.
      */
     private static void list(HttpExchange exchange, Templates folder, Templates.Kind kind) throws Exception {
@@ -326,9 +327,9 @@ final class Routes {
     }
 
     /**
-     * {@code GET /templates/{path}} and {@code GET /documents/{path}}: the texts of a template, its data as the text of
-     * its file, or of a document, without data; with its version as {@code ETag}, and whether it can be saved
-     * ({@code writable}). With {@code PUT}, the save ({@link #save}).
+     * {@code GET /files/templates/{path}} and {@code GET /files/documents/{path}}: the texts of a template, its data as
+     * the text of its file, or of a document, without data; with its version as {@code ETag}, and whether it can be
+     * saved ({@code writable}). With {@code PUT}, the save ({@link #save}).
      */
     private void texts(HttpExchange exchange, Templates folder, Templates.Kind kind, String path) throws Exception {
         if (exchange.getRequestMethod().equals("PUT")) {
@@ -339,9 +340,9 @@ final class Routes {
     }
 
     /**
-     * {@code PUT /templates/{path}} and {@code PUT /documents/{path}}, with {@code Save} on: writes the files of the
-     * body ({@link SaveBody}) if they are still those of the version of {@code If-Match}, the {@code ETag} of the
-     * {@code GET} they come from. It answers as the {@code GET}, with the new version, and the files it wrote
+     * {@code PUT /files/templates/{path}} and {@code PUT /files/documents/{path}}, with {@code Save} on: writes the
+     * files of the body ({@link SaveBody}) if they are still those of the version of {@code If-Match}, the {@code ETag}
+     * of the {@code GET} they come from. It answers as the {@code GET}, with the new version, and the files it wrote
      * ({@code written}). A JSON body is required, so that a form of another site cannot send one without the preflight
      * of CORS, which the server does not answer.
      */

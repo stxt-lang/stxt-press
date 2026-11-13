@@ -176,7 +176,7 @@ async function run(format: Format): Promise<void> {
  * Saves the files that changed (`PUT`), if they are still those the page read: with someone else's save in between,
  * the server answers `FILES_CHANGED` and nothing is written. A `.styles.stxt` of a folder, shared by everything below
  * it, is saved only if the user says so. Afterwards the panels are those of the server: unchanged, so the buttons print
- * them with `/print`.
+ * them with `/print` or `/documents`.
  */
 async function save(): Promise<void> {
 	const asked = saveRequest(state());
@@ -241,7 +241,7 @@ function served(response: Response, body: { writable?: boolean }): void {
 
 /** A document of the documents folder of the server, with its chain of styles. */
 async function showDocument(path: string): Promise<void> {
-	const response = await call("GET", `/documents/${path}`);
+	const response = await call("GET", `/files/documents/${path}`);
 	if (!response.ok) {
 		clear();
 		say(serverMessage(await errorOf(response), null), true);
@@ -254,7 +254,7 @@ async function showDocument(path: string): Promise<void> {
 
 /** A template of the server: its data, its document and its chain of styles, with the URL and the curl that print it. */
 async function showTemplate(path: string): Promise<void> {
-	const response = await call("GET", `/templates/${path}`);
+	const response = await call("GET", `/files/templates/${path}`);
 	if (!response.ok) {
 		clear();
 		say(serverMessage(await errorOf(response), null), true);
@@ -262,7 +262,7 @@ async function showTemplate(path: string): Promise<void> {
 	}
 	original = (await response.json()) as ServerTemplate;
 	served(response, original);
-	$("print-url").textContent = `${location.origin}/print/templates/${original.path}`;
+	$("print-url").textContent = `${location.origin}/print/${original.path}`;
 	$("print").hidden = false;
 	display(templatePanels(original));
 }

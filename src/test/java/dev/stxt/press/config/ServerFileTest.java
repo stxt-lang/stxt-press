@@ -176,8 +176,7 @@ class ServerFileTest {
                     Routes:
                         Editor: false
                         Render: false
-                        Templates: false
-                        Documents: false
+                        Files: false
                         Save: true
                     Limits:
                         Max body size: 1000
@@ -195,7 +194,7 @@ class ServerFileTest {
                         Exclude: BARCODE_SIZE
                 """, Map.of("PRESS_TOKEN", " secret "));
 
-        assertEquals(new ServerConfig("0.0.0.0", 9090, "secret", false, false, false, false, true, 1000,
+        assertEquals(new ServerConfig("0.0.0.0", 9090, "secret", false, false, false, true, 1000,
                 Duration.ofSeconds(5), 2,
                 new Options(1, PdfA.A3B, false, Set.of(Check.CONTRAST, Check.BARCODE_SIZE))), file.http());
         assertEquals(new Limits(10, 11, 12, 13, 14), file.limits());
@@ -353,24 +352,21 @@ class ServerFileTest {
         String folder = "    Template folder: templates\n    Document folder: documents\n";
         try (PressServer on = read(server(folder)).start();
                 PressServer noRender = read(server(folder + "    Routes:\n        Render: false\n")).start();
-                PressServer noTemplates = read(server(folder + "    Routes:\n        Templates: false\n")).start();
-                PressServer noDocuments = read(server(folder + "    Routes:\n        Documents: false\n")).start();
+                PressServer noFiles = read(server(folder + "    Routes:\n        Files: false\n")).start();
                 PressServer noEditor = read(server(folder + "    Routes:\n        Editor: false\n")).start()) {
             assertEquals(200, get(on, "/", null).statusCode());
             assertEquals(405, get(on, "/render", null).statusCode());
-            assertEquals(200, get(on, "/templates", null).statusCode());
-            assertEquals(200, get(on, "/documents", null).statusCode());
-            assertEquals(404, get(noDocuments, "/documents", null).statusCode());
-            assertEquals(200, get(noDocuments, "/templates", null).statusCode());
-            assertEquals(200, get(noTemplates, "/documents", null).statusCode());
+            assertEquals(200, get(on, "/files/templates", null).statusCode());
+            assertEquals(200, get(on, "/files/documents", null).statusCode());
+            assertEquals(404, get(noFiles, "/files/templates", null).statusCode());
+            assertEquals(404, get(noFiles, "/files/documents", null).statusCode());
             // Save is off unless the file says so.
             assertFalse(read(server(folder)).http().save());
             assertEquals(404, get(noEditor, "/", null).statusCode());
             assertEquals(405, get(noEditor, "/render", null).statusCode());
             assertEquals(404, get(noRender, "/render", null).statusCode());
-            assertEquals(200, get(noRender, "/templates", null).statusCode());
-            assertEquals(405, get(noTemplates, "/render", null).statusCode());
-            assertEquals(404, get(noTemplates, "/templates", null).statusCode());
+            assertEquals(200, get(noRender, "/files/templates", null).statusCode());
+            assertEquals(405, get(noFiles, "/render", null).statusCode());
         }
     }
 
@@ -382,7 +378,7 @@ class ServerFileTest {
         Files.writeString(config.resolve("documents/hello.stxt"), HELLO);
 
         try (PressServer server = read(server("    Template folder: templates\n    Document folder: documents\n")).start()) {
-            for (String path : List.of("/print/templates/hello", "/print/documents/hello")) {
+            for (String path : List.of("/print/hello", "/documents/hello")) {
                 HttpResponse<byte[]> pdf = get(server, path, null);
 
                 assertEquals(200, pdf.statusCode(), () -> new String(pdf.body(), StandardCharsets.UTF_8));

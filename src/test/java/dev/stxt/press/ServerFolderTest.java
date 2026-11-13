@@ -66,7 +66,7 @@ class ServerFolderTest {
         assertEquals(FOLDER.resolve("templates"), server.templateFolder());
         assertEquals(FOLDER.resolve("documents"), server.documentFolder());
         assertEquals("127.0.0.1", server.http().host());
-        assertEquals(8082, server.http().port());
+        assertEquals(8080, server.http().port());
     }
 
     @TestFactory

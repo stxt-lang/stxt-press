@@ -4,23 +4,24 @@
 Server (dev.stxt.press):
 	# 127.0.0.1 answers only this machine; 0.0.0.0, every address of the machine (in a container, for example).
 	Host: 127.0.0.1
-	Port: 8082
+	Port: 8080
 	# The environment variable with the token. Without Token env, every route answers without a token.
 	# Token env: STXT_PRESS_TOKEN
-	# Reading the resources and converting each template once before answering; until then every route answers 503.
+	# Reading the resources and converting each template and document once before answering; until then every route
+	# answers 503.
 	# Warm up: true
 	# The fonts in fonts/, one folder for each family, and the images in images/, by the path a document gives them
 	# (Image: examples/menu/emblem.svg).
 	Resource folder: resources
-	# The templates of /print/templates: each one with its document, its styles and its sample data.
+	# The templates of /print: each one with its document, its styles and its sample data.
 	Template folder: templates
-	# The documents of /print/documents: layout documents converted as they are, each one with its styles.
+	# The documents of /documents: layout documents converted as they are, each one with its styles.
 	Document folder: documents
 	Routes:
 		# Editor: true
 		# Render: true
-		# Templates: true
-		# Documents: true
+		# The files of the templates and the documents for the editor, under /files/.
+		# Files: true
 		# The Save of the editor, which writes the files of the templates and the documents of these folders. Off by
 		# default; on here, for a server of this machine. Off for a server open to others without a token.
 		Save: true

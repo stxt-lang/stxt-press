@@ -14,33 +14,40 @@ java -jar stxt-press.jar render invoice.stxt --styles styles.stxt --data invoice
 
 ## Routes
 
+The routes of the clients:
+
 | Route | What it does |
 |---|---|
-| `GET /print/templates/{path}` | The template `{path}` of the templates folder, filled with its sample data |
-| `POST /print/templates/{path}` | The template `{path}`, filled with the body: the JSON data as they are |
-| `GET /print/documents/{path}` | The document `{path}` of the documents folder, as it is |
+| `GET /print/{path}` | The template `{path}` of the templates folder, filled with its sample data |
+| `POST /print/{path}` | The template `{path}`, filled with the body: the JSON data as they are |
+| `GET /documents/{path}` | The document `{path}` of the documents folder, as it is |
 | `POST /render` | Any document: `{"document": "...", "styles": ["..."], "data": {...}, "options": {...}}` |
-| `GET /templates` | The templates, with the files each one has |
-| `GET /templates/{path}` | The document, the chain of styles and the sample data of a template |
-| `GET /documents` | The documents, with the files each one has |
-| `GET /documents/{path}` | The document and the chain of styles of a document |
-| `PUT /templates/{path}`, `PUT /documents/{path}` | Writes the files of a template or a document, with [`Save`](#saving) on |
 | `GET /schema` | The schema `dev.stxt.pdf` of the engine |
-| `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file; for the editor |
-| `GET /fonts/{id}` | The file of a face, by its SHA-256; for the editor |
 | `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.1.0", "stxt-pdf": "0.17.0"}}`, without token |
+
+The routes of the editor:
+
+| Route | What it does |
+|---|---|
+| `GET /files/templates` | The templates, with the files each one has |
+| `GET /files/templates/{path}` | The document, the chain of styles and the sample data of a template |
+| `GET /files/documents` | The documents, with the files each one has |
+| `GET /files/documents/{path}` | The document and the chain of styles of a document |
+| `PUT /files/templates/{path}`, `PUT /files/documents/{path}` | Writes the files of a template or a document, with [`Save`](#saving) on |
+| `GET /fonts` | The font families of the server, and each face (family, weight, style) with the id of its file |
+| `GET /fonts/{id}` | The file of a face, by its SHA-256 |
 | `GET /` | The [index](#index-and-editor): the templates, the documents and the routes, without token |
 | `GET /editor`, `GET /editor/templates/{path}`, `GET /editor/documents/{path}` | The [web editor](#index-and-editor), blank, on a template or on a document, without token |
 
-`/print` and `/render` answer with a PDF (`?format=pdf`, the default), one SVG per page (`?format=svg`, as
+`/print`, `/documents` and `/render` answer with a PDF (`?format=pdf`, the default), one SVG per page (`?format=svg`, as
 `{"pages": [...]}`, with `&debug=true` for the outlines of the boxes) or the filled document (`?format=stxt`).
 Every PDF names its producer in its document information and its XMP: `stxt-press 0.1.0 (stxt-pdf 0.17.0)`, or the
 `Producer` of `server.stxt`.
 
 ```bash
-curl -o invoice.pdf http://127.0.0.1:8082/print/templates/invoices/invoice
-curl -o invoice.pdf -d @data.json http://127.0.0.1:8082/print/templates/invoices/invoice
-curl -o blue-hour.pdf http://127.0.0.1:8082/print/documents/examples/poster/blue-hour
+curl -o invoice.pdf http://127.0.0.1:8080/print/invoices/invoice
+curl -o invoice.pdf -d @data.json http://127.0.0.1:8080/print/invoices/invoice
+curl -o blue-hour.pdf http://127.0.0.1:8080/documents/examples/poster/blue-hour
 ```
 
 A template is a `<name>.stxt` of the templates folder, named by its path without extension
@@ -92,15 +99,17 @@ make its own name resolve to `127.0.0.1` (DNS rebinding) and read the templates 
 same origin. A server reached through another name, such as an alias of the `hosts` file, needs a token (`Token env`)
 or that name in `Host`. With a token, or on another address, any `Host` is answered.
 
-`/render` converts any document, `/templates` shows the texts and the sample data of the templates and `/documents`
-the texts of the documents, so the three can be turned off. `/fonts` gives the files of the fonts to the SVG previews
-of the editor, and is turned off with it, as are `/`, `/editor` and `/assets/`, the files of the pages. With
-`/render`, `/templates`, `/documents` and the editor off, the server has `/print`, `/schema` and `/health`.
+`/render` converts any document, and the routes under `/files/` show the texts and the sample data of the templates
+and the texts of the documents, so both can be turned off (`Render` and `Files` in the `Routes` of `server.stxt`): with
+`Files: false` the templates and the documents are still printed, without showing their files. `/fonts` gives the
+files of the fonts to the SVG previews of the editor, and is turned off with it, as are `/`, `/editor` and `/assets/`,
+the files of the pages. With `/render`, `/files/` and the editor off, the server has `/print`, `/documents`, `/schema`
+and `/health`.
 
 ### Saving
 
-With `Save: true` in the `Routes` of `server.stxt` (off by default), `PUT /templates/{path}` and
-`PUT /documents/{path}` write the files of a template or a document: the Save of the editor. The body has the shape of
+With `Save: true` in the `Routes` of `server.stxt` (off by default), `PUT /files/templates/{path}` and
+`PUT /files/documents/{path}` write the files of a template or a document: the Save of the editor. The body has the shape of
 the `GET`, with the texts to write; `If-Match` has the `ETag` of the `GET` they come from, and a save from another
 version writes nothing, so that it does not undo a change made since, on disk or by someone else (`409`,
 `FILES_CHANGED`).
@@ -108,7 +117,7 @@ version writes nothing, so that it does not undo a change made since, on disk or
 ```bash
 curl -X PUT -H 'Content-Type: application/json' -H 'If-Match: "<the ETag of the GET>"' \
     --data-binary '{"document": "Document (dev.stxt.pdf): ...", "styles": [{"path": "invoices/invoice.styles.stxt", "text": "..."}], "data": "{...}"}' \
-    http://127.0.0.1:8082/templates/invoices/invoice
+    http://127.0.0.1:8080/files/templates/invoices/invoice
 ```
 
 Only `document` is required; a styles file left out is not touched, nor are the data without `data`. Only the files
@@ -146,11 +155,11 @@ everything below it, is saved only after a confirmation. Without `Save`, there i
 tried with the buttons and lost on leaving.
 
 - **A document**: the document and its chain of styles, without data, one panel per file. As the server has them, it
-  is printed with `/print/documents`; edited, or a blank one, with `/render`.
+  is printed with `/documents`; edited, or a blank one, with `/render`.
 - **A template**: its sample data first, the panel that changes from one PDF to another, then the document and its
   chain of styles, one panel per file. With the document and the styles as the server has them, it is printed with
-  `/print/templates` and the data of the panel; edited, with `/render` and the whole chain. The page shows the URL of
-  `/print/templates` and a `curl` with the data of the panel.
+  `/print` and the data of the panel; edited, with `/render` and the whole chain. The page shows the URL of `/print`
+  and a `curl` with the data of the panel.
 
 The editor fills the window. The bar has the path of what it shows and the buttons; on the left, one tab for each
 file (the data, the document, each styles document), with a dot when the file has an error (red) or a warning of the
@@ -248,9 +257,9 @@ a folder that does not exist, `Resource folder` with `Font folder`…). A change
 | `Font folder`, `Image folder` | — | The fonts and the images in folders of their own, instead of `Resource folder`; each `Image folder` with its `Prefix` |
 | `Template folder` | none | The templates folder |
 | `Document folder` | none | The documents folder |
-| `Routes` | all on but `Save` | `Editor`, `Render`, `Templates` and `Documents`: the index and the editor (with `/fonts`), `/render`, `/templates` and `/documents` on or off; `Save`, the `PUT` of `/templates` and `/documents` ([Saving](#saving)), off by default |
+| `Routes` | all on but `Save` | `Editor`, `Render` and `Files`: the index and the editor (with `/fonts`), `/render` and the routes under `/files/` on or off; `Save`, the `PUT` of `/files/templates` and `/files/documents` ([Saving](#saving)), off by default |
 | `Limits` | — | `Max body size` (bytes, 2 MiB), `Timeout` (seconds, 30), `Concurrent conversions` (4), and the limits of the engine: `Max pages`, `Max image pixels`, `Max SVG elements`, `Max SVG depth`, `Max PDF bytes` |
-| `Template options` | — | `PDF UA` (`1` or `2`), `PDF A` (`A2B`, `A2A`, `A3B`, `A3A`) and one `Exclude` for each check not made, as the `options` of `/render`; for the templates and the documents of `/print` |
+| `Template options` | — | `PDF UA` (`1` or `2`), `PDF A` (`A2B`, `A2A`, `A3B`, `A3A`) and one `Exclude` for each check not made, as the `options` of `/render`; for the templates of `/print` and the documents of `/documents` |
 | `Producer` | `stxt-press 0.1.0 (stxt-pdf 0.17.0)` | The producer that the PDFs of the server and of `render` and `print` name |
 
 Relative paths are relative to the folder of `server.stxt`, so a server moves with its configuration. The token is not
@@ -258,7 +267,7 @@ written in the file, only the name of its variable.
 
 The folder [`server/`](server/) is a whole server, to copy anywhere and to start a project from: `start.sh` and
 `start.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
-`127.0.0.1:8082`, turns `Save` on (for the editor of this machine) and shows the other nodes commented with their
+`127.0.0.1:8080`, turns `Save` on (for the editor of this machine) and shows the other nodes commented with their
 defaults; the fonts IBM Plex Sans, Serif and Mono and
 the images of the examples of stxt-pdf in `resources/`; and in `templates/`, one template for each example of
 stxt-pdf (`invoices/invoice`, `letters/letter`, `resumes/resume`, `reports/annual-report`, `newsletters/newsletter`,
