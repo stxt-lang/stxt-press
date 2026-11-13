@@ -1,0 +1,40 @@
+# Markdown: bulleted lists, with one marker per nesting level in Bullet markers.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Bulleted lists
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Bulleted lists
+		Paragraph: Lists written with `-`, `*` or `+` become a `List`. `Bullet markers` gives the marker of each level, and the last one serves the deeper levels. The room for the marker is the left `Padding` of `For element: List`.
+			Style: intro
+		Text: Bullet markers: bullet dash
+			Style: label
+		Markdown:
+			Bullet markers: bullet dash
+			Content >>
+				- Wood
+				  - Walnut
+				  - Oak
+				    - Only for tables
+				- Fabric
+				  - Wool
+		Text: Bullet markers: dash
+			Style: label
+		Markdown:
+			Bullet markers: dash
+			Content >>
+				* Chairs
+				* Stools
+				  * Bar stools
+		Text: Bullet markers: none
+			Style: label
+		Markdown:
+			Bullet markers: none
+			Content >>
+				+ No marker on this item
+				+ Nor on this one

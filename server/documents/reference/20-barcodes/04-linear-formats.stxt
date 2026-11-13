@@ -1,0 +1,36 @@
+# Barcodes: the formats of one row of bars: code-128, gs1-128 and ean-13, at their natural size.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · Linear formats
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: code
+			Box:
+				Margin: 0 0 16 0
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: Linear formats
+		Paragraph: Three formats draw one row of bars, 0.33 mm per module and 22.85 mm high at their natural size. `code-128` takes printable ASCII, up to 80 characters. `gs1-128` takes GS1 data and `ean-13` takes 12 digits (the engine adds the check digit) or 13 (it checks it).
+			Style: intro
+		Text: Barcode format: code-128
+			Style: label
+		Barcode: ORD-2026-0147
+			Style: code
+			Alt: Order ORD-2026-0147
+			Barcode format: code-128
+		Text: Barcode format: gs1-128
+			Style: label
+		Barcode: (00)395011015300000011
+			Style: code
+			Alt: Package 395011015300000011
+			Barcode format: gs1-128
+		Text: Barcode format: ean-13  (12 digits, check digit added)
+			Style: label
+		Barcode: 841234567890
+			Style: code
+			Alt: Product 8412345678905
+			Barcode format: ean-13

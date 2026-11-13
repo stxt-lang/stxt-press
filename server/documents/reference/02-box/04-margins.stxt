@@ -1,0 +1,65 @@
+# The box: margins between boxes do not add up, Margin: 0 auto centers a box, and a negative margin pulls it closer.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: The box · Margins
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: demo
+			Box:
+				Padding: 6 8
+				Background: tint
+				Border: 0 0 0 2
+				Border color: accent
+	Section:
+		Text: The box
+			Style: topic
+		Heading 1:
+			Text: Margins
+		Paragraph: The margin is the space outside the box, always transparent. Between two boxes one above the other, the vertical margins **do not add up**: the larger one is kept.
+			Style: intro
+		Text: Margin: 0 0 20 0  then  Margin: 30 0 0 0  (30 apart, not 50)
+			Style: label
+			Box:
+				Margin: 0 0 6 0
+		Text: Bottom margin 20.
+			Style: demo
+			Box:
+				Margin: 0 0 20 0
+		Text: Top margin 30.
+			Style: demo
+			Box:
+				Margin: 30 0 0 0
+		Text: Margin: 0 auto, with Width: 240  (centered)
+			Style: label
+			Box:
+				Margin: 30 0 6 0
+		Text: A centered box.
+			Style: demo
+			Box:
+				Width: 240
+				Margin: 0 auto
+			Typography:
+				Align: center
+		Text: Margin: 0 40  (40 at each side)
+			Style: label
+			Box:
+				Margin: 30 0 6 0
+		Text: The width the parent leaves, minus 40 at the left and 40 at the right.
+			Style: demo
+			Box:
+				Margin: 0 40
+		Text: Margin: -12 0 0 60  (a negative top margin pulls the box up)
+			Style: label
+			Box:
+				Margin: 30 0 6 0
+		Text: The first box.
+			Style: demo
+			Box:
+				Height: 40
+		Text: The second box, 12 points over the first one.
+			Style: demo
+			Box:
+				Margin: -12 0 0 60
+				Background: #D8E4EF

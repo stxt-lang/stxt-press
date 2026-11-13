@@ -49,6 +49,7 @@ import dev.stxt.utils.FileUtils;
  *     Token env: STXT_PRESS_TOKEN
  *     Resource folder: resources
  *     Template folder: templates
+ *     Document folder: documents
  *     Routes:
  *         Render: false
  *     Limits:
@@ -60,7 +61,7 @@ import dev.stxt.utils.FileUtils;
  * <p>The file is validated with the schema {@code dev.stxt.press} of the jar ({@code /stxt/dev.stxt.press.stxt}), by
  * {@code stxt-core}. Relative paths are relative to the folder of the file, so that a server moves with its
  * configuration. Without a file, the server listens only on {@code 127.0.0.1:8080}, without token, with the resources
- * of {@code resources} in the working directory and without templates.</p>
+ * of {@code resources} in the working directory and without templates or documents.</p>
  */
 public final class ServerFile {
 
@@ -84,10 +85,11 @@ public final class ServerFile {
     private final boolean warmUp;
     private final boolean lazyInit;
     private final Path templateFolder;
+    private final Path documentFolder;
     private final String producer;
 
     private ServerFile(Path file, ServerConfig http, Resources resources, Limits limits, boolean warmUp,
-            boolean lazyInit, Path templateFolder, String producer) {
+            boolean lazyInit, Path templateFolder, Path documentFolder, String producer) {
         this.file = file;
         this.http = http;
         this.resources = resources;
@@ -95,6 +97,7 @@ public final class ServerFile {
         this.warmUp = warmUp;
         this.lazyInit = lazyInit;
         this.templateFolder = templateFolder;
+        this.documentFolder = documentFolder;
         this.producer = producer;
     }
 
@@ -157,7 +160,8 @@ public final class ServerFile {
 
     /**
      * The configuration of a server without file: {@link ServerConfig#DEFAULT} (only {@code 127.0.0.1:8080}, without
-     * token), the folder {@code resources} of {@code workingDirectory}, the limits of the engine and no templates.
+     * token), the folder {@code resources} of {@code workingDirectory}, the limits of the engine, and no templates or
+     * documents.
      *
      * @param workingDirectory what the folder of the resources is relative to; not {@code null}
      * @return the configuration
@@ -165,7 +169,7 @@ public final class ServerFile {
     public static ServerFile defaults(Path workingDirectory) {
         return new ServerFile(null, ServerConfig.DEFAULT,
                 new Resources(workingDirectory.resolve(Resources.DEFAULT_ROOT)), Limits.DEFAULT, true, false, null,
-                Press.producer());
+                null, Press.producer());
     }
 
     /**
@@ -223,7 +227,7 @@ public final class ServerFile {
 
     /**
      * {@return whether the server warms up before answering: it reads the whole resources folder and converts its
-     * templates, and until then answers every request with {@code 503}} By default {@code true}, and {@code false}
+     * templates and its documents, and until then answers every request with {@code 503}} By default {@code true}, and {@code false}
      * with {@link #lazyInit()}.
      */
     public boolean warmUp() {
@@ -238,6 +242,11 @@ public final class ServerFile {
     /** {@return the templates folder, or {@code null} if the server has none} */
     public Path templateFolder() {
         return templateFolder;
+    }
+
+    /** {@return the documents folder, or {@code null} if the server has none} */
+    public Path documentFolder() {
+        return documentFolder;
     }
 
     /**
@@ -276,22 +285,23 @@ public final class ServerFile {
      * first request that needs it. Without token, it says so in the log.
      *
      * @return the server, answering
-     * @throws IOException if it cannot listen on its address, or the templates folder cannot be read
+     * @throws IOException if it cannot listen on its address, or the templates or the documents folder cannot be read
      * @throws dev.stxt.pdf.resources.ResourceException with {@link #warmUp()}, if the fonts cannot be read
      */
     public PressServer start() throws IOException {
         Templates templates = templateFolder == null ? null : new Templates(templateFolder);
+        Templates documents = documentFolder == null ? null : new Templates(documentFolder, Templates.Kind.DOCUMENT);
         if (http.token() == null) {
             LOG.log(Level.WARNING, "The server has no token: every route answers without one (Token env in "
                     + FILE_NAME + ")");
         }
         if (lazyInit) {
-            return PressServer.startLazily(this::serverConverter, templates, http);
+            return PressServer.startLazily(this::serverConverter, templates, documents, http);
         }
         if (!warmUp) {
-            return PressServer.start(serverConverter(), templates, http);
+            return PressServer.start(serverConverter(), templates, documents, http);
         }
-        PressServer server = PressServer.startWarmingUp(this::serverConverter, templates, http);
+        PressServer server = PressServer.startWarmingUp(this::serverConverter, templates, documents, http);
         try {
             server.warmUp();
         } catch (RuntimeException e) {
@@ -304,8 +314,8 @@ public final class ServerFile {
     @Override
     public String toString() {
         return "ServerFile[file=" + file + ", http=" + http + ", limits=" + limits + ", warmUp="
-                + warmUp + ", lazyInit=" + lazyInit + ", templateFolder=" + templateFolder + ", producer=" + producer
-                + "]";
+                + warmUp + ", lazyInit=" + lazyInit + ", templateFolder=" + templateFolder + ", documentFolder="
+                + documentFolder + ", producer=" + producer + "]";
     }
 
     private static SchemaProviderMemory loadSchema() {
@@ -343,7 +353,7 @@ public final class ServerFile {
             InlineNode routes = group(server, "Routes");
             if (routes != null) {
                 http = http.withRoutes(bool(routes, "Editor", http.editor()), bool(routes, "Render", http.render()),
-                        bool(routes, "Templates", http.templates()));
+                        bool(routes, "Templates", http.templates()), bool(routes, "Documents", http.documents()));
             }
 
             Limits limits = Limits.DEFAULT;
@@ -375,8 +385,10 @@ public final class ServerFile {
                         + "which opens the resources with the first request instead of at the start");
             }
             Node templates = server.getChild("Template folder");
+            Node documents = server.getChild("Document folder");
             return new ServerFile(file, http, resources(server), limits, warmUp, lazyInit,
-                    templates == null ? null : folder(templates), text(server, "Producer", Press.producer()));
+                    templates == null ? null : folder(templates), documents == null ? null : folder(documents),
+                    text(server, "Producer", Press.producer()));
         }
 
         /** {@return the token of the variable {@code Token env} names, or {@code null} without {@code Token env}} */

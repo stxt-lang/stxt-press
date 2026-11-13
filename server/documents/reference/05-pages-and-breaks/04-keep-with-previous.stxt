@@ -1,0 +1,39 @@
+# Pages and breaks: Keep with previous keeps a box on the same page as the box before it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Pages and breaks · Keep with previous
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Pages and breaks
+			Style: topic
+		Heading 1:
+			Text: Keep with previous
+		Paragraph: With `Keep with previous: true`, a box stays on the same page as the box before it. The note below is kept together and does not fit on page 1. Instead of starting page 2 alone, it takes the total with it.
+			Style: intro
+		Block:
+			Style: filler
+			Box:
+				Height: 290
+			Text: A filler block, 290 points high, to bring the total near the end of the page.
+		Block:
+			Style: marked
+			Text: Total due: 2,630.00 EUR
+				Typography:
+					Bold: true
+		Block:
+			Style: marked
+			Box:
+				Height: 110
+			Break:
+				Keep with previous: true
+				Keep together: true
+			Text: Break: Keep with previous: true
+				Style: label
+			Paragraph: A note that belongs to the total: payment within 30 days of the invoice date.

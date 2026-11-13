@@ -1,0 +1,51 @@
+# Typography: Language on a box in another language, and its letter rules with Case: uppercase.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · Language
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: quote
+			Box:
+				Margin: 0 0 18 0
+				Padding: 8 12
+				Border: 0 0 0 3
+				Border color: accent
+			Typography:
+				Font: IBM Plex Serif
+				Italic: true
+				Size: 12
+		For style: upper
+			Box:
+				Margin: 0 0 6 0
+			Typography:
+				Case: uppercase
+				Size: 14
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: Language
+		Paragraph: The language of the document is its `Language`. A box in another language declares its own in `Typography`: a screen reader changes voice there, and hyphenation and automatic capitals follow its rules. The language belongs to the whole box.
+			Style: intro
+		Text: Typography: Language: fr
+			Style: label
+		Paragraph: « Je pense, donc je suis », écrit Descartes dans le Discours de la méthode.
+			Style: quote
+			Typography:
+				Language: fr
+		Text: Typography: Language: ca
+			Style: label
+		Paragraph: La plaça s'omple de castanyes cada tardor, i el mercat obre fins al vespre.
+			Style: quote
+			Typography:
+				Language: ca
+		Text: Case: uppercase on the word "istanbul", painted by the rules of each language
+			Style: label
+		Text: en: istanbul
+			Style: upper
+		Text: tr: istanbul
+			Style: upper
+			Typography:
+				Language: tr

@@ -1,0 +1,63 @@
+# Figures: Figure numbering: chapter, which numbers the figures by chapter (2.1, 2.2) and starts again in each one.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Figures · Numbering by chapter
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Size: 13
+				Line height: 17
+				Bold: true
+				Numbered: true
+			Box:
+				Margin: 12 0 6 0
+		For element: Figure
+			Box:
+				Margin: 2 0 8 0
+	Section:
+		Figure numbering: chapter
+		Text: Figures
+			Style: topic
+		Heading 1:
+			Text: Numbering by chapter
+		Paragraph: With `Figure numbering: chapter` in the `Section`, the figures count again in each chapter and carry its number first. The chapter is the numbered heading of the highest level, here the `Heading 2`, because the title is not numbered.
+			Style: intro
+		Heading 2:
+			Text: Chairs
+		Stack:
+			Gap: 16
+			Item:
+				Figure:
+					Caption: Chair.
+					Image: examples/catalog/silla.jpg
+						Alt: Walnut chair
+						Box:
+							Width: 40mm
+			Item:
+				Figure:
+					Caption: Stool.
+					Image: examples/catalog/taburete.jpg
+						Alt: Walnut stool
+						Box:
+							Width: 40mm
+		Heading 2:
+			Text: Tables
+		Stack:
+			Gap: 16
+			Item:
+				Figure:
+					Caption: Dining table.
+					Image: examples/catalog/mesa.jpg
+						Alt: Walnut dining table
+						Box:
+							Width: 40mm
+			Item:
+				Figure:
+					Caption: Desk.
+					Image: examples/catalog/escritorio.jpg
+						Alt: Walnut desk
+						Box:
+							Width: 40mm

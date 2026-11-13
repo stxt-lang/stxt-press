@@ -1,0 +1,25 @@
+# Markdown: an image alone in its paragraph becomes an Image, and one inside a sentence is as tall as the letters.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Images
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Image
+			Box:
+				Width: 50mm
+				Margin: 0 0 10 0
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Images
+		Paragraph: `![alt](path)` alone in its paragraph is an `Image`, with the text in brackets as its `Alt`. Its size comes from `For element: Image`. Inside a sentence it is an inline image, as tall as the letters, and with empty brackets it is decorative.
+			Style: intro
+		Markdown:
+			Content >>
+				![Walnut chair with a wool seat](examples/catalog/silla.jpg)
+
+				The menu of the day carries the emblem ![Emblem of the restaurant](examples/menu/emblem.svg) of the house,
+				and the planner icon ![](examples/planner/icon.png) in the same line is decorative.

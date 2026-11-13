@@ -1,0 +1,24 @@
+# The look of the positioned elements documents: a stage (a Frame with a size) and the boxes placed on it.
+Styles (dev.stxt.pdf):
+	For style: stage
+		Box:
+			Height: 150
+			Margin: 0 0 16 0
+			Border: 0.5
+			Border color: rule
+			Background: tint
+	For style: badge
+		Box:
+			Padding: 4 8
+			Background: accent
+		Typography:
+			Color: #FFFFFF
+			Size: 8.5
+			Line height: 11
+	For style: note
+		Typography:
+			Size: 8.5
+			Line height: 12
+			Color: muted
+		Box:
+			Padding: 6 8

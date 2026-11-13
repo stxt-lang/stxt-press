@@ -64,6 +64,7 @@ class ServerFolderTest {
 
         assertEquals(FOLDER.resolve("resources"), server.resources().root());
         assertEquals(FOLDER.resolve("templates"), server.templateFolder());
+        assertEquals(FOLDER.resolve("documents"), server.documentFolder());
         assertEquals("127.0.0.1", server.http().host());
         assertEquals(8080, server.http().port());
     }
@@ -83,6 +84,26 @@ class ServerFolderTest {
             press.pdf(template.job(server.http().templateOptions()), pdf);
 
             assertEquals("%PDF", new String(pdf.toByteArray(), 0, 4, StandardCharsets.US_ASCII));
+        }));
+    }
+
+    /** Every document converts as it is, with its chain of styles and the options of the server, to PDF and to SVG. */
+    @TestFactory
+    Stream<DynamicTest> everyDocumentConverts() throws ConfigException, IOException {
+        ServerFile server = server();
+        Press press = new Press(server.converter());
+        Templates documents = new Templates(server.documentFolder(), Templates.Kind.DOCUMENT);
+        List<Templates.Entry> entries = documents.list();
+        assertFalse(entries.isEmpty(), "no documents in server/documents/");
+        return entries.stream().map(entry -> DynamicTest.dynamicTest(entry.path(), () -> {
+            Template document = documents.get(entry.path());
+            Job job = document.job(server.http().templateOptions());
+
+            ByteArrayOutputStream pdf = new ByteArrayOutputStream();
+            press.pdf(job, pdf);
+
+            assertEquals("%PDF", new String(pdf.toByteArray(), 0, 4, StandardCharsets.US_ASCII));
+            assertFalse(press.svg(job).isEmpty());
         }));
     }
 

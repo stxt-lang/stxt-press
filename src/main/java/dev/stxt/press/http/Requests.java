@@ -88,14 +88,6 @@ final class Requests {
         };
     }
 
-    /** That {@code ?mode=} of the editor is {@code document} or {@code template}, which the page reads. */
-    static void mode(Map<String, String> parameters) throws HttpError {
-        String mode = parameters.get("mode");
-        if (mode != null && !mode.equals("document") && !mode.equals("template")) {
-            throw notValid("Unknown mode " + mode + " (document, template)");
-        }
-    }
-
     /** {@return whether the request has {@code token}, if it is not {@code null}} */
     static boolean authorized(HttpExchange exchange, String token) {
         if (token == null) {

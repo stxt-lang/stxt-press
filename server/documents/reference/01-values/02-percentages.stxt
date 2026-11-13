@@ -1,0 +1,99 @@
+# Values: percentages of the width of the container, of a known height and of the font size.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Values · Percentages
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: bar
+			Box:
+				Height: 14
+				Margin: 0 0 14 0
+				Background: accent
+		For style: column
+			Box:
+				Height: 100%
+				Background: accent
+	Section:
+		Text: Values
+			Style: topic
+		Heading 1:
+			Text: Percentages
+		Paragraph: A width, a margin or a padding in percent is a part of the **width** of the container. A height in percent needs a container whose height is known, and a `Line height` in percent is relative to the `Size` of the text.
+			Style: intro
+		Text: Width: 25%
+			Style: label
+		Block:
+			Style: bar
+			Box:
+				Width: 25%
+		Text: Width: 50%
+			Style: label
+		Block:
+			Style: bar
+			Box:
+				Width: 50%
+		Text: Width: 100%
+			Style: label
+		Block:
+			Style: bar
+			Box:
+				Width: 100%
+		Text: Margin: 0 0 14 50%
+			Style: label
+		Block:
+			Style: bar
+			Box:
+				Width: 25%
+				Margin: 0 0 14 50%
+		Text: Height: 100%, 50% and 25% of a Stack with Height: 80
+			Style: label
+		Stack:
+			Gap: 10
+			Vertical: bottom
+			Box:
+				Height: 80
+				Margin: 0 0 14 0
+				Border: 0 0 0.5 0
+				Border color: rule
+			Item:
+				Block:
+					Box:
+						Width: 40
+						Height: 100%
+						Background: accent
+			Item:
+				Block:
+					Box:
+						Width: 40
+						Height: 50%
+						Background: accent
+			Item:
+				Block:
+					Box:
+						Width: 40
+						Height: 25%
+						Background: accent
+		Stack:
+			Gap: 20
+			Item:
+				Grow: 1
+				Base size: 0
+				Block:
+					Text: Line height: 100%
+						Style: label
+					Paragraph: With a line height equal to the size, the lines of this paragraph touch each other and the text reads as a dense block.
+						Style: sample
+						Typography:
+							Line height: 100%
+			Item:
+				Grow: 1
+				Base size: 0
+				Block:
+					Text: Line height: 160%
+						Style: label
+					Paragraph: With a line height of 160% of the size, the same paragraph gets air between its lines.
+						Style: sample
+						Typography:
+							Line height: 160%

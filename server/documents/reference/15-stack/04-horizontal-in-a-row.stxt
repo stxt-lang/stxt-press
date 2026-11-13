@@ -1,0 +1,92 @@
+# Stack: each value of Horizontal in a row, where it distributes the leftover space.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Horizontal in a row
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 6
+			Box:
+				Margin: 0 0 14 0
+				Border: 0.5
+				Border color: rule
+				Background: tint
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Horizontal in a row
+		Paragraph: In a `Stack` with `Direction: horizontal`, `Horizontal` says where the leftover space goes when no item grows. `justify` puts it between the items and `distribute` makes every gap equal, also at the edges.
+			Style: intro
+		Text: Horizontal: left  (the default)
+			Style: label
+		Stack:
+			Style: row
+			Horizontal: left
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile
+			Item:
+				Text: Three
+					Style: tile
+		Text: Horizontal: right
+			Style: label
+		Stack:
+			Style: row
+			Horizontal: right
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile
+			Item:
+				Text: Three
+					Style: tile
+		Text: Horizontal: center
+			Style: label
+		Stack:
+			Style: row
+			Horizontal: center
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile
+			Item:
+				Text: Three
+					Style: tile
+		Text: Horizontal: justify
+			Style: label
+		Stack:
+			Style: row
+			Horizontal: justify
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile
+			Item:
+				Text: Three
+					Style: tile
+		Text: Horizontal: distribute
+			Style: label
+		Stack:
+			Style: row
+			Horizontal: distribute
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile
+			Item:
+				Text: Three
+					Style: tile

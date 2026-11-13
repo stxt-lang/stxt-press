@@ -1,0 +1,154 @@
+# Minutes of a housing co-operative's general meeting, on US Letter paper, written almost entirely in Markdown: the
+# body is one Markdown with numbered headings (Numbered in the rules of Heading 2 and Heading 3), nested bulleted and
+# numbered lists with their own markers per level (Bullet markers, Number markers), two GFM tables with aligned
+# columns, a block quote, a horizontal rule and, inline, bold, italic, ++underline++, ~~strikethrough~~ (an item
+# withdrawn from the agenda), `code` and links. The engine styles the block quote and the rule with the For element
+# rules of Block quote and Divider. Two footnotes are called from the Markdown ([^id]). The meeting details are a
+# Grid of labels and values above it, the signatures a Stack kept together, and the first page carries a "Draft"
+# stamp, a Page overlay rotated 8 degrees that appears only there (Pages: first).
+Document (dev.stxt.pdf):
+	Page:
+		Paper: Letter
+		Margin: 54 72 62 72
+	Title: Minutes of the general meeting of 4 November 2026 · Linden Street Housing Co-operative
+	Subject: Draft minutes of the autumn general meeting: roof repairs, the 2027 budget and the garden
+	Author: Linden Street Housing Co-operative
+	Language: en-US
+	Page overlay:
+		Id: stamp
+		Pages: first
+		Offset: -30 -20 auto auto
+		Rotate: 8
+		Layer: 2
+		Text: Draft · for approval
+			Style: stamp
+	Page overlay:
+		Id: footer
+		Offset: auto 0 -40 0
+		Style: footer
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Linden Street Housing Co-operative · General meeting, 4 November 2026
+			Item:
+				Text: Page {page} of {pages}
+	Section:
+		Text: Linden Street Housing Co-operative
+			Style: org
+		Heading 1:
+			Text: Minutes of the general meeting
+		Grid:
+			Id: details
+			Style: details
+			Area:
+				Text: Date
+					Style: detail-label
+			Area:
+				Text: Wednesday 4 November 2026, 7:00 pm to 8:50 pm
+			Area:
+				Text: Place
+					Style: detail-label
+			Area:
+				Text: Community room, 14 Linden Street
+			Area:
+				Text: Chair
+					Style: detail-label
+			Area:
+				Text: Dolores Achebe
+			Area:
+				Text: Minutes
+					Style: detail-label
+			Area:
+				Text: Sam Whitfield, secretary
+			Area:
+				Text: Present
+					Style: detail-label
+			Area:
+				Text: 31 of 42 member households, so the meeting was quorate (the quorum is 22)
+		Markdown:
+			Id: minutes
+			Style: minutes
+			Content >>
+				## Opening and agenda
+
+				The chair opened the meeting at 7:02 pm and welcomed two new households, from flats 3B and 7A. The agenda sent on 21 October was approved with one change:
+
+				- ~~Item 6: bicycle storage~~ was *withdrawn* and moves to the January meeting, when the quotes will be in.
+				- Apologies were received from nine households.
+
+				## Minutes of the last meeting
+
+				The minutes of the meeting of 9 July were approved without changes (proposed by flat 2A, seconded by flat 5C).
+
+				## Roof repairs
+
+				Juan Ferraro, for the maintenance group, reported on the survey of the roof carried out on 12 September[^survey]. The survey found:
+
+				1. Slipped and broken slates over flats 6A to 6D, which let water into the loft in heavy rain.
+				2. Corroded valley gutters on the north side, which should be replaced, not patched.
+				3. Lead flashing around the two chimneys that is past its life:
+				   - the east chimney needs it now;
+				   - the west chimney can wait until 2028.
+
+				Three contractors quoted for the work. The group recommended **Hallam Roofing**, which was not the cheapest but offered a ten-year guarantee and could start in March.
+
+				> We would rather pay once for a roof that lasts than three times for one that leaks.
+				>
+				> Juan Ferraro, maintenance group
+
+				### Decision
+
+				The meeting agreed to the recommendation. The work will be paid for from the repairs reserve, which stands at £61,400, and the reserve will be rebuilt over four years.
+
+				## Budget for 2027
+
+				The treasurer presented the draft budget. Rents rise by 3.2%, below inflation, and the service charge stays the same. The figures are in the [budget pack](https://lindenstreet.example/members/budget-2027) sent to members.
+
+				### Questions from members
+
+				- Flat 4D asked why insurance rises by 11%. The treasurer explained that the insurer has raised prices for all flats built before 1950, and that two other quotes were higher.
+				- Flat 1B asked to publish the accounts on the members' site. Agreed: the file will be at `members/accounts/2026.pdf`.
+
+				## Motions
+
+				| No. | Motion | For | Against | Abstain | Result |
+				|:---:|--------|----:|--------:|--------:|:------:|
+				| 1 | Approve the roof repairs by Hallam Roofing, £48,900 | 29 | 1 | 1 | Carried |
+				| 2 | Approve the 2027 budget and a rent rise of 3.2% | 26 | 3 | 2 | Carried |
+				| 3 | Turn the east lawn into a vegetable garden | 14 | 15 | 2 | Not carried |
+
+				Motion 3 will come back in a new form: the garden group will propose a smaller plot that keeps half of the lawn[^garden].
+
+				---
+
+				## Actions
+
+				| Action | Who | By |
+				|--------|-----|---:|
+				| Sign the contract with Hallam Roofing | Treasurer | 30 Nov 2026 |
+				| Tell flats 6A to 6D the dates of the roof work | Maintenance group | 15 Jan 2027 |
+				| Publish the 2026 accounts on the members' site | Secretary | 15 Dec 2026 |
+				| Bring a new garden proposal | Garden group | Next meeting |
+
+				## Next meeting
+
+				The next general meeting is on ++Wednesday 13 January 2027++ at 7:00 pm in the community room. The chair closed the meeting at 8:50 pm.
+		Footnote:
+			Id: survey
+			Paragraph: The full survey, with photographs of each defect, is available from the secretary.
+		Footnote:
+			Id: garden
+			Paragraph: Members who abstained or voted against were invited to join the garden group to help shape the new proposal.
+		Stack:
+			Id: signatures
+			Style: signatures
+			Item:
+				Grow: 1
+				Block:
+					Style: signature
+					Text: Dolores Achebe, chair
+			Item:
+				Grow: 1
+				Block:
+					Style: signature
+					Text: Sam Whitfield, secretary

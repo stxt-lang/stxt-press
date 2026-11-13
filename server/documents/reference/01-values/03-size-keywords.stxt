@@ -1,0 +1,52 @@
+# Values: the width keywords auto, narrowest, natural and fit on the same text.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Values · Size keywords
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: box
+			Box:
+				Margin: 0 0 14 0
+				Padding: 4 6
+				Background: tint
+				Border: 0 0 0 2
+				Border color: accent
+	Section:
+		Text: Values
+			Style: topic
+		Heading 1:
+			Text: Size keywords
+		Paragraph: Besides a length or a percentage, a width can be a keyword that the engine works out from the content. The same text gets each of the four widths below.
+			Style: intro
+		Text: Width: auto  (the width the parent leaves)
+			Style: label
+		Paragraph: Walnut chair, solid wood with an oil finish.
+			Style: box
+			Box:
+				Width: auto
+		Text: Width: narrowest  (its longest word)
+			Style: label
+		Paragraph: Walnut chair, solid wood with an oil finish.
+			Style: box
+			Box:
+				Width: narrowest
+		Text: Width: natural  (its text without breaking any line)
+			Style: label
+		Paragraph: Walnut chair, solid wood with an oil finish.
+			Style: box
+			Box:
+				Width: natural
+		Text: Width: fit  (what the content needs, up to the space available)
+			Style: label
+		Paragraph: Walnut chair, solid wood with an oil finish.
+			Style: box
+			Box:
+				Width: fit
+		Text: Width: fit  (a longer text, limited by the space available)
+			Style: label
+		Paragraph: Walnut chair, solid wood with an oil finish. The seat is upholstered in natural wool and the legs end in felt pads that protect the floor.
+			Style: box
+			Box:
+				Width: fit

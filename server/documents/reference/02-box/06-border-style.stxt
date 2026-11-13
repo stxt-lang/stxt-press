@@ -1,0 +1,103 @@
+# The box: Border style solid, dashed and dotted, alone, on one side and with rounded corners.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: The box · Border style
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 20
+			Box:
+				Margin: 0 0 20 0
+		For style: cell
+			Grow: 1
+			Base size: 0
+		For style: demo
+			Box:
+				Height: 60
+				Border: 2
+				Border color: accent
+	Section:
+		Text: The box
+			Style: topic
+		Heading 1:
+			Text: Border style
+		Paragraph: `Border style` draws the border with a solid line (the default), with dashes or with dots, the same on its four sides. The dashes are three times as long as the border is wide, the dots as wide as it, and each side starts and ends with a whole one.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: Border style: solid
+						Style: label
+					Block:
+						Style: demo
+						Box:
+							Border style: solid
+			Item:
+				Block:
+					Style: cell
+					Text: Border style: dashed
+						Style: label
+					Block:
+						Style: demo
+						Box:
+							Border style: dashed
+			Item:
+				Block:
+					Style: cell
+					Text: Border style: dotted
+						Style: label
+					Block:
+						Style: demo
+						Box:
+							Border style: dotted
+		Text: With Corner radius: 12, the pattern follows the curve
+			Style: label
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Block:
+						Style: demo
+						Box:
+							Corner radius: 12
+							Border style: dashed
+			Item:
+				Block:
+					Style: cell
+					Block:
+						Style: demo
+						Box:
+							Corner radius: 12
+							Border style: dotted
+							Border: 3
+			Item:
+				Block:
+					Style: cell
+					Block:
+						Style: demo
+						Box:
+							Corner radius: 30
+							Border style: dashed
+							Border: 1
+		Text: Border: 0.5 0 0 0, Border style: dashed  (a line to cut along)
+			Style: label
+		Block:
+			Box:
+				Margin: 12 0
+				Border: 0.5 0 0 0
+				Border style: dashed
+		Text: Border: 0 0 1 0, Border style: dotted  (a line to sign on)
+			Style: label
+			Box:
+				Margin: 12 0 4 0
+		Block:
+			Box:
+				Width: 220
+				Height: 40
+				Border: 0 0 1 0
+				Border style: dotted

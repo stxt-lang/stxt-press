@@ -1,0 +1,157 @@
+# Styles of the meeting minutes: IBM Plex Sans in a dark green, numbered section headings, tables with a tinted
+# header row and a red stamp for the draft.
+Styles (dev.stxt.pdf):
+	Named color: linden #2D5A3D
+	Named color: grey #5C6660
+	Named color: rule #CBD5CE
+	Named color: tint #EEF3EF
+	Named color: stamp #B42318
+	For element: Document
+		Typography:
+			Size: 9.5
+			Line height: 13.5
+			Color: #1D2420
+	For style: stamp
+		Typography:
+			Size: 12
+			Bold: true
+			Color: stamp
+			Case: uppercase
+			Letter spacing: 2
+		Box:
+			Padding: 5 12
+			Border: 2
+			Border color: stamp
+			Corner radius: 4
+			Background: #FFFFFF
+	For style: footer
+		Typography:
+			Size: 8
+			Color: grey
+		Box:
+			Padding: 6 0 0 0
+			Border: 0.5 0 0 0
+			Border color: rule
+	For style: org
+		Typography:
+			Size: 9
+			Bold: true
+			Color: linden
+			Case: uppercase
+			Letter spacing: 1.5
+		Box:
+			Margin: 0 0 4 0
+	For element: Heading 1
+		Typography:
+			Size: 24
+			Line height: 30
+			Bold: true
+			Color: #1D2420
+		Box:
+			Margin: 0 0 14 0
+	For style: details
+		Column sizes: 72 *
+		Gap: 5 12
+		Box:
+			Padding: 12 14
+			Margin: 0 0 12 0
+			Background: tint
+			Corner radius: 4
+	For style: detail-label
+		Typography:
+			Size: 8
+			Bold: true
+			Color: linden
+			Case: uppercase
+			Letter spacing: 1
+	For element: Heading 2
+		Typography:
+			Size: 13
+			Line height: 18
+			Bold: true
+			Color: linden
+			Numbered: true
+		Box:
+			Margin: 14 0 5 0
+	For element: Heading 3
+		Typography:
+			Size: 10.5
+			Line height: 15
+			Bold: true
+			Numbered: true
+		Box:
+			Margin: 10 0 4 0
+	For style: minutes
+		Bullet markers: bullet dash
+		Number markers: decimal lower-alpha
+		Table column sizes: auto
+		For element: Paragraph
+			Box:
+				Margin: 0 0 7 0
+		For element: List
+			Box:
+				Padding: 0 0 0 18
+				Margin: 0 0 8 0
+		For element: List item
+			Box:
+				Margin: 0 0 2 0
+		For element: Table
+			Box:
+				Margin: 4 0 10 0
+		For element: Cell
+			Box:
+				Padding: 4 7
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Size: 8.5
+				Bold: true
+				Color: linden
+			Box:
+				Background: tint
+				Border: 0 0 1 0
+				Border color: linden
+	For element: Block quote
+		Typography:
+			Font: IBM Plex Serif
+			Italic: true
+			Size: 10.5
+			Line height: 15
+			Color: #2E3A33
+		Box:
+			Margin: 4 0 10 0
+			Padding: 6 0 6 14
+			Border: 0 0 0 3
+			Border color: linden
+		Break:
+			Keep together: true
+	For element: Divider
+		Box:
+			Margin: 12 0 4 0
+			Border: 0.75 0 0 0
+			Border color: rule
+	For element: Footnote area
+		Typography:
+			Size: 8
+			Line height: 11
+			Color: grey
+		Box:
+			Margin: 10 0 0 0
+			Padding: 4 0 0 0
+			Border: 0.5 0 0 0
+			Border color: grey
+	For style: signatures
+		Gap: 40
+		Box:
+			Margin: 40 0 0 0
+		Break:
+			Keep together: true
+	For style: signature
+		Box:
+			Padding: 6 0 0 0
+			Border: 0.75 0 0 0
+			Border color: #1D2420
+		Typography:
+			Size: 9
+			Color: grey

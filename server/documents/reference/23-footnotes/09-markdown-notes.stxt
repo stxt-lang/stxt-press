@@ -1,0 +1,28 @@
+# Footnotes: calls written in a Markdown, and a note whose content is a Markdown.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · Notes in Markdown
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: Notes in Markdown
+		Paragraph: Inside a `Markdown` the calls work without `Markup`. The note itself can be a `Markdown` whose first block is a paragraph, with bold, italic and links.
+			Style: intro
+		Markdown:
+			Content >>
+				The workshop uses walnut from the valley[^wood] and wool from a
+				cooperative in the hills[^wool].
+		Footnote:
+			Id: wood
+			Markdown:
+				Content >>
+					Dried for **two years** before it is cut.
+		Footnote:
+			Id: wool
+			Markdown:
+				Content >>
+					See [the cooperative](https://stxt.dev) for its *certificates*.

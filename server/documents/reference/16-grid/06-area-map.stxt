@@ -1,0 +1,43 @@
+# Grid: Area map draws the grid with names, each Area takes the cells of its name and . leaves a cell empty.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Area map
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Area map
+		Paragraph: `Area map` has one line per row and one name per column. The `Area` with that name takes all its cells, which must form a rectangle, and a `.` leaves a cell empty.
+			Style: intro
+		Text:
+			Style: label
+			Typography:
+				Preformatted: keep
+			Content >>
+				head head head
+				side main main
+				side main main
+				foot foot .
+		Grid:
+			Column sizes: 120 * *
+			Gap: 6
+			Area map >>
+				head head head
+				side main main
+				side main main
+				foot foot .
+			Area: head
+				Text: head
+					Style: tile
+			Area: side
+				Text: side
+					Style: pale
+			Area: main
+				Text: main: the body takes two columns and two rows. Its rows measure what its content needs.
+					Style: tile
+			Area: foot
+				Text: foot
+					Style: pale

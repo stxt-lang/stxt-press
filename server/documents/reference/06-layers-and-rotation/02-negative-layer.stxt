@@ -1,0 +1,48 @@
+# Layers and rotation: a negative Layer paints a positioned box behind the content in flow.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Layers and rotation · Behind the flow
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: band
+			Box:
+				Padding: 6 10
+				Background: #F6D9A8
+				Corner radius: 4
+		For style: stage
+			Box:
+				Margin: 0 0 18 0
+				Padding: 12
+				Border: 0.5
+				Border color: rule
+	Section:
+		Text: Layers and rotation
+			Style: topic
+		Heading 1:
+			Text: Behind the flow
+		Paragraph: A positioned box is painted on top of the content in flow, after it. With a negative `Layer` it is painted before it, behind the text. The two frames below place the same band across their paragraph.
+			Style: intro
+		Text: Overlay without Layer: the band covers the text
+			Style: label
+		Frame:
+			Style: stage
+			Paragraph: The walnut for this collection comes from trees felled in winter and dried in the open air for two years before it reaches the workshop.
+			Overlay:
+				Offset: 10 30 auto auto
+				Text: On top of the text
+					Style: band
+		Text: Overlay with Layer: -1: the band goes behind the text
+			Style: label
+		Frame:
+			Style: stage
+			Paragraph: The walnut for this collection comes from trees felled in winter and dried in the open air for two years before it reaches the workshop.
+			Overlay:
+				Offset: 10 30 auto auto
+				Layer: -1
+				Block:
+					Style: band
+					Box:
+						Width: 150
+						Height: 40

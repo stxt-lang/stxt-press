@@ -1,0 +1,19 @@
+# Footnotes: a call [^id] in the text and its Footnote, placed at the bottom of the page under a rule.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · A footnote
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: A footnote
+		Paragraph: The call `[^id]` goes in a text with `Markup: markdown`, attached to the word. The `Footnote` with that `Id` can be written anywhere in the section and takes no room there. The engine numbers it and places it at the bottom of the page, under a rule.
+			Style: intro
+		Paragraph: Sales grew by 12% in the quarter[^source], above the forecast, and the margin stayed at 31%.
+		Footnote:
+			Id: source
+			Paragraph: Figures from the annual report, closed on December 31.
+		Paragraph: The rest of the page stays as it is: the note takes room only at the bottom.

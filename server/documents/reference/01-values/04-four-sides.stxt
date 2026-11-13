@@ -1,0 +1,113 @@
+# Values: one to four values for the sides (top, right, bottom, left) and for the corners.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Values · Four sides
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: case
+			Box:
+				Height: 50
+				Background: tint
+				Border color: accent
+		For style: row
+			Gap: 16
+			Box:
+				Margin: 0 0 16 0
+		For style: cell
+			Grow: 1
+			Base size: 0
+	Section:
+		Text: Values
+			Style: topic
+		Heading 1:
+			Text: Four sides
+		Paragraph: `Margin`, `Padding`, `Border` and `Offset` take from one to four values in the order top, right, bottom, left. A missing value copies its opposite side. `Corner radius` takes one value per corner, from the top left clockwise.
+			Style: intro
+		Text: Border:
+			Style: label
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: 6
+						Style: label
+					Block:
+						Style: case
+						Box:
+							Border: 6
+			Item:
+				Block:
+					Style: cell
+					Text: 6 1
+						Style: label
+					Block:
+						Style: case
+						Box:
+							Border: 6 1
+			Item:
+				Block:
+					Style: cell
+					Text: 6 1 3
+						Style: label
+					Block:
+						Style: case
+						Box:
+							Border: 6 1 3
+			Item:
+				Block:
+					Style: cell
+					Text: 6 1 3 0
+						Style: label
+					Block:
+						Style: case
+						Box:
+							Border: 6 1 3 0
+		Text: Corner radius:
+			Style: label
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: 12
+						Style: label
+					Block:
+						Style: case
+						Box:
+							Corner radius: 12
+			Item:
+				Block:
+					Style: cell
+					Text: 20 0
+						Style: label
+					Block:
+						Style: case
+						Box:
+							Corner radius: 20 0
+			Item:
+				Block:
+					Style: cell
+					Text: 20 0 6
+						Style: label
+					Block:
+						Style: case
+						Box:
+							Corner radius: 20 0 6
+			Item:
+				Block:
+					Style: cell
+					Text: 25 0 0 0
+						Style: label
+					Block:
+						Style: case
+						Box:
+							Corner radius: 25 0 0 0
+		Text: Padding: 4 40 12 8
+			Style: label
+		Text: The padding of this text is 4 at the top, 40 at the right, 12 at the bottom and 8 at the left.
+			Box:
+				Padding: 4 40 12 8
+				Background: tint

@@ -1,0 +1,57 @@
+# Block: vertical margins between siblings merge, and the margin of a first child comes out of its parent.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Block · Margin merging
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: piece
+			Box:
+				Padding: 6 8
+				Background: tint
+	Section:
+		Text: Block
+			Style: topic
+		Heading 1:
+			Text: Margin merging
+		Paragraph: Two vertical margins that touch are not added: the larger one is kept. With 10 below the first box and 30 above the second, they are 30 apart. The top margin of a first child comes out of a parent without border or padding on that side.
+			Style: intro
+		Text: Margin: 0 0 10 0, then Margin: 30 0 0 0
+			Style: label
+		Block:
+			Style: sample
+			Text: Bottom margin 10
+				Style: piece
+				Box:
+					Margin: 0 0 10 0
+			Text: Top margin 30: the gap is 30, not 40
+				Style: piece
+				Box:
+					Margin: 30 0 0 0
+		Text: A negative margin: Margin: -4 0 0 0 after Margin: 0 0 20 0
+			Style: label
+		Block:
+			Style: sample
+			Text: Bottom margin 20
+				Style: piece
+				Box:
+					Margin: 0 0 20 0
+			Text: Top margin -4: the gap is 20 - 4 = 16
+				Style: piece
+				Box:
+					Margin: -4 0 0 0
+		Text: The first child has Margin: 24 0 0 0 and its parent has no padding
+			Style: label
+		Block:
+			Box:
+				Border: 0.5
+				Border color: rule
+			Block:
+				Box:
+					Padding: 0 0 8 0
+					Background: sand
+				Text: The margin of 24 came out of the sand block: it is above its background, not inside it.
+					Style: piece
+					Box:
+						Margin: 24 0 0 0

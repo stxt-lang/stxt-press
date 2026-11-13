@@ -1,0 +1,92 @@
+# Grid: fractions of the leftover space (*, 2*), between() and repeat().
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Fractions, between and repeat
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Fractions, between and repeat
+		Paragraph: A fraction (`*`, `2*`) is a share of what the fixed and content columns leave. `between(a, b)` keeps a column between two sizes, and `repeat(n, ...)` writes a pattern of tracks n times.
+			Style: intro
+		Text: Column sizes: 120 * 2*
+			Style: label
+		Grid:
+			Column sizes: 120 * 2*
+			Area:
+				Text: 120
+					Style: tile
+			Area:
+				Text: *
+					Style: pale
+			Area:
+				Text: 2*
+					Style: tile
+		Text: Column sizes: auto *  (a sidebar and the body)
+			Style: label
+		Grid:
+			Column sizes: auto *
+			Area:
+				Text: Contents
+					Style: tile
+			Area:
+				Text: The body takes all the rest.
+					Style: pale
+		Text: Column sizes: between(100, 160) *
+			Style: label
+		Grid:
+			Column sizes: between(100, 160) *
+			Area:
+				Text: between(100, 160)
+					Style: tile
+			Area:
+				Text: *
+					Style: pale
+		Text: Column sizes: between(100, *) 2*
+			Style: label
+		Grid:
+			Column sizes: between(100, *) 2*
+			Area:
+				Text: between(100, *)
+					Style: tile
+			Area:
+				Text: 2*
+					Style: pale
+		Text: Column sizes: repeat(4, *)
+			Style: label
+		Grid:
+			Column sizes: repeat(4, *)
+			Area:
+				Text: 1
+					Style: tile
+			Area:
+				Text: 2
+					Style: pale
+			Area:
+				Text: 3
+					Style: tile
+			Area:
+				Text: 4
+					Style: pale
+		Text: Column sizes: 60 repeat(2, 2* *)
+			Style: label
+		Grid:
+			Column sizes: 60 repeat(2, 2* *)
+			Area:
+				Text: 60
+					Style: pale
+			Area:
+				Text: 2*
+					Style: tile
+			Area:
+				Text: *
+					Style: pale
+			Area:
+				Text: 2*
+					Style: tile
+			Area:
+				Text: *
+					Style: pale

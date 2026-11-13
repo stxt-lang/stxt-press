@@ -1,0 +1,36 @@
+# Styles: For id, a rule for the one element with that Id.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Styles · For id
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For id: total
+			Box:
+				Margin: 10 0 0 0
+				Padding: 8 10
+				Border: 1.5 0 0 0
+				Border color: accent
+				Background: tint
+			Typography:
+				Size: 14
+				Bold: true
+				Align: right
+	Section:
+		Text: Styles
+			Style: topic
+		Heading 1:
+			Text: For id
+		Paragraph: A `For id` rule applies to the element whose `Id` has that name. An `Id` is unique in the document, so the rule styles a single element and keeps its look out of the content.
+			Style: intro
+		Text: Text: Subtotal, Text: VAT (21%), and the one with Id: total
+			Style: label
+		Text: Subtotal: 2,630.00
+			Typography:
+				Align: right
+		Text: VAT (21%): 552.30
+			Typography:
+				Align: right
+		Text: Total: 3,182.30 EUR
+			Id: total

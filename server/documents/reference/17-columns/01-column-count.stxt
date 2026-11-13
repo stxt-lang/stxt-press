@@ -1,0 +1,35 @@
+# Columns: Column count sets how many columns the content flows through.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Columns · Column count
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Columns
+			Style: topic
+		Heading 1:
+			Text: Column count
+		Paragraph: The content of a `Columns` fills the first column and goes on in the next one. `Column count` sets how many there are, all of the same width, and `Gap` separates them.
+			Style: intro
+		Text: Column count: 2, Gap: 16
+			Style: label
+		Columns:
+			Column count: 2
+			Gap: 16
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven of the old bakery.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning and ending at the mill, where there will be lunch for everyone.
+			Paragraph: Registration is open until Friday at the public library, and the walk is free for members.
+		Text: Column count: 3, Gap: 12
+			Style: label
+		Columns:
+			Column count: 3
+			Gap: 12
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven of the old bakery.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning and ending at the mill, where there will be lunch for everyone.
+			Paragraph: Registration is open until Friday at the public library, and the walk is free for members.
+		Text: Column count: 1  (a single column, no Gap)
+			Style: label
+		Columns:
+			Column count: 1
+			Paragraph: With one column the content flows as in a Block, but it is still a Columns: on a later page it starts at the top of the column.

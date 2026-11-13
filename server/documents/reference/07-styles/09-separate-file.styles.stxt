@@ -1,0 +1,22 @@
+# The styles of 09-separate-file.stxt: a separate styles document, applied after the shared ones of the folders.
+Styles (dev.stxt.pdf):
+	Named color: house #1F6B3A
+	For style: panel
+		Box:
+			Margin: 0 0 14 0
+			Padding: 10
+			Border: 0 0 0 4
+			Border color: house
+			Background: sand
+		Typography:
+			Color: house
+	For style: tag
+		Box:
+			Width: fit
+			Padding: 3 8
+			Corner radius: 10
+			Background: house
+		Typography:
+			Size: 9
+			Bold: true
+			Color: #FFFFFF

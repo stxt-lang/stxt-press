@@ -1,0 +1,41 @@
+# Text formatting: Small caps paints the lowercase letters as capitals at 80% of the size.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Small caps
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: result
+			Box:
+				Margin: 0 0 14 0
+			Typography:
+				Font: IBM Plex Serif
+				Size: 18
+				Line height: 24
+		For style: author
+			Typography:
+				Small caps: true
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Small caps
+		Paragraph: With `Small caps: true` the lowercase letters are painted as capitals at 80% of the size. Capitals, digits and symbols do not change.
+			Style: intro
+		Text: Small caps: false
+			Style: label
+		Text: The Annual Report 2025, by Marta Vidal
+			Style: result
+		Text: Small caps: true
+			Style: label
+		Text: The Annual Report 2025, by Marta Vidal
+			Style: result
+			Typography:
+				Small caps: true
+		Text: In a styled part: Bibliography by [Vidal, M.]{author} (2025).
+			Style: label
+		Text: Bibliography by [Vidal, M.]{author} and [Ferrer, J.]{author} (2025).
+			Style: result
+			Typography:
+				Markup: markdown

@@ -1,0 +1,106 @@
+# Stack: an Item overrides the alignment of its Stack on the cross axis, and Layer decides which item covers another.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Item alignment and Layer
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 6
+			Box:
+				Margin: 0 0 14 0
+				Border: 0.5
+				Border color: rule
+				Background: tint
+		For style: tall
+			Box:
+				Width: 60
+				Height: 60
+				Background: sand
+		For style: card
+			Box:
+				Width: 120
+				Height: 50
+				Padding: 6 8
+				Border: 1
+				Border color: accent
+				Background: #FFFFFF
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Item alignment and Layer
+		Paragraph: The `Horizontal` or `Vertical` of an `Item` aligns that item alone on the cross axis of its `Stack`. `Layer` on the `Item` sets which item is painted on top when they overlap.
+			Style: intro
+		Text: Stack with Vertical: top, each Item with its own Vertical
+			Style: label
+		Stack:
+			Style: row
+			Vertical: top
+			Item:
+				Block:
+					Style: tall
+			Item:
+				Text: (no Vertical)
+					Style: tile
+			Item:
+				Vertical: center
+				Text: center
+					Style: tile
+			Item:
+				Vertical: bottom
+				Text: bottom
+					Style: tile
+			Item:
+				Vertical: stretch
+				Text: stretch
+					Style: tile
+		Text: Vertical Stack with Horizontal: left, one Item with Horizontal: right
+			Style: label
+		Stack:
+			Style: row
+			Direction: vertical
+			Horizontal: left
+			Item:
+				Text: left, from the Stack
+					Style: tile
+			Item:
+				Horizontal: right
+				Text: right, from its Item
+					Style: tile
+		Text: Overlapping cards (Margin: 0 0 0 -40): without Layer, then Layer: 1 on the first
+			Style: label
+		Stack:
+			Style: row
+			Gap: 0
+			Item:
+				Text: First card
+					Style: card
+			Item:
+				Text: Second card
+					Style: card
+					Box:
+						Margin: 0 0 0 -40
+			Item:
+				Text: Third card
+					Style: card
+					Box:
+						Margin: 0 0 0 -40
+		Stack:
+			Style: row
+			Gap: 0
+			Item:
+				Layer: 1
+				Text: First card, Layer: 1
+					Style: card
+			Item:
+				Text: Second card
+					Style: card
+					Box:
+						Margin: 0 0 0 -40
+			Item:
+				Text: Third card
+					Style: card
+					Box:
+						Margin: 0 0 0 -40

@@ -7,7 +7,8 @@ import dev.stxt.press.Job;
 import dev.stxt.press.Options;
 
 /**
- * A template of the server, read from its folder: its document, its chain of styles and its sample data.
+ * A template of the server, read from its folder: its document, its chain of styles and its sample data. A document of
+ * the documents folder is one without data ({@link Templates.Kind#DOCUMENT}).
  *
  * @param path the path of the template in the templates folder, without extension ({@code invoices/invoice}); not
  *        {@code null}

@@ -1,0 +1,57 @@
+# Table of contents: one entry per heading, with its title, a dot leader and its page, styled with TOC 1 to TOC 3.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Table of contents · Headings
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For element: TOC 1
+			Typography:
+				Bold: true
+			Box:
+				Margin: 6 0 2 0
+		For element: TOC 2
+			Box:
+				Padding: 0 0 0 14
+				Margin: 0 0 2 0
+		For element: TOC 3
+			Typography:
+				Color: muted
+			Box:
+				Padding: 0 0 0 28
+				Margin: 0 0 2 0
+	Section:
+		Text: Table of contents
+			Style: topic
+		Heading 1:
+			In table of contents: false
+			Text: Headings
+		Paragraph: A `Table of contents` lists the headings of the document in order, with the page where each one starts. Each entry leads to its heading. By default it lists levels 1 to 3, and `For element: TOC 1` to `TOC 3` style them, with the indent in the left `Padding`.
+			Style: intro
+		Text: Contents
+			Style: contents
+		Table of contents:
+	Section:
+		Heading 1:
+			Text: Installation
+		Heading 2:
+			Text: Before starting
+		Paragraph: Check that the box holds the thermostat, the base and four screws.
+		Heading 2:
+			Text: Wiring
+		Heading 3:
+			Text: Cables
+		Paragraph: Connect the live wire to terminal L and the neutral to terminal N.
+		Heading 3:
+			Text: Boiler
+		Paragraph: Terminals C and NO switch the boiler.
+	Section:
+		Heading 1:
+			Text: Use
+		Heading 2:
+			Text: Setpoint
+		Paragraph: Turn the ring to change the setpoint by half a degree.
+		Heading 2:
+			Text: Schedules
+		Paragraph: The schedules are set in the app.

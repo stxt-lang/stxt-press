@@ -1,0 +1,47 @@
+# Footnotes: Footnote numbering: continue across sections by default, and restart to count again from 1.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · Numbering across sections
+	Page:
+		Paper: A6
+		Orientation: landscape
+		Margin: 10mm
+	Styles:
+		For style: format
+			Typography:
+				Font: IBM Plex Mono
+				Size: 9
+				Color: accent
+			Box:
+				Margin: 0 0 6 0
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: Numbering across sections
+		Paragraph: The count of the notes goes on from one section to the next. `Footnote numbering: restart` starts it again at 1.
+			Style: intro
+		Text: Section 1
+			Style: format
+		Paragraph: First chapter[^c1] and its source[^c2].
+		Footnote:
+			Id: c1
+			Paragraph: Written in 2024.
+		Footnote:
+			Id: c2
+			Paragraph: Municipal archive.
+	Section:
+		Text: Section 2, Footnote numbering: continue  (default)
+			Style: format
+		Paragraph: Second chapter[^c3], numbered after the notes of the first.
+		Footnote:
+			Id: c3
+			Paragraph: Written in 2025.
+	Section:
+		Footnote numbering: restart
+		Text: Section 3, Footnote numbering: restart
+			Style: format
+		Paragraph: Appendix[^c4], whose notes count again from 1.
+		Footnote:
+			Id: c4
+			Paragraph: Added in the second edition.

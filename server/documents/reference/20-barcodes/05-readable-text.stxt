@@ -1,0 +1,47 @@
+# Barcodes: Readable text under the bars of the three linear formats, with the font of its Typography.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · Readable text
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: code
+			Readable text: true
+			Box:
+				Width: 70mm
+				Margin: 0 0 18 0
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: Readable text
+		Paragraph: With `Readable text: true` the data goes as text under the bars, in the font, size and color of the `Typography` of the `Barcode`. An EAN-13 sets its digits as on a product, the others write one centered line. The text adds its height to the code.
+			Style: intro
+		Text: code-128 (inherited typography)
+			Style: label
+		Barcode: ORD-2026-0147
+			Style: code
+			Alt: Order ORD-2026-0147
+			Barcode format: code-128
+		Text: gs1-128 with Font: IBM Plex Mono, Size: 8
+			Style: label
+		Barcode: (00)395011015300000011
+			Style: code
+			Alt: Package 395011015300000011
+			Barcode format: gs1-128
+			Typography:
+				Font: IBM Plex Mono
+				Size: 8
+		Text: ean-13 with Size: 9, Bold: true, Color: #12315A
+			Style: label
+		Barcode: 8412345678905
+			Style: code
+			Alt: Product 8412345678905
+			Barcode format: ean-13
+			Box:
+				Width: 50mm
+			Typography:
+				Size: 9
+				Bold: true
+				Color: #12315A

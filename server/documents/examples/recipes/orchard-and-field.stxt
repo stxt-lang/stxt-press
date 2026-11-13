@@ -1,0 +1,236 @@
+# A chapter of a seasonal cookbook, on A5 pages printed on both sides: Mirror margins gives the even pages the wide
+# margin on the right, and the folios go on the outer edge with two Page overlay, one for the odd pages, with the
+# title of the book, and one for the even ones, with the recipe in effect as a running head ({heading 2}). The
+# chapter starts at page 87 (Page numbering: restart, First number). The opener has a drop cap (Drop cap: 3), an
+# illustration as a numbered Figure ("Plate 1.") and the list of recipes as a Table of contents of the Heading 2
+# level. Each recipe starts on a new page with its details on a shared baseline, the ingredients in a List whose
+# markers are a leaf drawn in SVG (Marker: image) and the method as a numbered List beside them, in a Grid. The cook's
+# notes run around a small illustration (Side: right), the variations and the method of the cake go in two Columns,
+# and the quantities of the cake are a Table with a numbered caption and a cell that spans two columns. The body
+# text is IBM Plex Serif, justified with optimal line breaking and hyphenation (Language: en-GB).
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A5
+		Margin: 16mm 14mm 18mm 20mm
+		Mirror margins: true
+	Title: Orchard and Field · Chapter 4 of The Slow Autumn Kitchen
+	Subject: Two autumn recipes: roast squash with sage brown butter, and a pear and walnut cake
+	Author: Hanna Brookes
+	Keywords: cookbook, autumn, squash, pear, walnut
+	Language: en-GB
+	Page overlay:
+		Id: folio-odd
+		Pages: odd
+		Offset: auto 0 -11mm 0
+		Style: folio
+		Stack:
+			Horizontal: right
+			Gap: 10
+			Item:
+				Text: The Slow Autumn Kitchen
+					Style: folio-title
+			Item:
+				Text: {page}
+					Style: folio-number
+	Page overlay:
+		Id: folio-even
+		Pages: even
+		Offset: auto 0 -11mm 0
+		Style: folio
+		Stack:
+			Gap: 10
+			Item:
+				Text: {page}
+					Style: folio-number
+			Item:
+				Text: {heading 2}
+					Style: folio-title
+	Section:
+		Id: chapter
+		Page numbering: restart
+		First number: 87
+		Block:
+			Id: opener
+			Text: Chapter 4
+				Style: chapter-number
+			Heading 1:
+				Text: Orchard and Field
+			Paragraph: October is when the kitchen slows down. The squash have hardened their skins in the field, the late pears are finally soft enough to eat, and the walnuts have dropped onto the lane by the gate. These two recipes use all three, and both are better made a day ahead.
+				Style: intro
+				Drop cap: 3
+			Paragraph: Neither asks for much: an oven, a heavy pan and some patience while the butter turns brown or the cake cools. Buy squash that feel heavy for their size, and pears that give a little at the neck.
+				Style: intro-more
+			Figure:
+				Id: fig-pears
+				Caption: Comice and Conference pears, with walnuts from the lane.
+				Image: documents/recipes/pears.svg
+					Alt: Drawing of two pears, one yellow and one russet, with two walnuts
+					Box:
+						Width: 62%
+			Text: In this chapter
+				Style: list-label
+			Table of contents:
+				Id: recipes-toc
+				Levels: 2 2
+		Block:
+			Id: squash
+			Style: recipe
+			Heading 2:
+				Text: Roast squash with sage brown butter
+			Stack:
+				Style: details
+				Item:
+					Text: Serves 4
+						Style: detail-main
+				Item:
+					Text: Prep 15 min
+						Style: detail
+				Item:
+					Text: Oven 45 min at 200 °C
+						Style: detail
+			Paragraph: A whole tray of squash, roasted until the edges catch, then dressed with butter cooked to the colour of hazelnuts and crisp sage leaves. Serve it with bread for the butter, or next to a roast chicken.
+				Style: lead
+			Grid:
+				Style: recipe-grid
+				Area:
+					Block:
+						Style: ingredients
+						Text: Ingredients
+							Style: list-label
+						List:
+							Style: leaves
+							List item:
+								Text: 1 kg squash (onion or butternut)
+							List item:
+								Text: 2 tbsp olive oil
+							List item:
+								Text: 1 tsp flaky salt
+							List item:
+								Text: 60 g butter
+							List item:
+								Text: 16 sage leaves
+							List item:
+								Text: 1 small garlic clove
+							List item:
+								Text: ½ lemon
+							List item:
+								Text: 40 g hazelnuts, toasted
+				Area:
+					Block:
+						Text: Method
+							Style: list-label
+						List:
+							Style: steps
+							List item:
+								Paragraph: Heat the oven to 200 °C. Halve the squash, scoop out the seeds and cut it into wedges about 3 cm thick. There is no need to peel an onion squash; the skin softens as it roasts.
+							List item:
+								Paragraph: Toss the wedges with the oil and salt on a large tray, in a single layer. Roast for 40 to 45 minutes, turning once, until soft and dark at the edges.
+							List item:
+								Paragraph: Meanwhile, melt the butter in a light-coloured pan over a medium heat. When it foams, add the sage and the sliced garlic and swirl until the butter smells of nuts and the leaves are crisp, about 3 minutes.
+							List item:
+								Paragraph: Take the pan off the heat and squeeze in the lemon. Spoon the butter and leaves over the squash and scatter with the chopped hazelnuts.
+			Heading 3:
+				Text: Cook’s notes
+			Image: documents/recipes/squash.svg
+				Style: side-drawing
+				Side: right
+			Paragraph: The butter is ready when the solids at the bottom of the pan turn golden brown and the foam settles. A light pan shows the colour; in a dark one it is easy to go too far, and burnt butter tastes bitter.
+			Paragraph: Onion squash and butternut roast in the same time. A pumpkin grown for carving is too watery for this: it steams instead of browning.
+			Paragraph: The squash keeps for two days in the fridge. Warm it in the oven and make the butter fresh.
+			Block:
+				Style: variations
+				Text: Variations
+					Style: list-label
+				Columns:
+					Style: variation-columns
+					Paragraph: **With blue cheese.** Crumble 80 g of a soft blue over the hot squash just before the butter goes on.
+					Paragraph: **With lentils.** Fold the squash through 250 g of cooked green lentils and a spoonful of mustard for a main course.
+					Paragraph: **With chilli.** Add a pinch of chilli flakes to the butter with the sage.
+					Paragraph: **Without dairy.** Fry the sage in olive oil and finish it with the lemon and a little honey.
+		Block:
+			Id: cake
+			Style: recipe
+			Heading 2:
+				Text: Pear and walnut cake
+			Stack:
+				Style: details
+				Item:
+					Text: Makes one 22 cm cake
+						Style: detail-main
+				Item:
+					Text: Prep 25 min
+						Style: detail
+				Item:
+					Text: Oven 50 min at 170 °C
+						Style: detail
+			Paragraph: A plain, damp cake with pears pressed into the top. It is at its best the day after baking, when the crumb has taken on the pear juice.
+				Style: lead
+			Figure:
+				Id: cake-quantities
+				Caption: Quantities for a 22 cm round tin and for a 900 g loaf tin.
+				Table:
+					Style: quantities
+					Header rows:
+						Row:
+							Cell: Ingredient
+							Cell: Round tin
+							Cell: Loaf tin
+					Body rows:
+						Row:
+							Cell: Ripe pears
+								Row header: true
+							Cell: 3
+							Cell: 2
+						Row:
+							Cell: Soft butter
+								Row header: true
+							Cell: 150 g
+							Cell: 110 g
+						Row:
+							Cell: Light brown sugar
+								Row header: true
+							Cell: 140 g
+							Cell: 100 g
+						Row:
+							Cell: Eggs, at room temperature
+								Row header: true
+							Cell: 3
+							Cell: 2
+						Row:
+							Cell: Plain flour
+								Row header: true
+							Cell: 120 g
+							Cell: 90 g
+						Row:
+							Cell: Ground walnuts
+								Row header: true
+							Cell: 80 g
+							Cell: 60 g
+						Row:
+							Cell: Baking powder
+								Row header: true
+							Cell: 2 tsp
+							Cell: 1½ tsp
+						Row:
+							Cell: Salt and a pinch of cinnamon
+								Row header: true
+							Cell: the same for both
+								Style: span-note
+								Span: 1 2
+			Text: Method
+				Style: list-label
+			Columns:
+				Style: method-columns
+				List:
+					Style: steps
+					List item:
+						Paragraph: Heat the oven to 170 °C and line the tin with baking paper. Peel and quarter the pears and take out the cores.
+					List item:
+						Paragraph: Beat the butter and sugar until pale, about 4 minutes. Add the eggs one at a time, with a spoonful of the flour after each one so the mixture does not split.
+					List item:
+						Paragraph: Fold in the rest of the flour, the walnuts, the baking powder, the salt and the cinnamon. Spread the batter in the tin.
+					List item:
+						Paragraph: Press the pear quarters into the top, cut side down. Bake for 50 minutes, until a skewer comes out clean, and leave the cake in its tin for 15 minutes before turning it out.
+			Block:
+				Style: tip
+				Paragraph: **Hard pears?** Poach the quarters in syrup for 5 minutes first.

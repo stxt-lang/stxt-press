@@ -1,0 +1,228 @@
+# Stack: each value of Line distribution, which places the wrapped lines in a Stack taller than them.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Line distribution
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: lines
+			Wrap items: true
+			Gap: 4
+			Box:
+				Height: 92
+				Border: 0.5
+				Border color: rule
+				Background: tint
+		For style: chip
+			Box:
+				Width: 46
+				Padding: 3 0
+				Background: accent
+			Typography:
+				Color: #FFFFFF
+				Size: 8
+				Line height: 10
+				Align: center
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Line distribution
+		Paragraph: With `Wrap items: true` and a `Height` larger than its lines, `Line distribution` says where the lines go. In a row the lines are stacked from top to bottom, so it takes `top` or `bottom`, and in a column, `left` or `right`.
+			Style: intro
+		Grid:
+			Column sizes: repeat(3, *)
+			Gap: 12 14
+			Area:
+				Block:
+					Text: Line distribution: stretch
+						Style: label
+					Stack:
+						Style: lines
+						Line distribution: stretch
+						Item:
+							Text: One
+								Style: chip
+						Item:
+							Text: Two
+								Style: chip
+						Item:
+							Text: Three
+								Style: chip
+						Item:
+							Text: Four
+								Style: chip
+						Item:
+							Text: Five
+								Style: chip
+			Area:
+				Block:
+					Text: Line distribution: top
+						Style: label
+					Stack:
+						Style: lines
+						Line distribution: top
+						Item:
+							Text: One
+								Style: chip
+						Item:
+							Text: Two
+								Style: chip
+						Item:
+							Text: Three
+								Style: chip
+						Item:
+							Text: Four
+								Style: chip
+						Item:
+							Text: Five
+								Style: chip
+			Area:
+				Block:
+					Text: Line distribution: bottom
+						Style: label
+					Stack:
+						Style: lines
+						Line distribution: bottom
+						Item:
+							Text: One
+								Style: chip
+						Item:
+							Text: Two
+								Style: chip
+						Item:
+							Text: Three
+								Style: chip
+						Item:
+							Text: Four
+								Style: chip
+						Item:
+							Text: Five
+								Style: chip
+			Area:
+				Block:
+					Text: Line distribution: center
+						Style: label
+					Stack:
+						Style: lines
+						Line distribution: center
+						Item:
+							Text: One
+								Style: chip
+						Item:
+							Text: Two
+								Style: chip
+						Item:
+							Text: Three
+								Style: chip
+						Item:
+							Text: Four
+								Style: chip
+						Item:
+							Text: Five
+								Style: chip
+			Area:
+				Block:
+					Text: Line distribution: justify
+						Style: label
+					Stack:
+						Style: lines
+						Line distribution: justify
+						Item:
+							Text: One
+								Style: chip
+						Item:
+							Text: Two
+								Style: chip
+						Item:
+							Text: Three
+								Style: chip
+						Item:
+							Text: Four
+								Style: chip
+						Item:
+							Text: Five
+								Style: chip
+			Area:
+				Block:
+					Text: Line distribution: distribute
+						Style: label
+					Stack:
+						Style: lines
+						Line distribution: distribute
+						Item:
+							Text: One
+								Style: chip
+						Item:
+							Text: Two
+								Style: chip
+						Item:
+							Text: Three
+								Style: chip
+						Item:
+							Text: Four
+								Style: chip
+						Item:
+							Text: Five
+								Style: chip
+		Text: Direction: vertical, Line distribution: left, right, center
+			Style: label
+			Box:
+				Margin: 14 0 4 0
+		Stack:
+			Gap: 14
+			Item:
+				Grow: 1
+				Base size: 0
+				Stack:
+					Style: lines
+					Direction: vertical
+					Line distribution: left
+					Box:
+						Height: 60
+					Item:
+						Text: One
+							Style: chip
+					Item:
+						Text: Two
+							Style: chip
+					Item:
+						Text: Three
+							Style: chip
+			Item:
+				Grow: 1
+				Base size: 0
+				Stack:
+					Style: lines
+					Direction: vertical
+					Line distribution: right
+					Box:
+						Height: 60
+					Item:
+						Text: One
+							Style: chip
+					Item:
+						Text: Two
+							Style: chip
+					Item:
+						Text: Three
+							Style: chip
+			Item:
+				Grow: 1
+				Base size: 0
+				Stack:
+					Style: lines
+					Direction: vertical
+					Line distribution: center
+					Box:
+						Height: 60
+					Item:
+						Text: One
+							Style: chip
+					Item:
+						Text: Two
+							Style: chip
+					Item:
+						Text: Three
+							Style: chip

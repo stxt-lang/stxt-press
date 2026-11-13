@@ -1,0 +1,39 @@
+# Headings: an Id as a link target and for {page of} and {number of}, and Link on a heading.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Headings · Id and Link
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Numbered: true
+		For style: link
+			Typography:
+				Color: accent
+	Section:
+		Text: Headings
+			Style: topic
+		Heading 1:
+			Text: Id and Link
+		Paragraph: A heading with `Id` is a target: `Link: #id` leads to it, and `{{number of: id}}` and `{{page of: id}}` write its number and its page. A heading with `Link` leads somewhere itself.
+			Style: intro
+		Text: Link: #install
+			Style: label
+		Text: Go to section {number of: install}, on page {page of: install}
+			Style: link
+			Link: #install
+			Box:
+				Margin: 0 0 12 0
+		Heading 2:
+			Text: Overview
+		Paragraph: A short overview of the product.
+		Heading 2:
+			Id: install
+			Text: Installation
+		Paragraph: This heading has Id: install.
+		Heading 2:
+			Link: https://stxt.dev
+			Text: Further reading, a heading with Link: https://stxt.dev
+		Paragraph: The whole heading above is clickable.

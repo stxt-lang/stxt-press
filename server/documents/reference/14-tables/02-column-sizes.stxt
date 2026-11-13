@@ -1,0 +1,74 @@
+# Tables: the forms of Column sizes, with points, millimeters, percentages, auto and fractions.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Column sizes
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Border: 0.5
+				Border color: rule
+		For element: Table
+			Box:
+				Margin: 0 0 14 0
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Column sizes
+		Paragraph: One size per column. Fixed sizes (`120`, `40mm`, `25%`) do not change. `auto` takes what its content asks for, and without fractions the leftover goes to the `auto` columns by how much their content measures. `*` and `2*` share what is left over.
+			Style: intro
+		Text: Column sizes: 120 40mm 25%
+			Style: label
+		Table:
+			Column sizes: 120 40mm 25%
+			Body rows:
+				Row:
+					Cell: 120 points
+					Cell: 40 millimeters
+					Cell: 25% of the table
+		Text: Column sizes: auto auto
+			Style: label
+		Table:
+			Column sizes: auto auto
+			Body rows:
+				Row:
+					Cell: Short
+					Cell: A much longer text in the second column takes more of the width
+		Text: Column sizes: auto *
+			Style: label
+		Table:
+			Column sizes: auto *
+			Body rows:
+				Row:
+					Cell: Label
+					Cell: The fraction takes everything the auto column leaves
+		Text: Column sizes: * 2* *
+			Style: label
+		Table:
+			Column sizes: * 2* *
+			Body rows:
+				Row:
+					Cell: One part
+					Cell: Two parts
+					Cell: One part
+		Text: Column sizes: repeat(4, *)
+			Style: label
+		Table:
+			Column sizes: repeat(4, *)
+			Body rows:
+				Row:
+					Cell: Q1
+					Cell: Q2
+					Cell: Q3
+					Cell: Q4
+		Text: Column sizes: between(60, 100) *
+			Style: label
+		Table:
+			Column sizes: between(60, 100) *
+			Body rows:
+				Row:
+					Cell: 60 to 100
+					Cell: The rest of the width

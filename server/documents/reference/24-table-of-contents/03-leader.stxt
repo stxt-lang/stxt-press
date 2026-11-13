@@ -1,0 +1,42 @@
+# Table of contents: the three values of Leader, the fill between the title and the page: dots, line and none.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Table of contents · Leader
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Section:
+		Text: Table of contents
+			Style: topic
+		Heading 1:
+			In table of contents: false
+			Text: Leader
+		Paragraph: `Leader` fills the gap between the title of each entry and its page: `dots` (the default), `line` or `none`. The line takes the color of the text.
+			Style: intro
+		Text: Leader: dots
+			Style: label
+		Table of contents:
+			Style: sample
+			Leader: dots
+		Text: Leader: line
+			Style: label
+		Table of contents:
+			Style: sample
+			Leader: line
+		Text: Leader: none
+			Style: label
+		Table of contents:
+			Style: sample
+			Leader: none
+	Section:
+		Heading 1:
+			Text: Installation
+		Paragraph: Check that the box holds the thermostat, the base and four screws.
+	Section:
+		Heading 1:
+			Text: Use
+		Paragraph: Turn the ring to change the setpoint by half a degree.
+	Section:
+		Heading 1:
+			Text: Maintenance
+		Paragraph: Clean the front with a dry cloth.

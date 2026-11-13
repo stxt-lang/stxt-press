@@ -1,0 +1,57 @@
+# Frame and overlays: a Frame keeps its place in the flow and is shifted with Offset without moving its siblings.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Frame
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: card
+			Box:
+				Width: 200
+				Padding: 8
+				Border: 1
+				Border color: accent
+				Background: #FFFFFF
+	Section:
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Frame
+		Paragraph: A `Frame` is laid out in its place, like a `Block`, and then shifted by `Offset` (top, right, bottom, left). Its space stays where it was and the boxes after it do not move. One side of each pair stays `auto`.
+			Style: intro
+		Text: No Offset
+			Style: label
+		Frame:
+			Box:
+				Width: 200
+			Text: In its place in the flow
+				Style: card
+		Paragraph: The paragraph after the Frame.
+			Box:
+				Margin: 6 0 16 0
+		Text: Offset: 12 auto auto 40  (12 down, 40 to the right)
+			Style: label
+		Frame:
+			Offset: 12 auto auto 40
+			Box:
+				Width: 200
+			Text: Shifted down and to the right
+				Style: card
+		Paragraph: The paragraph after the Frame does not move: the shifted box covers it.
+			Box:
+				Margin: 6 0 16 0
+		Text: Offset: auto 0 0 auto  (no shift) and Offset: -10 auto auto 0  (10 up)
+			Style: label
+		Frame:
+			Offset: auto 0 0 auto
+			Box:
+				Width: 200
+			Text: Offset at 0 from the right and the bottom: in its place
+				Style: card
+		Frame:
+			Offset: -10 auto auto 220
+			Box:
+				Width: 200
+			Text: 10 up and 220 to the right
+				Style: card

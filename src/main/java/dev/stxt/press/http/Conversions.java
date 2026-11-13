@@ -74,16 +74,17 @@ final class Conversions {
 
     /**
      * Warms the server up: creates its converter, which reads the whole resources folder, and converts its templates
-     * ({@link WarmUp}).
+     * and its documents ({@link WarmUp}).
      *
      * @param templates the templates folder, or {@code null}
-     * @param options the options of the templates
+     * @param documents the documents folder, or {@code null}
+     * @param options the options of the templates and the documents
      * @throws dev.stxt.pdf.model.StxtPdfException if the converter cannot be created: its resources
      */
-    WarmUp.Result warmUp(Templates templates, Options options) {
+    WarmUp.Result warmUp(Templates templates, Templates documents, Options options) {
         Shared current = shared();
         String font = current.converter().resources().fonts().families().stream().findFirst().orElse(null);
-        return WarmUp.run(current.press(), templates, font, options, timeout);
+        return WarmUp.run(current.press(), templates, documents, font, options, timeout);
     }
 
     /** Converts {@code job} and answers with it in {@code format}; {@code name} names the PDF, if not {@code null}. */

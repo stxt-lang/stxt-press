@@ -1,0 +1,29 @@
+# Figures: an image with a numbered caption, cited from the text with {number of: id}.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Figures · An image with a caption
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Figures
+			Style: topic
+		Heading 1:
+			Text: An image with a caption
+		Paragraph: A `Figure` holds one element and its `Caption`, which goes below an image. The engine numbers it and writes the number, or its `Number label` (here `Figure {number}.` from a rule), before the caption. `{{number of: id}}` gives the number alone.
+			Style: intro
+		Paragraph: The chair of figure {number of: chair} and the table of figure {number of: table} are made of the same walnut.
+		Figure:
+			Id: chair
+			Caption: Walnut chair with a wool seat.
+			Image: examples/catalog/silla.jpg
+				Alt: Walnut chair with a wool seat
+				Box:
+					Width: 55mm
+		Figure:
+			Id: table
+			Caption: Walnut dining table, for six.
+			Image: examples/catalog/mesa.jpg
+				Alt: Walnut dining table
+				Box:
+					Width: 55mm

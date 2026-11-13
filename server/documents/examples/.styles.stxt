@@ -1,0 +1,12 @@
+# Styles shared by the complete examples: the base typography that every box inherits. Each example brings its own
+# look in its <name>.styles.stxt, which wins over these rules where they say the same thing.
+Styles (dev.stxt.pdf):
+	For element: Document
+		Typography:
+			Font: IBM Plex Sans
+			Code font: IBM Plex Mono
+			Size: 10
+			Line height: 14
+			Color: #1E2328
+			Kerning: true
+			Ligatures: true

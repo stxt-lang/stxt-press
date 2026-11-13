@@ -1,0 +1,69 @@
+# Grid: the value of Area places an item by row and column, with a span, or automatically.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Placement
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Placement
+		Paragraph: The value of `Area` is `row column`, counting from 1, with `rows columns` after it to span several. Without a value the item goes to the next free cell, and `auto auto 1 2` to the next free place two columns wide. An item past the last row adds rows.
+			Style: intro
+		Text: Area: 2 3 / Area: 1 1 / Area: 1 2 1 2 / Area: 2 1 2 1
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Row sizes: 30 30 30
+			Gap: 4
+			Area: 2 3
+				Text: 2 3
+					Style: tile
+			Area: 1 1
+				Text: 1 1
+					Style: tile
+			Area: 1 2 1 2
+				Text: 1 2 1 2  (one row, two columns)
+					Style: pale
+			Area: 2 1 2 1
+				Text: 2 1 2 1  (two rows, one column)
+					Style: pale
+		Text: Area:  (automatic) and Area: auto auto 1 2
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Gap: 4
+			Area:
+				Text: 1
+					Style: tile
+			Area:
+				Text: 2
+					Style: tile
+			Area: auto auto 1 2
+				Text: 3, auto auto 1 2: no room in row 1, so it goes to row 2
+					Style: pale
+			Area:
+				Text: 4
+					Style: tile
+			Area:
+				Text: 5
+					Style: tile
+		Text: Area: 2 auto  (row fixed) and Area: auto 3  (column fixed)
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Gap: 4
+			Area:
+				Text: 1
+					Style: tile
+			Area: 2 auto
+				Text: 2 auto: the first free column of row 2
+					Style: pale
+			Area: auto 3
+				Text: auto 3
+					Style: pale
+			Area:
+				Text: 4
+					Style: tile

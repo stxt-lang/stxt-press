@@ -1,0 +1,61 @@
+# Block: Trim margins drops the margins that touch the padding from inside, with none, top, bottom and both.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Block · Trim margins
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: card
+			Box:
+				Margin: 0 0 14 0
+				Padding: 8
+				Background: tint
+		For style: line
+			Box:
+				Margin: 12 0 12 0
+				Padding: 2 6
+				Background: #FFFFFF
+	Section:
+		Text: Block
+			Style: topic
+		Heading 1:
+			Text: Trim margins
+		Paragraph: Each card has a padding of 8 and two texts with a margin of 12 above and below. `Trim margins` drops the margin of the first child (`top`), of the last one (`bottom`) or both. The margin between the two texts never changes.
+			Style: intro
+		Text: Trim margins: none (by default)
+			Style: label
+		Block:
+			Style: card
+			Trim margins: none
+			Text: First text
+				Style: line
+			Text: Last text
+				Style: line
+		Text: Trim margins: top
+			Style: label
+		Block:
+			Style: card
+			Trim margins: top
+			Text: First text
+				Style: line
+			Text: Last text
+				Style: line
+		Text: Trim margins: bottom
+			Style: label
+		Block:
+			Style: card
+			Trim margins: bottom
+			Text: First text
+				Style: line
+			Text: Last text
+				Style: line
+		Text: Trim margins: both
+			Style: label
+		Block:
+			Style: card
+			Trim margins: both
+			Text: First text
+				Style: line
+			Text: Last text
+				Style: line

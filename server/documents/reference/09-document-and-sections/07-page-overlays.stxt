@@ -1,0 +1,39 @@
+# Document and sections: the Page overlay of the document and of a section, and Inherit page overlays: false.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Document and sections · Headers of the document and of a section
+	Page:
+		Paper: A5
+		Margin: 22mm 15mm 15mm 15mm
+	Page overlay:
+		Offset: -36 0 auto 0
+		Text: Header of the document
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Document and sections
+			Style: topic
+		Heading 1:
+			Text: Headers of the document and of a section
+		Paragraph: A `Page overlay` of the `Document` appears on the pages of every section. One of a `Section` appears only on its own pages, together with those of the document. With `Inherit page overlays: false` a section carries only its own.
+			Style: intro
+		Text: Section without overlays: the header and the footer of the document
+			Style: card
+	Section:
+		Page overlay:
+			Offset: -24 0 auto 0
+			Text: Header of this section, under the one of the document
+				Typography:
+					Align: right
+		Text: Section with its own Page overlay: all three
+			Style: card
+	Section:
+		Inherit page overlays: false
+		Page overlay:
+			Offset: -36 0 auto 0
+			Text: Only the header of this section
+		Text: Section with Inherit page overlays: false: only its own
+			Style: card

@@ -1,0 +1,41 @@
+# Frame and overlays: a Page overlay repeats a header and a footer on every page, in the margin of the page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Page overlay
+	Page:
+		Paper: A5
+		Margin: 60 40 60 40
+	Styles:
+		For element: Page overlay
+			Typography:
+				Size: 8
+				Line height: 10
+				Color: muted
+	Page overlay:
+		Offset: -36 0 auto 0
+		Box:
+			Padding: 0 0 4 0
+			Border: 0 0 0.5 0
+			Border color: rule
+		Text: Reference of the layout language · Positioned elements
+	Page overlay:
+		Offset: auto 0 -36 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Page overlay
+		Paragraph: A `Page overlay` is placed like an `Overlay`, against the page area, and painted on every page. It takes no space, so the `Margin` of the `Page` leaves room for it, and a negative `Offset` takes it into that margin. Its text can write `{{page}}` and `{{pages}}`.
+			Style: intro
+		Paragraph: The header of this document is a Page overlay with Offset: -36 0 auto 0, 36 points above the page area, with a bottom border. The footer has Offset: auto 0 -36 0 and the text Page {{page}} of {{pages}}, aligned to the right.
+		Paragraph: Both are children of the Document, so they appear in every section. A Page overlay inside a Section appears only on the pages of that section.
+		Paragraph: The content of a Page overlay is decoration of the page: a screen reader does not read it and it cannot hold headings.
+			Break:
+				After: page
+		Paragraph: The second page carries the same header and footer, with its own number.
+			Break:
+				After: page
+		Paragraph: And so does the third.

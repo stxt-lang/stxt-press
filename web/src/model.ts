@@ -14,11 +14,21 @@ export interface StylesText {
 }
 
 /**
- * The panels of the document mode: a document and its styles documents in order (those of the chain of the template it
- * comes from, or one blank panel). It has no data: a document is converted as it is.
+ * The panels of the document mode: a document and its styles documents in order (those of the chain of a document of
+ * the server, or one blank panel). It has no data: a document is converted as it is. `path` and `original` are those
+ * of the document of the server it shows, or `null` and `undefined` for a blank one.
  */
 export interface DocumentState {
 	mode: "document";
+	path: string | null;
+	document: string;
+	styles: StylesText[];
+	original?: { document: string; styles: StylesText[] };
+}
+
+/** A document as `GET /documents/{path}` gives it. */
+export interface ServerDocument {
+	path: string;
 	document: string;
 	styles: StylesText[];
 }
@@ -113,13 +123,18 @@ export function validatesDocument(data: string): boolean {
 }
 
 /**
- * Whether the panels of a template are still the template of the server, so that `/print` can convert it. The line
- * ends do not count: the server gives the files as they are, with CRLF in a Windows checkout, and the panels have LF.
+ * Whether the panels of a template or a document of the server are still its files, so that `/print` can convert it.
+ * The line ends do not count: the server gives the files as they are, with CRLF in a Windows checkout, and the panels
+ * have LF. A styles panel beyond those of the server, the blank one of a document without styles, has to stay blank.
  */
-export function isUnchanged(state: TemplateState): boolean {
-	return sameText(state.document, state.original.document)
-		&& state.styles.length === state.original.styles.length
-		&& state.styles.every((styles, i) => sameText(styles.text, state.original.styles[i].text));
+export function isUnchanged(state: TemplateState | DocumentState): boolean {
+	const original = state.original;
+	return original !== undefined
+		&& sameText(state.document, original.document)
+		&& state.styles.length >= original.styles.length
+		&& state.styles.every((styles, i) => i < original.styles.length
+			? sameText(styles.text, original.styles[i].text)
+			: styles.text.trim() === "");
 }
 
 /** Whether two texts are the same but for their line ends (CRLF, CR or LF). */
@@ -128,14 +143,19 @@ function sameText(a: string, b: string): boolean {
 }
 
 /**
- * The request of a button. A document goes to `/render`. A template goes to `/print` while its document and its
- * styles are those of the server, with the data of the panel; edited, to `/render` with the whole chain of styles, as
- * the server would apply them.
+ * The request of a button. A document of the server goes to `/print/documents` while its document and its styles are
+ * those of the server; edited, or a blank one, to `/render`. A template goes to `/print/templates` while its document
+ * and its styles are those of the server, with the data of the panel; edited, to `/render` with the whole chain of
+ * styles, as the server would apply them.
  */
 export function request(state: State, format: Format, debug: boolean): Request | LocalError {
 	const query = `?format=${format}${debug && format === "svg" ? "&debug=true" : ""}`;
+	if (state.mode === "document" && state.path !== null && isUnchanged(state)) {
+		const names = state.styles.map((styles, i) => i < state.original!.styles.length ? styles.path : "");
+		return { method: "GET", url: `/print/documents/${state.path}${query}`, stylesNames: names };
+	}
 	if (state.mode === "template" && isUnchanged(state)) {
-		const url = `/print/${state.path}${query}`;
+		const url = `/print/templates/${state.path}${query}`;
 		const names = state.styles.map((styles) => styles.path);
 		if (state.data.trim() === "") {
 			// Without data in the panel, GET: the template as it is, if it has no sample data.
@@ -212,12 +232,14 @@ export interface Panels {
 }
 
 /**
- * The panels of the document mode: the document and its styles, those of the chain of the template it comes from or,
- * without any, one blank panel for the ones the user writes. No data: a document is converted as it is.
+ * The panels of the document mode: the document and its styles, those of the chain of a document of the server or,
+ * without any, one blank panel for the ones the user writes. No data: a document is converted as it is. Without
+ * `document`, a blank one.
  */
-export function documentPanels(text: string, styles: StylesText[]): Panels {
+export function documentPanels(document?: ServerDocument): Panels {
+	const styles = document?.styles ?? [];
 	return {
-		document: { title: "Document", text },
+		document: { title: document ? `${document.path}.stxt` : "Document", text: document?.document ?? "" },
 		styles: styles.length > 0 ? styles : [{ path: "Styles", text: "" }],
 	};
 }
@@ -256,9 +278,9 @@ export function tabState(marked: boolean, severities: string[]): "error" | "warn
 	return severities.length > 0 ? "warning" : null;
 }
 
-/** The name of the PDF that is downloaded. */
+/** The name of the PDF that is downloaded: that of the template or the document, or `document.pdf` for a blank one. */
 export function fileName(state: State): string {
-	return state.mode === "template" ? `${state.path.slice(state.path.lastIndexOf("/") + 1)}.pdf` : "document.pdf";
+	return state.path === null ? "document.pdf" : `${state.path.slice(state.path.lastIndexOf("/") + 1)}.pdf`;
 }
 
 /** `text` between single quotes for a POSIX shell. */
@@ -279,6 +301,6 @@ export function curl(origin: string, path: string, data: string, token: boolean)
 	if (data.trim() !== "") {
 		parts.push("-H", "'Content-Type: application/json'", "--data-binary", shellQuote(data.trim()));
 	}
-	parts.push(`${origin}/print/${path}`);
+	parts.push(`${origin}/print/templates/${path}`);
 	return parts.join(" ");
 }

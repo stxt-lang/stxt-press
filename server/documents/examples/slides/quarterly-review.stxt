@@ -1,0 +1,334 @@
+# A slide deck in 16:9 (Width: 960, Height: 540 in Page): one slide per page, each one a Block as tall as the page
+# area (Height: 100%) that starts a new page (Before: page). The title slide is a section of its own, with a gradient
+# background, no slide number and no footer of the deck (Inherit page overlays: false). The other slides are laid out
+# with Grid: an Area map for the agenda, four key-figure tiles, a bar chart drawn with boxes whose Width is the
+# percentage of each value, a table, a timeline whose phases span several quarters ("Area: 2 1 1 2") and a closing
+# slide with a QR code to the deck. The footer, with the slide number of the total ({page} / {pages}), is a
+# Page overlay of the document, and the accent strip at the left edge, another one with a negative Layer.
+Document (dev.stxt.pdf):
+	Page:
+		Width: 960
+		Height: 540
+		Margin: 44 60 56 60
+	Title: Harbour Bikes · Third quarter 2026 review
+	Subject: Results of the Harbour Bikes public bike share in July, August and September 2026, and plans for 2027
+	Author: Harbour Bikes operations team
+	Language: en
+	Page overlay:
+		Id: strip
+		Offset: -44 auto -56 -60
+		Layer: -1
+		Block:
+			Style: strip
+	Page overlay:
+		Id: deck-footer
+		Offset: auto 0 -36 0
+		Style: deck-footer
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Harbour Bikes · Q3 2026 review
+			Item:
+				Text: {page} / {pages}
+	Section:
+		Id: cover
+		Inherit page overlays: false
+		Page numbering: none
+		Page:
+			Width: 960
+			Height: 540
+			Margin: 0
+		Block:
+			Id: title-slide
+			Style: title-slide
+			Text: Quarterly review · Board meeting of 14 October 2026
+				Style: eyebrow
+			Heading 1:
+				Text: Third quarter 2026
+				In table of contents: false
+			Text: More riders, fewer empty docks, and what we plan for 2027
+				Style: title-sub
+			Stack:
+				Style: presenters
+				Item:
+					Block:
+						Text: Priya Natarajan
+							Style: presenter
+						Text: Head of operations
+							Style: presenter-role
+				Item:
+					Block:
+						Text: Jonas Weber
+							Style: presenter
+						Text: Data and planning
+							Style: presenter-role
+	Section:
+		Id: deck
+		Block:
+			Id: agenda
+			Style: slide
+			Grid:
+				Style: agenda-grid
+				Area map >>
+					title list
+					note  list
+				Area: title
+					Heading 2:
+						Text: Agenda
+				Area: note
+					Paragraph: Twenty minutes, then questions. The figures are for 1 July to 30 September 2026.
+						Style: slide-note
+				Area: list
+					List:
+						Style: agenda
+						List item:
+							Paragraph: **The quarter in four numbers.** Trips, riders, availability and income.
+						List item:
+							Paragraph: **Where people ride.** Trips by district, and the new waterfront stations.
+						List item:
+							Paragraph: **Fleet and docks.** E-bikes, repairs and rebalancing.
+						List item:
+							Paragraph: **2027.** The three projects we ask the board to approve.
+		Block:
+			Id: figures
+			Style: slide
+			Heading 2:
+				Text: The quarter in four numbers
+			Grid:
+				Style: tiles
+				Area:
+					Block:
+						Style: tile
+						Text: 412,800
+							Style: tile-figure
+						Text: trips
+							Style: tile-label
+						Text: +18% on Q3 2025
+							Style: tile-change up
+				Area:
+					Block:
+						Style: tile
+						Text: 38,950
+							Style: tile-figure
+						Text: active riders
+							Style: tile-label
+						Text: +11% on Q3 2025
+							Style: tile-change up
+				Area:
+					Block:
+						Style: tile
+						Text: 96.4%
+							Style: tile-figure
+						Text: docks available at peak
+							Style: tile-label
+						Text: target 95%
+							Style: tile-change
+				Area:
+					Block:
+						Style: tile
+						Text: £1.18M
+							Style: tile-figure
+						Text: income from fares
+							Style: tile-label
+						Text: +9% on Q3 2025
+							Style: tile-change up
+			Paragraph: August broke the record for a single month, with 151,200 trips. Rain on eleven days in September brought the quarter back to the forecast.
+				Style: slide-note
+		Block:
+			Id: districts
+			Style: slide
+			Heading 2:
+				Text: Where people ride
+			Grid:
+				Style: chart-and-notes
+				Area:
+					Block:
+						Text: Trips starting in each district, in thousands
+							Style: chart-title
+						Grid:
+							Style: bar-row
+							Area:
+								Text: City Centre
+									Style: bar-label
+							Area:
+								Block:
+									Style: bar-track
+									Block:
+										Style: bar
+										Box:
+											Width: 100%
+							Area:
+								Text: 138.2
+									Style: bar-value
+						Grid:
+							Style: bar-row
+							Area:
+								Text: Waterfront
+									Style: bar-label
+							Area:
+								Block:
+									Style: bar-track
+									Block:
+										Style: bar highlight
+										Box:
+											Width: 72%
+							Area:
+								Text: 99.6
+									Style: bar-value
+						Grid:
+							Style: bar-row
+							Area:
+								Text: University
+									Style: bar-label
+							Area:
+								Block:
+									Style: bar-track
+									Block:
+										Style: bar
+										Box:
+											Width: 58%
+							Area:
+								Text: 80.4
+									Style: bar-value
+						Grid:
+							Style: bar-row
+							Area:
+								Text: Old Town
+									Style: bar-label
+							Area:
+								Block:
+									Style: bar-track
+									Block:
+										Style: bar
+										Box:
+											Width: 39%
+							Area:
+								Text: 53.9
+									Style: bar-value
+						Grid:
+							Style: bar-row
+							Area:
+								Text: Eastfield
+									Style: bar-label
+							Area:
+								Block:
+									Style: bar-track
+									Block:
+										Style: bar
+										Box:
+											Width: 29%
+							Area:
+								Text: 40.7
+									Style: bar-value
+				Area:
+					Block:
+						Style: callout
+						Text: Waterfront
+							Style: callout-label
+						Paragraph: The six stations opened in June already start one trip in four of the district’s total.
+						Paragraph: Busiest dock: **Ferry Terminal**, with 610 trips a day in August.
+		Block:
+			Id: fleet
+			Style: slide
+			Heading 2:
+				Text: Fleet and docks
+			Table:
+				Style: fleet-table
+				Header rows:
+					Row:
+						Cell:
+						Cell: Q3 2025
+						Cell: Q3 2026
+						Cell: Change
+				Body rows:
+					Row:
+						Cell: Bikes in service, daily average
+							Row header: true
+						Cell: 1,420
+						Cell: 1,610
+						Cell: +190
+					Row:
+						Cell: of which e-bikes
+							Row header: true
+						Cell: 300
+						Cell: 520
+						Cell: +220
+					Row:
+						Cell: Trips per bike and day
+							Row header: true
+						Cell: 2.7
+						Cell: 2.8
+						Cell: +0.1
+					Row:
+						Cell: Repairs completed
+							Row header: true
+						Cell: 3,940
+						Cell: 3,515
+						Cell: −11%
+					Row:
+						Cell: Bikes moved by van to rebalance docks
+							Row header: true
+						Cell: 21,300
+						Cell: 16,800
+						Cell: −21%
+			Paragraph: Rebalancing fell by a fifth after the new pricing rewarded trips that end at empty docks.
+				Style: slide-note
+		Block:
+			Id: plans
+			Style: slide
+			Heading 2:
+				Text: 2027: three projects for approval
+			Grid:
+				Style: timeline
+				Area: 1 1
+					Text: Q1
+						Style: quarter
+				Area: 1 2
+					Text: Q2
+						Style: quarter
+				Area: 1 3
+					Text: Q3
+						Style: quarter
+				Area: 1 4
+					Text: Q4
+						Style: quarter
+				Area: 2 1 1 2
+					Block:
+						Style: phase phase-a
+						Text: Eastfield extension
+							Style: phase-title
+						Text: 12 new stations, 180 bikes · £640k
+							Style: phase-detail
+				Area: 3 2 1 3
+					Block:
+						Style: phase phase-b
+						Text: All-electric fleet in the hills
+							Style: phase-title
+						Text: Replace 400 pedal bikes in Old Town and University · £1.1M
+							Style: phase-detail
+				Area: 4 1 1 4
+					Block:
+						Style: phase phase-c
+						Text: One card for bus, ferry and bike
+							Style: phase-title
+						Text: With the transport authority, from the January fare change · no capital cost
+							Style: phase-detail
+		Block:
+			Id: questions
+			Style: slide
+			Grid:
+				Style: closing
+				Area:
+					Block:
+						Heading 2:
+							Text: Questions
+						Paragraph: The slides, the data for each station and the full report are on the board’s site.
+							Style: slide-note
+						Text: harbourbikes.example/board/2026-q3
+							Style: closing-link
+							Link: https://harbourbikes.example/board/2026-q3
+				Area:
+					Barcode: https://harbourbikes.example/board/2026-q3
+						Id: deck-qr
+						Alt: QR code that leads to the slides and the report of the third quarter
+						Style: closing-qr

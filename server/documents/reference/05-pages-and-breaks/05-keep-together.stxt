@@ -1,0 +1,39 @@
+# Pages and breaks: Keep together moves a box whole to the next page instead of splitting it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Pages and breaks · Keep together
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Pages and breaks
+			Style: topic
+		Heading 1:
+			Text: Keep together
+		Paragraph: With `Keep together: true`, a box is not split across pages if it fits whole on the next one. The signature block below would be split at the end of page 1, so it moves to page 2 in one piece.
+			Style: intro
+		Block:
+			Style: filler
+			Box:
+				Height: 270
+			Text: A filler block, 270 points high, to bring the signatures near the end of the page.
+		Block:
+			Style: marked
+			Break:
+				Keep together: true
+			Text: Break: Keep together: true
+				Style: label
+			Paragraph: Signed in Girona, on 12 November 2026.
+			Paragraph: The customer
+				Box:
+					Margin: 30 0 0 0
+			Paragraph: Marta Ferrer Soler
+			Paragraph: The supplier
+				Box:
+					Margin: 30 0 0 0
+			Paragraph: Nogal Workshop

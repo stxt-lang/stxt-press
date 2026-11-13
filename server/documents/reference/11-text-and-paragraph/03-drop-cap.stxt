@@ -1,0 +1,44 @@
+# Text and Paragraph: Drop cap from 2 to 5 lines.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text and Paragraph · Drop cap
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: story
+			Typography:
+				Font: IBM Plex Serif
+				Size: 10
+				Line height: 14
+				Align: justify
+			Box:
+				Width: 320
+				Margin: 0 0 14 0
+	Section:
+		Text: Text and Paragraph
+			Style: topic
+		Heading 1:
+			Text: Drop cap
+		Paragraph: With `Drop cap`, the first letter of a `Paragraph` is set as tall as that number of lines, from 2 to 5, in the font of the paragraph, and the lines start at its right.
+			Style: intro
+		Text: Drop cap: 2
+			Style: label
+		Paragraph: Once upon a time, in a valley among beech forests, a village filled its square with chestnuts every autumn. The smoke of the roasters rose above the roofs and the whole valley smelled of it for a week.
+			Style: story
+			Drop cap: 2
+		Text: Drop cap: 3
+			Style: label
+		Paragraph: Once upon a time, in a valley among beech forests, a village filled its square with chestnuts every autumn. The smoke of the roasters rose above the roofs and the whole valley smelled of it for a week.
+			Style: story
+			Drop cap: 3
+		Text: Drop cap: 4
+			Style: label
+		Paragraph: Once upon a time, in a valley among beech forests, a village filled its square with chestnuts every autumn. The smoke of the roasters rose above the roofs and the whole valley smelled of it for a week, while the children ran between the stalls.
+			Style: story
+			Drop cap: 4
+		Text: Drop cap: 5
+			Style: label
+		Paragraph: Once upon a time, in a valley among beech forests, a village filled its square with chestnuts every autumn. The smoke of the roasters rose above the roofs and the whole valley smelled of it for a week, while the children ran between the stalls and the old people counted the sacks that came down from the hills on the backs of the mules.
+			Style: story
+			Drop cap: 5

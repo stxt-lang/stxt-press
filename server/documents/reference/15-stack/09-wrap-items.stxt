@@ -1,0 +1,210 @@
+# Stack: Wrap items moves the items that do not fit to a new line, in a row and in a column.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Wrap items
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: chip
+			Box:
+				Padding: 4 10
+				Corner radius: 10
+				Background: accent
+			Typography:
+				Color: #FFFFFF
+				Size: 9
+				Line height: 12
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Wrap items
+		Paragraph: Without `Wrap items` all the items share one line, where they shrink down to their longest word. With `Wrap items: true`, an item that does not fit starts a new line, and each line is distributed on its own.
+			Style: intro
+		Text: Wrap items: false  (the default)
+			Style: label
+		Stack:
+			Style: area
+			Gap: 6
+			Item:
+				Text: Walnut
+					Style: chip
+			Item:
+				Text: Oak
+					Style: chip
+			Item:
+				Text: Cherry
+					Style: chip
+			Item:
+				Text: Beech
+					Style: chip
+			Item:
+				Text: Chestnut
+					Style: chip
+			Item:
+				Text: Ash
+					Style: chip
+		Text: Wrap items: true
+			Style: label
+		Stack:
+			Style: area
+			Wrap items: true
+			Gap: 6
+			Item:
+				Text: Walnut
+					Style: chip
+			Item:
+				Text: Oak
+					Style: chip
+			Item:
+				Text: Cherry
+					Style: chip
+			Item:
+				Text: Beech
+					Style: chip
+			Item:
+				Text: Chestnut
+					Style: chip
+			Item:
+				Text: Ash
+					Style: chip
+			Item:
+				Text: Maple
+					Style: chip
+			Item:
+				Text: Pine
+					Style: chip
+			Item:
+				Text: Elm
+					Style: chip
+			Item:
+				Text: Olive
+					Style: chip
+			Item:
+				Text: Teak
+					Style: chip
+			Item:
+				Text: Birch
+					Style: chip
+			Item:
+				Text: Sapele
+					Style: chip
+			Item:
+				Text: Iroko
+					Style: chip
+			Item:
+				Text: Wenge
+					Style: chip
+			Item:
+				Text: Zebrano
+					Style: chip
+			Item:
+				Text: Mahogany
+					Style: chip
+			Item:
+				Text: Sycamore
+					Style: chip
+			Item:
+				Text: Hornbeam
+					Style: chip
+			Item:
+				Text: Lime
+					Style: chip
+		Text: Wrap items: true, Horizontal: center
+			Style: label
+		Stack:
+			Style: area
+			Wrap items: true
+			Horizontal: center
+			Gap: 6
+			Item:
+				Text: Walnut
+					Style: chip
+			Item:
+				Text: Oak
+					Style: chip
+			Item:
+				Text: Cherry
+					Style: chip
+			Item:
+				Text: Beech
+					Style: chip
+			Item:
+				Text: Chestnut
+					Style: chip
+			Item:
+				Text: Ash
+					Style: chip
+			Item:
+				Text: Maple
+					Style: chip
+			Item:
+				Text: Pine
+					Style: chip
+			Item:
+				Text: Elm
+					Style: chip
+			Item:
+				Text: Olive
+					Style: chip
+			Item:
+				Text: Teak
+					Style: chip
+			Item:
+				Text: Birch
+					Style: chip
+			Item:
+				Text: Sapele
+					Style: chip
+			Item:
+				Text: Iroko
+					Style: chip
+			Item:
+				Text: Wenge
+					Style: chip
+			Item:
+				Text: Zebrano
+					Style: chip
+			Item:
+				Text: Mahogany
+					Style: chip
+			Item:
+				Text: Sycamore
+					Style: chip
+			Item:
+				Text: Hornbeam
+					Style: chip
+			Item:
+				Text: Lime
+					Style: chip
+		Text: Direction: vertical, Wrap items: true, Height: 80
+			Style: label
+		Stack:
+			Style: area
+			Direction: vertical
+			Wrap items: true
+			Gap: 6
+			Box:
+				Height: 80
+			Item:
+				Text: Walnut
+					Style: chip
+			Item:
+				Text: Oak
+					Style: chip
+			Item:
+				Text: Cherry
+					Style: chip
+			Item:
+				Text: Beech
+					Style: chip
+			Item:
+				Text: Chestnut
+					Style: chip
+			Item:
+				Text: Ash
+					Style: chip
+			Item:
+				Text: Maple
+					Style: chip

@@ -1,0 +1,516 @@
+# A sheet of eight shipping labels for A4 label paper, two columns of four labels of 99.1 × 67.7 mm: a Grid with
+# fixed column and row sizes, and the margins of the sheet in Page. Each label has the service written vertically in
+# a coloured band (a Text with Rotate: -90, which takes the rectangle of the rotated text, centred in a vertical
+# Stack), the sender, the recipient, a GS1-128 barcode with the SSCC of the parcel and its readable text, and a Data
+# Matrix with the routing code for the sorting machines. The name of the recipient has a fixed height and Overflow:
+# shrink, so a long name gets smaller, on two lines, instead of pushing the barcode out of the label (the allotment
+# association on the third and fourth labels). The dotted outline of each label is for checking the sheet on screen;
+# it falls on the cuts of the paper.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 13.1mm 4.65mm
+	Title: Shipping labels · Willow & Moss · Dispatch of 12 November 2026
+	Subject: Eight parcel labels with SSCC barcodes for orders WM-20931 to WM-20937
+	Author: Willow & Moss Seeds
+	Language: en
+	Section:
+		Grid:
+			Id: sheet
+			Style: sheet
+			Area:
+				Stack:
+					Id: label-1
+					Style: label
+					Item:
+						Stack:
+							Style: band express
+							Item:
+								Block:
+									Text: Express
+										Style: service
+										Rotate: -90
+					Item:
+						Grow: 1
+						Base size: 0
+						Block:
+							Style: label-body
+							Stack:
+								Style: label-head
+								Item:
+									Grow: 1
+									Base size: 0
+									Text: From Willow & Moss Seeds, York YO1 6JB
+										Style: sender
+								Item:
+									Text: 1 of 1
+										Style: parcel
+							Stack:
+								Style: address-row
+								Item:
+									Grow: 1
+									Base size: 0
+									Block:
+										Text: Deliver to
+											Style: deliver-to
+										Text: Amara Okoye
+											Style: to-name
+										Text: Flat 4, 22 Kelvin Grove
+											Style: to-line
+										Text: Glasgow G3 7RZ
+											Style: to-line
+										Text: United Kingdom
+											Style: to-line
+								Item:
+									Barcode: GLA-03 WM-20931 1.2kg
+										Style: matrix
+										Barcode format: data-matrix
+										Alt: Data Matrix with the routing code GLA-03 and order WM-20931
+							Barcode: (00)350612340000041012
+								Style: sscc
+								Barcode format: gs1-128
+								Readable text: true
+								Alt: GS1-128 barcode with the SSCC 350612340000041012 of parcel 1 of 1 of order WM-20931
+							Stack:
+								Style: label-foot
+								Item:
+									Text: Order WM-20931
+								Item:
+									Text: 1.2 kg
+								Item:
+									Text: Route GLA-03
+										Style: route
+			Area:
+				Stack:
+					Id: label-2
+					Style: label
+					Item:
+						Stack:
+							Style: band standard
+							Item:
+								Block:
+									Text: Standard
+										Style: service
+										Rotate: -90
+					Item:
+						Grow: 1
+						Base size: 0
+						Block:
+							Style: label-body
+							Stack:
+								Style: label-head
+								Item:
+									Grow: 1
+									Base size: 0
+									Text: From Willow & Moss Seeds, York YO1 6JB
+										Style: sender
+								Item:
+									Text: 1 of 1
+										Style: parcel
+							Stack:
+								Style: address-row
+								Item:
+									Grow: 1
+									Base size: 0
+									Block:
+										Text: Deliver to
+											Style: deliver-to
+										Text: Henrik Dahl
+											Style: to-name
+										Text: Storgata 18B
+											Style: to-line
+										Text: 0184 Oslo
+											Style: to-line
+										Text: Norway
+											Style: to-line
+								Item:
+									Barcode: OSL-11 WM-20932 0.8kg
+										Style: matrix
+										Barcode format: data-matrix
+										Alt: Data Matrix with the routing code OSL-11 and order WM-20932
+							Barcode: (00)350612340000041029
+								Style: sscc
+								Barcode format: gs1-128
+								Readable text: true
+								Alt: GS1-128 barcode with the SSCC 350612340000041029 of parcel 1 of 1 of order WM-20932
+							Stack:
+								Style: label-foot
+								Item:
+									Text: Order WM-20932
+								Item:
+									Text: 0.8 kg
+								Item:
+									Text: Route OSL-11
+										Style: route
+			Area:
+				Stack:
+					Id: label-3
+					Style: label
+					Item:
+						Stack:
+							Style: band standard
+							Item:
+								Block:
+									Text: Standard
+										Style: service
+										Rotate: -90
+					Item:
+						Grow: 1
+						Base size: 0
+						Block:
+							Style: label-body
+							Stack:
+								Style: label-head
+								Item:
+									Grow: 1
+									Base size: 0
+									Text: From Willow & Moss Seeds, York YO1 6JB
+										Style: sender
+								Item:
+									Text: 1 of 2
+										Style: parcel
+							Stack:
+								Style: address-row
+								Item:
+									Grow: 1
+									Base size: 0
+									Block:
+										Text: Deliver to
+											Style: deliver-to
+										Text: The Riverside Community Allotment and Orchard Association
+											Style: to-name
+										Text: Unit 3, Mill Yard, Water Lane
+											Style: to-line
+										Text: Totnes TQ9 5HN
+											Style: to-line
+										Text: United Kingdom
+											Style: to-line
+								Item:
+									Barcode: EXE-02 WM-20933 4.6kg
+										Style: matrix
+										Barcode format: data-matrix
+										Alt: Data Matrix with the routing code EXE-02 and order WM-20933
+							Barcode: (00)350612340000041036
+								Style: sscc
+								Barcode format: gs1-128
+								Readable text: true
+								Alt: GS1-128 barcode with the SSCC 350612340000041036 of parcel 1 of 2 of order WM-20933
+							Stack:
+								Style: label-foot
+								Item:
+									Text: Order WM-20933
+								Item:
+									Text: 4.6 kg
+								Item:
+									Text: Route EXE-02
+										Style: route
+			Area:
+				Stack:
+					Id: label-4
+					Style: label
+					Item:
+						Stack:
+							Style: band standard
+							Item:
+								Block:
+									Text: Standard
+										Style: service
+										Rotate: -90
+					Item:
+						Grow: 1
+						Base size: 0
+						Block:
+							Style: label-body
+							Stack:
+								Style: label-head
+								Item:
+									Grow: 1
+									Base size: 0
+									Text: From Willow & Moss Seeds, York YO1 6JB
+										Style: sender
+								Item:
+									Text: 2 of 2
+										Style: parcel
+							Stack:
+								Style: address-row
+								Item:
+									Grow: 1
+									Base size: 0
+									Block:
+										Text: Deliver to
+											Style: deliver-to
+										Text: The Riverside Community Allotment and Orchard Association
+											Style: to-name
+										Text: Unit 3, Mill Yard, Water Lane
+											Style: to-line
+										Text: Totnes TQ9 5HN
+											Style: to-line
+										Text: United Kingdom
+											Style: to-line
+								Item:
+									Barcode: EXE-02 WM-20933 3.9kg
+										Style: matrix
+										Barcode format: data-matrix
+										Alt: Data Matrix with the routing code EXE-02 and order WM-20933
+							Barcode: (00)350612340000041043
+								Style: sscc
+								Barcode format: gs1-128
+								Readable text: true
+								Alt: GS1-128 barcode with the SSCC 350612340000041043 of parcel 2 of 2 of order WM-20933
+							Stack:
+								Style: label-foot
+								Item:
+									Text: Order WM-20933
+								Item:
+									Text: 3.9 kg
+								Item:
+									Text: Route EXE-02
+										Style: route
+			Area:
+				Stack:
+					Id: label-5
+					Style: label
+					Item:
+						Stack:
+							Style: band express
+							Item:
+								Block:
+									Text: Express
+										Style: service
+										Rotate: -90
+					Item:
+						Grow: 1
+						Base size: 0
+						Block:
+							Style: label-body
+							Stack:
+								Style: label-head
+								Item:
+									Grow: 1
+									Base size: 0
+									Text: From Willow & Moss Seeds, York YO1 6JB
+										Style: sender
+								Item:
+									Text: 1 of 1
+										Style: parcel
+							Stack:
+								Style: address-row
+								Item:
+									Grow: 1
+									Base size: 0
+									Block:
+										Text: Deliver to
+											Style: deliver-to
+										Text: Lucía Marín Ortega
+											Style: to-name
+										Text: Calle de Alcalá 141, 3.º B
+											Style: to-line
+										Text: 28009 Madrid
+											Style: to-line
+										Text: Spain
+											Style: to-line
+								Item:
+									Barcode: MAD-07 WM-20934 2.1kg
+										Style: matrix
+										Barcode format: data-matrix
+										Alt: Data Matrix with the routing code MAD-07 and order WM-20934
+							Barcode: (00)350612340000041050
+								Style: sscc
+								Barcode format: gs1-128
+								Readable text: true
+								Alt: GS1-128 barcode with the SSCC 350612340000041050 of parcel 1 of 1 of order WM-20934
+							Stack:
+								Style: label-foot
+								Item:
+									Text: Order WM-20934
+								Item:
+									Text: 2.1 kg
+								Item:
+									Text: Route MAD-07
+										Style: route
+			Area:
+				Stack:
+					Id: label-6
+					Style: label
+					Item:
+						Stack:
+							Style: band standard
+							Item:
+								Block:
+									Text: Standard
+										Style: service
+										Rotate: -90
+					Item:
+						Grow: 1
+						Base size: 0
+						Block:
+							Style: label-body
+							Stack:
+								Style: label-head
+								Item:
+									Grow: 1
+									Base size: 0
+									Text: From Willow & Moss Seeds, York YO1 6JB
+										Style: sender
+								Item:
+									Text: 1 of 1
+										Style: parcel
+							Stack:
+								Style: address-row
+								Item:
+									Grow: 1
+									Base size: 0
+									Block:
+										Text: Deliver to
+											Style: deliver-to
+										Text: Bakkerij Van Dijk
+											Style: to-name
+										Text: Oudegracht 210
+											Style: to-line
+										Text: 3511 NS Utrecht
+											Style: to-line
+										Text: Netherlands
+											Style: to-line
+								Item:
+									Barcode: UTR-01 WM-20935 6.0kg
+										Style: matrix
+										Barcode format: data-matrix
+										Alt: Data Matrix with the routing code UTR-01 and order WM-20935
+							Barcode: (00)350612340000041067
+								Style: sscc
+								Barcode format: gs1-128
+								Readable text: true
+								Alt: GS1-128 barcode with the SSCC 350612340000041067 of parcel 1 of 1 of order WM-20935
+							Stack:
+								Style: label-foot
+								Item:
+									Text: Order WM-20935
+								Item:
+									Text: 6.0 kg
+								Item:
+									Text: Route UTR-01
+										Style: route
+			Area:
+				Stack:
+					Id: label-7
+					Style: label
+					Item:
+						Stack:
+							Style: band economy
+							Item:
+								Block:
+									Text: Economy
+										Style: service
+										Rotate: -90
+					Item:
+						Grow: 1
+						Base size: 0
+						Block:
+							Style: label-body
+							Stack:
+								Style: label-head
+								Item:
+									Grow: 1
+									Base size: 0
+									Text: From Willow & Moss Seeds, York YO1 6JB
+										Style: sender
+								Item:
+									Text: 1 of 1
+										Style: parcel
+							Stack:
+								Style: address-row
+								Item:
+									Grow: 1
+									Base size: 0
+									Block:
+										Text: Deliver to
+											Style: deliver-to
+										Text: Siobhán Ní Bhriain
+											Style: to-name
+										Text: 14 Rosemount Avenue
+											Style: to-line
+										Text: Galway H91 X2C4
+											Style: to-line
+										Text: Ireland
+											Style: to-line
+								Item:
+									Barcode: GWY-04 WM-20936 0.5kg
+										Style: matrix
+										Barcode format: data-matrix
+										Alt: Data Matrix with the routing code GWY-04 and order WM-20936
+							Barcode: (00)350612340000041074
+								Style: sscc
+								Barcode format: gs1-128
+								Readable text: true
+								Alt: GS1-128 barcode with the SSCC 350612340000041074 of parcel 1 of 1 of order WM-20936
+							Stack:
+								Style: label-foot
+								Item:
+									Text: Order WM-20936
+								Item:
+									Text: 0.5 kg
+								Item:
+									Text: Route GWY-04
+										Style: route
+			Area:
+				Stack:
+					Id: label-8
+					Style: label
+					Item:
+						Stack:
+							Style: band express
+							Item:
+								Block:
+									Text: Express
+										Style: service
+										Rotate: -90
+					Item:
+						Grow: 1
+						Base size: 0
+						Block:
+							Style: label-body
+							Stack:
+								Style: label-head
+								Item:
+									Grow: 1
+									Base size: 0
+									Text: From Willow & Moss Seeds, York YO1 6JB
+										Style: sender
+								Item:
+									Text: 1 of 1
+										Style: parcel
+							Stack:
+								Style: address-row
+								Item:
+									Grow: 1
+									Base size: 0
+									Block:
+										Text: Deliver to
+											Style: deliver-to
+										Text: Mateusz Kowalczyk
+											Style: to-name
+										Text: ul. Długa 27/5
+											Style: to-line
+										Text: 80-827 Gdańsk
+											Style: to-line
+										Text: Poland
+											Style: to-line
+								Item:
+									Barcode: GDN-02 WM-20937 1.7kg
+										Style: matrix
+										Barcode format: data-matrix
+										Alt: Data Matrix with the routing code GDN-02 and order WM-20937
+							Barcode: (00)350612340000041081
+								Style: sscc
+								Barcode format: gs1-128
+								Readable text: true
+								Alt: GS1-128 barcode with the SSCC 350612340000041081 of parcel 1 of 1 of order WM-20937
+							Stack:
+								Style: label-foot
+								Item:
+									Text: Order WM-20937
+								Item:
+									Text: 1.7 kg
+								Item:
+									Text: Route GDN-02
+										Style: route

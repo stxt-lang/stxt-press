@@ -1,0 +1,73 @@
+# Typography: Hyphenate with the patterns of the language, the soft hyphen, and the hyphens written inside a word.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · Hyphenation
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 30
+			Vertical: top
+			Box:
+				Margin: 0 0 18 0
+		For style: column
+			Box:
+				Width: 120
+				Padding: 0 0 0 8
+				Border: 0 0 0 0.5
+				Border color: rule
+			Typography:
+				Font: IBM Plex Serif
+				Align: justify
+				Language: en-GB
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: Hyphenation
+		Paragraph: With `Hyphenate: true`, words are split at the end of a line with the patterns of the `Language` of the box (es, ca, en-US, en-GB, de, fr, it, nl and pt). A soft hyphen (U+00AD) marks a break point by hand, and a hyphen between letters or digits is always one.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Text: Hyphenate: false
+						Style: label
+					Paragraph: Internationalisation of the administrative documentation requires considerable organisational commitment.
+						Style: column
+						Typography:
+							Hyphenate: false
+			Item:
+				Block:
+					Text: Hyphenate: true
+						Style: label
+					Paragraph: Internationalisation of the administrative documentation requires considerable organisational commitment.
+						Style: column
+						Typography:
+							Hyphenate: true
+			Item:
+				Block:
+					Text: Language: de, Hyphenate: true
+						Style: label
+					Paragraph: Die Donaudampfschifffahrtsgesellschaft veröffentlicht ihre Jahresabschlussberichte.
+						Style: column
+						Typography:
+							Language: de
+							Hyphenate: true
+		Text: A soft hyphen inside a word, without Hyphenate  (Ther|mo|stat|con|trol|ler)
+			Style: label
+		Paragraph: The new Ther­mo­stat­con­trol­ler unit replaces the old one.
+			Style: column
+			Box:
+				Margin: 0 0 18 0
+		Text: A written hyphen is a break point, a non-breaking hyphen (U+2011) is not
+			Style: label
+		Stack:
+			Style: row
+			Item:
+				Paragraph: Order reference REF-2026-009812-A, dispatched today.
+					Style: column
+			Item:
+				Paragraph: Order reference REF‑2026‑0098, dispatched today.
+					Style: column

@@ -1,0 +1,33 @@
+# Columns: Balance columns evens out the last columns (true, the default) or fills them in order (false).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Columns · Balance columns
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Columns
+			Style: topic
+		Heading 1:
+			Text: Balance columns
+		Paragraph: On the last page of a `Columns`, `Balance columns: true` looks for the height at which all the columns are even. With `false` the content fills the first column to the bottom of its room before going on to the next one, so here it needs a `Height`.
+			Style: intro
+		Text: Balance columns: true  (the default)
+			Style: label
+		Columns:
+			Column count: 3
+			Gap: 14
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven of the old bakery.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning and ending at the mill.
+			Paragraph: Registration is open until Friday at the public library.
+		Text: Balance columns: false, Height: 140
+			Style: label
+		Columns:
+			Column count: 3
+			Gap: 14
+			Balance columns: false
+			Box:
+				Height: 140
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven of the old bakery.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning and ending at the mill.
+			Paragraph: Registration is open until Friday at the public library.

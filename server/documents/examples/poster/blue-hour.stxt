@@ -1,0 +1,251 @@
+# Poster of a three-day jazz festival, on one A3 page without margins. The night-blue background is a gradient in a
+# Page overlay with a negative Layer. The moon and its rings are boxes with Corner radius: 50% made faint with
+# Opacity; they go partly off the page, so they are Overlay inside a Page overlay with Overflow: clip, which cuts
+# them at its edges. The waves are a small SVG, also faint. The title is set at 168 points in IBM Plex Serif with a
+# negative Letter spacing, the ribbon across the corner is an Overlay rotated −12 degrees, and the programme is a
+# Grid of three columns, one per night, with each time and act on the same baseline (Vertical: baseline in a Stack).
+# At the foot, an Overlay anchored to the bottom of the page with the venue and a QR code that leads to the tickets.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A3
+		Margin: 0
+	Title: Blue Hour · A jazz weekend by the water
+	Subject: Poster of the Blue Hour jazz festival, Port Ellery, 14 to 16 August 2026
+	Language: en
+	Section:
+		Page overlay:
+			Id: night
+			Offset: 0
+			Layer: -3
+			Box:
+				Background: linear(180, #0B1530, #18254F, #2B2560)
+		Page overlay:
+			Id: sky
+			Offset: 0
+			Layer: -2
+			Box:
+				Overflow: clip
+			Overlay:
+				Id: ring-outer
+				Offset: -10 -280 auto auto
+				Opacity: 20%
+				Block:
+					Style: ring-outer
+			Overlay:
+				Id: ring-inner
+				Offset: 60 -210 auto auto
+				Opacity: 35%
+				Block:
+					Style: ring-inner
+			Overlay:
+				Id: moon
+				Offset: 120 -150 auto auto
+				Opacity: 85%
+				Block:
+					Style: moon
+		Page overlay:
+			Id: water
+			Offset: auto 0 160 0
+			Layer: -1
+			Opacity: 70%
+			Image: documents/poster/waves.svg
+				Box:
+					Width: 100%
+		Overlay:
+			Id: ribbon
+			Offset: 58 auto auto 40
+			Rotate: -12
+			Layer: 2
+			Text: Free entry before 8 pm
+				Style: ribbon
+		Block:
+			Id: masthead
+			Style: masthead
+			Text: Port Ellery Arts Council presents
+				Style: kicker
+			Heading 1:
+				Text: Blue
+				Text: Hour
+			Text: A jazz weekend by the water
+				Style: tagline
+			Stack:
+				Id: dates
+				Vertical: baseline
+				Gap: 14
+				Box:
+					Margin: 34 0 0 0
+				Item:
+					Text: 14–16
+						Style: date-days
+				Item:
+					Text: August 2026
+						Style: date-month
+				Item:
+					Grow: 1
+					Text: Three nights · Twelve bands · One harbour
+						Style: date-note
+		Grid:
+			Id: programme
+			Column sizes: repeat(3, *)
+			Gap: 26
+			Style: programme
+			Area:
+				Block:
+					Style: night
+					Text: Friday
+						Style: night-name
+					Text: Opening night on the pier
+						Style: night-theme
+					Stack:
+						Style: slot
+						Item:
+							Text: 19:00
+								Style: time
+						Item:
+							Grow: 1
+							Text: The Saltmarsh Trio
+								Style: act
+					Stack:
+						Style: slot
+						Item:
+							Text: 20:30
+								Style: time
+						Item:
+							Grow: 1
+							Text: Ines Okafor Quartet
+								Style: act
+					Stack:
+						Style: slot
+						Item:
+							Text: 22:00
+								Style: time
+						Item:
+							Grow: 1
+							Text: Harbour Big Band
+								Style: act headliner
+					Stack:
+						Style: slot
+						Item:
+							Text: 23:45
+								Style: time
+						Item:
+							Grow: 1
+							Text: Late jam, open stage
+								Style: act
+			Area:
+				Block:
+					Style: night
+					Text: Saturday
+						Style: night-name
+					Text: Voices and strings
+						Style: night-theme
+					Stack:
+						Style: slot
+						Item:
+							Text: 18:30
+								Style: time
+						Item:
+							Grow: 1
+							Text: Port Ellery Youth Ensemble
+								Style: act
+					Stack:
+						Style: slot
+						Item:
+							Text: 20:00
+								Style: time
+						Item:
+							Grow: 1
+							Text: Marta Villanueva
+								Style: act
+					Stack:
+						Style: slot
+						Item:
+							Text: 21:30
+								Style: time
+						Item:
+							Grow: 1
+							Text: Night Ferry
+								Style: act
+					Stack:
+						Style: slot
+						Item:
+							Text: 23:00
+								Style: time
+						Item:
+							Grow: 1
+							Text: Theo Lindqvist & The Tides
+								Style: act headliner
+			Area:
+				Block:
+					Style: night
+					Text: Sunday
+						Style: night-name
+					Text: Brunch to blue hour
+						Style: night-theme
+					Stack:
+						Style: slot
+						Item:
+							Text: 12:00
+								Style: time
+						Item:
+							Grow: 1
+							Text: Brass on the Green
+								Style: act
+					Stack:
+						Style: slot
+						Item:
+							Text: 16:00
+								Style: time
+						Item:
+							Grow: 1
+							Text: Duo Amaral
+								Style: act
+					Stack:
+						Style: slot
+						Item:
+							Text: 18:30
+								Style: time
+						Item:
+							Grow: 1
+							Text: Clara Wynn Sextet
+								Style: act
+					Stack:
+						Style: slot
+						Item:
+							Text: 20:15
+								Style: time
+						Item:
+							Grow: 1
+							Text: Closing set at sunset
+								Style: act headliner
+		Overlay:
+			Id: footer
+			Offset: auto 0 0 0
+			Style: footer
+			Stack:
+				Vertical: center
+				Gap: 22
+				Item:
+					Barcode: https://bluehour.example/tickets
+						Id: tickets-qr
+						Alt: QR code that leads to the ticket page of the festival
+						Style: qr
+				Item:
+					Grow: 1
+					Block:
+						Text: Tickets and full programme
+							Style: footer-label
+						Text: bluehour.example/tickets
+							Style: footer-url
+							Link: https://bluehour.example/tickets
+						Text: Weekend pass £48 · One night £20 · Under 16 free with an adult
+							Style: footer-note
+				Item:
+					Block:
+						Style: venue
+						Text: Old Customs Pier
+							Style: venue-name
+						Text: Quay Street, Port Ellery
+							Style: footer-note
+						Text: Step-free access · Seats for every set
+							Style: footer-note

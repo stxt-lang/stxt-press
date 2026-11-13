@@ -1,0 +1,45 @@
+# Typography: Line breaking simple (greedy) and optimal (the whole paragraph at once) on a narrow justified column.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · Line breaking
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 30
+			Vertical: top
+		For style: column
+			Box:
+				Width: 191.5
+				Padding: 0 0 0 6
+				Border: 0 0 0 0.5
+				Border color: rule
+			Typography:
+				Font: IBM Plex Serif
+				Align: justify
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: Line breaking
+		Paragraph: With `Line breaking: simple`, the default, each line takes as many words as fit. With `optimal`, the engine chooses the breaks of the whole paragraph at once and leaves more even spaces, which shows above all in narrow justified text.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Text: Line breaking: simple
+						Style: label
+					Paragraph: The association is also organizing a walk along the river, starting from the old bridge at ten in the morning. Registration is open until Friday at the public library, and the route is suitable for children and for the elderly.
+						Style: column
+						Typography:
+							Line breaking: simple
+			Item:
+				Block:
+					Text: Line breaking: optimal
+						Style: label
+					Paragraph: The association is also organizing a walk along the river, starting from the old bridge at ten in the morning. Registration is open until Friday at the public library, and the route is suitable for children and for the elderly.
+						Style: column
+						Typography:
+							Line breaking: optimal

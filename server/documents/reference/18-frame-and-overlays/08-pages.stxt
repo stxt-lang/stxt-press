@@ -1,0 +1,59 @@
+# Frame and overlays: Pages decides on which pages a Page overlay appears (all, first, not-first, odd, even, last).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Pages
+	Page:
+		Paper: A6
+		Margin: 50 30 40 30
+	Styles:
+		For style: tag
+			Box:
+				Padding: 2 5
+				Background: accent
+			Typography:
+				Color: #FFFFFF
+				Size: 7
+				Line height: 9
+	Page overlay:
+		Offset: -34 auto auto 0
+		Text: Pages: all
+			Style: tag
+	Page overlay:
+		Pages: first
+		Offset: -34 auto auto 60
+		Text: first
+			Style: tag
+	Page overlay:
+		Pages: not-first
+		Offset: -34 auto auto 98
+		Text: not-first
+			Style: tag
+	Page overlay:
+		Pages: odd
+		Offset: auto auto -26 0
+		Text: Pages: odd
+			Style: tag
+	Page overlay:
+		Pages: even
+		Offset: auto 0 -26 auto
+		Text: Pages: even
+			Style: tag
+	Page overlay:
+		Pages: last
+		Offset: auto auto -26 80
+		Text: last
+			Style: tag
+	Section:
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Pages
+		Paragraph: The tags in the margins are six Page overlay elements, each with a value of `Pages`. They count the pages of their scope from 1, here the whole document.
+			Style: intro
+		Text: Page 1: all, first and odd.
+			Break:
+				After: page
+		Text: Page 2: all, not-first and even.
+			Break:
+				After: page
+		Text: Page 3: all, not-first, odd and last.

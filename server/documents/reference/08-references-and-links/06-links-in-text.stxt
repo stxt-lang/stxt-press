@@ -1,0 +1,43 @@
+# References and links: links inside a line, written [text](target) in a text with Markup: markdown.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: References and links · Links in a line
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: linked
+			Typography:
+				Markup: markdown
+		For style: accent
+			Typography:
+				Color: accent
+	Section:
+		Text: References and links
+			Style: topic
+		Heading 1:
+			Text: Links in a line
+		Paragraph: With `Markup: markdown`, a part of a line becomes a link with `[text](target)`, to the same targets as `Link`. These links are underlined, and only the linked words are clickable. A styled part can be a link too.
+			Style: intro
+		Text: [the website](https://stxt.dev) and [write to us](mailto:workshop@nogal.example)
+			Style: label
+		Paragraph: More models are on [the website](https://stxt.dev). For a quote, [write to us](mailto:workshop@nogal.example).
+			Style: linked
+		Text: [the terms](#terms)
+			Style: label
+		Paragraph: Orders are accepted under [the terms](#terms) at the end of the page.
+			Style: linked
+		Text: [[the catalog]{accent}](https://stxt.dev)
+			Style: label
+		Paragraph: The full collection is in [[the catalog]{accent}](https://stxt.dev), updated every season.
+			Style: linked
+		Block:
+			Id: terms
+			Style: target
+			Box:
+				Margin: 40 0 0 0
+			Text: Id: terms
+				Style: label
+			Paragraph: Terms: delivery in two weeks, payment within 30 days, two years of warranty.
+				Box:
+					Margin: 0

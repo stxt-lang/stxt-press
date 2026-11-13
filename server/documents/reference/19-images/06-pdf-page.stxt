@@ -1,0 +1,38 @@
+# Images: an Image of a PDF draws one of its pages, chosen with PDF page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · PDF page
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: sheet
+			Box:
+				Width: 100%
+				Border: 0.5
+				Border color: rule
+	Section:
+		Text: Images
+			Style: topic
+		Heading 1:
+			Text: PDF page
+		Paragraph: The page of a PDF goes in as a vector drawing, at the size of that page. `PDF page` chooses it, from 1, the first one by default. The file here has two pages, the letterhead of the first sheet and that of the following ones.
+			Style: intro
+		Grid:
+			Column sizes: 225 225
+			Gap: 6 24
+			Area:
+				Text: PDF page: 1  (the default)
+					Style: label
+			Area:
+				Text: PDF page: 2
+					Style: label
+			Area:
+				Image: examples/letterhead/letterhead.pdf
+					Alt: Letterhead of the first sheet
+					Style: sheet
+			Area:
+				Image: examples/letterhead/letterhead.pdf
+					Alt: Letterhead of the following sheets
+					Style: sheet
+					PDF page: 2

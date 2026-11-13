@@ -1,0 +1,8 @@
+# The common look of the tables in the documents of the tables topic: room around the tables and inside the cells.
+Styles (dev.stxt.pdf):
+	For element: Table
+		Box:
+			Margin: 0 0 16 0
+	For element: Cell
+		Box:
+			Padding: 4 6

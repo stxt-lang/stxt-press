@@ -1,0 +1,29 @@
+# Footnotes: a long note called near the end of a page, which goes on at the bottom of the next page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · A note across pages
+	Page:
+		Paper: A6
+		Margin: 10mm
+	Styles:
+		For element: Paragraph
+			Typography:
+				Align: justify
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: A note across pages
+		Paragraph: A note that does not fit at the bottom of its page is broken, and its rest goes at the top of the footnote area of the next page.
+			Style: intro
+		Paragraph: The mill on the river worked until 1962. Its wheel moved two pairs of stones and, in the last years, a small generator that gave light to the houses of the street.
+		Paragraph: After it closed the building was used as a store for the cooperative, and later it was left empty for almost thirty years.
+		Paragraph: The town bought it in 1998 and restored it as a museum. Today it shows the machines of the mill and the tools of the workshops that were around it[^history].
+		Paragraph: The visit takes an hour and ends in the room of the wheel, which turns again on the first Sunday of each month.
+		Footnote:
+			Id: history
+			Paragraph: The cooperative kept grain and seed there until it moved to the new building by the station.
+			Paragraph: The records of those years, with the names of the members and the amounts stored each season, are kept in the municipal archive.
+			Paragraph: Part of them was published in 2010 by the local history society, with photographs of the building before the restoration.
+			Paragraph: The rest can be read in the archive on weekday mornings, by appointment, with the help of the archivist, who also keeps the plans of the mill and the letters of the last miller.
+			Paragraph: Copies of the plans can be ordered from the archive and are sent by post within two weeks.

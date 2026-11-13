@@ -45,7 +45,7 @@ class ExamplesThroughRenderTest {
     @BeforeAll
     static void start() throws IOException {
         Converter shared = Converter.builder().resources(new Resources(Path.of("..", "stxt-pdf", "resources"))).build();
-        server = PressServer.start(shared, null, ServerConfig.DEFAULT.withAddress("127.0.0.1", 0));
+        server = PressServer.start(shared, null, null, ServerConfig.DEFAULT.withAddress("127.0.0.1", 0));
     }
 
     @AfterAll

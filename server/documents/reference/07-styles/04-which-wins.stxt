@@ -1,0 +1,62 @@
+# Styles: which rule wins when several give the same property.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Styles · Which one wins
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		# Inside the demo only, so that the heading keeps its color.
+		For style: demo
+			For element: Text
+				Typography:
+					Color: #1F6B3A
+		For style: plum
+			Typography:
+				Color: #6B2A5E
+		For id: brick
+			Typography:
+				Color: #A32D2D
+		For style: line
+			Box:
+				Margin: 0 0 10 0
+				Padding: 6 8
+				Border: 0 0 0 3
+				Border color: rule
+			Typography:
+				Size: 12
+				Bold: true
+	Section:
+		Text: Styles
+			Style: topic
+		Heading 1:
+			Text: Which one wins
+		Paragraph: When several sources give the same property, the strongest wins: what the element declares, then its `For id` rule, its `For style` rules, its `For element` rule and finally what it inherits from its parent. Each line below adds one source of `Color` to those of the line above it.
+			Style: intro
+		Block:
+			Style: demo
+			Typography:
+				Color: #8A5A00
+			Text: Inherited from the Block: Color: #8A5A00
+				Style: label
+			Paragraph: A paragraph has no rule of its own, so it takes the color of its block.
+				Style: line
+			Text: For element: Text beats the inherited color
+				Style: label
+			Text: Green, from For element: Text
+				Style: line
+			Text: For style beats For element
+				Style: label
+			Text: Plum, from For style: plum
+				Style: line plum
+			Text: For id beats For style
+				Style: label
+			Text: Brick red, from For id: brick
+				Id: brick
+				Style: line plum
+			Text: The element itself beats all the rules
+				Style: label
+			Text: Blue, declared on the Text itself
+				Style: line plum
+				Typography:
+					Color: accent

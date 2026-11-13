@@ -1,0 +1,53 @@
+# Columns: Break with Before: column or After: column moves the content to the next column.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Columns · Column breaks
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: day
+			Typography:
+				Bold: true
+				Color: accent
+			Box:
+				Margin: 0 0 4 0
+	Section:
+		Text: Columns
+			Style: topic
+		Heading 1:
+			Text: Column breaks
+		Paragraph: Inside a `Columns`, `Break` with `Before: column` starts a box at the top of the next column, and `After: column` sends what follows there. With `page` instead of `column` the jump is to the next page.
+			Style: intro
+		Text: Before: column on each day after the first
+			Style: label
+		Columns:
+			Column count: 3
+			Gap: 16
+			Separator: 0.5
+			Separator color: rule
+			Text: Friday
+				Style: day
+			Paragraph: Opening of the market at nine.
+			Text: Saturday
+				Style: day
+				Break:
+					Before: column
+			Paragraph: Walk along the river, from the old bridge.
+			Paragraph: Lunch at the mill.
+			Text: Sunday
+				Style: day
+				Break:
+					Before: column
+			Paragraph: Closing concert in the square.
+		Text: After: column on the first paragraph
+			Style: label
+		Columns:
+			Column count: 2
+			Gap: 16
+			Separator: 0.5
+			Separator color: rule
+			Paragraph: This paragraph ends the first column, because it declares After: column.
+				Break:
+					After: column
+			Paragraph: This one starts the second column, although the first one had room for it.

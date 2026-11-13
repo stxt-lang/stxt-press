@@ -1,0 +1,44 @@
+# Stack: the same three items in a row (Direction: horizontal) and in a column (Direction: vertical).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Direction
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Direction
+		Paragraph: A `Stack` places each `Item` one after another along its main axis. `Direction: horizontal`, the default, puts them in a row, and `Direction: vertical`, in a column.
+			Style: intro
+		Text: Direction: horizontal
+			Style: label
+		Stack:
+			Style: area
+			Direction: horizontal
+			Gap: 6
+			Item:
+				Text: First
+					Style: tile
+			Item:
+				Text: Second
+					Style: tile
+			Item:
+				Text: Third
+					Style: tile
+		Text: Direction: vertical
+			Style: label
+		Stack:
+			Style: area
+			Direction: vertical
+			Gap: 6
+			Item:
+				Text: First
+					Style: tile
+			Item:
+				Text: Second
+					Style: tile
+			Item:
+				Text: Third
+					Style: tile

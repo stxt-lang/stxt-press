@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" width="320" height="220">
+  <g fill="none" stroke="#1D3557" stroke-width="2">
+    <rect x="30" y="30" width="150" height="150" rx="18"/>
+    <rect x="230" y="30" width="34" height="150" rx="6"/>
+    <path d="M264 50 L274 50 L274 160 L264 160"/>
+  </g>
+  <g fill="none" stroke="#8A97A6" stroke-width="1" stroke-dasharray="5 4">
+    <circle cx="105" cy="105" r="30"/>
+    <path d="M105 60 L105 150 M60 105 L150 105"/>
+  </g>
+  <g stroke="#5B6878" stroke-width="1">
+    <path d="M30 196 L180 196 M30 190 L30 202 M180 190 L180 202"/>
+    <path d="M14 30 L14 180 M8 30 L20 30 M8 180 L20 180"/>
+    <path d="M230 196 L274 196 M230 190 L230 202 M274 190 L274 202"/>
+  </g>
+  <g font-family="IBM Plex Sans" font-size="12" fill="#1D3557" text-anchor="middle">
+    <text x="105" y="214">86</text>
+    <text x="252" y="214">27</text>
+    <text x="10" y="110" transform="rotate(-90 10 110)">86</text>
+    <text x="105" y="20">Front</text>
+    <text x="252" y="20">Side</text>
+  </g>
+</svg>

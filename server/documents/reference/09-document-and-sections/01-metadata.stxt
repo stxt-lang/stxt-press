@@ -1,0 +1,35 @@
+# Document and sections: Title, Language, Subject, Author and Keywords, the data of the PDF.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Document and sections · Metadata
+	Subject: The data that a Document gives its PDF, shown in the document properties of a viewer
+	Author: Nogal Workshop
+	Keywords: metadata, title, language, subject, author, keywords
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: field
+			Box:
+				Margin: 0 0 2 0
+	Section:
+		Text: Document and sections
+			Style: topic
+		Heading 1:
+			Text: Metadata
+		Paragraph: A `Document` needs a `Title`, which the viewer shows instead of the file name, and a `Language`, which the screen reader needs. `Subject`, `Author` and `Keywords` are optional. None of them is printed: they are in the document properties of the PDF.
+			Style: intro
+		Text: What this document declares
+			Style: label
+		Block:
+			Style: card
+			Text: Title: Document and sections · Metadata
+				Style: field
+			Text: Language: en
+				Style: field
+			Text: Subject: The data that a Document gives its PDF, shown in the document properties of a viewer
+				Style: field
+			Text: Author: Nogal Workshop
+				Style: field
+			Text: Keywords: metadata, title, language, subject, author, keywords
+		Paragraph: The keywords are separated by commas, and none of them can be empty.

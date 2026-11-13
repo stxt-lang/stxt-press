@@ -1,0 +1,29 @@
+# Markdown: headings, paragraphs and a line break with a backslash, translated into the elements written in STXT.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Headings and paragraphs
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Headings and paragraphs
+		Paragraph: A `Markdown` holds its content in a `Content` block. Each `#` heading becomes a `Heading` of that level and each paragraph a `Paragraph`, styled by the same `For element` rules. Its headings count in the levels of the document, so after this `Heading 1` it starts with `##`. A backslash at the end of a line breaks it.
+			Style: intro
+		Markdown:
+			Content >>
+				## Delivery
+
+				The pieces are delivered within two weeks of the order, at the address
+				given in the order form. Lines broken inside a paragraph join with a space.
+
+				### Assembly
+
+				Chairs and stools arrive assembled. Tables arrive with the legs apart
+				and a key to fix them.
+
+				Taller Nogal\
+				Carrer del Riu 12\
+				Olot

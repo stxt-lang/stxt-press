@@ -1,0 +1,35 @@
+# Figures: a caption in the value and a longer one in Content, with inline formatting.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Figures · The caption
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Figures
+			Style: topic
+		Heading 1:
+			Text: The caption
+		Paragraph: A `Caption` is a text like a `Text`: one line in its value, or a `Content` block for a longer one. It inherits the `Typography` of the `Figure`, and `Markup: markdown` gives it bold and italic. `For element: Caption` styles every caption.
+			Style: intro
+		Text: Caption: (value)
+			Style: label
+		Figure:
+			Caption: The thermostat, front view.
+			Image: examples/manual/en/thermostat.svg
+				Alt: Front view of the thermostat
+				Box:
+					Width: 45mm
+		Text: Caption: (Content, with Markup: markdown)
+			Style: label
+		Figure:
+			Caption:
+				Typography:
+					Markup: markdown
+				Content >>
+					**Wiring of the four terminals.** The live wire goes to *L* and the neutral to *N*.
+					Terminals *C* and *NO* switch the boiler, with the power off during the whole installation.
+			Image: examples/manual/en/wiring.svg
+				Alt: Wiring diagram of terminals L, N, C and NO
+				Box:
+					Width: 90mm

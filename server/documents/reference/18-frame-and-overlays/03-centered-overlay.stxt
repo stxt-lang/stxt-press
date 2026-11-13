@@ -1,0 +1,39 @@
+# Frame and overlays: an Overlay with Offset on both sides, a size and Margin: auto is centered in its container.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Centering
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Centering
+		Paragraph: An `Overlay` with `Offset: 0`, a `Width` and a `Height` sets its position twice, which is an error. With `Margin: auto` the margins take the leftover space and the box is centered. `Margin: auto 0` centers it only vertically.
+			Style: intro
+		Text: Offset: 0, Width: 160, Height: 50, Margin: auto
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 0
+				Box:
+					Width: 160
+					Height: 50
+					Margin: auto
+					Background: accent
+				Text: Centered on both axes
+					Style: badge
+		Text: Offset: 0 auto 0 20, Height: 50, Margin: auto 0
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 0 auto 0 20
+				Box:
+					Height: 50
+					Margin: auto 0
+					Background: accent
+				Text: Centered vertically, 20 from the left
+					Style: badge

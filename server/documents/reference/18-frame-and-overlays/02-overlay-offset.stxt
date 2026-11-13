@@ -1,0 +1,77 @@
+# Frame and overlays: an Overlay is placed with Offset against the Frame that contains it, at a corner, along a side or stretched.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Overlay and Offset
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Overlay and Offset
+		Paragraph: An `Overlay` leaves the flow and takes no space. Each side of its `Offset` is the distance to that edge of the nearest `Frame` (or the page area), and `auto` leaves the side free. With both sides of an axis set, the box stretches between them.
+			Style: intro
+		Text: The four corners and the center of the left side
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 10 auto auto 10
+				Text: 10 auto auto 10
+					Style: badge
+			Overlay:
+				Offset: 10 10 auto auto
+				Text: 10 10 auto auto
+					Style: badge
+			Overlay:
+				Offset: auto auto 10 10
+				Text: auto auto 10 10
+					Style: badge
+			Overlay:
+				Offset: auto 10 10 auto
+				Text: auto 10 10 auto
+					Style: badge
+			Overlay:
+				Offset: 50% auto auto 10
+				Text: 50% auto auto 10  (the top at half the height)
+					Style: badge
+		Text: Stretched between two sides
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 0 0 auto 0
+				Text: 0 0 auto 0: a band along the top
+					Style: badge
+			Overlay:
+				Offset: auto 0 0 0
+				Text: auto 0 0 0: a band along the bottom
+					Style: badge
+			Overlay:
+				Offset: 40 auto 40 10
+				Text: 40 auto 40 10: a column
+					Style: badge
+					Box:
+						Width: 80
+			Overlay:
+				Offset: 40 20 40 140
+				Block:
+					Box:
+						Height: 100%
+						Border: 1
+						Border color: accent
+						Background: #FFFFFF
+					Text: 40 20 40 140: stretched on both axes
+						Style: note
+		Text: No Offset: the Overlay stays where it would have been in the flow
+			Style: label
+		Frame:
+			Style: stage
+			Paragraph: A paragraph in the flow of the Frame.
+				Style: note
+			Overlay:
+				Text: Overlay without Offset, after the paragraph
+					Style: badge
+			Paragraph: The next paragraph starts where the Overlay is, because the Overlay takes no space.
+				Style: note

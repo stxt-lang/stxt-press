@@ -1,0 +1,40 @@
+# Tables: Vertical places the content of a cell at the top, the center or the bottom of the height of its row.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Vertical alignment in a cell
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Border: 0.5
+				Border color: rule
+		For element: Header cell
+			Vertical: bottom
+			Typography:
+				Bold: true
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Vertical alignment in a cell
+		Paragraph: A cell is stretched to the height of its row. `Vertical` says where its content goes in that height: `top` (the default), `center` or `bottom`. Here the header cells take `Vertical: bottom` from a rule.
+			Style: intro
+		Table:
+			Column sizes: * 90 90 90
+			Header rows:
+				Row:
+					Cell: The tallest cell of the header sets the height of the row, and the others go down
+					Cell: Vertical: top
+					Cell: Vertical: center
+					Cell: Vertical: bottom
+			Body rows:
+				Row:
+					Cell: This long text, in several lines, makes the row taller than the three short cells beside it, which place their content in the height that is left.
+					Cell: top
+						Vertical: top
+					Cell: center
+						Vertical: center
+					Cell: bottom
+						Vertical: bottom

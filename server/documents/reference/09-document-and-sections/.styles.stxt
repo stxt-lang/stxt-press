@@ -1,0 +1,23 @@
+# The look shared by the documents about the document and its sections: the page footers and the section titles.
+Styles (dev.stxt.pdf):
+	For element: Page overlay
+		Typography:
+			Size: 8
+			Line height: 10
+			Color: muted
+	For element: Heading 2
+		Typography:
+			Size: 14
+			Line height: 18
+			Bold: true
+			Color: accent
+		Box:
+			Margin: 0 0 8 0
+	# A box that shows what the page or the section is.
+	For style: card
+		Box:
+			Margin: 0 0 12 0
+			Padding: 8 10
+			Border: 0 0 0 3
+			Border color: accent
+			Background: tint

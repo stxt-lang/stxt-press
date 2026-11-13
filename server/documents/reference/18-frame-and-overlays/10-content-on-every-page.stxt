@@ -1,0 +1,39 @@
+# Frame and overlays: content that every page shows and a screen reader reads once, an Overlay plus a Page overlay with Pages: not-first.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Content on every page
+	Page:
+		Paper: A5
+		Margin: 40 40 40 40
+	Styles:
+		For style: ref
+			Box:
+				Width: 110
+				Padding: 4 6
+				Border: 1
+				Border color: accent
+			Typography:
+				Size: 8
+				Line height: 10
+				Color: accent
+				Align: right
+	Section:
+		Overlay:
+			Offset: -30 0 auto auto
+			Text: Receipt 2026-0147
+				Style: ref
+		Page overlay:
+			Pages: not-first
+			Offset: -30 0 auto auto
+			Text: Receipt 2026-0147
+				Style: ref
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Content on every page
+		Paragraph: What a `Page overlay` holds is decoration and is not read. Data that must be seen on every page and also read goes twice: in an `Overlay` at the start of the section, which falls on the first page, and in a `Page overlay` with the same `Offset` and `Pages: not-first`.
+			Style: intro
+		Paragraph: Both boxes have the page area as their reference container, so the reference of the receipt is in the same place on every page. A screen reader reads it once, at its place at the start of the section.
+		Paragraph: The second page shows the copy from the Page overlay.
+			Break:
+				Before: page

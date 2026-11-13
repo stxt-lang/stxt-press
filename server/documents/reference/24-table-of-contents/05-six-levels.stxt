@@ -1,0 +1,72 @@
+# Table of contents: Levels: 1 6 and the six entry rules, TOC 1 to TOC 6, each with its own indent and type.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Table of contents · Six levels
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Heading 4
+			Typography:
+				Bold: true
+		For element: Heading 5
+			Typography:
+				Italic: true
+		For element: Heading 6
+			Typography:
+				Color: muted
+		For element: TOC 1
+			Typography:
+				Size: 12
+				Bold: true
+			Box:
+				Margin: 6 0 2 0
+		For element: TOC 2
+			Typography:
+				Bold: true
+			Box:
+				Padding: 0 0 0 12
+		For element: TOC 3
+			Box:
+				Padding: 0 0 0 24
+		For element: TOC 4
+			Typography:
+				Size: 9
+			Box:
+				Padding: 0 0 0 36
+		For element: TOC 5
+			Typography:
+				Size: 9
+				Italic: true
+			Box:
+				Padding: 0 0 0 48
+		For element: TOC 6
+			Typography:
+				Size: 8.5
+				Color: muted
+			Box:
+				Padding: 0 0 0 60
+	Section:
+		Text: Table of contents
+			Style: topic
+		Heading 1:
+			In table of contents: false
+			Text: Six levels
+		Paragraph: `Levels: 1 6` lists every heading level. The entries of each level are styled with their own rule, from `For element: TOC 1` to `TOC 6`.
+			Style: intro
+		Table of contents:
+			Style: sample
+			Levels: 1 6
+		Heading 1:
+			Text: Part one
+		Heading 2:
+			Text: Chapter
+		Heading 3:
+			Text: Section
+		Heading 4:
+			Text: Subsection
+		Heading 5:
+			Text: Paragraph title
+		Heading 6:
+			Text: Minor title
+		Paragraph: Each heading above is one level deeper than the previous one.

@@ -1,0 +1,24 @@
+# The look of the Stack documents: the items are tiles, so that their size and their place show.
+Styles (dev.stxt.pdf):
+	For style: tile
+		Box:
+			Padding: 6 8
+			Background: accent
+		Typography:
+			Color: #FFFFFF
+			Size: 9
+			Line height: 12
+	For style: pale
+		Box:
+			Padding: 6 8
+			Background: sand
+		Typography:
+			Size: 9
+			Line height: 12
+	# The frame of a Stack: its edges show where the leftover space goes.
+	For style: area
+		Box:
+			Margin: 0 0 14 0
+			Border: 0.5
+			Border color: rule
+			Background: tint

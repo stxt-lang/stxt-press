@@ -1,0 +1,91 @@
+# The box: the contrast between a text and what lies beneath it, which the conversion checks.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: The box · Contrast
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 12
+			Box:
+				Margin: 0 0 12 0
+		For style: chip
+			Grow: 1
+			Base size: 0
+			Box:
+				Padding: 10
+			Typography:
+				Align: center
+	Section:
+		Text: The box
+			Style: topic
+		Heading 1:
+			Text: Contrast
+		Paragraph: A text must stand out from what lies beneath it: at least **4.5:1**, or **3:1** for large text (`Size` 18, or 14 in bold). Below that, the conversion stops with `CONTRAST_LOW`. Every pair on this page passes the check.
+			Style: intro
+		Text: Normal text, at least 4.5:1
+			Style: label
+		Stack:
+			Style: row
+			Item:
+				Text: #767676 on white, 4.5:1
+					Style: chip
+					Typography:
+						Color: #767676
+					Box:
+						Border: 0.5
+						Border color: rule
+			Item:
+				Text: #000000 on white, 21:1
+					Style: chip
+					Typography:
+						Color: #000000
+					Box:
+						Border: 0.5
+						Border color: rule
+			Item:
+				Text: white on #1B5E8C
+					Style: chip
+					Typography:
+						Color: #FFFFFF
+					Box:
+						Background: accent
+			Item:
+				Text: #7A3E0F on #F4F1EA
+					Style: chip
+					Typography:
+						Color: #7A3E0F
+					Box:
+						Background: sand
+		Text: Large text, at least 3:1
+			Style: label
+		Stack:
+			Style: row
+			Item:
+				Text: #8A8A8A, Size: 18
+					Style: chip
+					Typography:
+						Size: 18
+						Color: #8A8A8A
+					Box:
+						Border: 0.5
+						Border color: rule
+			Item:
+				Text: white on #3A8DC5, 14 bold
+					Style: chip
+					Typography:
+						Size: 14
+						Bold: true
+						Color: #FFFFFF
+					Box:
+						Background: #3A8DC5
+		Text: What counts is what is really beneath the text: here, the background of the outer box
+			Style: label
+		Block:
+			Box:
+				Padding: 12
+				Background: #12315A
+			Text: This text has no background of its own. It is white on the dark blue of its parent.
+				Typography:
+					Color: #FFFFFF

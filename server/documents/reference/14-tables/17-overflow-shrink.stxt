@@ -1,0 +1,43 @@
+# Tables: Overflow shrink in cells of a fixed height reduces the text that does not fit, down to Min size.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Shrinking text in a cell
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Height: 22
+				Border: 0 0 0.5 0
+				Border color: rule
+				Overflow: shrink
+			Typography:
+				Line height: 120%
+				Min size: 6
+		For element: Header cell
+			Typography:
+				Bold: true
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Shrinking text in a cell
+		Paragraph: The cells have a fixed `Height` of 22 and `Overflow: shrink`. Their `Line height` is a percentage, so it shrinks with the text. A name that does not fit in its cell is set smaller, half a point at a time, until it fits, without going below `Min size`. Without `Overflow: shrink` the same name would stop the conversion with an error.
+			Style: intro
+		Table:
+			Column sizes: 100 280
+			Header rows:
+				Row:
+					Cell: Badge
+					Cell: Name
+			Body rows:
+				Row:
+					Cell: A-001
+					Cell: Ana Ruiz
+				Row:
+					Cell: A-002
+					Cell: Maria del Carmen Fernández de la Torre i Puigdomènech
+				Row:
+					Cell: A-003
+					Cell: Josep Maria Bartomeu Vilaplana Sant Martí de Provençals, Barcelona, Catalonia

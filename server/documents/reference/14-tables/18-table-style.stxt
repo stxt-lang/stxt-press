@@ -1,0 +1,66 @@
+# Tables: a For style rule for a kind of table, with its Column sizes and its own cell rules inside.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · A style for a kind of table
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: prices
+			Column sizes: * 70 70
+			Column align: left right right
+			For element: Cell
+				Box:
+					Border: 0 0 0.5 0
+					Border color: rule
+			For element: Header cell
+				Typography:
+					Bold: true
+					Color: accent
+				Box:
+					Border: 0 0 1.5 0
+					Border color: accent
+			For column: 3
+				Typography:
+					Bold: true
+		For style: plain
+			Column sizes: auto *
+			For element: Cell
+				Box:
+					Padding: 1 12 1 0
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: A style for a kind of table
+		Paragraph: `Column sizes` and `Column align` can come from a rule, and the cell rules (`Header cell`, `For column`...) can go inside a `For style` rule. Then each table only says its `Style` and its rows.
+			Style: intro
+		Text: Style: prices
+			Style: label
+		Table:
+			Style: prices
+			Header rows:
+				Row:
+					Cell: Menu
+					Cell: Lunch
+					Cell: Dinner
+			Body rows:
+				Row:
+					Cell: Daily menu
+					Cell: 14.50
+					Cell: 19.00
+				Row:
+					Cell: Tasting menu
+					Cell: 38.00
+					Cell: 45.00
+		Text: Style: plain
+			Style: label
+		Table:
+			Style: plain
+			Body rows:
+				Row:
+					Cell: Opening hours
+					Cell: Tuesday to Sunday, from 13:00 to 16:00 and from 20:00 to 23:00
+				Row:
+					Cell: Address
+					Cell: 12 Main Square, Olot

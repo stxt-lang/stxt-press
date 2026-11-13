@@ -1,0 +1,46 @@
+# Lists: Marker suffix period or parenthesis after the number, in the list or in a rule with its Marker.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Lists · Marker suffix
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: clauses
+			Marker: lower-alpha
+			Marker suffix: parenthesis
+	Section:
+		Text: Lists
+			Style: topic
+		Heading 1:
+			Text: Marker suffix
+		Paragraph: `Marker suffix` says what follows the number: `period` (the default) or `parenthesis`, as in the clauses of a contract. It only goes in a numbered list, and a rule can give it together with the `Marker`.
+			Style: intro
+		Text: Marker: decimal, Marker suffix: period
+			Style: label
+		List:
+			Marker: decimal
+			Marker suffix: period
+			List item:
+				Paragraph: Pay the premium within the agreed period.
+			List item:
+				Paragraph: Report the claim within seven days.
+		Text: Marker: decimal, Marker suffix: parenthesis
+			Style: label
+		List:
+			Marker: decimal
+			Marker suffix: parenthesis
+			List item:
+				Paragraph: Pay the premium within the agreed period.
+			List item:
+				Paragraph: Report the claim within seven days.
+		Text: Style: clauses (For style: clauses with Marker: lower-alpha and Marker suffix: parenthesis)
+			Style: label
+		List:
+			Style: clauses
+			List item:
+				Paragraph: Pay the premium within the agreed period.
+			List item:
+				Paragraph: Report the claim within seven days.
+			List item:
+				Paragraph: Keep the remains until the appraisal.

@@ -1,0 +1,27 @@
+# Footnotes: calls inside a Columns: the notes go at the bottom of the page, across the whole width.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · Notes in columns
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: Notes in columns
+		Paragraph: In a `Columns` the notes do not go under each column. They go at the bottom of the page, across the whole width, like the rest.
+			Style: intro
+		Columns:
+			Column count: 2
+			Gap: 16
+			Separator: 0.5
+			Separator color: rule
+			Paragraph: The Saturday market returns to the main square with more stalls than ever[^stalls], with vegetables from the market gardens and cheese from the hills.
+			Paragraph: The residents' association also organizes a walk along the river[^walk], starting from the old bridge at ten in the morning.
+			Footnote:
+				Id: stalls
+				Paragraph: Forty-two stalls, eight more than last year.
+			Footnote:
+				Id: walk
+				Paragraph: Registration at the public library until Friday.

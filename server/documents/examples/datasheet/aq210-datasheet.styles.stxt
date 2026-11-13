@@ -1,0 +1,198 @@
+# Styles of the data sheet: navy for the brand and the table headers, teal for the checks of the features, and
+# compact tables with merged borders.
+Styles (dev.stxt.pdf):
+	Named color: navy #1D3557
+	Named color: teal #1F7A70
+	Named color: coral #C2492D
+	Named color: grey #5B6878
+	Named color: rule #C9D2DC
+	Named color: tint #EEF2F6
+	For element: Document
+		Typography:
+			Size: 9
+			Line height: 13
+			Color: #1B2430
+	For element: Paragraph
+		Typography:
+			Markup: markdown
+		Box:
+			Margin: 0 0 7 0
+	For style: header
+		Box:
+			Padding: 0 0 6 0
+			Border: 0 0 1.5 0
+			Border color: navy
+	For style: logo
+		Box:
+			Width: 22
+	For style: company
+		Typography:
+			Size: 12
+			Bold: true
+			Color: navy
+	For style: doc-number
+		Typography:
+			Font: IBM Plex Mono
+			Size: 8
+			Color: grey
+	For style: footer
+		Typography:
+			Size: 7
+			Color: grey
+	For style: hero
+		Box:
+			Margin: 0 0 6 0
+	For style: eyebrow
+		Typography:
+			Size: 8
+			Bold: true
+			Color: coral
+			Case: uppercase
+			Letter spacing: 1.5
+		Box:
+			Margin: 0 0 4 0
+	For element: Heading 1
+		Typography:
+			Size: 24
+			Line height: 28
+			Bold: true
+			Color: navy
+		Box:
+			Margin: 0 0 6 0
+	For style: tagline
+		Typography:
+			Size: 11.5
+			Line height: 16
+			Color: grey
+	For element: Heading 2
+		Typography:
+			Size: 12
+			Line height: 16
+			Bold: true
+			Color: navy
+		Box:
+			Margin: 12 0 7 0
+			Padding: 0 0 3 0
+			Border: 0 0 0.75 0
+			Border color: rule
+	For style: features
+		Box:
+			Width: 36%
+			Margin: 4 0 10 18
+			Padding: 12 14 6 14
+			Background: tint
+			Corner radius: 6
+	For style: box-label
+		Typography:
+			Size: 7.5
+			Bold: true
+			Color: navy
+			Case: uppercase
+			Letter spacing: 1.2
+		Box:
+			Margin: 0 0 8 0
+	For style: checks
+		Marker: image
+		Marker image: documents/datasheet/check.svg
+		Box:
+			Padding: 0 0 0 14
+		Typography:
+			Size: 8.5
+			Line height: 11.5
+		For element: List item
+			Box:
+				Margin: 0 0 6 0
+	For element: Figure
+		Typography:
+			Number label: Figure {number}.
+		Box:
+			Margin: 0 0 6 0
+	For element: Caption
+		Typography:
+			Size: 7.5
+			Color: grey
+		Box:
+			Margin: 6 0 0 0
+	For style: views
+		Gap: 40
+		Horizontal: center
+		Vertical: center
+		Box:
+			Padding: 10 18
+			Border: 0.75
+			Border color: rule
+			Corner radius: 6
+	For style: view-front
+		Box:
+			Width: 100
+	For style: view-drawing
+		Box:
+			Width: 196
+	For element: Table
+		Box:
+			Merge borders: true
+			Margin: 0 0 6 0
+	For element: Cell
+		Box:
+			Padding: 4 7
+			Border: 0.75
+			Border color: rule
+	For element: Header cell
+		Typography:
+			Size: 8
+			Bold: true
+			Color: #FFFFFF
+		Box:
+			Background: navy
+			Border color: navy
+	For style: spec-table
+		Column sizes: 110 120 *
+	For style: group
+		Typography:
+			Bold: true
+			Color: navy
+		Box:
+			Background: tint
+	For style: note-cell
+		Typography:
+			Size: 7.5
+			Line height: 10.5
+			Color: grey
+	For style: terminal-table
+		Column sizes: 60 70 *
+		Column align: center center left
+		For column: 2
+			Typography:
+				Font: IBM Plex Mono
+				Size: 8.5
+			Vertical: center
+		For column: 3
+			Vertical: center
+	For style: order-table
+		Column sizes: 88 * 128
+		Column align: left left center
+		For element: Cell
+			Vertical: center
+			Box:
+				Padding: 3 7
+	For style: part
+		Typography:
+			Font: IBM Plex Mono
+			Bold: true
+			Color: navy
+	For style: ean
+		Box:
+			Width: 104
+			Height: 30
+			Margin: 0 auto
+		Typography:
+			Font: IBM Plex Mono
+			Size: 7
+			Color: #000000
+	For style: small-print
+		Typography:
+			Size: 8
+			Line height: 11
+			Color: grey
+		Box:
+			Margin: 10 0 0 0

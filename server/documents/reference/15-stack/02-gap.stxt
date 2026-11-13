@@ -1,0 +1,72 @@
+# Stack: Gap with one value between the items, and with two values (rows columns) between wrapped lines.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Gap
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Gap
+		Paragraph: `Gap` is the space between items. With one value it is the same between items and between lines. Two values, rows then columns, are only valid with `Wrap items: true`.
+			Style: intro
+		Text: Gap: 0
+			Style: label
+		Stack:
+			Style: area
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: pale
+			Item:
+				Text: Three
+					Style: tile
+		Text: Gap: 20
+			Style: label
+		Stack:
+			Style: area
+			Gap: 20
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile
+			Item:
+				Text: Three
+					Style: tile
+		Text: Gap: 4 30  (Wrap items: true, items of Width: 140)
+			Style: label
+		Stack:
+			Style: area
+			Wrap items: true
+			Gap: 4 30
+			Item:
+				Text: One
+					Style: tile
+					Box:
+						Width: 140
+			Item:
+				Text: Two
+					Style: tile
+					Box:
+						Width: 140
+			Item:
+				Text: Three
+					Style: tile
+					Box:
+						Width: 140
+			Item:
+				Text: Four
+					Style: tile
+					Box:
+						Width: 140
+			Item:
+				Text: Five
+					Style: tile
+					Box:
+						Width: 140

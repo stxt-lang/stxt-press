@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+<line x1="60" y1="300" x2="620" y2="300" stroke="#DADDE2" stroke-width="1"/>
+<text x="50" y="305" text-anchor="end" font-family="IBM Plex Sans" font-size="14" fill="#5A6068">0%</text>
+<line x1="60" y1="232.5" x2="620" y2="232.5" stroke="#DADDE2" stroke-width="1"/>
+<text x="50" y="237.5" text-anchor="end" font-family="IBM Plex Sans" font-size="14" fill="#5A6068">20%</text>
+<line x1="60" y1="165" x2="620" y2="165" stroke="#DADDE2" stroke-width="1"/>
+<text x="50" y="170" text-anchor="end" font-family="IBM Plex Sans" font-size="14" fill="#5A6068">40%</text>
+<line x1="60" y1="97.5" x2="620" y2="97.5" stroke="#DADDE2" stroke-width="1"/>
+<text x="50" y="102.5" text-anchor="end" font-family="IBM Plex Sans" font-size="14" fill="#5A6068">60%</text>
+<line x1="60" y1="30" x2="620" y2="30" stroke="#DADDE2" stroke-width="1"/>
+<text x="50" y="35" text-anchor="end" font-family="IBM Plex Sans" font-size="14" fill="#5A6068">80%</text>
+<rect x="83" y="239.25" width="44" height="60.75" fill="#1F4E79"/>
+<text x="105" y="233.25" text-anchor="middle" font-family="IBM Plex Sans" font-size="13" fill="#2A2F36">18</text>
+<rect x="133" y="259.5" width="44" height="40.5" fill="#9DB7D1"/>
+<text x="155" y="253.5" text-anchor="middle" font-family="IBM Plex Sans" font-size="13" fill="#2A2F36">12</text>
+<text x="130" y="322" text-anchor="middle" font-family="IBM Plex Sans" font-size="14" fill="#5A6068">2022</text>
+<rect x="223" y="161.625" width="44" height="138.375" fill="#1F4E79"/>
+<text x="245" y="155.625" text-anchor="middle" font-family="IBM Plex Sans" font-size="13" fill="#2A2F36">41</text>
+<rect x="273" y="208.875" width="44" height="91.125" fill="#9DB7D1"/>
+<text x="295" y="202.875" text-anchor="middle" font-family="IBM Plex Sans" font-size="13" fill="#2A2F36">27</text>
+<text x="270" y="322" text-anchor="middle" font-family="IBM Plex Sans" font-size="14" fill="#5A6068">2023</text>
+<rect x="363" y="107.625" width="44" height="192.375" fill="#1F4E79"/>
+<text x="385" y="101.625" text-anchor="middle" font-family="IBM Plex Sans" font-size="13" fill="#2A2F36">57</text>
+<rect x="413" y="181.875" width="44" height="118.125" fill="#9DB7D1"/>
+<text x="435" y="175.875" text-anchor="middle" font-family="IBM Plex Sans" font-size="13" fill="#2A2F36">35</text>
+<text x="410" y="322" text-anchor="middle" font-family="IBM Plex Sans" font-size="14" fill="#5A6068">2024</text>
+<rect x="503" y="77.25" width="44" height="222.75" fill="#1F4E79"/>
+<text x="525" y="71.25" text-anchor="middle" font-family="IBM Plex Sans" font-size="13" fill="#2A2F36">66</text>
+<rect x="553" y="171.75" width="44" height="128.25" fill="#9DB7D1"/>
+<text x="575" y="165.75" text-anchor="middle" font-family="IBM Plex Sans" font-size="13" fill="#2A2F36">38</text>
+<text x="550" y="322" text-anchor="middle" font-family="IBM Plex Sans" font-size="14" fill="#5A6068">2025</text>
+<line x1="60" y1="300" x2="620" y2="300" stroke="#5A6068" stroke-width="1.5"/>
+<rect x="70" y="8" width="14" height="14" fill="#1F4E79"/><text x="90" y="20" font-family="IBM Plex Sans" font-size="14" fill="#2A2F36">Integrated nest brick</text>
+<rect x="270" y="8" width="14" height="14" fill="#9DB7D1"/><text x="290" y="20" font-family="IBM Plex Sans" font-size="14" fill="#2A2F36">Surface-mounted box</text>
+</svg>

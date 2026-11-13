@@ -1,0 +1,64 @@
+# Tables: the Row with its Style, its Typography, its Id and a Box painted as a band under its cells.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Row look
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: total
+			Typography:
+				Bold: true
+				Color: accent
+		For style: link
+			Typography:
+				Color: accent
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Row look
+		Paragraph: A `Row` passes its `Typography` to its cells, and its `Style` and `Id` rules apply to each of them. Its `Box` takes only `Background`, `Border`, `Border color`, `Border style` and `Corner radius`, painted as one band from the first column to the last, also over the `Gap`.
+			Style: intro
+		Table:
+			Column sizes: * 80
+			Column align: left right
+			Gap: 0 8
+			Header rows:
+				Row:
+					Box:
+						Border: 0 0 1 0
+						Border color: accent
+					Typography:
+						Bold: true
+					Cell: Item
+					Cell: Amount
+			Body rows:
+				Row:
+					Cell: Design
+					Cell: 1,200.00
+				Row:
+					Box:
+						Background: tint
+						Corner radius: 4
+					Cell: Layout, a row with a rounded band
+					Cell: 800.00
+				Row:
+					Cell: Printing
+					Cell: 600.00
+			Footer rows:
+				Row:
+					Id: total
+					Style: total
+					Box:
+						Background: sand
+						Border: 1 0 0 0
+						Border color: accent
+						Border style: dashed
+					Cell: Total
+					Cell: 2,600.00
+		Text: Link: #total
+			Style: label
+		Text: The total is on page {page of: total}.
+			Style: link
+			Link: #total

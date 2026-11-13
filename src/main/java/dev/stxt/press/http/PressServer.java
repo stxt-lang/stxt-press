@@ -63,15 +63,18 @@ public final class PressServer implements AutoCloseable {
      * Starts a server.
      *
      * @param shared the converter of the server, with its resources and its limits; not {@code null}
-     * @param templates the templates folder, or {@code null} if the server has none ({@code /print} is then always
-     *        {@code 404})
+     * @param templates the templates folder, or {@code null} if the server has none ({@code /print/templates} is then
+     *        always {@code 404})
+     * @param documents the documents folder ({@link Templates.Kind#DOCUMENT}), or {@code null} if the server has none
+     *        ({@code /print/documents} is then always {@code 404})
      * @param config where it listens and its token, routes and limits; not {@code null}
      * @return the server, already answering
      * @throws IOException if it cannot listen on the address of {@code config}
      */
-    public static PressServer start(Converter shared, Templates templates, ServerConfig config) throws IOException {
+    public static PressServer start(Converter shared, Templates templates, Templates documents, ServerConfig config)
+            throws IOException {
         Objects.requireNonNull(shared, "shared");
-        return startLazily(() -> shared, templates, config);
+        return startLazily(() -> shared, templates, documents, config);
     }
 
     /**
@@ -81,13 +84,14 @@ public final class PressServer implements AutoCloseable {
      *
      * @param shared what creates the converter of the server, with its resources and its limits; not {@code null}
      * @param templates the templates folder, or {@code null} if the server has none
+     * @param documents the documents folder, or {@code null} if the server has none
      * @param config where it listens and its token, routes and limits; not {@code null}
      * @return the server, already answering
      * @throws IOException if it cannot listen on the address of {@code config}
      */
-    public static PressServer startLazily(Supplier<Converter> shared, Templates templates, ServerConfig config)
-            throws IOException {
-        return start(shared, templates, config, false);
+    public static PressServer startLazily(Supplier<Converter> shared, Templates templates, Templates documents,
+            ServerConfig config) throws IOException {
+        return start(shared, templates, documents, config, false);
     }
 
     /**
@@ -97,13 +101,14 @@ public final class PressServer implements AutoCloseable {
      *
      * @param shared what creates the converter of the server, which {@link #warmUp()} calls; not {@code null}
      * @param templates the templates folder, or {@code null} if the server has none
+     * @param documents the documents folder, or {@code null} if the server has none
      * @param config where it listens and its token, routes and limits; not {@code null}
      * @return the server, answering {@code 503}
      * @throws IOException if it cannot listen on the address of {@code config}
      */
-    public static PressServer startWarmingUp(Supplier<Converter> shared, Templates templates, ServerConfig config)
-            throws IOException {
-        return start(shared, templates, config, true);
+    public static PressServer startWarmingUp(Supplier<Converter> shared, Templates templates, Templates documents,
+            ServerConfig config) throws IOException {
+        return start(shared, templates, documents, config, true);
     }
 
     /**
@@ -145,13 +150,19 @@ public final class PressServer implements AutoCloseable {
         return limits;
     }
 
-    private static PressServer start(Supplier<Converter> shared, Templates templates, ServerConfig config,
-            boolean starting) throws IOException {
+    private static PressServer start(Supplier<Converter> shared, Templates templates, Templates documents,
+            ServerConfig config, boolean starting) throws IOException {
         Objects.requireNonNull(shared, "shared");
         Objects.requireNonNull(config, "config");
+        if (templates != null && templates.kind() != Templates.Kind.TEMPLATE) {
+            throw new IllegalArgumentException("Not a templates folder: " + templates.folder());
+        }
+        if (documents != null && documents.kind() != Templates.Kind.DOCUMENT) {
+            throw new IllegalArgumentException("Not a documents folder: " + documents.folder());
+        }
         HttpServer server = HttpServer.create(new InetSocketAddress(config.host(), config.port()), 0);
         Conversions conversions = new Conversions(shared, config.concurrentConversions(), config.timeout());
-        Routes routes = new Routes(conversions, templates, config);
+        Routes routes = new Routes(conversions, templates, documents, config);
         // The address it got, not the name of the configuration, says whether the server is only local.
         Gate gate = new Gate(routes, Gate.localHosts(config, server.getAddress().getAddress()));
         gate.starting(starting);
@@ -177,20 +188,21 @@ public final class PressServer implements AutoCloseable {
 
     /**
      * Warms the server up and then answers the requests: creates its converter, reading the whole resources folder, and
-     * converts every template with its sample data, to PDF and to SVG, throwing the output away; without templates, a
-     * small document. A template that cannot be converted is a warning in the log, and the server answers all the same:
-     * its error is that of {@code /print}. For a template without sample data it is only information, since a template
-     * with Slots needs the data of the request.
+     * converts every template with its sample data and every document, to PDF and to SVG, throwing the output away;
+     * without templates or documents, a small document. One that cannot be converted is a warning in the log, and the
+     * server answers all the same: its error is that of {@code /print}. For a template without sample data it is only
+     * information, since a template with Slots needs the data of the request.
      *
      * @throws dev.stxt.pdf.model.StxtPdfException if the converter cannot be created: its resources; the server keeps
      *         answering {@code 503}, and whoever started it closes it
      */
     public void warmUp() {
         LOG.log(Level.INFO, "Warming up on port " + address().getPort() + ": every request is answered with 503 until "
-                + "the resources are read and the templates converted");
+                + "the resources are read and the templates and documents converted");
         WarmUp.Result result = routes.warmUp();
         for (WarmUp.Failure failure : result.failures()) {
-            String what = failure.path() == null ? "The warm up document" : "The template " + failure.path();
+            String what = failure.path() == null ? "The warm up document"
+                    : "The " + failure.kind().noun() + " " + failure.path();
             LOG.log(failure.withData() ? Level.WARNING : Level.INFO, what + " could not be converted in the warm up"
                     + (failure.withData() ? "" : " (it has no sample data)") + ": " + failure.error());
         }

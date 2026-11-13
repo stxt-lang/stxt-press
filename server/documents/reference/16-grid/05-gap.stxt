@@ -1,0 +1,82 @@
+# Grid: Gap with one value for rows and columns, and with two values (rows columns).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Gap
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Gap
+		Paragraph: `Gap` separates the rows and the columns. With one value both gaps are equal, and with two the first is between rows and the second between columns.
+			Style: intro
+		Text: Gap: 0  (the default)
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Area:
+				Text: 1
+					Style: tile
+			Area:
+				Text: 2
+					Style: pale
+			Area:
+				Text: 3
+					Style: tile
+			Area:
+				Text: 4
+					Style: pale
+			Area:
+				Text: 5
+					Style: tile
+			Area:
+				Text: 6
+					Style: pale
+		Text: Gap: 10
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Gap: 10
+			Area:
+				Text: 1
+					Style: tile
+			Area:
+				Text: 2
+					Style: tile
+			Area:
+				Text: 3
+					Style: tile
+			Area:
+				Text: 4
+					Style: tile
+			Area:
+				Text: 5
+					Style: tile
+			Area:
+				Text: 6
+					Style: tile
+		Text: Gap: 4 30
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Gap: 4 30
+			Area:
+				Text: 1
+					Style: tile
+			Area:
+				Text: 2
+					Style: tile
+			Area:
+				Text: 3
+					Style: tile
+			Area:
+				Text: 4
+					Style: tile
+			Area:
+				Text: 5
+					Style: tile
+			Area:
+				Text: 6
+					Style: tile

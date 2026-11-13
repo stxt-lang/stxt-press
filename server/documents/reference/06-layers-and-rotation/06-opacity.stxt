@@ -1,0 +1,80 @@
+# Layers and rotation: Opacity makes a box and all it contains faint, so what lies beneath shows through.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Layers and rotation · Opacity
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: stage
+			Box:
+				Height: 90
+				Background: linear(90, #F6D9A8, #BFDCEB)
+		For style: veil
+			Box:
+				Height: 50
+				Background: accent
+				Border: 4
+				Border color: ink
+				Corner radius: 6
+	Section:
+		Text: Layers and rotation
+			Style: topic
+		Heading 1:
+			Text: Opacity
+		Paragraph: `Opacity` paints a box with everything it contains at a percentage from `0%` (nothing is seen) to `100%` (opaque). It goes in an `Image`, a `Frame`, an `Overlay` and a `Page overlay`, and only changes the painting. Each overlay below covers the same two-color stage with a blue box.
+			Style: intro
+		Stack:
+			Gap: 12
+			Item:
+				Grow: 1
+				Base size: 0
+				Block:
+					Text: Opacity: 100%
+						Style: label
+					Frame:
+						Style: stage
+						Overlay:
+							Offset: 20 10 auto 10
+							Opacity: 100%
+							Block:
+								Style: veil
+			Item:
+				Grow: 1
+				Base size: 0
+				Block:
+					Text: Opacity: 60%
+						Style: label
+					Frame:
+						Style: stage
+						Overlay:
+							Offset: 20 10 auto 10
+							Opacity: 60%
+							Block:
+								Style: veil
+			Item:
+				Grow: 1
+				Base size: 0
+				Block:
+					Text: Opacity: 25%
+						Style: label
+					Frame:
+						Style: stage
+						Overlay:
+							Offset: 20 10 auto 10
+							Opacity: 25%
+							Block:
+								Style: veil
+		Paragraph: The border and the background of each box fade together, as one thing: the border does not let the background show through. A single faint color needs no Opacity: the color carries it in its last two digits, as in #1B5E8C40.
+			Box:
+				Margin: 18 0 8 0
+		Text: Background: #1B5E8C40
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 20 10 auto 10
+				Block:
+					Style: veil
+					Box:
+						Background: #1B5E8C40

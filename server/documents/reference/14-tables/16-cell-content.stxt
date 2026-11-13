@@ -1,0 +1,77 @@
+# Tables: a cell without a value holds elements: paragraphs, a list, an image or another table.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Elements in a cell
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Trim margins: both
+			Box:
+				Border: 0.5
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+		For element: List
+			Box:
+				Padding: 0 0 0 14
+		For style: inner
+			Box:
+				Margin: 0
+			For element: Cell
+				Box:
+					Padding: 2 4
+					Border: 0 0 0.5 0
+					Border color: rule
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Elements in a cell
+		Paragraph: A `Cell` with a value is one text. Without a value it is a block with its elements, one below another, or nothing. Here the cells take `Trim margins: both` from a rule, so the margins of the first and the last paragraph do not leave a gap inside the cell.
+			Style: intro
+		Table:
+			Column sizes: 110 * 150
+			Header rows:
+				Row:
+					Cell: Product
+					Cell: Description
+					Cell: Measurements
+			Body rows:
+				Row:
+					Cell:
+						Image: examples/catalog/silla.jpg
+							Alt: Walnut chair
+							Fit: crop
+							Box:
+								Width: 100%
+								Height: 80
+						Text: Walnut chair
+							Typography:
+								Bold: true
+					Cell:
+						Paragraph: Solid walnut with an oil finish.
+						Paragraph: Includes:
+						List:
+							Marker: bullet
+							List item:
+								Text: Wool seat cushion.
+							List item:
+								Text: Felt pads for the legs.
+					Cell:
+						Table:
+							Style: inner
+							Column sizes: * auto
+							Column align: left right
+							Body rows:
+								Row:
+									Cell: Width
+									Cell: 45 cm
+								Row:
+									Cell: Depth
+									Cell: 52 cm
+								Row:
+									Cell: Height
+									Cell: 82 cm

@@ -1,0 +1,74 @@
+# The box: Padding, Border, Border color (one per side) and Background.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: The box · Border and background
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 20
+			Box:
+				Margin: 0 0 18 0
+		For style: cell
+			Grow: 1
+			Base size: 0
+	Section:
+		Text: The box
+			Style: topic
+		Heading 1:
+			Text: Border and background
+		Paragraph: The padding lies between the content and the border and has the background of the box. The border is painted between the padding and the margin, by default in the color of the text. With one color per side, the sides meet diagonally at the corners.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: Padding: 12, Background: #EEF3F8
+						Style: label
+					Text: The content starts 12 points inside the background.
+						Box:
+							Padding: 12
+							Background: tint
+			Item:
+				Block:
+					Style: cell
+					Text: Border: 2  (the color of the text)
+						Style: label
+					Text: A border without Border color.
+						Box:
+							Padding: 12
+							Border: 2
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: Border: 0 0 0 4  (a strip at the left)
+						Style: label
+					Text: Only the left side has a thickness.
+						Box:
+							Padding: 8 12
+							Border: 0 0 0 4
+							Border color: #B5651D
+							Background: sand
+			Item:
+				Block:
+					Style: cell
+					Text: Border: 0 0 1 0  (a rule under the text)
+						Style: label
+					Text: Only the bottom side has a thickness.
+						Box:
+							Padding: 8 0
+							Border: 0 0 1 0
+							Border color: rule
+		Text: Border: 8, Border color: #E9A23B #2E6F9E #12315A #B5651D
+			Style: label
+		Block:
+			Box:
+				Width: 200
+				Height: 80
+				Border: 8
+				Border color: #E9A23B #2E6F9E #12315A #B5651D
+				Background: sand

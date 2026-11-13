@@ -1,0 +1,42 @@
+# Text formatting: code between backticks, in the font of Code font.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Code
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: source
+			Typography:
+				Font: IBM Plex Mono
+				Size: 9
+				Color: muted
+				Markup: none
+		For style: result
+			Box:
+				Margin: 0 0 14 0
+			Typography:
+				Size: 12
+				Line height: 17
+				Markup: markdown
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Code
+		Paragraph: With `Markup: markdown`, what goes between backticks is code and takes the font of `Code font`, usually a monospaced one. `Code font` is inherited, and these documents declare it once with `For element: Document`. A text with code and no `Code font` is an error.
+			Style: intro
+		Text: Run `mvn test` before publishing, and `mvn -o package` to build offline.
+			Style: source
+		Text: Run `mvn test` before publishing, and `mvn -o package` to build offline.
+			Style: result
+		Text: The code keeps the bold and the italic around it: **the `--force` flag** and *the `-v` flag*.
+			Style: source
+		Text: The code keeps the bold and the italic around it: **the `--force` flag** and *the `-v` flag*.
+			Style: result
+		Text: Code font: IBM Plex Serif  (any family can be the code font)
+			Style: label
+		Text: Run `mvn test` before publishing.
+			Style: result
+			Typography:
+				Code font: IBM Plex Serif

@@ -1,0 +1,42 @@
+# Text and Paragraph: the same text box with two roles, and a For element: Paragraph rule that reaches only paragraphs.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text and Paragraph · Text or Paragraph
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Paragraph
+			Typography:
+				Font: IBM Plex Serif
+				Size: 11
+				Line height: 16
+				Align: justify
+	Section:
+		Text: Text and Paragraph
+			Style: topic
+		Heading 1:
+			Text: Text or Paragraph
+		Paragraph: A `Paragraph` is a paragraph of the content and a `Text` is standalone text: a label, a figure, a line of a header. Both break their text into lines. Here a `For element: Paragraph` rule gives the paragraphs a serif font and justified lines, and the texts keep the base typography.
+			Style: intro
+			Typography:
+				Font: IBM Plex Sans
+				Size: 10
+				Line height: 14
+				Align: left
+		Text: Text: Madrid, 3 March 2026
+			Style: label
+		Text: Madrid, 3 March 2026
+			Box:
+				Margin: 0 0 14 0
+		Text: Paragraph: Dear Ms. García, ...
+			Style: label
+		Paragraph: Dear Ms. García,
+		Paragraph: We confirm the order of twelve walnut chairs, which will be delivered in two weeks to the address given in the order, together with the invoice and the care instructions for the oil finish.
+		Text: Text: Order 2026-014
+			Style: label
+			Box:
+				Margin: 6 0 4 0
+		Text: Order 2026-014
+			Typography:
+				Bold: true

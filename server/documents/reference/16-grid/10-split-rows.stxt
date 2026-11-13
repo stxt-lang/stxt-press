@@ -1,0 +1,75 @@
+# Grid: across pages, Split rows: true breaks a row that does not fit and false moves it whole to the next page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Split rows
+	Page:
+		Paper: A6
+		Margin: 12mm
+	Styles:
+		For style: cell
+			Box:
+				Padding: 6
+				Background: sand
+			Typography:
+				Size: 8
+				Line height: 11
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Split rows
+		Paragraph: A `Grid` breaks between rows. A row taller than what is left of the page is broken there, its items in parallel, with `Split rows: true` (the default). With `false` it moves whole to the next page.
+			Style: intro
+		Text: Split rows: false
+			Style: label
+		Grid:
+			Column sizes: * *
+			Gap: 8
+			Split rows: false
+			Area:
+				Text: Row 1
+					Style: cell
+			Area:
+				Text: Row 1
+					Style: cell
+			Area:
+				Text:
+					Style: cell
+					Content >>
+						Row 2 does not fit under row 1, so it moves whole to the next page and leaves the rest of this page empty.
+						A row is only broken with false when it does not fit on a whole page either.
+						The engine looks for the place of the break between rows first.
+						This row is taller than what is left of the first page.
+						Its two items move together.
+						It suits rows that are read as one piece, such as the entries of a timetable or the cards of a catalog.
+						The label above the grid stays on the first page, with the first row.
+			Area:
+				Text: Row 2
+					Style: cell
+		Text: Split rows: true
+			Style: label
+		Grid:
+			Column sizes: * *
+			Gap: 8
+			Area:
+				Text: Row 1
+					Style: cell
+			Area:
+				Text: Row 1
+					Style: cell
+			Area:
+				Text:
+					Style: cell
+					Content >>
+						Row 2 starts on this page and goes on at the top of the next one, because the row is split where the page ends.
+						Each item of the row is broken between its own lines.
+						Widows and orphans still apply to the text of each item.
+						The background of the item is broken with it.
+						The second part of the row goes on the next page.
+						There, the row ends after these lines.
+			Area:
+				Text:
+					Style: cell
+					Content >>
+						The other item of row 2 is broken at the same height.
+						Its last lines go on the next page.

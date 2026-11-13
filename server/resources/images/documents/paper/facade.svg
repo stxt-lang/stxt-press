@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300">
+  <rect x="40" y="40" width="560" height="230" fill="#F1EEE8" stroke="#5A6068" stroke-width="2"/>
+  <rect x="30" y="30" width="580" height="12" fill="#8C8F94"/>
+  <g fill="#C9D3DE" stroke="#5A6068" stroke-width="1.5">
+    <rect x="70" y="80" width="50" height="60"/><rect x="170" y="80" width="50" height="60"/><rect x="270" y="80" width="50" height="60"/><rect x="370" y="80" width="50" height="60"/><rect x="470" y="80" width="50" height="60"/>
+    <rect x="70" y="180" width="50" height="60"/><rect x="170" y="180" width="50" height="60"/><rect x="270" y="180" width="50" height="60"/><rect x="370" y="180" width="50" height="60"/><rect x="470" y="180" width="50" height="60"/>
+  </g>
+  <g fill="#1F4E79">
+    <rect x="132" y="50" width="24" height="12"/><rect x="232" y="50" width="24" height="12"/><rect x="332" y="50" width="24" height="12"/><rect x="432" y="50" width="24" height="12"/>
+  </g>
+  <g fill="#FFFFFF"><circle cx="144" cy="58" r="3"/><circle cx="244" cy="58" r="3"/><circle cx="344" cy="58" r="3"/><circle cx="444" cy="58" r="3"/></g>
+  <g fill="#9DB7D1" stroke="#1F4E79" stroke-width="1.5">
+    <rect x="540" y="56" width="28" height="18"/><rect x="540" y="150" width="28" height="18"/>
+  </g>
+  <line x1="144" y1="50" x2="144" y2="16" stroke="#2A2F36" stroke-width="1"/>
+  <text x="150" y="20" font-family="IBM Plex Sans" font-size="14" fill="#2A2F36">Integrated bricks, 30 cm below the eaves</text>
+  <line x1="554" y1="74" x2="554" y2="150" stroke="#2A2F36" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="600" y="292" text-anchor="end" font-family="IBM Plex Sans" font-size="14" fill="#2A2F36">Surface boxes, gable end</text>
+  <line x1="40" y1="270" x2="600" y2="270" stroke="#5A6068" stroke-width="3"/>
+</svg>

@@ -1,0 +1,22 @@
+# The look shared by the documents about pages and breaks: the page footer, the filler blocks that take up room and
+# the boxes the breaks act on.
+Styles (dev.stxt.pdf):
+	For element: Page overlay
+		Typography:
+			Size: 8
+			Line height: 10
+			Color: muted
+	# A block that only takes up room, to bring the next box near the end of the page.
+	For style: filler
+		Box:
+			Padding: 8
+			Background: sand
+		Typography:
+			Color: muted
+	# The box the demonstration is about.
+	For style: marked
+		Box:
+			Padding: 6 8
+			Border: 0 0 0 3
+			Border color: accent
+			Background: tint

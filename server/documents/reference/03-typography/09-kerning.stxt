@@ -1,0 +1,46 @@
+# Typography: Kerning false and true on large titles, where the pairs AV, To and Wa show.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · Kerning
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: title
+			Box:
+				Margin: 0 0 16 0
+			Typography:
+				Size: 40
+				Line height: 48
+				Bold: true
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: Kerning
+		Paragraph: Some pairs of letters leave a visible gap because of their shape. With `Kerning: true` the engine applies the pairs of the font, which bring them closer. It shows in large titles. IBM Plex Mono, where every letter measures the same, has none.
+			Style: intro
+		Text: Kerning: false  (the default)
+			Style: label
+		Text: AVATAR · Torre · Wave
+			Style: title
+			Typography:
+				Kerning: false
+		Text: Kerning: true
+			Style: label
+		Text: AVATAR · Torre · Wave
+			Style: title
+			Typography:
+				Kerning: true
+		Text: Kerning: false and true, IBM Plex Serif
+			Style: label
+		Text: WAVY TOWER, P. 7
+			Style: title
+			Typography:
+				Font: IBM Plex Serif
+				Kerning: false
+		Text: WAVY TOWER, P. 7
+			Style: title
+			Typography:
+				Font: IBM Plex Serif
+				Kerning: true

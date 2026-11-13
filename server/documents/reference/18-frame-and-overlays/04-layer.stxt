@@ -1,0 +1,76 @@
+# Frame and overlays: Layer orders what is painted on top, with negative layers beneath the content in flow.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Layer
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: square
+			Box:
+				Width: 110
+				Height: 70
+				Padding: 6 8
+				Border: 1
+				Border color: accent
+				Background: #FFFFFF
+			Typography:
+				Size: 8.5
+				Line height: 11
+	Section:
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Layer
+		Paragraph: Positioned boxes are painted after the flow, in document order. `Layer` changes that order: higher layers go on top, and a negative layer goes beneath the content in flow. Without `Layer`, a box counts as `Layer: 0`.
+			Style: intro
+		Text: Without Layer: the later box covers the earlier one
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 20 auto auto 20
+				Text: First
+					Style: square
+			Overlay:
+				Offset: 45 auto auto 80
+				Text: Second
+					Style: square
+			Overlay:
+				Offset: 70 auto auto 140
+				Text: Third
+					Style: square
+		Text: Layer: 3, 2 and 1: the first box on top
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 20 auto auto 20
+				Layer: 3
+				Text: First, Layer: 3
+					Style: square
+			Overlay:
+				Offset: 45 auto auto 80
+				Layer: 2
+				Text: Second, Layer: 2
+					Style: square
+			Overlay:
+				Offset: 70 auto auto 140
+				Layer: 1
+				Text: Third, Layer: 1
+					Style: square
+		Text: Layer: -1 beneath the text of the Frame
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 0 auto 0 0
+				Layer: -1
+				Block:
+					Box:
+						Width: 160
+						Height: 100%
+						Background: sand
+			Paragraph: This paragraph is in the flow of the Frame. The sand band is an Overlay with Layer: -1, so it is painted beneath the paragraph and not over it.
+				Box:
+					Padding: 10

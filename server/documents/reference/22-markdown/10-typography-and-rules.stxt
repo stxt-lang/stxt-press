@@ -1,0 +1,42 @@
+# Markdown: the Typography of a Markdown, inherited by all it generates, and its properties given once in For element: Markdown.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Typography and rules
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Markdown
+			Bullet markers: dash
+			Box:
+				Margin: 0 0 14 0
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Typography and rules
+		Paragraph: The `Typography` of a `Markdown` is inherited by everything it generates. `Bullet markers`, `Number markers` and `Table column sizes` can come from a `For element: Markdown` rule, here the `dash` of both lists.
+			Style: intro
+		Text: (inherited typography)
+			Style: label
+		Markdown:
+			Content >>
+				The workshop opens from Monday to Friday.
+
+				- Mornings, from 9 to 13.
+				- Afternoons, from 15 to 18.
+		Text: Typography: Font IBM Plex Serif, Size 11, Align justify, Color accent
+			Style: label
+		Markdown:
+			Typography:
+				Font: IBM Plex Serif
+				Size: 11
+				Line height: 16
+				Align: justify
+				Color: accent
+			Content >>
+				The workshop opens from Monday to Friday, and on Saturday mornings in December,
+				when the orders for the holidays have to be ready on time.
+
+				- Mornings, from 9 to 13.
+				- Afternoons, from 15 to 18.

@@ -271,6 +271,19 @@ main.workspace {
 	color: var(--error);
 }
 
+/* The line under each list of the index: why it is empty or not listed. */
+.status {
+	color: var(--muted);
+}
+
+.status:empty {
+	display: none;
+}
+
+.status.error {
+	color: var(--error);
+}
+
 #view {
 	display: flex;
 	flex-direction: column;

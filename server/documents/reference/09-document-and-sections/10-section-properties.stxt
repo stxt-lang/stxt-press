@@ -1,0 +1,47 @@
+# Document and sections: the Id, Style and Trim margins of a Section.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Document and sections · Id, Style and Trim margins of a section
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For style: appendix
+			Typography:
+				Font: IBM Plex Serif
+				Language: ca
+		For style: spaced
+			Box:
+				Margin: 40 0 12 0
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Document and sections
+			Style: topic
+		Heading 1:
+			Text: Id, Style and Trim margins of a section
+		Paragraph: The `Id` of a section is its first page, for a link or a reference. Its `Style` gives it typography only: the appendix on page 2 is serif and in Catalan. `Trim margins` drops the margin of its first or last child, so the content starts at the top of the page area.
+			Style: intro
+		Text: Link: #appendix  (a whole box that leads to page {page of: appendix})
+			Style: card
+			Link: #appendix
+	Section:
+		Id: appendix
+		Style: appendix
+		Text: Id: appendix, Style: appendix  (Typography: Font: IBM Plex Serif, Language: ca)
+			Style: card
+		Paragraph: Aquest annex és en català, amb la lletra de la regla de l'estil.
+	Section:
+		Trim margins: top
+		Block:
+			Style: card spaced
+			Text: Trim margins: top
+			Text: This block has Margin: 40 at the top, and the section drops it.
+	Section:
+		Block:
+			Style: card spaced
+			Text: Trim margins: none  (the default)
+			Text: The same block, with its top margin of 40.

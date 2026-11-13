@@ -84,7 +84,7 @@ final class Responses {
             body.put("code", engine.code());
             body.put("message", engine.getMessage());
         } else if (e instanceof TemplateException template) {
-            boolean notFound = template.code().equals(TemplateException.NOT_FOUND);
+            boolean notFound = template.notFound();
             status = notFound ? 404 : 500;
             if (!notFound) {
                 LOG.log(Level.ERROR, "Error of " + exchange.getRequestURI(), e);

@@ -1,0 +1,73 @@
+# Tables: the cell rules Header cell, Body cell, Footer cell, Odd row cell and Even row cell.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Cell rules
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Header cell
+			Typography:
+				Bold: true
+				Color: #FFFFFF
+			Box:
+				Background: accent
+		For element: Body cell
+			Box:
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Even row cell
+			Box:
+				Background: sand
+		For element: Odd row cell
+			Typography:
+				Color: ink
+		For element: Footer cell
+			Typography:
+				Bold: true
+			Box:
+				Border: 1.5 0 0 0
+				Border color: accent
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Cell rules
+		Paragraph: Rules for the cells by their place in the table: `Header cell`, `Body cell` and `Footer cell`, and `Odd row cell` and `Even row cell` for the zebra stripes of the body. They style every table without writing a style in each cell.
+			Style: intro
+		Table:
+			Column sizes: * 80 80
+			Column align: left right right
+			Header rows:
+				Row:
+					Cell: Rate
+					Cell: Month
+					Cell: Year
+			Body rows:
+				Row:
+					Cell: Basic
+					Cell: 9.00
+					Cell: 90.00
+				Row:
+					Cell: Professional
+					Cell: 19.00
+					Cell: 190.00
+				Row:
+					Cell: Business
+					Cell: 49.00
+					Cell: 490.00
+				Row:
+					Cell: Enterprise
+					Cell: 99.00
+					Cell: 990.00
+				Row:
+					Cell: Unlimited
+					Cell: 149.00
+					Cell: 1,490.00
+			Footer rows:
+				Row:
+					Cell: Prices without VAT
+					Cell:
+					Cell:
+		Text: Header cell: accent background. Body cell: a line below. Even row cell: sand background. Footer cell: a line above.
+			Style: label

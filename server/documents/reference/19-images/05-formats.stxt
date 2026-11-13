@@ -1,0 +1,49 @@
+# Images: PNG, JPEG and SVG files side by side.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · Formats
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Images
+			Style: topic
+		Heading 1:
+			Text: Formats
+		Paragraph: An `Image` reads PNG (also with transparency), JPEG and SVG files, and pages of a PDF. An SVG goes into the PDF as a vector drawing, sharp at any size. The engine accepts a closed subset of SVG: shapes, paths, groups, gradients, clipping paths, `use` and text.
+			Style: intro
+		Grid:
+			Column sizes: repeat(3, 145)
+			Gap: 6 16
+			Area:
+				Text: PNG  (examples/planner/icon.png)
+					Style: label
+			Area:
+				Text: JPEG  (examples/catalog/lampara.jpg)
+					Style: label
+			Area:
+				Text: SVG  (examples/menu/emblem.svg)
+					Style: label
+			Area:
+				Image: examples/planner/icon.png
+					Alt: The icon of the planner
+					Box:
+						Width: 100%
+			Area:
+				Image: examples/catalog/lampara.jpg
+					Alt: Walnut floor lamp
+					Box:
+						Width: 100%
+			Area:
+				Image: examples/menu/emblem.svg
+					Alt: The emblem of La Cala
+					Box:
+						Width: 100%
+		Text: SVG  (examples/report/en/chart-production.svg), with its text drawn as outlines
+			Style: label
+			Box:
+				Margin: 16 0 4 0
+		Image: examples/report/en/chart-production.svg
+			Alt: Chart of the production of the year
+			Box:
+				Width: 100%

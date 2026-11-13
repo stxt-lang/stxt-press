@@ -1,0 +1,34 @@
+# Headings: the six levels, each with the look of its For element rule, without skipping a level.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Headings · Levels
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Headings
+			Style: topic
+		Heading 1:
+			Text: Levels
+		Paragraph: From `Heading 1` to `Heading 6`. A heading is not larger than a paragraph unless a rule says so: the look of each level comes from a `For element` rule in the `.styles.stxt` of this folder. A level cannot be skipped: a `Heading 3` comes after a `Heading 2`.
+			Style: intro
+		Text: Heading 1 is the title of this page
+			Style: label
+		Heading 2:
+			Text: Heading 2: a chapter
+		Paragraph: A paragraph under the second level.
+		Heading 3:
+			Text: Heading 3: a section
+		Paragraph: A paragraph under the third level.
+		Heading 4:
+			Text: Heading 4: a subsection
+		Paragraph: A paragraph under the fourth level.
+		Heading 5:
+			Text: Heading 5: a point
+		Paragraph: A paragraph under the fifth level.
+		Heading 6:
+			Text: Heading 6: a minor point
+		Paragraph: A paragraph under the sixth level.
+		Heading 3:
+			Text: Back to Heading 3
+		Paragraph: Going back up to any level is allowed.

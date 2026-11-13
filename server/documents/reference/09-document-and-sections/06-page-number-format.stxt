@@ -1,0 +1,62 @@
+# Document and sections: Page number format, the five ways of writing page numbers.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Document and sections · Page number format
+	Page:
+		Paper: A6
+		Margin: 12mm
+	Page overlay:
+		Offset: auto 0 -22 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Page number format: lower-roman
+		Text: Document and sections
+			Style: topic
+		Heading 1:
+			Text: Page number format
+		Paragraph: `Page number format` writes the numbers of a section with digits, letters or roman numerals, in the footers, the references and the tables of contents. Each section here has two pages and restarts the count.
+			Style: intro
+		Text: Page number format: lower-roman
+			Style: card
+		Text: Second page: ii
+			Style: card
+			Break:
+				Before: page
+	Section:
+		Page numbering: restart
+		Page number format: upper-roman
+		Text: Page number format: upper-roman
+			Style: card
+		Text: Second page: II
+			Style: card
+			Break:
+				Before: page
+	Section:
+		Page numbering: restart
+		Page number format: lower-alpha
+		Text: Page number format: lower-alpha
+			Style: card
+		Text: Second page: b
+			Style: card
+			Break:
+				Before: page
+	Section:
+		Page numbering: restart
+		Page number format: upper-alpha
+		Text: Page number format: upper-alpha
+			Style: card
+		Text: Second page: B
+			Style: card
+			Break:
+				Before: page
+	Section:
+		Page numbering: restart
+		Page number format: decimal
+		Text: Page number format: decimal  (the default)
+			Style: card
+		Text: Second page: 2
+			Style: card
+			Break:
+				Before: page

@@ -1,0 +1,56 @@
+# Tables: Row header marks the cell that names its row, read by a screen reader with each cell of the row.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Row header
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+		For style: time
+			Typography:
+				Bold: true
+				Color: accent
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Row header
+		Paragraph: The cells of `Header rows` are column headers. `Row header: true` makes a body cell the header of its row: in the tagged PDF a screen reader announces it with each cell of the row. It does not change the look, so the times here take a style as well.
+			Style: intro
+		Table:
+			Column sizes: 70 * * *
+			Header rows:
+				Row:
+					Cell: Time
+					Cell: Monday
+					Cell: Wednesday
+					Cell: Friday
+			Body rows:
+				Row:
+					Cell: 09:00
+						Row header: true
+						Style: time
+					Cell: Mathematics
+					Cell: History
+					Cell: Mathematics
+				Row:
+					Cell: 10:00
+						Row header: true
+						Style: time
+					Cell: Biology
+					Cell: Mathematics
+					Cell: Physics
+				Row:
+					Cell: 11:30
+						Row header: true
+						Style: time
+					Cell: English
+					Cell: Physics
+					Cell: Music

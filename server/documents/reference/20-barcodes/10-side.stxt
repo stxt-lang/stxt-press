@@ -1,0 +1,23 @@
+# Barcodes: a QR code as a side box, with the paragraphs that follow it running beside it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · Side box
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: Side box
+		Paragraph: With `Side: right` the code goes to the right of its container and the lines of the paragraphs that follow it get shorter beside it. Its `Margin` is the gap to the text.
+			Style: intro
+		Barcode: https://stxt.dev/verify/2026-0147
+			Alt: QR code to verify certificate 2026-0147
+			Side: right
+			Box:
+				Width: 32mm
+				Margin: 0 0 6 12
+		Paragraph: This certificate states that Marta Vidal Soler completed the course on accessible document design, with a total of forty hours of classes and practical work, between March and June 2026.
+		Paragraph: Its authenticity can be checked by reading the code with a phone or by entering the number 2026-0147 on the verification page. The code leads to a page that shows the same data as this document.
+		Paragraph: Below the code the paragraphs take the full width of the page again.

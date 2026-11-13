@@ -1,0 +1,34 @@
+# Text and Paragraph: the text in the value or in a Content block, where a single line break is a space.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text and Paragraph · Value and Content
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Text and Paragraph
+			Style: topic
+		Heading 1:
+			Text: Value and Content
+		Paragraph: A short text goes in the value. A long one goes in a `Content >>` block, where each line break counts as a space, so the source lines can be broken anywhere. A blank line inside `Content` is an error: several paragraphs are several `Paragraph`.
+			Style: intro
+		Text: Paragraph: Kind regards.
+			Style: label
+		Paragraph: Kind regards.
+			Style: sample
+		Text: Paragraph: with Content >> in four source lines
+			Style: label
+		Paragraph:
+			Style: sample
+			Content >>
+				The Saturday market returns to the main square
+				with more stalls than ever: vegetables from the gardens,
+				cheese from the hills and bread from the wood oven.
+				The four source lines make one paragraph.
+		Text: Text: with Content >> in two source lines
+			Style: label
+		Text:
+			Style: sample
+			Content >>
+				A Text also accepts Content: these two source lines
+				are joined by a space.

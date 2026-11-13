@@ -1,0 +1,63 @@
+# Grid: columns of a fixed size, in points, in millimeters and in percentages of the width of the Grid.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Fixed columns
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Fixed columns
+		Paragraph: `Column sizes` gives one track per column. A number is points, a number with `mm` is millimeters and a percentage is a part of the width of the `Grid`. Fixed columns do not depend on their content.
+			Style: intro
+		Text: Column sizes: 100 150 60
+			Style: label
+		Grid:
+			Column sizes: 100 150 60
+			Area:
+				Text: 100
+					Style: tile
+			Area:
+				Text: 150
+					Style: pale
+			Area:
+				Text: 60
+					Style: tile
+		Text: Column sizes: 30mm 50mm
+			Style: label
+		Grid:
+			Column sizes: 30mm 50mm
+			Area:
+				Text: 30mm
+					Style: tile
+			Area:
+				Text: 50mm
+					Style: pale
+		Text: Column sizes: 25% 50% 25%
+			Style: label
+		Grid:
+			Column sizes: 25% 50% 25%
+			Area:
+				Text: 25%
+					Style: tile
+			Area:
+				Text: 50%
+					Style: pale
+			Area:
+				Text: 25%
+					Style: tile
+		Text: Column sizes: 20% 40mm 100  (mixed)
+			Style: label
+		Grid:
+			Column sizes: 20% 40mm 100
+			Area:
+				Text: 20%
+					Style: tile
+			Area:
+				Text: 40mm
+					Style: pale
+			Area:
+				Text: 100
+					Style: tile

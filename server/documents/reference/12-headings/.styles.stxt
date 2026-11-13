@@ -1,0 +1,42 @@
+# The look of the heading levels in the documents of the headings topic: the engine gives none of its own.
+Styles (dev.stxt.pdf):
+	For element: Heading 2
+		Typography:
+			Size: 15
+			Line height: 19
+			Bold: true
+		Box:
+			Margin: 14 0 6 0
+	For element: Heading 3
+		Typography:
+			Size: 12.5
+			Line height: 16
+			Bold: true
+		Box:
+			Margin: 10 0 4 0
+	For element: Heading 4
+		Typography:
+			Size: 11
+			Line height: 15
+			Bold: true
+			Color: accent
+		Box:
+			Margin: 8 0 4 0
+	For element: Heading 5
+		Typography:
+			Size: 10
+			Line height: 14
+			Bold: true
+			Italic: true
+		Box:
+			Margin: 6 0 3 0
+	For element: Heading 6
+		Typography:
+			Size: 9
+			Line height: 13
+			Weight: 600
+			Color: muted
+			Case: uppercase
+			Letter spacing: 0.6
+		Box:
+			Margin: 6 0 3 0

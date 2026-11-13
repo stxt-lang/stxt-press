@@ -1,0 +1,45 @@
+# Headings: Number label writes what goes before the title, with {number} where the number goes.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Headings · Number label
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Numbered: true
+				Number label: Chapter {number}.
+		For style: annex
+			Typography:
+				Numbered: true
+				Number format: upper-alpha
+				Number label: Appendix {number}:
+	Section:
+		Text: Headings
+			Style: topic
+		Heading 1:
+			Text: Number label
+		Paragraph: Without `Number label` the number goes alone before the title. With it, the label replaces the number and `{number}` says where the number goes. `{{number of: id}}` still writes only the number.
+			Style: intro
+		Heading 2:
+			Text: Introduction
+		Text: Number label: Chapter {number}.
+			Style: label
+		Heading 2:
+			Text: Results
+		Paragraph: The rates are in appendix {number of: fees}, and the contacts in appendix {number of: contacts}.
+		Heading 2:
+			Typography:
+				Numbered: false
+			Text: Appendices
+		Text: Number label: Appendix {number}: with Number format: upper-alpha
+			Style: label
+		Heading 3:
+			Style: annex
+			Id: fees
+			Text: Fees
+		Heading 3:
+			Style: annex
+			Id: contacts
+			Text: Contacts

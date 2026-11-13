@@ -1,0 +1,94 @@
+# Stack: how Grow, Base size and Shrink of each Item share the leftover or missing space.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Grow, Shrink and Base size
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Grow, Shrink and Base size
+		Paragraph: Each `Item` starts from its `Base size` (by default, its content). The leftover space goes to the items in proportion to `Grow`, and the missing space is taken from them in proportion to `Shrink` times `Base size`.
+			Style: intro
+		Text: No Grow: the leftover space stays at the end
+			Style: label
+		Stack:
+			Style: area
+			Gap: 6
+			Item:
+				Text: Short
+					Style: tile
+			Item:
+				Text: A longer item
+					Style: tile
+		Text: Grow: 1 on the second item
+			Style: label
+		Stack:
+			Style: area
+			Gap: 6
+			Item:
+				Text: Short
+					Style: tile
+			Item:
+				Grow: 1
+				Text: Grow: 1
+					Style: tile
+		Text: Grow: 1 and Grow: 2, Base size: auto (the content counts)
+			Style: label
+		Stack:
+			Style: area
+			Gap: 6
+			Item:
+				Grow: 1
+				Text: Grow: 1, a long content
+					Style: tile
+			Item:
+				Grow: 2
+				Text: Grow: 2
+					Style: tile
+		Text: Grow: 1 and Grow: 2, Base size: 0 (widths 1 to 2)
+			Style: label
+		Stack:
+			Style: area
+			Gap: 6
+			Item:
+				Grow: 1
+				Base size: 0
+				Text: Grow: 1, a long content
+					Style: tile
+			Item:
+				Grow: 2
+				Base size: 0
+				Text: Grow: 2
+					Style: tile
+		Text: Base size: 300 each in less room, Shrink: 1 and Shrink: 3
+			Style: label
+		Stack:
+			Style: area
+			Gap: 6
+			Item:
+				Base size: 300
+				Shrink: 1
+				Text: Shrink: 1
+					Style: tile
+			Item:
+				Base size: 300
+				Shrink: 3
+				Text: Shrink: 3
+					Style: tile
+		Text: Shrink: 0 keeps its Base size
+			Style: label
+		Stack:
+			Style: area
+			Gap: 6
+			Item:
+				Base size: 300
+				Shrink: 0
+				Text: Shrink: 0, Base size: 300
+					Style: tile
+			Item:
+				Base size: 300
+				Text: Shrink: 1
+					Style: tile

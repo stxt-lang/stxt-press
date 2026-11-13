@@ -1,0 +1,42 @@
+# Figures: a figure made of a Block with two images, with the Alt of the whole on the Figure, and a figure with a Barcode.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Figures · Block and barcode figures
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Figures
+			Style: topic
+		Heading 1:
+			Text: Block and barcode figures
+		Paragraph: For several images under one caption they go in a `Block`, and the `Alt` of the whole figure goes on the `Figure`, where it is required. A `Barcode` can also be the content of a figure, with its own `Alt`.
+			Style: intro
+		Text: Figure with a Block
+			Style: label
+		Figure:
+			Alt: Two pieces of the collection, a stool and a bench
+			Caption: The stool and the bench of the collection.
+			Block:
+				Stack:
+					Gap: 8
+					Item:
+						Image: examples/catalog/taburete.jpg
+							Fit: crop
+							Box:
+								Width: 50mm
+								Height: 40mm
+					Item:
+						Image: examples/catalog/banco.jpg
+							Fit: crop
+							Box:
+								Width: 50mm
+								Height: 40mm
+		Text: Figure with a Barcode
+			Style: label
+		Figure:
+			Caption: Code that leads to the online catalog.
+			Barcode: https://stxt.dev/catalog
+				Alt: QR code with the address https://stxt.dev/catalog
+				Box:
+					Width: 28mm

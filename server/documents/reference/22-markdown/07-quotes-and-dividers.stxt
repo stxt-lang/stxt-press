@@ -1,0 +1,49 @@
+# Markdown: block quotes styled with For element: Block quote and horizontal rules styled with For element: Divider.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Block quotes and dividers
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Block quote
+			Box:
+				Margin: 4 0 12 0
+				Padding: 2 0 2 12
+				Border: 0 0 0 3
+				Border color: accent
+			Typography:
+				Font: IBM Plex Serif
+				Italic: true
+		For element: Divider
+			Box:
+				Margin: 12 60
+				Border: 1 0 0 0
+				Border color: rule
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Block quotes and dividers
+		Paragraph: A `>` quote is a `Block quote` and a `---` line is a `Divider`. Both are generated, so only their `For element` rules style them. Without a rule a quote looks like a paragraph and a divider is a line of 0.5 across the width.
+			Style: intro
+		Markdown:
+			Bullet markers: bullet
+			Content >>
+				The visitors' book of the workshop keeps this note:
+
+				> The chairs have outlived the table they were made for.
+				> We bought a new table to match them.
+
+				---
+
+				A quote can hold several paragraphs and a list:
+
+				> First paragraph of the quote.
+				>
+				> - an item
+				> - another item
+
+				***
+
+				The three forms of the rule, `---`, `***` and `___`, are the same element.

@@ -1,0 +1,45 @@
+# Barcodes: Quiet zone, the light modules around the code, made visible with a background.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · Quiet zone
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: code
+			Barcode format: code-128
+			Box:
+				Width: 80mm
+				Height: 15mm
+				Margin: 0 0 16 0
+				Background: sand
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: Quiet zone
+		Paragraph: The quiet zone is part of the size of the code: 10 modules on each side of a Code 128 by default. `Quiet zone` sets another number, from 0 to 40. In a box of the same width, a smaller zone leaves wider bars. The background shows where the zone is.
+			Style: intro
+		Text: (default: 10 modules)
+			Style: label
+		Barcode: ORD-2026-0147
+			Style: code
+			Alt: Order ORD-2026-0147
+		Text: Quiet zone: 5
+			Style: label
+		Barcode: ORD-2026-0147
+			Style: code
+			Alt: Order ORD-2026-0147
+			Quiet zone: 5
+		Text: Quiet zone: 0
+			Style: label
+		Barcode: ORD-2026-0147
+			Style: code
+			Alt: Order ORD-2026-0147
+			Quiet zone: 0
+		Text: Quiet zone: 20
+			Style: label
+		Barcode: ORD-2026-0147
+			Style: code
+			Alt: Order ORD-2026-0147
+			Quiet zone: 20

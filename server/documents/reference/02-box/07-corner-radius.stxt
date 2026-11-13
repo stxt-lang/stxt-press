@@ -1,0 +1,99 @@
+# The box: Corner radius rounds the background, the border and the clipping of an image, and of what reaches the corner inside.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: The box · Rounded corners
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 20
+			Vertical: top
+			Box:
+				Margin: 0 0 20 0
+	Section:
+		Text: The box
+			Style: topic
+		Heading 1:
+			Text: Rounded corners
+		Paragraph: `Corner radius` rounds the corners: one value for all four, or one per corner. It only changes how the box is painted. A child that reaches a rounded corner is clipped by it, without rounding the child, and an image is clipped by the corners of its own box.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Text: Corner radius: 8
+						Style: label
+					Block:
+						Box:
+							Width: 120
+							Height: 70
+							Corner radius: 8
+							Border: 2
+							Border color: accent
+							Background: tint
+			Item:
+				Block:
+					Text: Corner radius: 50%  (a circle)
+						Style: label
+					Block:
+						Box:
+							Width: 70
+							Height: 70
+							Corner radius: 50%
+							Background: #E9A23B
+			Item:
+				Block:
+					Text: Corner radius: 0 20 0 20
+						Style: label
+					Block:
+						Box:
+							Width: 120
+							Height: 70
+							Corner radius: 0 20 0 20
+							Background: #B5651D
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Text: A child clipped by the corners
+						Style: label
+					Block:
+						Box:
+							Width: 160
+							Corner radius: 16
+							Background: tint
+						Text: Header band
+							Typography:
+								Color: #FFFFFF
+								Bold: true
+							Box:
+								Padding: 8 12
+								Background: accent
+						Text: The band is square. The corners of the card clip it.
+							Box:
+								Padding: 8 12 12 12
+			Item:
+				Block:
+					Text: An image with Corner radius: 50%
+						Style: label
+					Image: examples/resume/photo.jpg
+						Alt: Portrait photo cut into a circle
+						Fit: crop
+						Box:
+							Width: 100
+							Height: 100
+							Corner radius: 50%
+			Item:
+				Block:
+					Text: An image with Corner radius: 10 and a border
+						Style: label
+					Image: examples/catalog/silla.jpg
+						Alt: Walnut chair
+						Fit: crop
+						Box:
+							Width: 120
+							Height: 100
+							Corner radius: 10
+							Border: 3
+							Border color: accent

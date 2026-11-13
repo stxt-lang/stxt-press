@@ -1,0 +1,59 @@
+# Layers and rotation: Rotate on a positioned box, painted rotated without moving anything.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Layers and rotation · Rotation when painting
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: stamp
+			Box:
+				Padding: 4 10
+				Border: 1.5
+				Border color: #A32D2D
+				Background: #FFFFFF
+			Typography:
+				Size: 14
+				Bold: true
+				Color: #A32D2D
+				Letter spacing: 2
+		For style: stage
+			Box:
+				Height: 130
+				Margin: 0 0 18 0
+				Padding: 12
+				Background: sand
+	Section:
+		Text: Layers and rotation
+			Style: topic
+		Heading 1:
+			Text: Rotation when painting
+		Paragraph: A rotated `Frame`, `Overlay` or `Page overlay` takes up its place as if it were not rotated: the rotation only changes how it is painted. It suits what goes on top of everything, such as a stamp.
+			Style: intro
+		Text: Overlay with Rotate: -12 in the top right corner of a Frame
+			Style: label
+		Frame:
+			Style: stage
+			Paragraph: Quote 2026-014 for the kitchen on Calle Mayor: six walnut chairs, one dining table and the delivery to the second floor.
+			Overlay:
+				Offset: 50 20 auto auto
+				Rotate: -12
+				Text: DRAFT
+					Style: stamp
+		Text: Frame with Rotate: 3: its siblings keep their place
+			Style: label
+			Box:
+				Margin: 0 0 16 0
+		Frame:
+			Rotate: 3
+			Box:
+				Padding: 10
+				Background: tint
+				Border: 1
+				Border color: accent
+			Paragraph: This frame is tilted when painted, but the paragraph below starts where it would start without the rotation.
+				Box:
+					Margin: 0
+		Paragraph: The next paragraph, in its unrotated place.
+			Box:
+				Margin: 20 0 0 0

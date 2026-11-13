@@ -1,0 +1,83 @@
+# Stack: each value of Vertical in a row, where it aligns the items on the cross axis.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Vertical in a row
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 6
+			Box:
+				Margin: 0 0 14 0
+				Border: 0.5
+				Border color: rule
+				Background: tint
+		For style: tall
+			Box:
+				Width: 60
+				Height: 50
+				Background: sand
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Vertical in a row
+		Paragraph: In a row, `Vertical` aligns the items in the height of the line, which is that of the tallest one. With `stretch`, the default, every item takes that height.
+			Style: intro
+		Text: Vertical: stretch  (the default)
+			Style: label
+		Stack:
+			Style: row
+			Vertical: stretch
+			Item:
+				Block:
+					Style: tall
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile
+		Text: Vertical: top
+			Style: label
+		Stack:
+			Style: row
+			Vertical: top
+			Item:
+				Block:
+					Style: tall
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile
+		Text: Vertical: center
+			Style: label
+		Stack:
+			Style: row
+			Vertical: center
+			Item:
+				Block:
+					Style: tall
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile
+		Text: Vertical: bottom
+			Style: label
+		Stack:
+			Style: row
+			Vertical: bottom
+			Item:
+				Block:
+					Style: tall
+			Item:
+				Text: One
+					Style: tile
+			Item:
+				Text: Two
+					Style: tile

@@ -1,13 +1,14 @@
 /**
  * The web editor of stxt-press: the panels of a document or of a template of the server, and the buttons that fill it,
- * preview it as SVG pages and show its PDF. What it shows is in its URL (`/editor/{path}`, see `parsePlace`), so a
- * reload shows the same template, read again from the server. What a button asks for and where an error goes is in
+ * preview it as SVG pages and show its PDF. What it shows is in its URL (`/editor/templates/{path}`,
+ * `/editor/documents/{path}`, see `parsePlace`), so a reload shows the same template or document, read again from the
+ * server. What a button asks for and where an error goes is in
  * model.ts, what a URL shows in place.ts, the panels and their tabs in panels.ts, and what the buttons give in
  * output.ts; here are the places, the buttons and the start.
  */
 import { $, askToken, call, errorOf, say, token } from "./api";
 import { curl, documentPanels, fileName, request, serverMessage, target, templatePanels, validatesDocument } from "./model";
-import type { Format, LocalError, Panels, Request, ServerError, ServerTemplate, State, StylesText, Target } from "./model";
+import type { Format, LocalError, Panels, Request, ServerDocument, ServerError, ServerTemplate, State, Target } from "./model";
 import { clearOutput, filled, loadFonts, showFilled, showPages, showPdf } from "./output";
 import { clearPanels, mark, panelOf, setSchema, showPanels, texts, unmarkAll, validateDocument } from "./panels";
 import type { Panel } from "./panels";
@@ -19,12 +20,16 @@ let mode: Place["mode"] = "document";
 let current: Place = BLANK;
 /** The paths of the templates of the server, empty if it has none or `/templates` is off. */
 let templatePaths: string[] = [];
+/** The paths of the documents of the server, empty if it has none or `/documents` is off. */
+let documentPaths: string[] = [];
 /** Counts the places shown, so that the answer of one left behind is not shown over the next. */
 let showing = 0;
 /** Whether a panel was edited in the page since it was shown: leaving it then asks first. */
 let dirty = false;
 /** The template on the panels, as the server gave it, in the templates mode. */
 let original: ServerTemplate | undefined;
+/** The document of the server on the panels, as the server gave it, in the document mode; none for a blank one. */
+let originalDocument: ServerDocument | undefined;
 /** What the panels show; `undefined` without panels (a template that cannot be read), and then the buttons are off. */
 let shown: Panels | undefined;
 
@@ -80,7 +85,13 @@ function state(): State {
 	if (mode === "template" && original) {
 		return { mode: "template", path: original.path, document: panels.document, styles, data: panels.data, original };
 	}
-	return { mode: "document", document: panels.document, styles };
+	return {
+		mode: "document",
+		path: originalDocument?.path ?? null,
+		document: panels.document,
+		styles,
+		original: originalDocument,
+	};
 }
 
 // ---- The buttons
@@ -171,31 +182,34 @@ async function run(format: Format): Promise<void> {
 
 // ---- The places
 
-/** The template of the server as a document: filled with its sample data, with its chain of styles, without data. */
+/** A document of the documents folder of the server, with its chain of styles. */
 async function showDocument(path: string, seq: number): Promise<void> {
-	const [response, filledText] = await Promise.all([call("GET", `/templates/${path}`), call("GET", `/print/${path}?format=stxt`)]);
+	const response = await call("GET", `/documents/${path}`);
 	if (seq !== showing) {
 		return;
 	}
-	const failed = [response, filledText].find((r) => !r.ok);
-	if (failed) {
-		const error = await errorOf(failed);
+	if (!response.ok) {
+		const error = await errorOf(response);
 		original = undefined;
+		originalDocument = undefined;
 		clear();
 		say(serverMessage(error, null), true);
 		return;
 	}
-	const template = (await response.json()) as { styles: StylesText[] };
-	const text = await filledText.text();
-	if (seq === showing) {
-		showBlankDocument(text, template.styles);
+	const served = (await response.json()) as ServerDocument;
+	if (seq !== showing) {
+		return;
 	}
+	original = undefined;
+	originalDocument = served;
+	display(documentPanels(served));
 }
 
-/** The panels of a document, with one blank styles panel if it has no styles, for the ones the user writes. */
-function showBlankDocument(text = "", styles: StylesText[] = []): void {
+/** The panels of a blank document, with one blank styles panel, for the ones the user writes. */
+function showBlankDocument(): void {
 	original = undefined;
-	display(documentPanels(text, styles));
+	originalDocument = undefined;
+	display(documentPanels());
 }
 
 async function showTemplate(path: string, seq: number): Promise<void> {
@@ -206,6 +220,7 @@ async function showTemplate(path: string, seq: number): Promise<void> {
 	if (!response.ok) {
 		const error = await errorOf(response);
 		original = undefined;
+		originalDocument = undefined;
 		clear();
 		say(serverMessage(error, null), true);
 		return;
@@ -215,7 +230,8 @@ async function showTemplate(path: string, seq: number): Promise<void> {
 		return;
 	}
 	original = template;
-	$("print-url").textContent = `${location.origin}/print/${template.path}`;
+	originalDocument = undefined;
+	$("print-url").textContent = `${location.origin}/print/templates/${template.path}`;
 	display(templatePanels(template));
 }
 
@@ -277,15 +293,20 @@ async function start(): Promise<void> {
 	const schemaResponse = await call("GET", "/schema");
 	setSchema(schemaResponse.ok ? await schemaResponse.text() : "");
 
-	// The two modes list the templates of the server: as documents, filled with their sample data, and as templates.
+	// The document mode lists the documents of the server after the blank one, and the templates mode its templates.
 	const documents = $<HTMLSelectElement>("documents");
 	const templates = $<HTMLSelectElement>("templates");
 	documents.add(new Option("New document", ""));
-	const listed = await call("GET", "/templates");
-	if (listed.ok) {
-		templatePaths = ((await listed.json()) as { templates: { path: string }[] }).templates.map((entry) => entry.path);
-		for (const path of templatePaths) {
+	const [listedDocuments, listedTemplates] = await Promise.all([call("GET", "/documents"), call("GET", "/templates")]);
+	if (listedDocuments.ok) {
+		documentPaths = ((await listedDocuments.json()) as { documents: { path: string }[] }).documents.map((entry) => entry.path);
+		for (const path of documentPaths) {
 			documents.add(new Option(path, path));
+		}
+	}
+	if (listedTemplates.ok) {
+		templatePaths = ((await listedTemplates.json()) as { templates: { path: string }[] }).templates.map((entry) => entry.path);
+		for (const path of templatePaths) {
 			templates.add(new Option(path, path));
 		}
 	}
@@ -297,7 +318,9 @@ async function start(): Promise<void> {
 	templates.onchange = () => go({ mode: "template", path: templates.value });
 	document.querySelectorAll<HTMLButtonElement>(".modes button").forEach((button) => {
 		button.onclick = () => {
-			const place = placeOfMode(button.dataset.mode as Place["mode"], current, templatePaths);
+			const next = button.dataset.mode as Place["mode"];
+			// The mode already shown stays where it is.
+			const place = next === current.mode ? null : placeOfMode(next, documentPaths, templatePaths);
 			if (place) {
 				go(place);
 			}
@@ -318,7 +341,7 @@ async function start(): Promise<void> {
 	};
 
 	window.addEventListener("popstate", () => {
-		const place = parsePlace(location.pathname, location.search) ?? BLANK;
+		const place = parsePlace(location.pathname) ?? BLANK;
 		if (canLeave()) {
 			void show(place);
 		} else {
@@ -333,8 +356,8 @@ async function start(): Promise<void> {
 		}
 	});
 
-	// The URL as the page writes it: /editor?mode=template, without a template, is /editor.
-	const place = parsePlace(location.pathname, location.search) ?? BLANK;
+	// The URL as the page writes it, without what the page does not read (a query).
+	const place = parsePlace(location.pathname) ?? BLANK;
 	window.history.replaceState(null, "", placeUrl(place));
 	await show(place);
 }

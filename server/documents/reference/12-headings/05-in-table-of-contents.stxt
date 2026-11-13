@@ -1,0 +1,42 @@
+# Headings: In table of contents: false keeps a heading out of the table of contents, while it stays a heading.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Headings · In table of contents
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: TOC 2
+			Box:
+				Margin: 0 0 3 0
+		For element: TOC 3
+			Box:
+				Margin: 0 0 3 0
+				Padding: 0 0 0 16
+	Section:
+		Text: Headings
+			Style: topic
+		Heading 1:
+			In table of contents: false
+			Text: In table of contents
+		Paragraph: Every heading of the listed levels has an entry in a `Table of contents`. With `In table of contents: false` a heading keeps its place in the structure and the bookmarks, and is left out of the list. Here the title of the page and the heading "Contents" are left out.
+			Style: intro
+		Heading 2:
+			In table of contents: false
+			Text: Contents
+		Table of contents:
+			Levels: 2 3
+			Box:
+				Margin: 0 0 16 0
+		Heading 2:
+			Text: Results
+		Heading 3:
+			Text: Sales
+		Paragraph: Sales grew by 12%.
+		Heading 3:
+			In table of contents: false
+			Text: A note that is not listed
+		Paragraph: This heading has In table of contents: false.
+		Heading 2:
+			Text: Forecast
+		Paragraph: A stable year is expected.

@@ -1,0 +1,129 @@
+# Values: colors in hexadecimal with three, four, six and eight digits, the last digit or pair being the opacity.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Values · Colors
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 12
+			Box:
+				Margin: 0 0 18 0
+		For style: cell
+			Grow: 1
+			Base size: 0
+		For style: swatch
+			Box:
+				Height: 50
+	Section:
+		Text: Values
+			Style: topic
+		Heading 1:
+			Text: Colors
+		Paragraph: A color is written in hexadecimal: `#RGB` or `#RRGGBB`. One more digit, or one more pair, is the opacity: `#RGBA` or `#RRGGBBAA`, from `0` or `00` (transparent) to `F` or `FF` (opaque).
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: #B5651D
+						Style: label
+					Block:
+						Style: swatch
+						Box:
+							Background: #B5651D
+			Item:
+				Block:
+					Style: cell
+					Text: #C63
+						Style: label
+					Block:
+						Style: swatch
+						Box:
+							Background: #C63
+			Item:
+				Block:
+					Style: cell
+					Text: #1B5E8C
+						Style: label
+					Block:
+						Style: swatch
+						Box:
+							Background: #1B5E8C
+			Item:
+				Block:
+					Style: cell
+					Text: #000
+						Style: label
+					Block:
+						Style: swatch
+						Box:
+							Background: #000
+		Text: The same blue with less and less opacity, over a dark band:
+			Style: label
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: #1B5E8CFF
+						Style: label
+					Block:
+						Box:
+							Padding: 10 0
+							Background: linear(180, #FFFFFF, #FFFFFF, #1F2933, #1F2933, #FFFFFF, #FFFFFF)
+						Block:
+							Style: swatch
+							Box:
+								Background: #1B5E8CFF
+			Item:
+				Block:
+					Style: cell
+					Text: #1B5E8CB0
+						Style: label
+					Block:
+						Box:
+							Padding: 10 0
+							Background: linear(180, #FFFFFF, #FFFFFF, #1F2933, #1F2933, #FFFFFF, #FFFFFF)
+						Block:
+							Style: swatch
+							Box:
+								Background: #1B5E8CB0
+			Item:
+				Block:
+					Style: cell
+					Text: #1B5E8C60
+						Style: label
+					Block:
+						Box:
+							Padding: 10 0
+							Background: linear(180, #FFFFFF, #FFFFFF, #1F2933, #1F2933, #FFFFFF, #FFFFFF)
+						Block:
+							Style: swatch
+							Box:
+								Background: #1B5E8C60
+			Item:
+				Block:
+					Style: cell
+					Text: #1B5E8C20
+						Style: label
+					Block:
+						Box:
+							Padding: 10 0
+							Background: linear(180, #FFFFFF, #FFFFFF, #1F2933, #1F2933, #FFFFFF, #FFFFFF)
+						Block:
+							Style: swatch
+							Box:
+								Background: #1B5E8C20
+		Text: Color: #A32D2D, Border color: #A32D2D80, Background: #F7E8E8
+			Style: label
+		Paragraph: The color of the text, of the border and of the background are written the same way.
+			Typography:
+				Color: #A32D2D
+			Box:
+				Padding: 8
+				Border: 1
+				Border color: #A32D2D80
+				Background: #F7E8E8

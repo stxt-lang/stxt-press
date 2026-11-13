@@ -1,0 +1,38 @@
+# Lists: {number of: id} writes the number of an item with an Id, in the format of its list.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Lists · Citing an item
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Lists
+			Style: topic
+		Heading 1:
+			Text: Citing an item
+		Paragraph: An item with `Id` can be cited from any text with `{{number of: id}}`, which writes only its own number in the format of its list: `3`, `c` or `IV`.
+			Style: intro
+		Paragraph: The payment is regulated by clause {number of: payment}, and the cases of withdrawal by clauses {number of: withdrawal} and {number of: notice}.
+			Style: sample
+		List:
+			Marker: upper-roman
+			List item:
+				Paragraph: The supplier delivers the furniture within six weeks.
+			List item:
+				Paragraph: The customer checks the furniture on delivery.
+			List item:
+				Paragraph: The customer may withdraw from the order:
+				List:
+					Marker: lower-alpha
+					Marker suffix: parenthesis
+					List item:
+						Paragraph: before the furniture is made.
+					List item:
+						Id: withdrawal
+						Paragraph: within 14 days of the delivery.
+					List item:
+						Id: notice
+						Paragraph: with a written notice.
+			List item:
+				Id: payment
+				Paragraph: Payment is made within 30 days of the invoice.

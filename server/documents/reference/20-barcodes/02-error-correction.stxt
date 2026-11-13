@@ -1,0 +1,48 @@
+# Barcodes: the four levels of Error correction of a QR code, with the same data.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · Error correction
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 16
+			Vertical: top
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: Error correction
+		Paragraph: `Error correction` is the part of the modules of a QR code that can be damaged while it still reads: `low` 7%, `medium` 15% (the default), `quartile` 25% and `high` 30%. The same data needs more modules as the level rises, so at its natural size the code grows.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Text: low
+						Style: label
+					Barcode: https://stxt.dev/docs
+						Alt: QR code with the address https://stxt.dev/docs
+						Error correction: low
+			Item:
+				Block:
+					Text: medium
+						Style: label
+					Barcode: https://stxt.dev/docs
+						Alt: QR code with the address https://stxt.dev/docs
+						Error correction: medium
+			Item:
+				Block:
+					Text: quartile
+						Style: label
+					Barcode: https://stxt.dev/docs
+						Alt: QR code with the address https://stxt.dev/docs
+						Error correction: quartile
+			Item:
+				Block:
+					Text: high
+						Style: label
+					Barcode: https://stxt.dev/docs
+						Alt: QR code with the address https://stxt.dev/docs
+						Error correction: high

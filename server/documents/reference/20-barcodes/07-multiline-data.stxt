@@ -1,0 +1,54 @@
+# Barcodes: data of several lines in Content, here the QR code of a SEPA credit transfer (EPC).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · Data in several lines
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: Data in several lines
+		Paragraph: Data with line breaks goes in a `Content` block (`>>`) instead of the value, with its lines as they are, empty ones included. The QR code of a SEPA transfer that banking apps read has one field per line.
+			Style: intro
+		Stack:
+			Gap: 20
+			Vertical: top
+			Item:
+				Barcode:
+					Alt: QR code to pay invoice 2026-0147 by transfer
+					Box:
+						Width: 40mm
+					Content >>
+						BCD
+						002
+						1
+						SCT
+						CAIXESBBXXX
+						Taller Nogal S.L.
+						ES9121000418450200051332
+						EUR1336.82
+
+
+						Invoice 2026-0147
+			Item:
+				Grow: 1
+				Text:
+					Typography:
+						Font: IBM Plex Mono
+						Size: 8.5
+						Line height: 12
+						Preformatted: keep
+					Content >>
+						BCD                         service tag
+						002                         version
+						1                           character set (UTF-8)
+						SCT                         SEPA credit transfer
+						CAIXESBBXXX                 BIC
+						Taller Nogal S.L.           beneficiary
+						ES9121000418450200051332    IBAN
+						EUR1336.82                  amount
+						                            purpose (empty)
+						                            reference (empty)
+						Invoice 2026-0147           text

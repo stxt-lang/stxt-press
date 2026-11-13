@@ -1,0 +1,25 @@
+# Styles: rules in a separate styles file (09-separate-file.styles.stxt), and the document winning over it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Styles · A separate styles file
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		# The same name as in the styles file: the document wins, also in the rules of the file.
+		Named color: house #6B2A5E
+	Section:
+		Text: Styles
+			Style: topic
+		Heading 1:
+			Text: A separate styles file
+		Paragraph: The rules can live in a document of their own, with `Styles` as its root, passed along when converting. This document has none of the rules it uses: they are in `09-separate-file.styles.stxt`, beside it. Its own `Styles` declares the color `house` again, and the document wins: the panel of the file comes out plum instead of green.
+			Style: intro
+		Text: Style: panel, from the styles file, with Named color: house from the document
+			Style: label
+		Paragraph: The rules shared by many documents go in one file, and each document keeps only its content.
+			Style: panel
+		Text: Style: tag, from the styles file
+			Style: label
+		Text: Shared rule
+			Style: tag

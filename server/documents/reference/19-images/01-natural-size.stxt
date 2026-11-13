@@ -1,0 +1,26 @@
+# Images: without Width or Height an image has its natural size, 0.75 points per pixel.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · Natural size
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Images
+			Style: topic
+		Heading 1:
+			Text: Natural size
+		Paragraph: The value of `Image` is the path of the file under `images/` of the resources. Without `Width` or `Height`, a PNG or a JPEG measures 0.75 points per pixel and an SVG what its `width` and `height` say. An image does not shrink on its own: one wider than its container is an error.
+			Style: intro
+		Text: Image: examples/planner/icon.png  (240 × 240 pixels, 180 × 180 points)
+			Style: label
+		Image: examples/planner/icon.png
+			Alt: The icon of the planner
+			Box:
+				Margin: 0 0 14 0
+		Text: Image: examples/brand/nogal.svg, Width: 100%  (its natural 900 points would not fit)
+			Style: label
+		Image: examples/brand/nogal.svg
+			Alt: Taller Nogal
+			Box:
+				Width: 100%

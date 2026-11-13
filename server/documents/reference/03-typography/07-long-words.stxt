@@ -1,0 +1,51 @@
+# Typography: Break long words new-line and same-line cut a word wider than its line, which is an error by default.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · Long words
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 30
+			Vertical: top
+			Box:
+				Margin: 0 0 18 0
+		For style: narrow
+			Box:
+				Width: 110
+				Padding: 6
+				Background: tint
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: Long words
+		Paragraph: An IBAN, an email address or a URL have no place to split, and in a narrow box they do not fit in a line. By default (`Break long words: never`) such a word is an error. With `new-line` or `same-line` it is cut at the last letter that fits, with no hyphen.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Text: Break long words: new-line
+						Style: label
+					Paragraph: IBAN ES9121000418450200051332 of the supplier.
+						Style: narrow
+						Typography:
+							Break long words: new-line
+			Item:
+				Block:
+					Text: Break long words: same-line
+						Style: label
+					Paragraph: IBAN ES9121000418450200051332 of the supplier.
+						Style: narrow
+						Typography:
+							Break long words: same-line
+		Text: A word that fits in a line of its own moves to the next line and is not cut
+			Style: label
+		Paragraph: Write to admin@nogal.example for the invoices.
+			Style: narrow
+			Box:
+				Width: 140
+			Typography:
+				Break long words: new-line

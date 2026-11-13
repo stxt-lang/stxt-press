@@ -1,0 +1,130 @@
+# Layers and rotation: Rotate origin, the point a positioned box rotates around.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Layers and rotation · Rotate origin
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: cell
+			Box:
+				Height: 150
+				Border: 0.5
+				Border color: rule
+		For style: ghost
+			Box:
+				Width: 100
+				Height: 40
+				Border: 1
+				Border color: rule
+				Border style: dashed
+		For style: turned
+			Box:
+				Width: 100
+				Height: 40
+				Padding: 4 6
+				Background: tint
+				Border: 1
+				Border color: accent
+			Typography:
+				Size: 8
+				Line height: 11
+		For style: dot
+			Box:
+				Width: 6
+				Height: 6
+				Corner radius: 50%
+				Background: #A32D2D
+	Section:
+		Text: Layers and rotation
+			Style: topic
+		Heading 1:
+			Text: Rotate origin
+		Paragraph: A rotated `Frame`, `Overlay` or `Page overlay` turns around its center by default. `Rotate origin` moves that point: one or two of `top`, `bottom`, `left`, `right` and `center`, or two measurements from the top left corner. Each cell turns the same box 30 degrees around the red dot. The dashed outline is the box unrotated.
+			Style: intro
+		Grid:
+			Column sizes: repeat(2, *)
+			Gap: 12
+			Area:
+				Frame:
+					Style: cell
+					Text: Rotate origin: center
+						Style: label
+						Box:
+							Margin: 6
+					Overlay:
+						Offset: 60 auto auto 70
+						Block:
+							Style: ghost
+					Overlay:
+						Offset: 60 auto auto 70
+						Rotate: 30
+						Text: Rotate: 30
+							Style: turned
+					Overlay:
+						Offset: 77 auto auto 117
+						Block:
+							Style: dot
+			Area:
+				Frame:
+					Style: cell
+					Text: Rotate origin: top left
+						Style: label
+						Box:
+							Margin: 6
+					Overlay:
+						Offset: 60 auto auto 70
+						Block:
+							Style: ghost
+					Overlay:
+						Offset: 60 auto auto 70
+						Rotate: 30
+						Rotate origin: top left
+						Text: Rotate: 30
+							Style: turned
+					Overlay:
+						Offset: 57 auto auto 67
+						Block:
+							Style: dot
+			Area:
+				Frame:
+					Style: cell
+					Text: Rotate origin: bottom right
+						Style: label
+						Box:
+							Margin: 6
+					Overlay:
+						Offset: 60 auto auto 70
+						Block:
+							Style: ghost
+					Overlay:
+						Offset: 60 auto auto 70
+						Rotate: 30
+						Rotate origin: bottom right
+						Text: Rotate: 30
+							Style: turned
+					Overlay:
+						Offset: 97 auto auto 167
+						Block:
+							Style: dot
+			Area:
+				Frame:
+					Style: cell
+					Text: Rotate origin: 20 50%
+						Style: label
+						Box:
+							Margin: 6
+					Overlay:
+						Offset: 60 auto auto 70
+						Block:
+							Style: ghost
+					Overlay:
+						Offset: 60 auto auto 70
+						Rotate: 30
+						Rotate origin: 20 50%
+						Text: Rotate: 30
+							Style: turned
+					Overlay:
+						Offset: 77 auto auto 87
+						Block:
+							Style: dot

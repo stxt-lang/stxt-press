@@ -1,0 +1,247 @@
+# Styles of the cookbook chapter: IBM Plex Serif on a warm ink, terracotta for the titles and the numbers, olive for
+# the leaves, and small spaced capitals for the labels.
+Styles (dev.stxt.pdf):
+	Named color: terracotta #9A3B1E
+	Named color: olive #4F5D2F
+	Named color: soft #6B5E52
+	Named color: rule #D8CDBB
+	Named color: cream #F6F0E3
+	For element: Document
+		Typography:
+			Font: IBM Plex Serif
+			Size: 9.5
+			Line height: 13.5
+			Color: #2E2620
+			Hyphenate: true
+	For element: Paragraph
+		Typography:
+			Align: justify
+			Line breaking: optimal
+			Markup: markdown
+		Box:
+			Margin: 0 0 6 0
+	For element: Heading 1
+		Typography:
+			Size: 30
+			Line height: 34
+			Bold: true
+			Color: terracotta
+			Hyphenate: false
+		Box:
+			Margin: 0 0 16 0
+	For element: Heading 2
+		Typography:
+			Size: 19
+			Line height: 23
+			Bold: true
+			Color: terracotta
+			Hyphenate: false
+		Box:
+			Margin: 0 0 6 0
+	For element: Heading 3
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8
+			Bold: true
+			Color: olive
+			Case: uppercase
+			Letter spacing: 1.2
+		Box:
+			Margin: 12 0 6 0
+	For style: chapter-number
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8.5
+			Bold: true
+			Color: olive
+			Case: uppercase
+			Letter spacing: 2
+		Box:
+			Margin: 8mm 0 4 0
+	For style: intro
+		Typography:
+			Size: 11
+			Line height: 16
+	For style: intro-more
+		Typography:
+			Size: 11
+			Line height: 16
+		Box:
+			Margin: 0 0 14 0
+	For element: Figure
+		Typography:
+			Number label: Plate {number}.
+		Box:
+			Margin: 2 0 12 0
+	For element: Caption
+		Typography:
+			Size: 8
+			Italic: true
+			Align: center
+			Color: soft
+		Box:
+			Margin: 6 0 0 0
+	For id: cake-quantities
+		Typography:
+			Number label: Table {number}.
+	For id: fig-pears
+		For element: Image
+			Box:
+				Margin: 0 auto
+	For style: list-label
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Bold: true
+			Color: olive
+			Case: uppercase
+			Letter spacing: 1.2
+		Box:
+			Margin: 0 0 6 0
+		Break:
+			Keep with next: true
+	For element: Table of contents
+		Box:
+			Padding: 8 0 0 0
+			Border: 0.75 0 0 0
+			Border color: rule
+	For element: TOC 2
+		Typography:
+			Size: 10.5
+			Line height: 15
+		Box:
+			Margin: 0 0 4 0
+	For style: recipe
+		Break:
+			Before: page
+	For style: details
+		Vertical: baseline
+		Gap: 12
+		Box:
+			Margin: 0 0 10 0
+			Padding: 0 0 6 0
+			Border: 0 0 0.75 0
+			Border color: rule
+	For style: detail-main
+		Typography:
+			Size: 11
+			Bold: true
+			Color: olive
+	For style: detail
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8
+			Color: soft
+	For style: lead
+		Typography:
+			Italic: true
+			Size: 10
+			Line height: 14.5
+		Box:
+			Margin: 0 0 12 0
+	For style: recipe-grid
+		Column sizes: 36% *
+		Gap: 14
+	For style: ingredients
+		Box:
+			Padding: 10 10 6 10
+			Background: cream
+			Corner radius: 4
+	For style: leaves
+		Marker: image
+		Marker image: documents/recipes/leaf.svg
+		Box:
+			Padding: 0 0 0 13
+		Typography:
+			Size: 8.5
+			Line height: 11.5
+		For element: List item
+			Box:
+				Margin: 0 0 4 0
+	For style: steps
+		Marker: decimal
+		Box:
+			Padding: 0 0 0 16
+		For element: List item
+			Box:
+				Margin: 0 0 3 0
+	For style: side-drawing
+		Box:
+			Width: 66
+			Margin: 2 0 4 12
+	For style: variations
+		Box:
+			Margin: 10 0 0 0
+			Padding: 10 0 0 0
+			Border: 0.75 0 0 0
+			Border color: rule
+	For style: variation-columns
+		Column count: 2
+		Gap: 18
+		Separator: 0.75
+		Separator style: dotted
+		Separator color: rule
+		For element: Paragraph
+			Typography:
+				Size: 8.5
+				Line height: 12
+				Align: left
+	For style: method-columns
+		Column count: 2
+		Gap: 16
+		For element: Paragraph
+			Typography:
+				Size: 9
+				Line height: 12.5
+	For element: Header cell
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Bold: true
+			Color: olive
+			Case: uppercase
+			Letter spacing: 0.8
+		Box:
+			Border: 0 0 1 0
+			Border color: olive
+	For element: Cell
+		Box:
+			Padding: 3 6
+			Border: 0 0 0.5 0
+			Border color: rule
+	For style: quantities
+		Column sizes: * 62 62
+		Column align: left right right
+		Box:
+			Margin: 0
+		For element: Cell
+			Box:
+				Padding: 2.5 6
+	For style: span-note
+		Typography:
+			Italic: true
+			Align: center
+			Color: soft
+	For style: tip
+		Box:
+			Margin: 4 0 0 0
+			Padding: 8 12
+			Background: cream
+			Border: 0 0 0 2.5
+			Border color: terracotta
+		For element: Paragraph
+			Box:
+				Margin: 0
+	For style: folio
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Color: soft
+	For style: folio-title
+		Typography:
+			Case: uppercase
+			Letter spacing: 1
+	For style: folio-number
+		Typography:
+			Bold: true
+			Color: terracotta

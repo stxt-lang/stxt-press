@@ -1,0 +1,72 @@
+# The box: Width and Height measure the box with its padding and its border, without its margin.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: The box · Width and height
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 24
+			Vertical: top
+			Box:
+				Margin: 0 0 18 0
+		For style: demo
+			Box:
+				Background: tint
+				Border color: accent
+	Section:
+		Text: The box
+			Style: topic
+		Heading 1:
+			Text: Width and height
+		Paragraph: Without `Width`, a box takes the width its parent leaves and, without `Height`, the height of its content. A declared `Width` or `Height` includes the padding and the border, so the three boxes below measure the same 140 by 60 points.
+			Style: intro
+		Text: (no Width, no Height)
+			Style: label
+		Paragraph: This paragraph takes the whole width and the height of its two lines of text. Its background shows its box, which ends where the text of the second line ends.
+			Style: demo
+			Box:
+				Margin: 0 0 18 0
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Text: Width: 140, Height: 60
+						Style: label
+					Block:
+						Style: demo
+						Box:
+							Width: 140
+							Height: 60
+						Text: content 140 × 60
+			Item:
+				Block:
+					Text: + Padding: 10
+						Style: label
+					Block:
+						Style: demo
+						Box:
+							Width: 140
+							Height: 60
+							Padding: 10
+						Text: content 120 × 40
+			Item:
+				Block:
+					Text: + Padding: 10, Border: 5
+						Style: label
+					Block:
+						Style: demo
+						Box:
+							Width: 140
+							Height: 60
+							Padding: 10
+							Border: 5
+						Text: content 110 × 30
+		Text: Width: 50%, Height: 40
+			Style: label
+		Block:
+			Style: demo
+			Box:
+				Width: 50%
+				Height: 40

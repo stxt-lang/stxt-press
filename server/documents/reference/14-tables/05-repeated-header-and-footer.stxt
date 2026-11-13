@@ -1,0 +1,203 @@
+# Tables: Header rows and Footer rows are repeated on each page of a table that goes on over several pages.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Repeated header and footer
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For element: Cell
+			Box:
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+				Color: #FFFFFF
+			Box:
+				Background: accent
+		For element: Footer cell
+			Typography:
+				Size: 8
+				Line height: 11
+				Color: muted
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Repeated header and footer
+		Paragraph: A table that does not fit on a page is broken between rows. Its `Header rows` go again at the top of each page and its `Footer rows` after the last row of each page. These 40 rows take three A5 pages.
+			Style: intro
+		Table:
+			Column sizes: 40 * 70
+			Column align: right left right
+			Header rows:
+				Row:
+					Cell: No.
+					Cell: Reading
+					Cell: kWh
+			Body rows:
+				Row:
+					Cell: 1
+					Cell: January, first week
+					Cell: 112
+				Row:
+					Cell: 2
+					Cell: January, second week
+					Cell: 118
+				Row:
+					Cell: 3
+					Cell: January, third week
+					Cell: 121
+				Row:
+					Cell: 4
+					Cell: January, fourth week
+					Cell: 109
+				Row:
+					Cell: 5
+					Cell: February, first week
+					Cell: 104
+				Row:
+					Cell: 6
+					Cell: February, second week
+					Cell: 99
+				Row:
+					Cell: 7
+					Cell: February, third week
+					Cell: 101
+				Row:
+					Cell: 8
+					Cell: February, fourth week
+					Cell: 96
+				Row:
+					Cell: 9
+					Cell: March, first week
+					Cell: 92
+				Row:
+					Cell: 10
+					Cell: March, second week
+					Cell: 88
+				Row:
+					Cell: 11
+					Cell: March, third week
+					Cell: 85
+				Row:
+					Cell: 12
+					Cell: March, fourth week
+					Cell: 83
+				Row:
+					Cell: 13
+					Cell: April, first week
+					Cell: 79
+				Row:
+					Cell: 14
+					Cell: April, second week
+					Cell: 77
+				Row:
+					Cell: 15
+					Cell: April, third week
+					Cell: 74
+				Row:
+					Cell: 16
+					Cell: April, fourth week
+					Cell: 72
+				Row:
+					Cell: 17
+					Cell: May, first week
+					Cell: 70
+				Row:
+					Cell: 18
+					Cell: May, second week
+					Cell: 68
+				Row:
+					Cell: 19
+					Cell: May, third week
+					Cell: 66
+				Row:
+					Cell: 20
+					Cell: May, fourth week
+					Cell: 65
+				Row:
+					Cell: 21
+					Cell: June, first week
+					Cell: 67
+				Row:
+					Cell: 22
+					Cell: June, second week
+					Cell: 71
+				Row:
+					Cell: 23
+					Cell: June, third week
+					Cell: 75
+				Row:
+					Cell: 24
+					Cell: June, fourth week
+					Cell: 80
+				Row:
+					Cell: 25
+					Cell: July, first week
+					Cell: 86
+				Row:
+					Cell: 26
+					Cell: July, second week
+					Cell: 91
+				Row:
+					Cell: 27
+					Cell: July, third week
+					Cell: 95
+				Row:
+					Cell: 28
+					Cell: July, fourth week
+					Cell: 97
+				Row:
+					Cell: 29
+					Cell: August, first week
+					Cell: 94
+				Row:
+					Cell: 30
+					Cell: August, second week
+					Cell: 90
+				Row:
+					Cell: 31
+					Cell: August, third week
+					Cell: 87
+				Row:
+					Cell: 32
+					Cell: August, fourth week
+					Cell: 84
+				Row:
+					Cell: 33
+					Cell: September, first week
+					Cell: 80
+				Row:
+					Cell: 34
+					Cell: September, second week
+					Cell: 78
+				Row:
+					Cell: 35
+					Cell: September, third week
+					Cell: 76
+				Row:
+					Cell: 36
+					Cell: September, fourth week
+					Cell: 79
+				Row:
+					Cell: 37
+					Cell: October, first week
+					Cell: 84
+				Row:
+					Cell: 38
+					Cell: October, second week
+					Cell: 89
+				Row:
+					Cell: 39
+					Cell: October, third week
+					Cell: 93
+				Row:
+					Cell: 40
+					Cell: October, fourth week
+					Cell: 98
+			Footer rows:
+				Row:
+					Cell: Readings of the meter of the workshop, in kWh per week.
+						Span: 1 3

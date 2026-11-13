@@ -1,0 +1,68 @@
+# Tables: Border style dashed and dotted in the cells, and in a table with merged borders.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Border style in cells
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: dashed
+			For element: Cell
+				Box:
+					Border: 0 0 1 0
+					Border color: muted
+					Border style: dashed
+		For style: dotted
+			Box:
+				Merge borders: true
+			For element: Cell
+				Box:
+					Border: 1
+					Border color: muted
+					Border style: dotted
+			For element: Header cell
+				Box:
+					Border: 1 1 2 1
+					Border color: accent
+					Border style: solid
+				Typography:
+					Bold: true
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Border style in cells
+		Paragraph: `Border style` draws the border of a cell with dashes (`dashed`) or dots (`dotted`). With merged borders, the line between two cells takes the style of the wider of the two: under the header it is solid.
+			Style: intro
+		Text: Border style: dashed, a line below each cell
+			Style: label
+		Table:
+			Style: dashed
+			Column sizes: * 80
+			Column align: left right
+			Body rows:
+				Row:
+					Cell: Signature of the customer
+					Cell: Date
+				Row:
+					Cell: Signature of the supplier
+					Cell: Date
+		Text: Border style: dotted, with Merge borders: true and a solid header
+			Style: label
+		Table:
+			Style: dotted
+			Column sizes: * * *
+			Header rows:
+				Row:
+					Cell: Name
+					Cell: Room
+					Cell: Signed
+			Body rows:
+				Row:
+					Cell: Ana Ruiz
+					Cell: A
+					Cell:
+				Row:
+					Cell: Pau Vidal
+					Cell: B
+					Cell:

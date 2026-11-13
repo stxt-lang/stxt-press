@@ -1,0 +1,31 @@
+# Pages and breaks: After: page sends what follows a box to a new page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Pages and breaks · Break after
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Pages and breaks
+			Style: topic
+		Heading 1:
+			Text: Break after
+		Paragraph: With `After: page`, what follows the box starts on a new page. The box itself stays where it is. A forced break after the last box of a section does nothing, so it never adds a blank page.
+			Style: intro
+		Block:
+			Style: marked
+			Break:
+				After: page
+			Text: Break: After: page
+				Style: label
+			Paragraph: This block ends page 1. The next one goes to page 2.
+		Block:
+			Style: marked
+			Text: Break: (none)
+				Style: label
+			Paragraph: This block starts page 2 because the one before it asked for the break.

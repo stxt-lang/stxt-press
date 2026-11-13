@@ -1,0 +1,49 @@
+# Lists: Marker image, for the whole list or for one item, with Alt and Height.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Lists · Marker image
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Lists
+			Style: topic
+		Heading 1:
+			Text: Marker image
+		Paragraph: With `Marker: image`, `Marker image` on the list gives the image of all its items, and on a `List item` it replaces it for that item. The image is as tall as the text unless it declares `Height`. With `Alt` a screen reader reads it, and without it the image is decorative.
+			Style: intro
+		Text: Marker image: documents/check.svg on the list, documents/cross.svg on the last item
+			Style: label
+		List:
+			Marker: image
+			Marker image: documents/check.svg
+				Alt: Included
+			List item:
+				Paragraph: Compulsory third-party liability.
+			List item:
+				Paragraph: Roadside assistance.
+			List item:
+				Marker image: documents/cross.svg
+					Alt: Excluded
+				Paragraph: Own damage to the vehicle.
+		Text: Marker image with Height: 7, decorative (no Alt)
+			Style: label
+		List:
+			Marker: image
+			Marker image: documents/star.svg
+				Height: 7
+			List item:
+				Paragraph: A small star before each item.
+			List item:
+				Paragraph: It does not carry a meaning, so it has no Alt.
+		Text: Marker image with Height: 18 in a list with Padding: 0 0 0 28
+			Style: label
+		List:
+			Marker: image
+			Box:
+				Padding: 0 0 0 28
+			Marker image: documents/star.svg
+				Alt: Featured
+				Height: 18
+			List item:
+				Paragraph: A larger marker, centered on the capitals of the first line.

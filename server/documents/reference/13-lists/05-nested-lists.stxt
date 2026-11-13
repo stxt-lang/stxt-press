@@ -1,0 +1,41 @@
+# Lists: a list inside an item, with its own marker and its own count.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Lists · Nested lists
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Lists
+			Style: topic
+		Heading 1:
+			Text: Nested lists
+		Paragraph: A `List item` holds one or more elements, and one of them can be another `List`. The inner list declares its own `Marker`, starts counting again and does not take the `Marker suffix` of the outer one.
+			Style: intro
+		List:
+			Marker: decimal
+			Marker suffix: parenthesis
+			List item:
+				Paragraph: Switch off the power.
+			List item:
+				Paragraph: Remove the cover of the thermostat.
+				List:
+					Marker: lower-alpha
+					List item:
+						Paragraph: Keep the screws.
+					List item:
+						Paragraph: Do not touch the wires.
+						List:
+							Marker: dash
+							List item:
+								Paragraph: Not even the green one.
+							List item:
+								Paragraph: Nor the blue one.
+			List item:
+				Paragraph: Connect the red wire to terminal L.
+				List:
+					Marker: lower-alpha
+					List item:
+						Paragraph: A new inner list counts from a again.
+			List item:
+				Paragraph: Fit the cover back.

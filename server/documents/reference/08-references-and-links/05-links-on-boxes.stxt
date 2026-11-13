@@ -1,0 +1,54 @@
+# References and links: Link makes a whole box clickable, to a web address, an email address or a box of the document.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: References and links · Links on boxes
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: References and links
+			Style: topic
+		Heading 1:
+			Text: Links on boxes
+		Paragraph: `Link` makes the whole box clickable. Its target is an `https://` or `http://` address, a `mailto:` address or `#id`, the box of the document with that `Id`. A link has no look of its own: the blue bold of these lines comes from a style.
+			Style: intro
+		Text: Link: https://stxt.dev
+			Style: label
+		Text: Visit stxt.dev
+			Style: link
+			Link: https://stxt.dev
+			Box:
+				Margin: 0 0 14 0
+		Text: Link: mailto:workshop@nogal.example
+			Style: label
+		Text: Write to workshop@nogal.example
+			Style: link
+			Link: mailto:workshop@nogal.example
+			Box:
+				Margin: 0 0 14 0
+		Text: Link: #specs  (on an image)
+			Style: label
+		Image: examples/brand/nogal.svg
+			Alt: Nogal Workshop, go to the specifications
+			Link: #specs
+			Box:
+				Width: 100
+				Margin: 0 0 14 0
+		Text: Link: #specs  (on a whole block)
+			Style: label
+		Block:
+			Style: target
+			Link: #specs
+			Paragraph: This whole block leads to the specifications at the end of the page.
+				Box:
+					Margin: 0
+		Block:
+			Id: specs
+			Style: target
+			Box:
+				Margin: 40 0 0 0
+			Text: Id: specs
+				Style: label
+			Paragraph: Specifications: solid walnut, oil finish, seat in natural wool.
+				Box:
+					Margin: 0

@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -127,6 +128,7 @@ class ServerFileTest {
         assertTrue(defaults.warmUp());
         assertFalse(defaults.lazyInit());
         assertNull(defaults.templateFolder());
+        assertNull(defaults.documentFolder());
         assertEquals(Press.producer(), defaults.producer());
     }
 
@@ -141,6 +143,7 @@ class ServerFileTest {
         assertTrue(file.warmUp());
         assertFalse(file.lazyInit());
         assertNull(file.templateFolder());
+        assertNull(file.documentFolder());
         assertEquals(Press.producer(), file.producer());
     }
 
@@ -158,6 +161,7 @@ class ServerFileTest {
     void everyValueIsRead() throws Exception {
         Files.createDirectories(config.resolve("res"));
         Files.createDirectories(config.resolve("templates"));
+        Files.createDirectories(config.resolve("docs"));
         ServerFile file = read("""
                 Server (dev.stxt.press):
                     Host: 0.0.0.0
@@ -167,11 +171,13 @@ class ServerFileTest {
                     Warm up: false
                     Resource folder: res
                     Template folder: templates
+                    Document folder: docs
                     Producer: ACME invoicing
                     Routes:
                         Editor: false
                         Render: false
                         Templates: false
+                        Documents: false
                     Limits:
                         Max body size: 1000
                         Timeout: 5
@@ -188,13 +194,14 @@ class ServerFileTest {
                         Exclude: BARCODE_SIZE
                 """, Map.of("PRESS_TOKEN", " secret "));
 
-        assertEquals(new ServerConfig("0.0.0.0", 9090, "secret", false, false, false, 1000, Duration.ofSeconds(5), 2,
+        assertEquals(new ServerConfig("0.0.0.0", 9090, "secret", false, false, false, false, 1000, Duration.ofSeconds(5), 2,
                 new Options(1, PdfA.A3B, false, Set.of(Check.CONTRAST, Check.BARCODE_SIZE))), file.http());
         assertEquals(new Limits(10, 11, 12, 13, 14), file.limits());
         assertTrue(file.lazyInit());
         assertFalse(file.warmUp());
         assertEquals(config.resolve("res").toAbsolutePath().normalize(), file.resources().root());
         assertEquals(config.resolve("templates").toAbsolutePath().normalize(), file.templateFolder());
+        assertEquals(config.resolve("docs").toAbsolutePath().normalize(), file.documentFolder());
         assertEquals("ACME invoicing", file.producer());
     }
 
@@ -264,6 +271,8 @@ class ServerFileTest {
             PDF UA 2 with PDF A              | CONFIG_CONFLICT          | 4 | '    Template options:\\n        PDF UA: 2\\n        PDF A: A2B'
             repeated Exclude                 | CONFIG_VALUE_NOT_VALID   | 4 | '    Template options:\\n        Exclude: CONTRAST\\n        Exclude: CONTRAST'
             folder that does not exist       | CONFIG_FOLDER_NOT_FOUND  | 2 | '    Template folder: missing'
+            documents that do not exist      | CONFIG_FOLDER_NOT_FOUND  | 2 | '    Document folder: missing'
+            two document folders             | TOO_MANY_CHILDREN        | 1 | '    Document folder: .\n    Document folder: .'
             file instead of a folder         | CONFIG_FOLDER_NOT_FOUND  | 2 | '    Resource folder: server.stxt'
             resource folder with font folder | CONFIG_CONFLICT          | 3 | '    Resource folder: .\\n    Font folder: .'
             image folder without font folder | CONFIG_CONFLICT          | 2 | '    Image folder: .'
@@ -338,14 +347,20 @@ class ServerFileTest {
     @Test
     void eachRouteIsSwitchedOffAlone() throws Exception {
         Files.createDirectories(config.resolve("templates"));
-        String folder = "    Template folder: templates\n";
+        Files.createDirectories(config.resolve("documents"));
+        String folder = "    Template folder: templates\n    Document folder: documents\n";
         try (PressServer on = read(server(folder)).start();
                 PressServer noRender = read(server(folder + "    Routes:\n        Render: false\n")).start();
                 PressServer noTemplates = read(server(folder + "    Routes:\n        Templates: false\n")).start();
+                PressServer noDocuments = read(server(folder + "    Routes:\n        Documents: false\n")).start();
                 PressServer noEditor = read(server(folder + "    Routes:\n        Editor: false\n")).start()) {
             assertEquals(200, get(on, "/", null).statusCode());
             assertEquals(405, get(on, "/render", null).statusCode());
             assertEquals(200, get(on, "/templates", null).statusCode());
+            assertEquals(200, get(on, "/documents", null).statusCode());
+            assertEquals(404, get(noDocuments, "/documents", null).statusCode());
+            assertEquals(200, get(noDocuments, "/templates", null).statusCode());
+            assertEquals(200, get(noTemplates, "/documents", null).statusCode());
             assertEquals(404, get(noEditor, "/", null).statusCode());
             assertEquals(405, get(noEditor, "/render", null).statusCode());
             assertEquals(404, get(noRender, "/render", null).statusCode());
@@ -356,9 +371,23 @@ class ServerFileTest {
     }
 
     @Test
-    void theTemplatesOfTheFileArePrinted() throws Exception {
+    void theTemplatesAndTheDocumentsOfTheFileArePrinted() throws Exception {
         Files.createDirectories(config.resolve("templates"));
-        Files.writeString(config.resolve("templates/hello.stxt"), """
+        Files.createDirectories(config.resolve("documents"));
+        Files.writeString(config.resolve("templates/hello.stxt"), HELLO);
+        Files.writeString(config.resolve("documents/hello.stxt"), HELLO);
+
+        try (PressServer server = read(server("    Template folder: templates\n    Document folder: documents\n")).start()) {
+            for (String path : List.of("/print/templates/hello", "/print/documents/hello")) {
+                HttpResponse<byte[]> pdf = get(server, path, null);
+
+                assertEquals(200, pdf.statusCode(), () -> new String(pdf.body(), StandardCharsets.UTF_8));
+                assertEquals("%PDF", new String(pdf.body(), 0, 4, StandardCharsets.US_ASCII));
+            }
+        }
+    }
+
+    private static final String HELLO = """
                 Document (dev.stxt.pdf):
                     Page:
                         Paper: A6
@@ -371,15 +400,7 @@ class ServerFileTest {
                                 Size: 11
                     Section:
                         Text: Hello
-                """);
-
-        try (PressServer server = read(server("    Template folder: templates\n")).start()) {
-            HttpResponse<byte[]> pdf = get(server, "/print/hello", null);
-
-            assertEquals(200, pdf.statusCode(), () -> new String(pdf.body(), StandardCharsets.UTF_8));
-            assertEquals("%PDF", new String(pdf.body(), 0, 4, StandardCharsets.US_ASCII));
-        }
-    }
+                """;
 
     @Test
     void aLazyServerStartsWithResourcesThatFailAndTheFirstRequestGetsTheError() throws Exception {

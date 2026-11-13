@@ -1,0 +1,47 @@
+# Typography: First line indent, positive for paragraphs and negative for a hanging indent.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · First line indent
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: indented
+			Box:
+				Margin: 0
+			Typography:
+				First line indent: 18
+				Align: justify
+		For style: clause
+			Box:
+				Margin: 0 0 8 0
+				Padding: 0 0 0 60
+			Typography:
+				First line indent: -60
+				Markup: markdown
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: First line indent
+		Paragraph: `First line indent` starts the first line of a paragraph later. With a negative value the first line starts before the others, in the left `Padding` of the box: the hanging indent of clauses, bibliographies and glossaries.
+			Style: intro
+		Text: First line indent: 18  (paragraphs without a gap between them)
+			Style: label
+		Block:
+			Box:
+				Margin: 0 0 20 0
+			Paragraph: The first paragraph of the chapter starts after a short indent, like the following ones. The indent tells the paragraphs apart without leaving a blank line between them.
+				Style: indented
+			Paragraph: Only the first line of each paragraph is indented. The rest of the lines start at the left edge of the box, and a justified paragraph is aligned in what is left of the first line.
+				Style: indented
+			Paragraph: A paragraph that goes on in another page or column does not indent the first line of its second part.
+				Style: indented
+		Text: First line indent: -60 with Padding: 0 0 0 60  (a hanging indent)
+			Style: label
+		Paragraph: **FIRST.** The landlord grants the tenant the use of the dwelling, which the tenant uses as a main residence, with the furniture listed in the inventory.
+			Style: clause
+		Paragraph: **SECOND.** The term is one year from the signing of this contract, renewable by tacit agreement for periods of equal length.
+			Style: clause
+		Paragraph: **THIRD.** The rent is paid in the first five days of each month, by transfer to the account of the landlord.
+			Style: clause

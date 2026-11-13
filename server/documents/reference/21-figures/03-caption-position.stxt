@@ -1,0 +1,39 @@
+# Figures: Caption position top and bottom, side by side.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Figures · Caption position
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Figures
+			Style: topic
+		Heading 1:
+			Text: Caption position
+		Paragraph: The caption goes below an image and above a table, wherever it is written inside the `Figure`. `Caption position: top` or `bottom` changes it.
+			Style: intro
+		Grid:
+			Column sizes: 80mm 80mm
+			Gap: 24
+			Vertical: top
+			Area:
+				Block:
+					Text: Caption position: bottom  (default)
+						Style: label
+					Figure:
+						Caption: The trail between the meadows.
+						Image: examples/newsletter/trail.jpg
+							Alt: A trail between meadows with mountains behind
+							Box:
+								Width: 100%
+			Area:
+				Block:
+					Text: Caption position: top
+						Style: label
+					Figure:
+						Caption position: top
+						Caption: The Saturday market.
+						Image: examples/newsletter/market.jpg
+							Alt: Stalls of a market in a square
+							Box:
+								Width: 100%

@@ -1,0 +1,57 @@
+# Figures: a Table with a caption is counted among the tables, apart from the figures, and Figure counter changes it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Figures · Tables and Figure counter
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Figures
+			Style: topic
+		Heading 1:
+			Text: Tables and Figure counter
+		Paragraph: A `Figure` with a `Table` inside counts among the tables, with its caption above. Images count apart, so the first table is table 1 even after a figure. `Figure counter: figures` counts a table as one more figure.
+			Style: intro
+		Figure:
+			Caption: The thermostat.
+			Image: examples/manual/en/thermostat.svg
+				Alt: Front view of the thermostat
+				Box:
+					Width: 30mm
+		Text: (a Table: counter tables, caption on top)
+			Style: label
+		Figure:
+			Style: table-figure
+			Caption: Measurements of the pieces.
+			Table:
+				Column sizes: * 30mm 30mm
+				Column align: left right right
+				Header rows:
+					Row:
+						Cell: Piece
+						Cell: Width
+						Cell: Height
+				Body rows:
+					Row:
+						Cell: Chair
+						Cell: 45 cm
+						Cell: 82 cm
+					Row:
+						Cell: Table
+						Cell: 180 cm
+						Cell: 75 cm
+		Text: Figure counter: figures
+			Style: label
+		Figure:
+			Figure counter: figures
+			Caption: Delivery times, counted as a figure.
+			Table:
+				Column sizes: * 30mm
+				Column align: left right
+				Body rows:
+					Row:
+						Cell: In stock
+						Cell: 1 week
+					Row:
+						Cell: Made to order
+						Cell: 6 weeks

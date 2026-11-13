@@ -1,0 +1,63 @@
+# Grid: Fill order places the automatic items by rows (the default) or by columns.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Fill order
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Fill order
+		Paragraph: The items without a place fill the grid in document order. `Fill order: rows` fills each row from left to right, and `Fill order: columns` each column from top to bottom, which needs `Row sizes` to know how many rows there are.
+			Style: intro
+		Text: Fill order: rows
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Gap: 4
+			Fill order: rows
+			Area:
+				Text: 1
+					Style: tile
+			Area:
+				Text: 2
+					Style: tile
+			Area:
+				Text: 3
+					Style: tile
+			Area:
+				Text: 4
+					Style: pale
+			Area:
+				Text: 5
+					Style: pale
+			Area:
+				Text: 6
+					Style: pale
+		Text: Fill order: columns  (Row sizes: auto auto)
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Row sizes: auto auto
+			Gap: 4
+			Fill order: columns
+			Area:
+				Text: 1
+					Style: tile
+			Area:
+				Text: 2
+					Style: tile
+			Area:
+				Text: 3
+					Style: pale
+			Area:
+				Text: 4
+					Style: pale
+			Area:
+				Text: 5
+					Style: tile
+			Area:
+				Text: 6
+					Style: tile

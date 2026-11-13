@@ -1,0 +1,76 @@
+# The box: Overflow shrink makes the letters of a text smaller until it fits, and Overflow clip cuts what sticks out of a box.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: The box · Overflow
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 16
+			Vertical: top
+			Box:
+				Margin: 0 0 20 0
+		For style: fixed
+			Box:
+				Width: 150
+				Height: 36
+				Padding: 4 6
+				Background: tint
+				Border: 0 0 0 2
+				Border color: accent
+			Typography:
+				Size: 14
+				Line height: 120%
+	Section:
+		Text: The box
+			Style: topic
+		Heading 1:
+			Text: Overflow
+		Paragraph: What does not fit in a box is an error, unless the box asks for something else. `Overflow: shrink`, in a box with text, lowers the `Size` half a point at a time until the text fits, without going below `Min size`. `Overflow: clip`, in a box without text, cuts what sticks out of its padding box.
+			Style: intro
+		Text: Three boxes of 150 × 36 with Size: 14 and Overflow: shrink
+			Style: label
+		Stack:
+			Style: row
+			Item:
+				Text: Ana Ruiz
+					Style: fixed
+					Box:
+						Overflow: shrink
+			Item:
+				Text: Maria del Carmen Vidal
+					Style: fixed
+					Box:
+						Overflow: shrink
+			Item:
+				Text: Maria del Carmen Vidal Soler de la Fuente
+					Style: fixed
+					Box:
+						Overflow: shrink
+		Text: Min size: 11  (the letters never go below 11: a longer name would be an error)
+			Style: label
+		Text: Maria del Carmen Vidal Soler
+			Style: fixed
+			Box:
+				Overflow: shrink
+				Margin: 0 0 20 0
+			Typography:
+				Min size: 11
+		Text: Overflow: clip  (the circle sticks out of the card and is cut at its edge)
+			Style: label
+		Frame:
+			Box:
+				Width: 260
+				Height: 90
+				Background: tint
+				Corner radius: 8
+				Overflow: clip
+			Overlay:
+				Offset: -40 -40 auto auto
+				Block:
+					Box:
+						Width: 120
+						Height: 120
+						Corner radius: 50%
+						Background: #E9A23B

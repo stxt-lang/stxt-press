@@ -1,0 +1,156 @@
+# Stack: Horizontal and Vertical in a column, where Horizontal aligns the items and Vertical distributes the leftover height.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Alignment in a column
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: column
+			Direction: vertical
+			Gap: 4
+			Box:
+				Height: 120
+				Border: 0.5
+				Border color: rule
+				Background: tint
+		For style: narrow
+			Direction: vertical
+			Gap: 4
+			Box:
+				Border: 0.5
+				Border color: rule
+				Background: tint
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Alignment in a column
+		Paragraph: With `Direction: vertical` the roles swap. `Horizontal` aligns the items in the width (`stretch` by default) and `Vertical` distributes the leftover height, which needs a `Height` on the `Stack`.
+			Style: intro
+		Grid:
+			Column sizes: repeat(4, *)
+			Gap: 6 10
+			Area:
+				Text: Horizontal: stretch
+					Style: label
+			Area:
+				Text: Horizontal: left
+					Style: label
+			Area:
+				Text: Horizontal: center
+					Style: label
+			Area:
+				Text: Horizontal: right
+					Style: label
+			Area:
+				Stack:
+					Style: narrow
+					Horizontal: stretch
+					Item:
+						Text: One
+							Style: tile
+					Item:
+						Text: Number two
+							Style: tile
+			Area:
+				Stack:
+					Style: narrow
+					Horizontal: left
+					Item:
+						Text: One
+							Style: tile
+					Item:
+						Text: Number two
+							Style: tile
+			Area:
+				Stack:
+					Style: narrow
+					Horizontal: center
+					Item:
+						Text: One
+							Style: tile
+					Item:
+						Text: Number two
+							Style: tile
+			Area:
+				Stack:
+					Style: narrow
+					Horizontal: right
+					Item:
+						Text: One
+							Style: tile
+					Item:
+						Text: Number two
+							Style: tile
+		Block:
+			Box:
+				Height: 16
+		Grid:
+			Column sizes: repeat(5, *)
+			Gap: 6 10
+			Area:
+				Text: Vertical: top
+					Style: label
+			Area:
+				Text: Vertical: center
+					Style: label
+			Area:
+				Text: Vertical: bottom
+					Style: label
+			Area:
+				Text: Vertical: justify
+					Style: label
+			Area:
+				Text: Vertical: distribute
+					Style: label
+			Area:
+				Stack:
+					Style: column
+					Vertical: top
+					Item:
+						Text: One
+							Style: tile
+					Item:
+						Text: Two
+							Style: tile
+			Area:
+				Stack:
+					Style: column
+					Vertical: center
+					Item:
+						Text: One
+							Style: tile
+					Item:
+						Text: Two
+							Style: tile
+			Area:
+				Stack:
+					Style: column
+					Vertical: bottom
+					Item:
+						Text: One
+							Style: tile
+					Item:
+						Text: Two
+							Style: tile
+			Area:
+				Stack:
+					Style: column
+					Vertical: justify
+					Item:
+						Text: One
+							Style: tile
+					Item:
+						Text: Two
+							Style: tile
+			Area:
+				Stack:
+					Style: column
+					Vertical: distribute
+					Item:
+						Text: One
+							Style: tile
+					Item:
+						Text: Two
+							Style: tile

@@ -1,0 +1,17 @@
+# The look of the Columns documents: each Columns has a frame, and the paragraphs inside are justified and hyphenated.
+Styles (dev.stxt.pdf):
+	For element: Columns
+		Box:
+			Margin: 0 0 16 0
+			Padding: 8
+			Border: 0.5
+			Border color: rule
+		For element: Paragraph
+			Typography:
+				Font: IBM Plex Serif
+				Size: 9
+				Line height: 12.5
+				Align: justify
+				Hyphenate: true
+			Box:
+				Margin: 0 0 6 0

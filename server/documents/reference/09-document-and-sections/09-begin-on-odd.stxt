@@ -1,0 +1,35 @@
+# Document and sections: Begin on: odd starts a section on a right-hand page, adding a blank page when needed.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Document and sections · Begin on an odd page
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Document and sections
+			Style: topic
+		Heading 1:
+			Text: Begin on an odd page
+		Paragraph: With `Begin on: odd`, a section starts on an odd page, the right-hand one in double-sided printing. Here the first chapter ends on page 1, so the engine adds page 2 blank: it counts for the numbers but carries no content and no footer.
+			Style: intro
+		Heading 2:
+			Text: Chapter 1
+		Paragraph: The first chapter takes up a single page.
+	Section:
+		Begin on: odd
+		Heading 2:
+			Text: Chapter 2
+		Text: Begin on: odd  (this is page 3)
+			Style: card
+		Paragraph: Page 2, before this one, is the blank page that the engine added.
+	Section:
+		Begin on: any
+		Heading 2:
+			Text: Chapter 3
+		Text: Begin on: any  (the default: the next page, page 4)
+			Style: card

@@ -1,0 +1,40 @@
+# Pages and breaks: Keep with next takes a caption to the next page together with the box it introduces.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Pages and breaks · Keep with next
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Pages and breaks
+			Style: topic
+		Heading 1:
+			Text: Keep with next
+		Paragraph: With `Keep with next: true`, a box stays on the same page as the box that follows it. The caption below fits at the end of page 1, but the box it introduces does not, and that box is kept together, so both move to page 2.
+			Style: intro
+		Block:
+			Style: filler
+			Box:
+				Height: 300
+			Text: A filler block, 300 points high, to bring the caption near the end of the page.
+		Text: Break: Keep with next: true  (on the caption)
+			Style: label
+		Text: Prices for 2026, in euros
+			Box:
+				Margin: 6 0 4 0
+			Typography:
+				Bold: true
+			Break:
+				Keep with next: true
+		Block:
+			Style: marked
+			Box:
+				Height: 120
+			Break:
+				Keep together: true
+			Paragraph: The box the caption introduces, too tall for what is left of page 1.

@@ -1,0 +1,47 @@
+# Document and sections: Mirror margins swaps the left and right margins on even pages, with the page number outside.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Document and sections · Mirror margins
+	Page:
+		Paper: A5
+		Margin: 15mm 15mm 18mm 35mm
+		Mirror margins: true
+	Styles:
+		For style: area
+			Box:
+				Height: 100%
+				Padding: 10
+				Background: tint
+	Page overlay:
+		Pages: odd
+		Offset: auto 0 -28 0
+		Text: {page}
+			Typography:
+				Align: right
+	Page overlay:
+		Pages: even
+		Offset: auto 0 -28 0
+		Text: {page}
+	Section:
+		Block:
+			Style: area
+			Text: Document and sections
+				Style: topic
+			Heading 1:
+				Text: Mirror margins
+			Paragraph: For double-sided printing, `Mirror margins: true` swaps the left and the right margins of `Margin` on the even pages: the wide margin (35 mm here) is always at the spine. The tinted block fills the page area of each page. The number goes outside with two overlays, one with `Pages: odd` and one with `Pages: even`.
+				Style: intro
+			Text: Page 1 (odd, right-hand): the wide margin on the left
+				Style: card
+		Block:
+			Style: area
+			Break:
+				Before: page
+			Text: Page 2 (even, left-hand): the wide margin on the right
+				Style: card
+		Block:
+			Style: area
+			Break:
+				Before: page
+			Text: Page 3 (odd): the wide margin on the left again
+				Style: card

@@ -1,0 +1,54 @@
+# Lists: an item with several elements, its own Box and Typography, and the marker on its first line.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Lists · Item content
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: step
+			Box:
+				Margin: 0 0 10 0
+				Padding: 8 10
+				Background: tint
+		For style: note
+			Typography:
+				Size: 8.5
+				Line height: 12
+				Color: muted
+	Section:
+		Text: Lists
+			Style: topic
+		Heading 1:
+			Text: Item content
+		Paragraph: A `List item` is a block: it holds paragraphs, texts, images or tables, but not headings, and it starts with a text so that the marker has a first line to sit on. Its `Box` and `Typography` are those of the item, and the marker takes its typography.
+			Style: intro
+		List:
+			Marker: decimal
+			Box:
+				Padding: 0 0 0 24
+			List item:
+				Style: step
+				Paragraph: Measure the wall.
+				Paragraph: Take the width and the height at three points and keep the smallest.
+					Style: note
+			List item:
+				Style: step
+				Typography:
+					Color: accent
+					Bold: true
+				Paragraph: Order the panels.
+				Paragraph: This item has Bold and Color in its Typography: the marker is bold and blue too.
+					Style: note
+					Typography:
+						Bold: false
+			List item:
+				Style: step
+				Paragraph: Fit the panels.
+				Block:
+					Box:
+						Padding: 4 8
+						Border: 0 0 0 2
+						Border color: accent
+						Background: #FFFFFF
+					Text: A block inside an item: a warning.

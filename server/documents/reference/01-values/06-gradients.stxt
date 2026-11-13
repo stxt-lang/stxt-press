@@ -1,0 +1,93 @@
+# Values: linear gradients as a background, with their angle, several colors and opacity.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Values · Gradients
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 12
+			Box:
+				Margin: 0 0 18 0
+		For style: tile
+			Grow: 1
+			Base size: 0
+		For style: band
+			Box:
+				Height: 70
+				Corner radius: 4
+	Section:
+		Text: Values
+			Style: topic
+		Heading 1:
+			Text: Gradients
+		Paragraph: A background can be `linear(angle, color, color...)`. The angle is in degrees: `0` goes from bottom to top, `90` from left to right and `180` from top to bottom. The colors are spread out evenly and can carry opacity.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: tile
+					Text: linear(0, ...)
+						Style: label
+					Block:
+						Style: band
+						Box:
+							Background: linear(0, #1B5E8C, #EEF3F8)
+			Item:
+				Block:
+					Style: tile
+					Text: linear(90, ...)
+						Style: label
+					Block:
+						Style: band
+						Box:
+							Background: linear(90, #1B5E8C, #EEF3F8)
+			Item:
+				Block:
+					Style: tile
+					Text: linear(180, ...)
+						Style: label
+					Block:
+						Style: band
+						Box:
+							Background: linear(180, #1B5E8C, #EEF3F8)
+			Item:
+				Block:
+					Style: tile
+					Text: linear(45, ...)
+						Style: label
+					Block:
+						Style: band
+						Box:
+							Background: linear(45, #1B5E8C, #EEF3F8)
+		Text: linear(90, #12315A, #E9A23B, #B5651D)  (three colors)
+			Style: label
+		Block:
+			Style: band
+			Box:
+				Margin: 0 0 18 0
+				Background: linear(90, #12315A, #E9A23B, #B5651D)
+		Text: linear(180, #12315A00, #12315A)  (from transparent, over an orange box)
+			Style: label
+		Block:
+			Box:
+				Background: #E9A23B
+				Corner radius: 4
+				Margin: 0 0 18 0
+			Block:
+				Style: band
+				Box:
+					Background: linear(180, #12315A00, #12315A)
+		Text: A gradient behind text: the worst of its colors must reach the contrast of the text.
+			Style: label
+		Paragraph: White text on a gradient from #12315A to #1B5E8C.
+			Typography:
+				Color: #FFFFFF
+				Size: 14
+				Bold: true
+			Box:
+				Padding: 14
+				Corner radius: 4
+				Background: linear(90, #12315A, #1B5E8C)

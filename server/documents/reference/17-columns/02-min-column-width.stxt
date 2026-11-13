@@ -1,0 +1,38 @@
+# Columns: Min column width fits as many columns as the width allows, up to Column count when it is declared.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Columns · Min column width
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Columns
+			Style: topic
+		Heading 1:
+			Text: Min column width
+		Paragraph: With `Min column width` the number of columns comes from the width: as many as fit with at least that width. With `Column count` too, that count is the maximum.
+			Style: intro
+		Text: Min column width: 110  (four columns fit)
+			Style: label
+		Columns:
+			Min column width: 110
+			Gap: 12
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven of the old bakery.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning and ending at the mill, where there will be lunch for everyone.
+		Text: Min column width: 110, Box Width: 300  (two columns fit)
+			Style: label
+		Columns:
+			Min column width: 110
+			Gap: 12
+			Box:
+				Width: 300
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven of the old bakery.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning and ending at the mill, where there will be lunch for everyone.
+		Text: Min column width: 110, Column count: 3  (at most three)
+			Style: label
+		Columns:
+			Min column width: 110
+			Column count: 3
+			Gap: 12
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven of the old bakery.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning and ending at the mill, where there will be lunch for everyone.

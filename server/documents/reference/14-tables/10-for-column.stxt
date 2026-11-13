@@ -1,0 +1,65 @@
+# Tables: For column styles the cells that start in a column or in a range of columns.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · For column
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+		For column: 1
+			Typography:
+				Bold: true
+				Color: accent
+		For column: 2 4
+			Typography:
+				Align: right
+			Box:
+				Background: tint
+		For column: 5
+			Typography:
+				Align: right
+				Italic: true
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: For column
+		Paragraph: `For column: 1` reaches the cells that start in column 1, and `For column: 2 4` those that start in any column from 2 to 4. They are written inside `Styles`, like the other rules, and also inside a `For style` rule for the tables of one style.
+			Style: intro
+		Text: For column: 1, For column: 2 4, For column: 5
+			Style: label
+		Table:
+			Column sizes: * 60 60 60 70
+			Header rows:
+				Row:
+					Cell: Store
+					Cell: Jan
+					Cell: Feb
+					Cell: Mar
+					Cell: Trend
+			Body rows:
+				Row:
+					Cell: Olot
+					Cell: 1,200
+					Cell: 1,350
+					Cell: 1,410
+					Cell: rising
+				Row:
+					Cell: Girona
+					Cell: 2,800
+					Cell: 2,650
+					Cell: 2,900
+					Cell: stable
+				Row:
+					Cell: Vic
+					Cell: 950
+					Cell: 1,020
+					Cell: 1,100
+					Cell: rising

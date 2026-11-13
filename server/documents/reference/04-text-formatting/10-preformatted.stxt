@@ -1,0 +1,76 @@
+# Text formatting: Preformatted keep and wrap, which keep spaces and line breaks, and Tab size.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Preformatted text
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: terminal
+			Box:
+				Margin: 0 0 16 0
+				Padding: 8 10
+				Background: sand
+				Corner radius: 4
+			Typography:
+				Font: IBM Plex Mono
+				Size: 9
+				Line height: 13
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Preformatted text
+		Paragraph: With `Preformatted: keep`, the text keeps its spaces and line breaks, empty lines included, and a line wider than the box is an error. With `wrap`, a line that is too long breaks between words. `Tab size` is the width of a tab in characters.
+			Style: intro
+		Text: Preformatted: keep
+			Style: label
+		Text:
+			Style: terminal
+			Typography:
+				Preformatted: keep
+			Content >>
+				$ thermostat --status
+				temperature   21.5 °C
+				setpoint      22.0 °C
+
+				mode          heating
+		Text: Preformatted: wrap  (in a box of 260 points)
+			Style: label
+		Text:
+			Style: terminal
+			Box:
+				Width: 260
+			Typography:
+				Preformatted: wrap
+			Content >>
+				log: the connection to the server was closed after 30 seconds without an answer
+				log: retrying in 5 seconds
+		Text: Preformatted: none  (the default: the same lines become one paragraph)
+			Style: label
+		Text:
+			Style: terminal
+			Content >>
+				$ thermostat --status
+				temperature   21.5 °C
+				setpoint      22.0 °C
+		Text: Tab size: 4 and Tab size: 12, the same lines with tabs
+			Style: label
+		Text:
+			Style: terminal
+			Typography:
+				Preformatted: keep
+				Tab size: 4
+			Content >>
+				Item	Qty	Price
+				Chair	12	145.00
+				Table	1	890.00
+		Text:
+			Style: terminal
+			Typography:
+				Preformatted: keep
+				Tab size: 12
+			Content >>
+				Item	Qty	Price
+				Chair	12	145.00
+				Table	1	890.00

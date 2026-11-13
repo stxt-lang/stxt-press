@@ -1,0 +1,44 @@
+# Headings: Numbered, turned on for levels 2 and 3, gives 1, 1.1, 2... and {number of: id} writes the number.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Headings · Numbered
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Numbered: true
+		For element: Heading 3
+			Typography:
+				Numbered: true
+	Section:
+		Text: Headings
+			Style: topic
+		Heading 1:
+			Text: Numbered
+		Paragraph: `Numbered: true` writes the number before the title. Here it is turned on in the rules of `Heading 2` and `Heading 3`. The title of the page is not numbered, so it does not count: the chapters are 1 and 2.
+			Style: intro
+		Heading 2:
+			Text: Before starting
+		Paragraph: Check that all the parts are in the box.
+		Heading 2:
+			Id: wiring
+			Text: Wiring
+		Heading 3:
+			Text: Cables
+		Paragraph: Connect the red wire to terminal L.
+		Heading 3:
+			Id: test
+			Text: Test
+		Paragraph: Switch the power on and check the display.
+		Heading 3:
+			Typography:
+				Numbered: false
+			Text: Notes, a heading with Numbered: false
+		Paragraph: A heading with `Numbered: false` is neither numbered nor counted.
+			Typography:
+				Markup: markdown
+		Heading 2:
+			Text: Maintenance
+		Paragraph: The steps of chapter {number of: wiring} are done with the power off, and section {number of: test} with the power on.

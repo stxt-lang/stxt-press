@@ -1,0 +1,49 @@
+# Headings: a heading with several Text inside and its own Box and Typography.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Headings · Several texts
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: chapter
+			Box:
+				Margin: 10 0 12 0
+				Padding: 12 14
+				Border: 0 0 0 4
+				Border color: accent
+				Background: tint
+		For style: kicker
+			Typography:
+				Size: 8
+				Line height: 12
+				Weight: 600
+				Color: muted
+				Case: uppercase
+				Letter spacing: 1
+		For style: subtitle
+			Typography:
+				Size: 10
+				Line height: 14
+				Bold: false
+				Italic: true
+				Color: muted
+	Section:
+		Text: Headings
+			Style: topic
+		Heading 1:
+			Text: Several texts
+		Paragraph: A heading is a block with one or more `Text` inside, which inherit its `Typography`. Here a `Heading 2` holds a small kicker, the title and a subtitle, each a `Text` with its own style, and its `Box` gives it a strip and a background.
+			Style: intro
+		Heading 2:
+			Style: chapter
+			Typography:
+				Size: 18
+				Line height: 22
+				Bold: true
+			Text: Chapter 3
+				Style: kicker
+			Text: The valley in autumn
+			Text: Walks, markets and the chestnut fair
+				Style: subtitle
+		Paragraph: The PDF bookmark and the table of contents take the texts of the heading in order.

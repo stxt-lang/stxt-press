@@ -1,0 +1,39 @@
+# References and links: {page of: id} writes the page where the box with that Id starts.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: References and links · Page of a box
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: References and links
+			Style: topic
+		Heading 1:
+			Text: Page of a box
+		Paragraph: `{{page of: id}}` writes the number of the page where the box with that `Id` starts, as its footer prints it. The reference can go before or after the box, and it can be any box of the document.
+			Style: intro
+		Text: Paragraph: ... on page {{page of: wiring}} ... on page {{page of: warranty}}.
+			Style: label
+		Paragraph: The wiring diagram is on page {page of: wiring}, and the warranty terms on page {page of: warranty}.
+			Style: target
+		Block:
+			Id: wiring
+			Style: target
+			Break:
+				Before: page
+			Text: Id: wiring
+				Style: label
+			Paragraph: The wiring diagram: the red wire goes to terminal L and the blue one to terminal N.
+		Block:
+			Id: warranty
+			Style: target
+			Break:
+				Before: page
+			Text: Id: warranty
+				Style: label
+			Paragraph: The warranty covers two years from the date of purchase. This page also refers back to the wiring diagram, on page {page of: wiring}.

@@ -1,0 +1,42 @@
+# Images: Side places an image at the left or the right and the text after it runs beside it, and Below side boxes moves a box under it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · Side
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Paragraph
+			Typography:
+				Align: justify
+	Section:
+		Text: Images
+			Style: topic
+		Heading 1:
+			Text: Side
+		Paragraph: With `Side: left` or `Side: right`, an image goes to that side and the paragraphs after it shorten their lines beside it. Its `Margin` is the separation from the text. `Below side boxes: true` takes a box under the image instead of beside it.
+			Style: intro
+		Text: Side: right, Margin: 0 0 8 14
+			Style: label
+		Image: examples/newsletter/trail.jpg
+			Alt: A path between meadows with mountains in the background
+			Side: right
+			Box:
+				Width: 180
+				Margin: 0 0 8 14
+		Paragraph: October is beech forest month in the valley. The trail of the Pla de les Eres starts at the factory parking lot and follows the river up to a small waterfall, through a forest that turns red and orange in the first weeks of the month.
+		Paragraph: The walk takes about two hours there and back, with a climb of two hundred meters, and it is suitable for children. The path is well marked and has three benches along the way.
+		Paragraph: Below side boxes: true. This paragraph does not run beside the photograph: it starts under it.
+			Below side boxes: true
+		Text: Side: left, Margin: 0 14 8 0
+			Style: label
+			Box:
+				Margin: 10 0 4 0
+		Image: examples/catalog/silla.jpg
+			Alt: Walnut chair with a wool seat
+			Side: left
+			Box:
+				Width: 110
+				Margin: 0 14 8 0
+		Paragraph: The walnut chair of the collection has a solid walnut frame with an oil finish and a seat upholstered in natural wool. It is made in the workshop, one by one, and each chair takes two days of work.
+		Paragraph: The seat can be ordered in three colors of wool, and the frame in walnut or in oak. Delivery takes three weeks from the order.

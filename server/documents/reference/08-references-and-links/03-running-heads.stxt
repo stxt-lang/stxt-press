@@ -1,0 +1,67 @@
+# References and links: {heading N} and {heading N: first}, the running head of each page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: References and links · Running heads
+	Page:
+		Paper: A5
+		Margin: 22mm 15mm 15mm 15mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Numbered: true
+		For element: Heading 3
+			Typography:
+				Numbered: true
+	Page overlay:
+		Pages: not-first
+		Offset: -36 0 auto 0
+		Box:
+			Padding: 0 0 4 0
+			Border: 0 0 0.5 0
+			Border color: rule
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: {heading 2}
+			Item:
+				Text: {heading 3: first}
+					Typography:
+						Align: right
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: References and links
+			Style: topic
+		Heading 1:
+			Text: Running heads
+		Paragraph: In a `Page overlay`, `{{heading 2}}` writes the last `Heading 2` that has started on the page or before it, and `{{heading 3: first}}` the first `Heading 3` that starts on the page. The header of pages 2 to 4 has both, with the number of the heading. A new chapter leaves the section empty until its first one starts.
+			Style: intro
+		Text: Page overlay: {{heading 2}} on the left, {{heading 3: first}} on the right
+			Style: label
+		Heading 2:
+			Text: Installation
+		Paragraph: The thermostat is installed in four steps, each one in its own section.
+		Heading 3:
+			Text: Before starting
+		Paragraph: Switch off the power at the panel and check with a tester that the wires carry no current.
+			Break:
+				After: page
+		Heading 3:
+			Text: Wiring
+		Paragraph: The red wire goes to terminal L and the blue one to terminal N. The green and yellow wire goes to the earth terminal.
+		Heading 3:
+			Text: Fixing
+		Paragraph: The base is fixed to the wall with the two screws supplied, at a height of 1.5 meters.
+			Break:
+				After: page
+		Heading 2:
+			Text: Use
+		Paragraph: This page starts a new chapter, and the right side of its header is empty until its first section starts.
+			Break:
+				After: page
+		Heading 3:
+			Text: Programs
+		Paragraph: The thermostat keeps four programs for each day of the week.

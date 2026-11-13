@@ -1,0 +1,26 @@
+# References and links: a marker inside another pair of braces, {{page}}, is written as text.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: References and links · Writing a marker as text
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: References and links
+			Style: topic
+		Heading 1:
+			Text: Writing a marker as text
+		Paragraph: A marker inside another pair of braces is written as text and is not replaced: `{{{page}}}` writes `{{page}}`, the marker itself. It works for every marker and in any text. Other texts between braces are not markers and are written as they are.
+			Style: intro
+		Text: Text: This is page {{page}} of {{pages}}.
+			Style: label
+		Text: This is page {page} of {pages}.
+			Style: target
+		Text: Text: The footer is written {{{page}}} of {{{pages}}}.
+			Style: label
+		Text: The footer is written {{page}} of {{pages}}.
+			Style: target
+		Text: Text: Dear {{name}}, see {{{page of: terms}}}.
+			Style: label
+		Text: Dear {{name}}, see {{page of: terms}}.
+			Style: target

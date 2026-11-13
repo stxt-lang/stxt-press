@@ -1,0 +1,85 @@
+# Table of contents: a table of contents with more entries than fit on a page goes on to the next one.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Table of contents · A long table
+	Page:
+		Paper: A6
+		Margin: 10mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Size: 10
+				Line height: 14
+		For element: TOC 2
+			Box:
+				Margin: 0
+	Section:
+		Text: Table of contents
+			Style: topic
+		Heading 1:
+			In table of contents: false
+			Text: A long table
+		Paragraph: A table of contents is broken between its entries like any text. The twenty entries of these recipes do not fit on the first page, and the last ones go at the top of the second.
+			Style: intro
+		Table of contents:
+			Levels: 2 2
+		Heading 2:
+			Text: Almond soup
+		Paragraph: Cold, with grapes.
+		Heading 2:
+			Text: Bean stew
+		Paragraph: Slow, with sausage.
+		Heading 2:
+			Text: Cabbage rolls
+		Paragraph: Filled with rice.
+		Heading 2:
+			Text: Chickpea salad
+		Paragraph: With cod and peppers.
+		Heading 2:
+			Text: Courgette cream
+		Paragraph: With mint.
+		Heading 2:
+			Text: Fish broth
+		Paragraph: With saffron.
+		Heading 2:
+			Text: Garlic soup
+		Paragraph: With bread and egg.
+		Heading 2:
+			Text: Grilled vegetables
+		Paragraph: With olive oil.
+		Heading 2:
+			Text: Lentils with rice
+		Paragraph: For winter.
+		Heading 2:
+			Text: Mushroom risotto
+		Paragraph: With parmesan.
+		Heading 2:
+			Text: Onion tart
+		Paragraph: With thyme.
+		Heading 2:
+			Text: Potato omelette
+		Paragraph: With or without onion.
+		Heading 2:
+			Text: Pumpkin soup
+		Paragraph: With nutmeg.
+		Heading 2:
+			Text: Rice with clams
+		Paragraph: Soupy.
+		Heading 2:
+			Text: Roast chicken
+		Paragraph: With lemon.
+		Heading 2:
+			Text: Spinach with raisins
+		Paragraph: And pine nuts.
+		Heading 2:
+			Text: Stuffed peppers
+		Paragraph: With minced meat.
+		Heading 2:
+			Text: Tomato bread
+		Paragraph: With ham.
+		Heading 2:
+			Text: Vegetable paella
+		Paragraph: With artichokes.
+		Heading 2:
+			Text: Walnut cake
+		Paragraph: For dessert.

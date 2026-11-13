@@ -1,0 +1,55 @@
+# Barcodes: the color of the modules (Color of Typography) and the background, padding, border and corners of the Box.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · Color and box
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 20
+			Vertical: top
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: Color and box
+		Paragraph: The dark modules take the `Color` of the `Typography`, black by default. The light ones are not painted: the `Background` of the `Box` shows, or what is behind. `Padding`, `Border` and `Corner radius` go around the code as in an image.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Text: Color: #12315A
+						Style: label
+					Barcode: https://stxt.dev
+						Alt: QR code with the address https://stxt.dev
+						Box:
+							Width: 30mm
+						Typography:
+							Color: #12315A
+			Item:
+				Block:
+					Text: Background: #FFF3DC
+						Style: label
+					Barcode: https://stxt.dev
+						Alt: QR code with the address https://stxt.dev
+						Box:
+							Width: 30mm
+							Background: #FFF3DC
+						Typography:
+							Color: #5A2D0C
+			Item:
+				Block:
+					Text: Padding, Border, Corner radius
+						Style: label
+					Barcode: https://stxt.dev
+						Alt: QR code with the address https://stxt.dev
+						Box:
+							Width: 36mm
+							Padding: 4
+							Border: 1.5
+							Border color: accent
+							Corner radius: 8
+						Typography:
+							Color: accent

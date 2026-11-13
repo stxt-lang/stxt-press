@@ -1,0 +1,59 @@
+# Pages and breaks: Edges open and closed, the border and padding of a box split across pages.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Pages and breaks · Edges of a split box
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For style: framed
+			Box:
+				Padding: 10
+				Border: 1.5
+				Border color: accent
+				Background: tint
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Pages and breaks
+			Style: topic
+		Heading 1:
+			Text: Edges of a split box
+		Paragraph: A box with a border and padding that is split across pages is open at the break by default (`Edges: open`), like a sheet cut in two. With `Edges: closed`, each piece is painted as a complete box.
+			Style: intro
+		Block:
+			Style: filler
+			Box:
+				Height: 280
+			Text: A filler block, 280 points high, so that the next box is split between pages 1 and 2.
+		Block:
+			Style: framed
+			Box:
+				Height: 200
+			Text: Edges: open
+				Style: label
+			Paragraph: The first piece of this box has no border or padding at the bottom.
+			Paragraph: The second piece, on the next page, has none at the top.
+			Paragraph: Together they read as one box cut by the page.
+			Paragraph: This is the default.
+		Block:
+			Style: filler
+			Box:
+				Height: 280
+				Margin: 14 0 0 0
+			Text: Another filler block, so that the next box is split between pages 2 and 3.
+		Block:
+			Style: framed
+			Box:
+				Height: 200
+			Break:
+				Edges: closed
+			Text: Edges: closed
+				Style: label
+			Paragraph: Each piece of this box carries its full border and padding.
+			Paragraph: The piece on page 2 is closed at the bottom.
+			Paragraph: The piece on page 3 is closed at the top.
+			Paragraph: Each one looks like a complete box.

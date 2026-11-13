@@ -1,0 +1,53 @@
+# Text formatting: Letter spacing, positive and negative, and how it ends a right-aligned line at its last letter.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Letter spacing
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: result
+			Box:
+				Margin: 0 0 14 0
+			Typography:
+				Size: 18
+				Line height: 24
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Letter spacing
+		Paragraph: `Letter spacing` adds points between every two letters, and a negative value tightens the text. The last letter of each line does not get it, so a right-aligned line ends at its last letter.
+			Style: intro
+		Text: Letter spacing: -1
+			Style: label
+		Text: Quarterly results
+			Style: result
+			Typography:
+				Letter spacing: -1
+		Text: Letter spacing: 0  (the default)
+			Style: label
+		Text: Quarterly results
+			Style: result
+		Text: Letter spacing: 2
+			Style: label
+		Text: Quarterly results
+			Style: result
+			Typography:
+				Letter spacing: 2
+		Text: Letter spacing: 6
+			Style: label
+		Text: Quarterly results
+			Style: result
+			Typography:
+				Letter spacing: 6
+		Text: Letter spacing: 6, Align: right  (the line ends at the border)
+			Style: label
+		Text: Quarterly results
+			Style: result
+			Box:
+				Border: 0 1 0 0
+				Border color: accent
+			Typography:
+				Letter spacing: 6
+				Align: right

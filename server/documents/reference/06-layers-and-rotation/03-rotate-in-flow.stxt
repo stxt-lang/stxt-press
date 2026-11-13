@@ -1,0 +1,53 @@
+# Layers and rotation: Rotate on a box in flow, which takes up the rectangle that encloses it rotated.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Layers and rotation · Rotation in flow
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: chip
+			Box:
+				Padding: 6 10
+				Background: tint
+				Border: 1
+				Border color: accent
+			Typography:
+				Bold: true
+	Section:
+		Text: Layers and rotation
+			Style: topic
+		Heading 1:
+			Text: Rotation in flow
+		Paragraph: `Rotate` turns a box clockwise by a number of degrees. A `Block`, `Text`, `Paragraph`, `Image` or `Barcode` in flow rotates about its center and takes up the rectangle that encloses it rotated, so the boxes around it move aside. Without `Width`, it measures its text on one line.
+			Style: intro
+		Text: Rotate: -90
+			Style: label
+		Text: Vertical label
+			Style: chip
+			Rotate: -90
+		Paragraph: This paragraph starts below the whole rotated rectangle.
+			Box:
+				Margin: 8 0 18 0
+		Text: Rotate: 90
+			Style: label
+		Text: Vertical label
+			Style: chip
+			Rotate: 90
+		Paragraph: The text now reads from top to bottom.
+			Box:
+				Margin: 8 0 18 0
+		Text: Rotate: 8, with Margin: 0 auto to center it
+			Style: label
+		Block:
+			Style: chip
+			Rotate: 8
+			Box:
+				Width: 220
+				Margin: 10 auto 10 auto
+			Paragraph: A block of 220 points, rotated 8 degrees with all it contains.
+				Box:
+					Margin: 0
+		Paragraph: The next box starts below the tilted block, which takes up more height than it would unrotated.
+			Box:
+				Margin: 8 0 0 0

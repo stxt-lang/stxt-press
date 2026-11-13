@@ -1,0 +1,37 @@
+# Footnotes: For element: Footnote area (the rule, the gap and the typography of the notes) and For element: Footnote.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · Area and note style
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For element: Footnote area
+			Typography:
+				Font: IBM Plex Serif
+				Size: 8.5
+				Line height: 12
+				Color: muted
+			Box:
+				Margin: 20 0 0 0
+				Padding: 6 0 0 0
+				Border: 1.5 0 0 0
+				Border color: accent
+				Border style: dotted
+		For element: Footnote
+			Box:
+				Margin: 0 0 6 0
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: Area and note style
+		Paragraph: The notes of a page go in a generated box, the footnote area. `For element: Footnote area` gives its rule (the top `Border`), the gap above it and the typography of every note. `For element: Footnote` styles each note.
+			Style: intro
+		Paragraph: The museum opens on Sundays[^sundays] and on public holidays[^holidays], except in August.
+		Footnote:
+			Id: sundays
+			Paragraph: From 10 to 14.
+		Footnote:
+			Id: holidays
+			Paragraph: The local holidays of the town included.

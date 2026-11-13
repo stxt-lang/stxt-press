@@ -1,0 +1,66 @@
+# Text formatting: Markup markdown for bold, italic, underline, strikethrough and links within a line, and Markup none.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Markup
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: source
+			Typography:
+				Font: IBM Plex Mono
+				Size: 9
+				Color: muted
+		For style: result
+			Box:
+				Margin: 0 0 12 0
+			Typography:
+				Size: 12
+				Line height: 17
+				Markup: markdown
+		For style: link
+			Typography:
+				Color: accent
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Markup
+		Paragraph: By default a text is literal. With `Markup: markdown`, a `Text`, a `Paragraph` or a `Cell` reads the Markdown marks within the line. Each pair below shows what is written (in gray) and what is painted.
+			Style: intro
+		Text: Payment is due in **30 days**, unless *otherwise agreed*.
+			Style: source
+		Text: Payment is due in **30 days**, unless *otherwise agreed*.
+			Style: result
+		Text: ***Bold and italic***, ++underline++ and ~~strikethrough~~.
+			Style: source
+		Text: ***Bold and italic***, ++underline++ and ~~strikethrough~~.
+			Style: result
+		Text: A [link to the website](https://stxt.dev), underlined and clickable.
+			Style: source
+		Text: A [link to the website](https://stxt.dev), underlined and clickable.
+			Style: result
+		Text: A literal \*asterisk\* and [brackets] that are not a link: 2024. A good year - 5% off
+			Style: source
+		Text: A literal \*asterisk\* and [brackets] that are not a link: 2024. A good year - 5% off
+			Style: result
+		Text: Markup: none  (the default: the marks are painted as they are written)
+			Style: label
+			Box:
+				Margin: 12 0 4 0
+		Text: Payment is due in **30 days**, unless *otherwise agreed*.
+			Style: result
+			Typography:
+				Markup: none
+		Text: Bold within a bold text, and within a light one (Weight: 300)
+			Style: label
+			Box:
+				Margin: 12 0 4 0
+		Text: A bold title with **bold** words stays bold.
+			Style: result
+			Typography:
+				Bold: true
+		Text: A light text with **bold** words gets weight 700 in them.
+			Style: result
+			Typography:
+				Weight: 300

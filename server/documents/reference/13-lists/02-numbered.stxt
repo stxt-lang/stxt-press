@@ -1,0 +1,134 @@
+# Lists: the numbered markers decimal, lower-alpha, upper-alpha, lower-roman and upper-roman, side by side.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Lists · Numbered
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Block
+			Grow: 1
+			Base size: 0
+	Section:
+		Text: Lists
+			Style: topic
+		Heading 1:
+			Text: Numbered
+		Paragraph: A numbered `Marker` counts the items of the list from 1. The markers are aligned to the right, so `iv.` and `viii.` end at the same place.
+			Style: intro
+		Stack:
+			Gap: 12
+			Item:
+				Block:
+					Text: decimal
+						Style: label
+					List:
+						Marker: decimal
+						List item:
+							Text: First
+						List item:
+							Text: Second
+						List item:
+							Text: Third
+						List item:
+							Text: Fourth
+						List item:
+							Text: Fifth
+						List item:
+							Text: Sixth
+						List item:
+							Text: Seventh
+						List item:
+							Text: Eighth
+			Item:
+				Block:
+					Text: lower-alpha
+						Style: label
+					List:
+						Marker: lower-alpha
+						List item:
+							Text: First
+						List item:
+							Text: Second
+						List item:
+							Text: Third
+						List item:
+							Text: Fourth
+						List item:
+							Text: Fifth
+						List item:
+							Text: Sixth
+						List item:
+							Text: Seventh
+						List item:
+							Text: Eighth
+			Item:
+				Block:
+					Text: upper-alpha
+						Style: label
+					List:
+						Marker: upper-alpha
+						List item:
+							Text: First
+						List item:
+							Text: Second
+						List item:
+							Text: Third
+						List item:
+							Text: Fourth
+						List item:
+							Text: Fifth
+						List item:
+							Text: Sixth
+						List item:
+							Text: Seventh
+						List item:
+							Text: Eighth
+			Item:
+				Block:
+					Text: lower-roman
+						Style: label
+					List:
+						Marker: lower-roman
+						Box:
+							Padding: 0 0 0 28
+						List item:
+							Text: First
+						List item:
+							Text: Second
+						List item:
+							Text: Third
+						List item:
+							Text: Fourth
+						List item:
+							Text: Fifth
+						List item:
+							Text: Sixth
+						List item:
+							Text: Seventh
+						List item:
+							Text: Eighth
+			Item:
+				Block:
+					Text: upper-roman
+						Style: label
+					List:
+						Marker: upper-roman
+						Box:
+							Padding: 0 0 0 30
+						List item:
+							Text: First
+						List item:
+							Text: Second
+						List item:
+							Text: Third
+						List item:
+							Text: Fourth
+						List item:
+							Text: Fifth
+						List item:
+							Text: Sixth
+						List item:
+							Text: Seventh
+						List item:
+							Text: Eighth

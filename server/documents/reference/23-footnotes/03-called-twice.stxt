@@ -1,0 +1,48 @@
+# Footnotes: the same note called from several places, here from cells of a table, with one number and one note.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · A note called twice
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For element: Cell
+			Typography:
+				Markup: markdown
+			Box:
+				Padding: 3 6
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: A note called twice
+		Paragraph: A note can be called several times. All its calls carry the number of the first one, and the note goes once, at the bottom of the page of the first call. A cell with `Markup: markdown` can hold a call.
+			Style: intro
+		Table:
+			Column sizes: * 30mm
+			Column align: left right
+			Header rows:
+				Row:
+					Cell: Plan
+					Cell: Price
+			Body rows:
+				Row:
+					Cell: Monthly fee
+					Cell: €49[^vat]
+				Row:
+					Cell: Sign-up
+					Cell: €20[^vat]
+				Row:
+					Cell: Support[^hours]
+					Cell: included
+		Footnote:
+			Id: vat
+			Paragraph: VAT not included.
+		Footnote:
+			Id: hours
+			Paragraph: From Monday to Friday, 9 to 18.

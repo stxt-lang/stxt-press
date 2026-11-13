@@ -291,5 +291,49 @@ class TemplatesTest {
     void theFolderHasToExist() {
         assertThrows(IOException.class, () -> new Templates(temp.resolve("missing")));
         assertThrows(IOException.class, () -> new Templates(folder.resolve("notes.txt")));
+        assertThrows(IOException.class, () -> new Templates(temp.resolve("missing"), Templates.Kind.DOCUMENT));
+    }
+
+    // ---- A documents folder: the same rules, without data
+
+    @Test
+    void aDocumentHasItsChainOfStylesAndNoData() throws IOException {
+        Templates documents = new Templates(folder, Templates.Kind.DOCUMENT);
+
+        Template invoice = documents.get("invoices/2026/invoice");
+
+        assertEquals(Templates.Kind.DOCUMENT, documents.kind());
+        assertEquals(List.of(".styles.stxt", "invoices/.styles.stxt", "invoices/2026/invoice.styles.stxt"), names(invoice));
+        // Its invoice.json is not read: a document is converted as it is.
+        assertNull(invoice.data());
+        assertFalse(documents.files(invoice).containsKey(PressException.DATA));
+        assertTrue(isPdf(documents.get("invoices/receipt").job(Options.DEFAULT)));
+    }
+
+    @Test
+    void theListOfDocumentsSaysNoData() throws IOException {
+        assertEquals(List.of(
+                new Templates.Entry("invoices/2026/invoice", true, false),
+                new Templates.Entry("invoices/receipt", false, false),
+                new Templates.Entry("own", false, false),
+                new Templates.Entry("unfilled", false, false)), new Templates(folder, Templates.Kind.DOCUMENT).list());
+    }
+
+    @Test
+    void theErrorsOfADocumentHaveTheirOwnCodes() throws IOException {
+        Templates documents = new Templates(folder, Templates.Kind.DOCUMENT);
+
+        TemplateException missing = assertThrows(TemplateException.class, () -> documents.get("missing"));
+        assertEquals(TemplateException.DOCUMENT_NOT_FOUND, missing.code());
+        assertTrue(missing.notFound());
+        assertEquals("There is no document missing", missing.getMessage());
+
+        Path outside = Files.createDirectories(temp.resolve("outside"));
+        Files.writeString(outside.resolve("secret.stxt"), RECEIPT);
+        link(folder.resolve("linked.stxt"), outside.resolve("secret.stxt"));
+        TemplateException link = assertThrows(TemplateException.class, () -> documents.get("linked"));
+        assertEquals(TemplateException.DOCUMENT_LINK_OUTSIDE, link.code());
+        assertFalse(link.notFound());
+        assertTrue(link.getMessage().contains("documents folder"), link.getMessage());
     }
 }

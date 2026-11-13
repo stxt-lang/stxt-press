@@ -1,0 +1,68 @@
+# Tables: Split rows true breaks a tall row across two pages, and Split rows false moves it whole to the next page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Split rows
+	Page:
+		Paper: A6
+		Margin: 12mm
+	Styles:
+		For element: Document
+			Typography:
+				Size: 8.5
+				Line height: 12
+		For element: Heading 1
+			Typography:
+				Size: 14
+				Line height: 18
+		For element: Cell
+			Box:
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Split rows
+		Paragraph: A row that does not fit in what is left of the page is split, with each cell going on in the next page (`Split rows: true`, the default). With `Split rows: false` on the `Table`, the row moves whole to the next page. The two tables, one per section, are the same except for that.
+			Style: intro
+		Text: Split rows: true
+			Style: label
+		Table:
+			Column sizes: 50 *
+			Header rows:
+				Row:
+					Cell: Clause
+					Cell: Text
+			Body rows:
+				Row:
+					Cell: First
+					Cell: The landlord grants the tenant the use of the dwelling, which the tenant uses as a main residence, with the furniture listed in the inventory.
+				Row:
+					Cell: Second
+					Cell: The term is one year from the date of signature, renewed for equal periods unless one of the parties gives notice two months before it ends, in writing and to the address given in this contract. The rent is updated each year with the index published for the month before the renewal, and the tenant pays it within the first five days of each month by transfer to the account of the landlord. Any repair that the dwelling needs is reported in writing, and the landlord carries it out within a month unless it is urgent, in which case the tenant may order it and deduct its cost from the next rent.
+	Section:
+		Text: Split rows: false
+			Style: label
+		Block:
+			Box:
+				Height: 120
+				Padding: 8
+				Background: tint
+			Text: Other content, so that the second row of the table reaches the end of the page.
+		Table:
+			Split rows: false
+			Column sizes: 50 *
+			Header rows:
+				Row:
+					Cell: Clause
+					Cell: Text
+			Body rows:
+				Row:
+					Cell: First
+					Cell: The landlord grants the tenant the use of the dwelling, which the tenant uses as a main residence, with the furniture listed in the inventory.
+				Row:
+					Cell: Second
+					Cell: The term is one year from the date of signature, renewed for equal periods unless one of the parties gives notice two months before it ends, in writing and to the address given in this contract. The rent is updated each year with the index published for the month before the renewal, and the tenant pays it within the first five days of each month by transfer to the account of the landlord. Any repair that the dwelling needs is reported in writing, and the landlord carries it out within a month unless it is urgent, in which case the tenant may order it and deduct its cost from the next rent.

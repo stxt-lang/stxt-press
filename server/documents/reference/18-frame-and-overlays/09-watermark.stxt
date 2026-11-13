@@ -1,0 +1,29 @@
+# Frame and overlays: a watermark is a Page overlay with Layer: -1 behind the content of every page, with a faint image.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Watermark
+	Page:
+		Paper: A5
+		Margin: 40
+	Page overlay:
+		Layer: -1
+		Offset: 0
+		Box:
+			Width: 260
+			Height: 260
+			Margin: auto
+		Image: examples/menu/emblem.svg
+			Opacity: 12%
+			Box:
+				Width: 100%
+	Section:
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Watermark
+		Paragraph: The emblem is a `Page overlay` with `Layer: -1`, painted beneath the content on every page. With `Offset: 0`, a size and `Margin: auto` it is centered in the page area, and the image inside is made faint with `Opacity: 12%`.
+			Style: intro
+		Paragraph: The text of the page is painted over the watermark. The contrast of a text over an image is not checked, so the image is kept faint.
+		Paragraph: The second page carries the same watermark.
+			Break:
+				Before: page

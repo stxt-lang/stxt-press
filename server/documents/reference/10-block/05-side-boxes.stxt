@@ -1,0 +1,55 @@
+# Block: a Block with Side left or right, and the paragraphs that follow it running beside it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Block · Side boxes
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: aside
+			Box:
+				Width: 150
+				Padding: 8
+				Background: tint
+		For style: caption
+			Typography:
+				Size: 8
+				Line height: 11
+				Color: muted
+	Section:
+		Text: Block
+			Style: topic
+		Heading 1:
+			Text: Side boxes
+		Paragraph: A `Block` with `Side` and a `Width` goes to that side of its container, and the text of the paragraphs that follow it shortens its lines beside it. The margin of the block is the separation from the text.
+			Style: intro
+		Text: Side: left
+			Style: label
+		Block:
+			Side: left
+			Style: aside
+			Box:
+				Margin: 0 14 8 0
+			Text: Side box on the left
+				Typography:
+					Bold: true
+			Text: 150 points wide, with a right margin of 14.
+				Style: caption
+		Paragraph: The beech forests of the valley turn copper in October. The path from the old mill climbs along the river to a small waterfall and comes back through the meadows, about two hours at an easy pace.
+		Paragraph: This second paragraph also runs beside the box while the box reaches its height, and then takes the full width of the page again.
+		Text: Side: right
+			Style: label
+			Box:
+				Margin: 12 0 4 0
+		Block:
+			Side: right
+			Style: aside
+			Box:
+				Margin: 0 0 8 14
+			Text: Side box on the right
+				Typography:
+					Bold: true
+			Text: The text runs at its left.
+				Style: caption
+		Paragraph: The market opens on Saturdays in the main square, with vegetables from the gardens, cheese from the hills and bread from the wood oven. Registration for new stalls is open until Friday at the library.
+		Paragraph: A short second paragraph beside the box.

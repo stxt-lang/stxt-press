@@ -1,0 +1,56 @@
+# Document and sections: the eight named paper sizes of Paper, one section each.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Document and sections · Paper sizes
+	Page:
+		Paper: A4
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Document and sections
+			Style: topic
+		Heading 1:
+			Text: Paper sizes
+		Paragraph: `Paper` gives the page a named size, in portrait. This document has one section for each of the eight sizes, and each section declares its own `Page`. What a section does not declare (here the margins) comes from the `Page` of the document.
+			Style: intro
+		Text: Paper: A4  (210 × 297 mm)
+			Style: card
+	Section:
+		Page:
+			Paper: A3
+		Text: Paper: A3  (297 × 420 mm)
+			Style: card
+	Section:
+		Page:
+			Paper: A5
+		Text: Paper: A5  (148 × 210 mm)
+			Style: card
+	Section:
+		Page:
+			Paper: A6
+		Text: Paper: A6  (105 × 148 mm)
+			Style: card
+	Section:
+		Page:
+			Paper: B4
+		Text: Paper: B4  (250 × 353 mm)
+			Style: card
+	Section:
+		Page:
+			Paper: B5
+		Text: Paper: B5  (176 × 250 mm)
+			Style: card
+	Section:
+		Page:
+			Paper: Letter
+		Text: Paper: Letter  (8.5 × 11 inches, 612 × 792 points)
+			Style: card
+	Section:
+		Page:
+			Paper: Legal
+		Text: Paper: Legal  (8.5 × 14 inches, 612 × 1008 points)
+			Style: card

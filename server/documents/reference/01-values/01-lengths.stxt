@@ -1,0 +1,45 @@
+# Values: lengths in points and in millimeters, and both mixed in one value.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Values · Lengths
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: bar
+			Box:
+				Height: 14
+				Margin: 0 0 14 0
+				Background: accent
+	Section:
+		Text: Values
+			Style: topic
+		Heading 1:
+			Text: Lengths
+		Paragraph: A number alone is points (1/72 of an inch) and a number with `mm` attached is millimeters. Each bar gives its `Width` in one unit. The last one mixes both units in its `Margin`.
+			Style: intro
+		Text: Width: 100
+			Style: label
+		Block:
+			Style: bar
+			Box:
+				Width: 100
+		Text: Width: 100mm
+			Style: label
+		Block:
+			Style: bar
+			Box:
+				Width: 100mm
+		Text: Width: 35.28mm  (100 points)
+			Style: label
+		Block:
+			Style: bar
+			Box:
+				Width: 35.28mm
+		Text: Margin: 0 0 14 20mm
+			Style: label
+		Block:
+			Style: bar
+			Box:
+				Width: 100
+				Margin: 0 0 14 20mm

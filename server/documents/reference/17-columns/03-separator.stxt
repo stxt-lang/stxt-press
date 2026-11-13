@@ -1,0 +1,42 @@
+# Columns: Separator draws a line in the middle of the Gap, with its color and its style (solid, dashed, dotted).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Columns · Separator
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Columns
+			Style: topic
+		Heading 1:
+			Text: Separator
+		Paragraph: `Separator` is the width of a line between the columns, centered in the `Gap`, which must be at least as wide. `Separator color` (by default the color of the text) and `Separator style` change how it is drawn.
+			Style: intro
+		Text: Separator: 0.5  (solid, the color of the text)
+			Style: label
+		Columns:
+			Column count: 3
+			Gap: 20
+			Separator: 0.5
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning.
+		Text: Separator: 1, Separator color: accent, Separator style: dashed
+			Style: label
+		Columns:
+			Column count: 3
+			Gap: 20
+			Separator: 1
+			Separator color: accent
+			Separator style: dashed
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning.
+		Text: Separator: 1.5, Separator color: #B16118, Separator style: dotted
+			Style: label
+		Columns:
+			Column count: 3
+			Gap: 20
+			Separator: 1.5
+			Separator color: #B16118
+			Separator style: dotted
+			Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread from the wood-fired oven.
+			Paragraph: The residents' association is also organizing a walk along the river, starting from the old bridge at ten in the morning.

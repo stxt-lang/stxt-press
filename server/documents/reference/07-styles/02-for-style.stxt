@@ -1,0 +1,46 @@
+# Styles: For style, a named style that elements ask for with Style, one or several at a time.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Styles · For style
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: note
+			Box:
+				Margin: 0 0 12 0
+				Padding: 8 10
+				Background: tint
+		For style: warning
+			Box:
+				Background: #FBEAE8
+				Border: 0 0 0 3
+				Border color: #A32D2D
+			Typography:
+				Bold: true
+		For style: narrow
+			Box:
+				Width: 60%
+	Section:
+		Text: Styles
+			Style: topic
+		Heading 1:
+			Text: For style
+		Paragraph: A `For style` rule applies to the elements that name it in their `Style`. An element can name several, separated by spaces. When two of its styles give the same property, the rule written later in `Styles` wins: `warning` comes after `note`, so its background wins.
+			Style: intro
+		Text: Style: note
+			Style: label
+		Paragraph: Delivery takes two weeks from the date of the order.
+			Style: note
+		Text: Style: note narrow
+			Style: label
+		Paragraph: The same note, with the width of the narrow style added.
+			Style: note narrow
+		Text: Style: note warning
+			Style: label
+		Paragraph: Switch off the power before removing the cover.
+			Style: note warning
+		Text: Style: warning note  (the order in Style does not matter)
+			Style: label
+		Paragraph: Switch off the power before removing the cover.
+			Style: warning note

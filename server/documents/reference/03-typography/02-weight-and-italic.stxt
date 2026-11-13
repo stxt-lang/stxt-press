@@ -1,0 +1,80 @@
+# Typography: Weight from 300 to 700, Bold and Italic, as far as the files of each family go.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · Weight and italic
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: big
+			Typography:
+				Size: 18
+				Line height: 26
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: Weight and italic
+		Paragraph: `Weight` goes from 100 to 900 in steps of 100, and each weight is a file of the family: IBM Plex Sans has 300, 400, 500, 600 and 700, and IBM Plex Serif only 400 and 700. `Bold: true` is `Weight: 700`, and `Italic: true` takes the italic file.
+			Style: intro
+		Text: IBM Plex Sans, Weight: 300 to 700
+			Style: label
+		Text: Weight 300, light
+			Style: big
+			Typography:
+				Weight: 300
+		Text: Weight 400, regular
+			Style: big
+			Typography:
+				Weight: 400
+		Text: Weight 500, medium
+			Style: big
+			Typography:
+				Weight: 500
+		Text: Weight 600, semibold
+			Style: big
+			Typography:
+				Weight: 600
+		Text: Weight 700, bold
+			Style: big
+			Typography:
+				Weight: 700
+		Text: Bold: true, Italic: true
+			Style: label
+			Box:
+				Margin: 14 0 4 0
+		Text: Bold: true
+			Style: big
+			Typography:
+				Bold: true
+		Text: Italic: true
+			Style: big
+			Typography:
+				Italic: true
+		Text: Bold: true with Italic: true
+			Style: big
+			Typography:
+				Bold: true
+				Italic: true
+		Text: IBM Plex Serif, the four files of the family
+			Style: label
+			Box:
+				Margin: 14 0 4 0
+		Block:
+			Typography:
+				Font: IBM Plex Serif
+			Text: Regular
+				Style: big
+			Text: Italic
+				Style: big
+				Typography:
+					Italic: true
+			Text: Bold
+				Style: big
+				Typography:
+					Bold: true
+			Text: Bold italic
+				Style: big
+				Typography:
+					Bold: true
+					Italic: true

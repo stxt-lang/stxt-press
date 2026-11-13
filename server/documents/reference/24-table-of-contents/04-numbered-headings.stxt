@@ -1,0 +1,53 @@
+# Table of contents: numbered headings carry their number in the entries, in the format of each level.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Table of contents · Numbered headings
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For element: Heading 1
+			Typography:
+				Numbered: true
+				Number format: upper-roman
+		For element: Heading 2
+			Typography:
+				Numbered: true
+		For element: TOC 1
+			Typography:
+				Bold: true
+			Box:
+				Margin: 6 0 2 0
+		For element: TOC 2
+			Box:
+				Padding: 0 0 0 14
+				Margin: 0 0 2 0
+	Section:
+		Text: Table of contents
+			Style: topic
+		Heading 1:
+			In table of contents: false
+			Typography:
+				Numbered: false
+			Text: Numbered headings
+		Paragraph: A numbered heading takes its number into its entry, written as its level says. Here the chapters are in Roman numerals and their sections in digits, `I.1`. The title has `Numbered: false`, so it neither carries a number nor counts.
+			Style: intro
+		Text: Contents
+			Style: contents
+		Table of contents:
+			Levels: 1 2
+	Section:
+		Heading 1:
+			Text: Installation
+		Heading 2:
+			Text: Before starting
+		Paragraph: Check that the box holds the thermostat, the base and four screws.
+		Heading 2:
+			Text: Wiring
+		Paragraph: Connect the live wire to terminal L and the neutral to terminal N.
+	Section:
+		Heading 1:
+			Text: Use
+		Heading 2:
+			Text: Setpoint
+		Paragraph: Turn the ring to change the setpoint by half a degree.

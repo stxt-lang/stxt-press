@@ -1,0 +1,46 @@
+# Tables: Column align gives each column its alignment, left, center, right or justify.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Column align
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Border: 0.5
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Column align
+		Paragraph: `Column align` has one value per column and is the default alignment of its cells. A rule or the cell itself can change it. The last cell here declares its own `Align: center`.
+			Style: intro
+		Text: Column align: left center right justify
+			Style: label
+		Table:
+			Column sizes: * * * 160
+			Column align: left center right justify
+			Header rows:
+				Row:
+					Cell: left
+					Cell: center
+					Cell: right
+					Cell: justify
+			Body rows:
+				Row:
+					Cell: Ana Ruiz
+					Cell: B-12
+					Cell: 1,250.00
+					Cell: A text of several lines, justified between both sides of its cell except the last line.
+				Row:
+					Cell: Pau Vidal
+					Cell: C-7
+					Cell: 98.50
+					Cell: This cell says Align: center.
+						Typography:
+							Align: center

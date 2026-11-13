@@ -1,0 +1,277 @@
+# Two-page data sheet of an indoor air quality sensor. The key features are a side box (Side: right) that the
+# overview runs beside, and the next heading goes below it (Below side boxes); its list marks each feature with a
+# check drawn in SVG (Marker: image). The front view and the dimension drawing are one Figure with a Block (two SVG
+# images side by side). The specification tables group their rows with cells that span several rows or columns
+# (Span: 3 1, Span: 1 2), share their borders (Merge borders, from a rule) and align each column (Column align, and
+# For column for the signals in IBM Plex Mono); the ordering table carries the EAN-13 barcode of each variant in a
+# cell, with its digits under the bars (Readable text). The header with the logo and the document number and the
+# footer with the revision and "Page 1 of 2" are Page overlay of the document.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 30mm 16mm 20mm 16mm
+	Title: AQ-210 Indoor Air Quality Sensor · Data sheet
+	Subject: Specifications, wiring and ordering information of the AQ-210 CO₂, temperature and humidity sensor
+	Author: Kestrel Sensing Ltd
+	Keywords: CO2 sensor, NDIR, Modbus RTU, BACnet MS/TP, data sheet
+	Language: en
+	Page overlay:
+		Id: header
+		Offset: -21mm 0 auto 0
+		Style: header
+		Stack:
+			Vertical: center
+			Gap: 8
+			Item:
+				Image: documents/datasheet/kestrel.svg
+					Alt: Kestrel Sensing
+					Style: logo
+			Item:
+				Grow: 1
+				Text: Kestrel Sensing
+					Style: company
+			Item:
+				Text: Data sheet DS-AQ210-EN
+					Style: doc-number
+	Page overlay:
+		Id: footer
+		Offset: auto 0 -12mm 0
+		Style: footer
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Revision C · 2026-09-15 · Specifications may change without notice · kestrel-sensing.example
+			Item:
+				Text: Page {page} of {pages}
+	Section:
+		Block:
+			Id: hero
+			Style: hero
+			Text: Building automation · Air quality
+				Style: eyebrow
+			Heading 1:
+				Text: AQ-210 Indoor Air Quality Sensor
+			Text: CO₂, temperature and relative humidity in one wall-mounted unit, with Modbus RTU and BACnet MS/TP on the same terminals.
+				Style: tagline
+		Heading 2:
+			Text: Overview
+		Block:
+			Id: features
+			Style: features
+			Side: right
+			Text: Key features
+				Style: box-label
+			List:
+				Style: checks
+				List item:
+					Text: Dual-beam NDIR CO₂ sensor, no recalibration for 15 years
+				List item:
+					Text: ±(30 ppm + 3%) CO₂ accuracy
+				List item:
+					Text: Modbus RTU and BACnet MS/TP, chosen by DIP switch
+				List item:
+					Text: Two 0–10 V outputs and one relay
+				List item:
+					Text: Three-colour status ring
+				List item:
+					Text: 24 V AC/DC, under 1.2 W
+		Paragraph: The AQ-210 measures carbon dioxide, temperature and relative humidity in offices, classrooms and meeting rooms, and sends them to the building management system so that ventilation follows the people in the room rather than a timetable.
+		Paragraph: Its dual-beam NDIR cell compares the measuring beam with a reference beam on every reading, so it does not drift with age and needs no automatic baseline correction. This makes it suitable for rooms that are never empty, such as hospital wards and control rooms.
+		Paragraph: The coloured ring on the front tells the people in the room how fresh the air is: green below 800 ppm, amber up to 1,200 ppm and red above. The thresholds can be changed over the bus, and the ring can be turned off.
+		Heading 2:
+			Text: Dimensions
+			Below side boxes: true
+		Figure:
+			Id: fig-views
+			Alt: Front view of the AQ-210 showing the CO₂ reading on its display, and a dimension drawing of the front and the side: 86 by 86 mm, 27 mm deep
+			Caption: Front of the unit and its dimensions in millimetres. It fits a standard single back box.
+			Block:
+				Stack:
+					Style: views
+					Item:
+						Image: documents/datasheet/aq210-front.svg
+							Style: view-front
+					Item:
+						Image: documents/datasheet/aq210-dimensions.svg
+							Style: view-drawing
+		Heading 2:
+			Text: Ordering information
+		Table:
+			Id: ordering
+			Style: order-table
+			Header rows:
+				Row:
+					Cell: Part number
+					Cell: Variant
+					Cell: EAN
+			Body rows:
+				Row:
+					Cell: AQ-210-W
+						Row header: true
+						Style: part
+					Cell: CO₂, temperature and humidity, white housing
+					Cell:
+						Barcode: 506012345001
+							Barcode format: ean-13
+							Readable text: true
+							Alt: EAN-13 barcode of part AQ-210-W
+							Style: ean
+				Row:
+					Cell: AQ-210-WD
+						Row header: true
+						Style: part
+					Cell: As AQ-210-W, with a display of the readings instead of the ring
+					Cell:
+						Barcode: 506012345002
+							Barcode format: ean-13
+							Readable text: true
+							Alt: EAN-13 barcode of part AQ-210-WD
+							Style: ean
+				Row:
+					Cell: AQ-210-B
+						Row header: true
+						Style: part
+					Cell: CO₂, temperature and humidity, black housing
+					Cell:
+						Barcode: 506012345003
+							Barcode format: ean-13
+							Readable text: true
+							Alt: EAN-13 barcode of part AQ-210-B
+							Style: ean
+		Block:
+			Id: specifications
+			Break:
+				Before: page
+			Heading 2:
+				Text: Specifications
+			Table:
+				Id: specs
+				Style: spec-table
+				Header rows:
+					Row:
+						Cell: Group
+						Cell: Parameter
+						Cell: Value
+				Body rows:
+					Row:
+						Cell: Carbon dioxide
+							Span: 3 1
+							Style: group
+						Cell: Range
+						Cell: 400 to 5,000 ppm
+					Row:
+						Cell: Accuracy
+						Cell: ±(30 ppm + 3% of reading) at 25 °C
+					Row:
+						Cell: Response time (τ63)
+						Cell: 120 s in still air
+					Row:
+						Cell: Temperature
+							Span: 2 1
+							Style: group
+						Cell: Range
+						Cell: 0 to 50 °C
+					Row:
+						Cell: Accuracy
+						Cell: ±0.3 °C from 15 to 35 °C
+					Row:
+						Cell: Relative humidity
+							Span: 2 1
+							Style: group
+						Cell: Range
+						Cell: 0 to 95% RH, non-condensing
+					Row:
+						Cell: Accuracy
+						Cell: ±2% RH from 20 to 80% RH
+					Row:
+						Cell: Outputs
+							Span: 3 1
+							Style: group
+						Cell: Analogue
+						Cell: 2 × 0–10 V, 2 mA maximum load
+					Row:
+						Cell: Relay
+						Cell: 1 × SPST, 1 A at 30 V DC
+					Row:
+						Cell: Bus
+						Cell: RS-485, Modbus RTU or BACnet MS/TP, 9,600 to 76,800 baud
+					Row:
+						Cell: Power
+							Span: 2 1
+							Style: group
+						Cell: Supply
+						Cell: 24 V AC ±15% or 15 to 35 V DC
+					Row:
+						Cell: Consumption
+						Cell: 1.2 W maximum, 0.6 W typical
+					Row:
+						Cell: Housing
+							Span: 3 1
+							Style: group
+						Cell: Material
+						Cell: PC/ABS, flame class UL 94 V-0, white RAL 9003
+					Row:
+						Cell: Protection
+						Cell: IP30
+					Row:
+						Cell: Operating environment
+						Cell: 0 to 50 °C, 0 to 95% RH, non-condensing
+					Row:
+						Cell: Notes
+							Style: group
+						Cell: The accuracy figures apply after 15 minutes of warm-up. Accuracy of CO₂ includes the repeatability and the effect of pressure between 950 and 1,050 hPa.
+							Span: 1 2
+							Style: note-cell
+			Heading 2:
+				Text: Terminals
+			Table:
+				Id: terminals
+				Style: terminal-table
+				Header rows:
+					Row:
+						Cell: Terminal
+						Cell: Signal
+						Cell: Function
+				Body rows:
+					Row:
+						Cell: 1
+							Row header: true
+						Cell: G
+						Cell: Supply, 24 V AC or + DC
+					Row:
+						Cell: 2
+							Row header: true
+						Cell: G0
+						Cell: Supply common
+					Row:
+						Cell: 3
+							Row header: true
+						Cell: A+ / B−
+							Span: 2 1
+						Cell: RS-485 bus, polarity marked on the board
+							Span: 2 1
+					Row:
+						Cell: 4
+							Row header: true
+					Row:
+						Cell: 5
+							Row header: true
+						Cell: AO1
+						Cell: 0–10 V output, CO₂ (0 to 2,000 ppm by default)
+					Row:
+						Cell: 6
+							Row header: true
+						Cell: AO2
+						Cell: 0–10 V output, temperature (0 to 50 °C by default)
+					Row:
+						Cell: 7
+							Row header: true
+						Cell: NO / C
+							Span: 2 1
+						Cell: Relay contact, closes above 1,200 ppm by default
+							Span: 2 1
+					Row:
+						Cell: 8
+							Row header: true
+			Paragraph: Each unit is supplied with its mounting plate, two screws and an installation sheet. Configuration software and the BACnet PICS can be downloaded from [kestrel-sensing.example/aq210](https://kestrel-sensing.example/aq210).
+				Style: small-print

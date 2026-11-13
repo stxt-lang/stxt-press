@@ -1,0 +1,61 @@
+# The box: Aspect ratio derives the height from the width (or the width from the height).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: The box · Aspect ratio
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 20
+			Vertical: top
+		For style: demo
+			Box:
+				Background: tint
+				Border: 1
+				Border color: accent
+	Section:
+		Text: The box
+			Style: topic
+		Heading 1:
+			Text: Aspect ratio
+		Paragraph: `Aspect ratio` is the proportion of width to height, as a fraction or as a number. With one side known, the other follows from it. With `Width` and `Height` at once it would have no effect, and it is an error.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Text: Width: 160, Aspect ratio: 16/9
+						Style: label
+					Block:
+						Style: demo
+						Box:
+							Width: 160
+							Aspect ratio: 16/9
+			Item:
+				Block:
+					Text: Width: 120, Aspect ratio: 1
+						Style: label
+					Block:
+						Style: demo
+						Box:
+							Width: 120
+							Aspect ratio: 1
+			Item:
+				Block:
+					Text: Height: 120, Aspect ratio: 0.5
+						Style: label
+					Block:
+						Style: demo
+						Box:
+							Height: 120
+							Aspect ratio: 0.5
+		Text: Width: 100%, Aspect ratio: 3/1
+			Style: label
+			Box:
+				Margin: 20 0 4 0
+		Block:
+			Style: demo
+			Box:
+				Width: 100%
+				Aspect ratio: 3/1

@@ -1,0 +1,79 @@
+# Frame and overlays: Rotate turns a positioned box when it is painted, around its center or around Rotate origin.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Rotate and Rotate origin
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: stage
+			Box:
+				Height: 110
+		For style: stamp
+			Box:
+				Padding: 4 10
+				Border: 1.5
+				Border color: #A32D2D
+			Typography:
+				Color: #A32D2D
+				Bold: true
+				Size: 11
+		For style: pin
+			Box:
+				Width: 6
+				Height: 6
+				Corner radius: 50%
+				Background: #A32D2D
+	Section:
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Rotate and Rotate origin
+		Paragraph: A rotated `Frame`, `Overlay` or `Page overlay` keeps its place in the layout and is turned when painted, clockwise in degrees. `Rotate origin` is the point it turns around: keywords such as `top left`, or two measures from its top left corner. The red dot marks the corner of the box before the turn.
+			Style: intro
+		Text: Rotate: 12  (around the center, by default)
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 40 auto auto 60
+				Rotate: 12
+				Text: DRAFT
+					Style: stamp
+		Text: Rotate: 30, Rotate origin: top left
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 47 auto auto 57
+				Block:
+					Style: pin
+			Overlay:
+				Offset: 50 auto auto 60
+				Rotate: 30
+				Rotate origin: top left
+				Text: APPROVED
+					Style: stamp
+		Text: Rotate: -90, Rotate origin: top left  (vertical text along the left edge)
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 100 auto auto 10
+				Rotate: -90
+				Rotate origin: top left
+				Text: VERTICAL
+					Style: stamp
+		Text: Rotate: 45 on a Frame with Rotate origin: 20 50%
+			Style: label
+		Block:
+			Box:
+				Height: 100
+			Frame:
+				Offset: 30 auto auto 80
+				Rotate: 45
+				Rotate origin: 20 50%
+				Box:
+					Width: 140
+				Text: A rotated Frame
+					Style: stamp

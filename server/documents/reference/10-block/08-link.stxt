@@ -1,0 +1,51 @@
+# Block: Link makes the whole block clickable, to a web address, an email address or another box of the document.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Block · Link
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: button
+			Box:
+				Width: 220
+				Margin: 0 0 12 0
+				Padding: 8 12
+				Background: accent
+				Corner radius: 4
+			Typography:
+				Color: #FFFFFF
+				Bold: true
+	Section:
+		Text: Block
+			Style: topic
+		Heading 1:
+			Text: Link
+		Paragraph: With `Link`, the whole area of the block leads to its target: an `https://` address, a `mailto:` address or `#id`, the box with that `Id`. A link does not change the look of the block: the button look comes from its style.
+			Style: intro
+		Text: Link: https://stxt.dev
+			Style: label
+		Block:
+			Style: button
+			Link: https://stxt.dev
+			Text: Open stxt.dev
+		Text: Link: mailto:info@example.com
+			Style: label
+		Block:
+			Style: button
+			Link: mailto:info@example.com
+			Text: Write to info@example.com
+		Text: Link: #target
+			Style: label
+		Block:
+			Style: button
+			Link: #target
+			Text: Go to the box below
+		Block:
+			Id: target
+			Box:
+				Margin: 30 0 0 0
+				Padding: 8
+				Border: 0.5
+				Border color: rule
+			Text: The box with Id: target.

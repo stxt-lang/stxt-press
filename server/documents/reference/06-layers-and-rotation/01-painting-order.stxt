@@ -1,0 +1,79 @@
+# Layers and rotation: Layer changes which overlapping box is painted on top.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Layers and rotation · Painting order
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: stage
+			Box:
+				Height: 150
+				Margin: 0 0 18 0
+				Background: sand
+		For style: card
+			Box:
+				Width: 150
+				Height: 90
+				Padding: 8
+				Border: 1
+				Border color: ink
+			Typography:
+				Bold: true
+		For style: first
+			Box:
+				Background: #F6D9A8
+		For style: second
+			Box:
+				Background: #BFDCEB
+		For style: third
+			Box:
+				Background: #D4E8C2
+	Section:
+		Text: Layers and rotation
+			Style: topic
+		Heading 1:
+			Text: Painting order
+		Paragraph: Boxes that overlap are painted in the order of the document, so the last one goes on top. `Layer` changes that order: among the positioned boxes of one container, a higher `Layer` is painted later. Both stages hold the same three cards in the same order.
+			Style: intro
+		Text: No Layer: document order, card 3 on top
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 20 auto auto 20
+				Text: Card 1
+					Style: card first
+			Overlay:
+				Offset: 40 auto auto 140
+				Text: Card 2
+					Style: card second
+			Overlay:
+				Offset: 60 auto auto 260
+				Text: Card 3
+					Style: card third
+		Text: Layer: 3, 2, 1  (card 1 on top)
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 20 auto auto 20
+				Layer: 3
+				Text: Card 1  (Layer: 3)
+					Style: card first
+					Typography:
+						Align: right
+			Overlay:
+				Offset: 40 auto auto 140
+				Layer: 2
+				Text: Card 2  (Layer: 2)
+					Style: card second
+					Typography:
+						Align: right
+			Overlay:
+				Offset: 60 auto auto 260
+				Layer: 1
+				Text: Card 3  (Layer: 1)
+					Style: card third
+					Typography:
+						Align: right

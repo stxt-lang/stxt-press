@@ -1,0 +1,84 @@
+# Table of contents: Entries: figures and Entries: tables, the lists of figures and of tables with their captions.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Table of contents · Lists of figures and tables
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For element: Figure
+			Typography:
+				Number label: Figure {number}.
+			Box:
+				Margin: 4 0 12 0
+		For style: table-figure
+			Typography:
+				Number label: Table {number}.
+		For element: Caption
+			Typography:
+				Size: 8.5
+				Color: muted
+			Box:
+				Margin: 3 0 3 0
+		For element: Cell
+			Box:
+				Padding: 2 6
+				Border: 0 0 0.5 0
+				Border color: rule
+	Section:
+		Text: Table of contents
+			Style: topic
+		Heading 1:
+			In table of contents: false
+			Text: Lists of figures and tables
+		Paragraph: With `Entries: figures` a `Table of contents` lists the figures, and with `Entries: tables`, the tables with a caption. Each entry is the numbered caption and its page, styled with `For element: TOC 1`.
+			Style: intro
+		Text: Entries: figures
+			Style: label
+		Table of contents:
+			Style: sample
+			Entries: figures
+		Text: Entries: tables
+			Style: label
+		Table of contents:
+			Style: sample
+			Entries: tables
+	Section:
+		Figure:
+			Caption: Front of the thermostat.
+			Image: examples/manual/en/thermostat.svg
+				Alt: Front view of the thermostat
+				Box:
+					Width: 30mm
+		Figure:
+			Style: table-figure
+			Caption: Terminals.
+			Table:
+				Column sizes: 20mm *
+				Body rows:
+					Row:
+						Cell: L
+						Cell: Live
+					Row:
+						Cell: N
+						Cell: Neutral
+		Figure:
+			Caption: Wiring of the terminals.
+			Image: examples/manual/en/wiring.svg
+				Alt: Wiring diagram of terminals L, N, C and NO
+				Box:
+					Width: 80mm
+	Section:
+		Figure:
+			Style: table-figure
+			Caption: Setpoints by room.
+			Table:
+				Column sizes: * 20mm
+				Column align: left right
+				Body rows:
+					Row:
+						Cell: Living room
+						Cell: 21 °C
+					Row:
+						Cell: Bedroom
+						Cell: 18 °C

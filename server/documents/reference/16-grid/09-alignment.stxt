@@ -1,0 +1,105 @@
+# Grid: Horizontal and Vertical align the items in their cells, for the whole Grid or for one Area, and Layer orders overlapping items.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Alignment and Layer
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Alignment and Layer
+		Paragraph: By default each item stretches to fill its cell. With `left`, `right`, `top`, `bottom` or `center` it keeps its own size and moves inside the cell. An `Area` can override the alignment of its `Grid`, and `Layer` on two `Area` that share cells decides which is on top.
+			Style: intro
+		Text: Horizontal: stretch, Vertical: stretch  (the default)
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Row sizes: 40
+			Gap: 4
+			Area:
+				Text: One
+					Style: tile
+			Area:
+				Text: Two
+					Style: tile
+			Area:
+				Text: Three
+					Style: tile
+		Text: Horizontal: left / center / right  (each Area)
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Row sizes: 40
+			Gap: 4
+			Area:
+				Horizontal: left
+				Text: left
+					Style: tile
+			Area:
+				Horizontal: center
+				Text: center
+					Style: tile
+			Area:
+				Horizontal: right
+				Text: right
+					Style: tile
+		Text: Vertical: top / center / bottom  (each Area)
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Row sizes: 40
+			Gap: 4
+			Area:
+				Vertical: top
+				Text: top
+					Style: tile
+			Area:
+				Vertical: center
+				Text: center
+					Style: tile
+			Area:
+				Vertical: bottom
+				Text: bottom
+					Style: tile
+		Text: Grid with Horizontal: center and Vertical: center, one Area with stretch
+			Style: label
+		Grid:
+			Column sizes: repeat(3, *)
+			Row sizes: 40
+			Gap: 4
+			Horizontal: center
+			Vertical: center
+			Area:
+				Text: center
+					Style: tile
+			Area:
+				Text: center
+					Style: tile
+			Area:
+				Horizontal: stretch
+				Vertical: stretch
+				Text: stretch
+					Style: pale
+		Text: Two Area on the same cells: Layer: 1 on the first
+			Style: label
+		Grid:
+			Column sizes: repeat(4, *)
+			Row sizes: 30 30
+			Gap: 4
+			Area: 1 1 2 2
+				Layer: 1
+				Block:
+					Box:
+						Margin: 8
+						Padding: 6
+						Border: 1
+						Border color: accent
+						Background: #FFFFFF
+					Text: Layer: 1, painted over the other
+			Area: 1 2 2 3
+				Text: Without Layer
+					Style: tile
+					Typography:
+						Align: right

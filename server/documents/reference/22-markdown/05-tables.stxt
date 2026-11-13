@@ -1,0 +1,34 @@
+# Markdown: GFM tables, with Table column sizes equal and auto and the alignment of the separator row.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Tables
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Tables
+		Paragraph: A GFM table becomes a `Table`, with its first row as the header. The colons of the separator row align each column. `Table column sizes: equal` gives all the columns the same width and `auto` sizes each one by its content.
+			Style: intro
+		Text: Table column sizes: equal
+			Style: label
+		Markdown:
+			Table column sizes: equal
+			Box:
+				Margin: 0 0 16 0
+			Content >>
+				| Item | Quantity | Amount |
+				|:-----|:--------:|-------:|
+				| Walnut chair with a wool seat | 12 | 1,740.00 |
+				| Dining table | 1 | 890.00 |
+		Text: Table column sizes: auto
+			Style: label
+		Markdown:
+			Table column sizes: auto
+			Content >>
+				| Item | Quantity | Amount |
+				|:-----|:--------:|-------:|
+				| Walnut chair with a wool seat | 12 | 1,740.00 |
+				| Dining table | 1 | 890.00 |

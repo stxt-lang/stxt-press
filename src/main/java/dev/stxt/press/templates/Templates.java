@@ -20,12 +20,13 @@ import dev.stxt.press.PressException;
 import dev.stxt.utils.FileUtils;
 
 /**
- * The templates folder of the server (ROADMAP-PDF 2.3). A template is a {@code <name>.stxt}, and its path is that of its
- * folder and its name without extension: {@code invoices/2026/invoice}. Beside it, and all optional:
+ * The templates folder of the server (ROADMAP-PDF 2.3), or its documents folder ({@link Kind#DOCUMENT}). A template is a
+ * {@code <name>.stxt}, and its path is that of its folder and its name without extension:
+ * {@code invoices/2026/invoice}. Beside it, and all optional:
  *
  * <ul>
  * <li>{@code <name>.styles.stxt}, its own styles;</li>
- * <li>{@code <name>.json}, its sample data;</li>
+ * <li>{@code <name>.json}, its sample data, only in a templates folder;</li>
  * <li>a {@code .styles.stxt} in any folder from the root to its own, shared by the templates below it.</li>
  * </ul>
  *
@@ -36,6 +37,10 @@ import dev.stxt.utils.FileUtils;
  * {@code .styles.stxt} or a {@code .json} is a template. A path never leaves the folder, nor through a symbolic link:
  * a file whose real path is outside it is not read. The folder is only read, on every call, so a changed template
  * counts without restarting.</p>
+ *
+ * <p>A documents folder has the same rules, without sample data: a document is converted as it is, and a
+ * {@code <name>.json} beside it is not read. Its errors have their own codes ({@link TemplateException#DOCUMENT_NOT_FOUND},
+ * {@link TemplateException#DOCUMENT_LINK_OUTSIDE}).</p>
  */
 public final class Templates {
 
@@ -48,16 +53,66 @@ public final class Templates {
     private static final Pattern SEGMENT = Pattern.compile("[A-Za-z0-9_-]+");
     private static final Pattern PATH = Pattern.compile("[A-Za-z0-9_-]+(/[A-Za-z0-9_-]+)*");
 
+    /** What a folder has: templates, with their sample data, or documents, converted as they are. */
+    public enum Kind {
+        /** The templates of {@code /print/templates}, with their sample data. */
+        TEMPLATE("template", "templates", TemplateException.NOT_FOUND, TemplateException.LINK_OUTSIDE),
+        /** The documents of {@code /print/documents}, without data. */
+        DOCUMENT("document", "documents", TemplateException.DOCUMENT_NOT_FOUND, TemplateException.DOCUMENT_LINK_OUTSIDE);
+
+        private final String noun;
+        private final String folderNoun;
+        private final String notFound;
+        private final String linkOutside;
+
+        Kind(String noun, String folderNoun, String notFound, String linkOutside) {
+            this.noun = noun;
+            this.folderNoun = folderNoun;
+            this.notFound = notFound;
+            this.linkOutside = linkOutside;
+        }
+
+        /** {@return what one of the folder is called in the messages: {@code template} or {@code document}} */
+        public String noun() {
+            return noun;
+        }
+
+        /** {@return the code of a path that is not one of the folder} */
+        public String notFound() {
+            return notFound;
+        }
+
+        /** {@return the error of a path that is not one of the folder, for whoever has none} */
+        public TemplateException notFound(String path, String why) {
+            return new TemplateException(notFound, true, path, "There is no " + noun + " " + path
+                    + (why == null ? "" : ": " + why));
+        }
+    }
+
     /** The folder, absolute and normalized. */
     private final Path folder;
+    /** Whether it has templates or documents. */
+    private final Kind kind;
     /** The folder with its links resolved, which every file read has to be inside. */
     private final Path real;
 
     /**
+     * A templates folder.
+     *
      * @param folder the templates folder; not {@code null}
      * @throws IOException if it does not exist or is not a folder
      */
     public Templates(Path folder) throws IOException {
+        this(folder, Kind.TEMPLATE);
+    }
+
+    /**
+     * @param folder the folder; not {@code null}
+     * @param kind whether it has templates or documents; not {@code null}
+     * @throws IOException if it does not exist or is not a folder
+     */
+    public Templates(Path folder, Kind kind) throws IOException {
+        this.kind = Objects.requireNonNull(kind, "kind");
         this.folder = Objects.requireNonNull(folder, "folder").toAbsolutePath().normalize();
         this.real = this.folder.toRealPath();
         if (!Files.isDirectory(real)) {
@@ -73,22 +128,29 @@ public final class Templates {
         return path != null && PATH.matcher(path).matches();
     }
 
-    /** {@return the templates folder, absolute and normalized} */
+    /** {@return the folder, absolute and normalized} */
     public Path folder() {
         return folder;
     }
 
+    /** {@return whether the folder has templates or documents} */
+    public Kind kind() {
+        return kind;
+    }
+
     /**
-     * {@return the template of {@code path}, with its document, its chain of styles and its sample data, read now}
+     * {@return the template of {@code path}, with its document, its chain of styles and its sample data, read now} In a
+     * documents folder, the document, without data.
      *
      * @param path the path of the template, without extension and with {@code /} between segments
-     * @throws TemplateException if there is no template at {@code path} ({@link TemplateException#NOT_FOUND}) or a file
-     *         of it is a link that leaves the folder ({@link TemplateException#LINK_OUTSIDE})
+     * @throws TemplateException if there is no template at {@code path} ({@link Kind#notFound()}) or a file of it is a
+     *         link that leaves the folder ({@link TemplateException#LINK_OUTSIDE},
+     *         {@link TemplateException#DOCUMENT_LINK_OUTSIDE})
      * @throws IOException if a file of it cannot be read or is not valid UTF-8
      */
     public Template get(String path) throws IOException {
         if (!isPath(path) || !isFile(path + DOCUMENT)) {
-            throw new TemplateException(TemplateException.NOT_FOUND, path, "There is no template " + path);
+            throw kind.notFound(path, null);
         }
         String document = read(path + DOCUMENT, path);
 
@@ -101,14 +163,14 @@ public final class Templates {
         }
         addStyles(styles, path + STYLES, path);
 
-        String data = isFile(path + DATA) ? read(path + DATA, path) : null;
+        String data = kind == Kind.TEMPLATE && isFile(path + DATA) ? read(path + DATA, path) : null;
         return new Template(path, document, styles, data);
     }
 
     /**
      * {@return the file of each input of the job of {@code template}, by the {@link PressException#source() source} of its
-     * errors} The document, each of its styles by its name and the sample data, {@code <name>.json}, which may not
-     * exist.
+     * errors} The document, each of its styles by its name and, in a templates folder, the sample data,
+     * {@code <name>.json}, which may not exist.
      */
     public Map<String, Path> files(Template template) {
         Map<String, Path> files = new LinkedHashMap<>();
@@ -116,7 +178,9 @@ public final class Templates {
         for (Job.Styles styles : template.styles()) {
             files.put(styles.name(), folder.resolve(styles.name()));
         }
-        files.put(PressException.DATA, folder.resolve(template.path() + DATA));
+        if (kind == Kind.TEMPLATE) {
+            files.put(PressException.DATA, folder.resolve(template.path() + DATA));
+        }
         return files;
     }
 
@@ -144,7 +208,7 @@ public final class Templates {
                         && Files.isRegularFile(file) && file.toRealPath().startsWith(real)) {
                     String relative = relative(file);
                     String path = relative.substring(0, relative.length() - DOCUMENT.length());
-                    entries.add(new Entry(path, isFile(path + STYLES), isFile(path + DATA)));
+                    entries.add(new Entry(path, isFile(path + STYLES), kind == Kind.TEMPLATE && isFile(path + DATA)));
                 }
                 return FileVisitResult.CONTINUE;
             }
@@ -158,7 +222,7 @@ public final class Templates {
      *
      * @param path its path, without extension
      * @param styles whether it has its own {@code <name>.styles.stxt}
-     * @param data whether it has sample data, a {@code <name>.json}
+     * @param data whether it has sample data, a {@code <name>.json}; never in a documents folder
      */
     public record Entry(String path, boolean styles, boolean data) {
     }
@@ -179,8 +243,8 @@ public final class Templates {
     private String read(String relative, String template) throws IOException {
         Path file = folder.resolve(relative);
         if (!file.toRealPath().startsWith(real)) {
-            throw new TemplateException(TemplateException.LINK_OUTSIDE, template, "The file " + relative
-                    + " of the template " + template + " is a link that leaves the templates folder");
+            throw new TemplateException(kind.linkOutside, false, template, "The file " + relative + " of the "
+                    + kind.noun + " " + template + " is a link that leaves the " + kind.folderNoun + " folder");
         }
         return FileUtils.readFileContent(file.toFile());
     }

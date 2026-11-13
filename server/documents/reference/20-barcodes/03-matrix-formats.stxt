@@ -1,0 +1,42 @@
+# Barcodes: the two-dimensional formats besides the QR code: data-matrix, gs1-data-matrix and pdf417.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · Matrix formats
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: code
+			Box:
+				Margin: 0 0 16 0
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: Matrix formats
+		Paragraph: `Barcode format` chooses the symbology. A Data Matrix is square, with modules of 0.5 mm. A GS1 Data Matrix carries GS1 data, each application identifier in parentheses before its value. A PDF417 has modules of 0.33 by 1 mm and keeps its proportion.
+			Style: intro
+		Text: Barcode format: data-matrix
+			Style: label
+		Barcode: L-2026-0388
+			Style: code
+			Alt: Data Matrix with the batch L-2026-0388
+			Barcode format: data-matrix
+			Box:
+				Width: 25mm
+		Text: Barcode format: gs1-data-matrix
+			Style: label
+		Barcode: (01)09501101530003(17)261231(10)AB-123
+			Style: code
+			Alt: Product 09501101530003, batch AB-123, expiry 2026-12-31
+			Barcode format: gs1-data-matrix
+			Box:
+				Width: 25mm
+		Text: Barcode format: pdf417
+			Style: label
+		Barcode: M1VIDAL/MARTA EABC123 BCNMADIB 2714 320Y012A0042 100
+			Style: code
+			Alt: PDF417 of a boarding pass
+			Barcode format: pdf417
+			Box:
+				Width: 90mm

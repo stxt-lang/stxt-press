@@ -1,0 +1,111 @@
+# Styles of the label sheet: black on white for everything that is scanned or read by the courier, and one colour
+# per service in the vertical band (express, standard and economy).
+Styles (dev.stxt.pdf):
+	Named color: express #B42318
+	Named color: standard #1D4E89
+	Named color: economy #3F6212
+	Named color: grey #555E66
+	For element: Document
+		Typography:
+			Size: 8
+			Line height: 10
+			Color: #111111
+	For style: sheet
+		Column sizes: 99.1mm 99.1mm
+		Row sizes: repeat(4, 67.7mm)
+		Gap: 0 2.5mm
+	For style: label
+		Box:
+			Border: 0.5
+			Border style: dotted
+			Border color: #B8BEC4
+			Corner radius: 3mm
+	For style: band
+		Direction: vertical
+		Vertical: center
+		Box:
+			Height: 100%
+			Padding: 0 2.2mm
+			Corner radius: 3mm 0 0 3mm
+		Typography:
+			Color: #FFFFFF
+	For style: express
+		Box:
+			Background: express
+	For style: standard
+		Box:
+			Background: standard
+	For style: economy
+		Box:
+			Background: economy
+	For style: service
+		Typography:
+			Size: 11
+			Bold: true
+			Case: uppercase
+			Letter spacing: 2
+	For style: label-body
+		Box:
+			Padding: 3.5mm 4mm 3mm 3.5mm
+	For style: label-head
+		Vertical: baseline
+		Gap: 6
+		Box:
+			Padding: 0 0 2mm 0
+			Margin: 0 0 2.5mm 0
+			Border: 0 0 0.5 0
+			Border color: #C9CED3
+	For style: sender
+		Typography:
+			Size: 6.5
+			Color: grey
+	For style: parcel
+		Typography:
+			Size: 8
+			Bold: true
+	For style: address-row
+		Gap: 8
+		Vertical: top
+	For style: deliver-to
+		Typography:
+			Size: 6
+			Bold: true
+			Color: grey
+			Case: uppercase
+			Letter spacing: 1
+		Box:
+			Margin: 0 0 1 0
+	For style: to-name
+		Typography:
+			Size: 13
+			Line height: 120%
+			Min size: 7
+			Bold: true
+		Box:
+			Height: 18
+			Margin: 0 0 1 0
+			Overflow: shrink
+	For style: to-line
+		Typography:
+			Size: 10
+			Line height: 12.5
+	For style: matrix
+		Box:
+			Width: 15mm
+	For style: sscc
+		Box:
+			Width: 100%
+			Height: 15mm
+			Margin: 2.5mm 0 1.5mm 0
+		Typography:
+			Font: IBM Plex Mono
+			Size: 7
+	For style: label-foot
+		Horizontal: justify
+		Typography:
+			Size: 7
+			Color: grey
+	For style: route
+		Typography:
+			Bold: true
+			Color: #111111

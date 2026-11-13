@@ -8,7 +8,22 @@ import {
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
 import { BLANK, byFolder, parsePlace, placeOfMode, placeUrl, samePlace } from "../src/place.ts";
 
-const DOCUMENT: DocumentState = { mode: "document", document: "Document (dev.stxt.pdf):", styles: [{ path: "Styles", text: "" }] };
+const DOCUMENT: DocumentState = {
+	mode: "document", path: null, document: "Document (dev.stxt.pdf):", styles: [{ path: "Styles", text: "" }],
+};
+
+/** A document of the server, `reference/tables/basic`, in its panels as the server gave it. */
+function serverDocument(changes: Partial<DocumentState> = {}): DocumentState {
+	const styles = [{ path: "reference/.styles.stxt", text: "shared" }];
+	return {
+		mode: "document",
+		path: "reference/tables/basic",
+		document: "doc",
+		styles: styles.map((s) => ({ ...s })),
+		original: { document: "doc", styles },
+		...changes,
+	};
+}
 
 function template(changes: Partial<TemplateState> = {}): TemplateState {
 	const styles = [{ path: ".styles.stxt", text: "root" }, { path: "invoices/invoice.styles.stxt", text: "own" }];
@@ -75,7 +90,7 @@ describe("request", () => {
 		const r = asRequest(request(template({ data: "{\"a\": 1.10}" }), "pdf", false));
 
 		assert.equal(r.method, "POST");
-		assert.equal(r.url, "/print/invoices/invoice?format=pdf");
+		assert.equal(r.url, "/print/templates/invoices/invoice?format=pdf");
 		assert.equal(r.body, "{\"a\": 1.10}");
 		assert.deepEqual(r.stylesNames, [".styles.stxt", "invoices/invoice.styles.stxt"]);
 	});
@@ -108,6 +123,34 @@ describe("request", () => {
 		assert.deepEqual(JSON.parse(r.body!), { document: "doc", styles: ["root", "own"] });
 	});
 
+	it("prints an unchanged document of the server with a GET of /print/documents, its styles by their files", () => {
+		const r = asRequest(request(serverDocument(), "svg", true));
+
+		assert.equal(r.method, "GET");
+		assert.equal(r.url, "/print/documents/reference/tables/basic?format=svg&debug=true");
+		assert.equal(r.body, undefined);
+		assert.deepEqual(r.stylesNames, ["reference/.styles.stxt"]);
+	});
+
+	it("prints a document of the server without styles, its blank styles panel left blank", () => {
+		const d = serverDocument({ styles: [{ path: "Styles", text: " " }], original: { document: "doc", styles: [] } });
+
+		const r = asRequest(request(d, "pdf", false));
+
+		assert.equal(r.url, "/print/documents/reference/tables/basic?format=pdf");
+		assert.deepEqual(r.stylesNames, [""]);
+	});
+
+	it("renders an edited document of the server, or one with styles written in its blank panel", () => {
+		const edited = asRequest(request(serverDocument({ document: "edited" }), "pdf", false));
+		assert.equal(edited.url, "/render?format=pdf");
+		assert.deepEqual(JSON.parse(edited.body!), { document: "edited", styles: ["shared"] });
+		assert.deepEqual(edited.stylesNames, ["styles[1]"]);
+
+		const written = serverDocument({ styles: [{ path: "Styles", text: "mine" }], original: { document: "doc", styles: [] } });
+		assert.equal(asRequest(request(written, "pdf", false)).url, "/render?format=pdf");
+	});
+
 	it("does not send data that is not JSON to /render, and says the line", () => {
 		const error = request(template({ document: "edited", data: "{\n  \"a\": 1,\n}" }), "pdf", false);
 
@@ -130,6 +173,12 @@ describe("the panels", () => {
 		assert.equal(isUnchanged(template({ data: "{}" })), true);
 	});
 
+	it("tell a changed document from the one of the server, and a blank one is never the server's", () => {
+		assert.equal(isUnchanged(serverDocument()), true);
+		assert.equal(isUnchanged(serverDocument({ document: "other" })), false);
+		assert.equal(isUnchanged(DOCUMENT), false);
+	});
+
 	it("take a template with CRLF from the server as unchanged in panels with LF, and print it", () => {
 		const t = template({ document: "doc\n\tline\n" });
 		t.original = { document: "doc\r\n\tline\r\n", styles: [{ path: ".styles.stxt", text: "root\r\n" },
@@ -137,7 +186,7 @@ describe("the panels", () => {
 		t.styles[0].text = "root\n";
 
 		assert.equal(isUnchanged(t), true);
-		assert.equal(asRequest(request(t, "pdf", false)).url, "/print/invoices/invoice?format=pdf");
+		assert.equal(asRequest(request(t, "pdf", false)).url, "/print/templates/invoices/invoice?format=pdf");
 		assert.equal(isUnchanged({ ...t, document: "doc\n\tother\n" }), false);
 	});
 
@@ -154,12 +203,17 @@ describe("the panels", () => {
 	});
 
 	it("are a document and its styles in the document mode, with one blank styles panel without styles", () => {
-		const blank = documentPanels("text", []);
-		assert.deepEqual(blank, { document: { title: "Document", text: "text" }, styles: [{ path: "Styles", text: "" }] });
+		const blank = documentPanels();
+		assert.deepEqual(blank, { document: { title: "Document", text: "" }, styles: [{ path: "Styles", text: "" }] });
 		assert.deepEqual(tabs(blank).map((tab) => tab.title), ["Document", "Styles"]);
 
-		const chain = [{ path: ".styles.stxt", text: "root" }, { path: "menus/menu.styles.stxt", text: "own" }];
-		assert.deepEqual(documentPanels("filled", chain).styles, chain);
+		const alone = documentPanels({ path: "posters/fair", document: "text", styles: [] });
+		assert.deepEqual(tabs(alone).map((tab) => tab.title), ["posters/fair.stxt", "Styles"]);
+
+		const chain = [{ path: "reference/.styles.stxt", text: "root" }, { path: "reference/tables/basic.styles.stxt", text: "own" }];
+		const panels = documentPanels({ path: "reference/tables/basic", document: "text", styles: chain });
+		assert.deepEqual(panels.styles, chain);
+		assert.deepEqual(panels.document, { title: "reference/tables/basic.stxt", text: "text" });
 	});
 
 	it("are the data first, then the document and its chain of styles, for a template", () => {
@@ -221,43 +275,44 @@ describe("curl", () => {
 	it("prints the template with the data of the panel, quoted for the shell", () => {
 		assert.equal(curl("http://h:8080", "invoices/invoice", "{\"name\": \"O'Brien\"}\n", false),
 			"curl -f -o invoice.pdf -H 'Content-Type: application/json' --data-binary '{\"name\": \"O'\\''Brien\"}' "
-			+ "http://h:8080/print/invoices/invoice");
+			+ "http://h:8080/print/templates/invoices/invoice");
 	});
 
 	it("takes the token from a variable, and without data is a GET", () => {
 		assert.equal(curl("http://h", "a", "", true),
-			"curl -f -o a.pdf -H \"Authorization: Bearer $STXT_PRESS_TOKEN\" http://h/print/a");
+			"curl -f -o a.pdf -H \"Authorization: Bearer $STXT_PRESS_TOKEN\" http://h/print/templates/a");
 	});
 
-	it("names the PDF after the template", () => {
+	it("names the PDF after the template or the document", () => {
 		assert.equal(fileName(template()), "invoice.pdf");
+		assert.equal(fileName(serverDocument()), "basic.pdf");
 		assert.equal(fileName(DOCUMENT), "document.pdf");
 	});
 });
 
 describe("parsePlace and placeUrl", () => {
-	it("reads a template, the same template as a document and the blank document", () => {
-		assert.deepEqual(parsePlace("/editor/catalogs/catalog", ""), { mode: "template", path: "catalogs/catalog" });
-		assert.deepEqual(parsePlace("/editor/catalogs/catalog", "?mode=document"), { mode: "document", path: "catalogs/catalog" });
-		assert.deepEqual(parsePlace("/editor/hello", "?mode=template"), { mode: "template", path: "hello" });
-		assert.deepEqual(parsePlace("/editor", ""), BLANK);
-		assert.deepEqual(parsePlace("/editor", "?mode=template"), BLANK);
+	it("reads a template, a document and the blank document", () => {
+		assert.deepEqual(parsePlace("/editor/templates/catalogs/catalog"), { mode: "template", path: "catalogs/catalog" });
+		assert.deepEqual(parsePlace("/editor/documents/reference/tables/basic"),
+			{ mode: "document", path: "reference/tables/basic" });
+		assert.deepEqual(parsePlace("/editor/templates/hello"), { mode: "template", path: "hello" });
+		assert.deepEqual(parsePlace("/editor"), BLANK);
 	});
 
 	it("is null for what is not a URL of the editor", () => {
-		for (const [pathname, search] of [["/", ""], ["/editor/", ""], ["/editor/a//b", ""], ["/editor/a/", ""],
-			["/editor/editor.js", ""], ["/editor/../x", ""], ["/editor/a%20b", ""], ["/editors/a", ""], ["/editor/a", "?mode=pdf"]]) {
-			assert.equal(parsePlace(pathname, search), null, pathname + search);
+		for (const pathname of ["/", "/editor/", "/editor/templates/", "/editor/documents/", "/editor/templates/a//b",
+			"/editor/templates/a/", "/editor/catalogs/catalog", "/editor/editor.js", "/editor/templates/../x",
+			"/editor/documents/a%20b", "/editors/templates/a", "/editor/template/a", "/editor/docs/a"]) {
+			assert.equal(parsePlace(pathname), null, pathname);
 		}
 	});
 
 	it("writes the URL that it reads", () => {
 		for (const place of [BLANK, { mode: "template" as const, path: "invoices/invoice" }, { mode: "document" as const, path: "menu" }]) {
-			const url = new URL(placeUrl(place), "http://localhost");
-			assert.deepEqual(parsePlace(url.pathname, url.search), place);
+			assert.deepEqual(parsePlace(new URL(placeUrl(place), "http://localhost").pathname), place);
 		}
-		assert.equal(placeUrl({ mode: "template", path: "catalogs/catalog" }), "/editor/catalogs/catalog");
-		assert.equal(placeUrl({ mode: "document", path: "catalogs/catalog" }), "/editor/catalogs/catalog?mode=document");
+		assert.equal(placeUrl({ mode: "template", path: "catalogs/catalog" }), "/editor/templates/catalogs/catalog");
+		assert.equal(placeUrl({ mode: "document", path: "examples/poster" }), "/editor/documents/examples/poster");
 		assert.equal(placeUrl(BLANK), "/editor");
 	});
 
@@ -267,24 +322,21 @@ describe("parsePlace and placeUrl", () => {
 		assert.ok(!samePlace(BLANK, { mode: "document", path: "a" }));
 	});
 
-	it("gives the place of a mode button: the same template in the other mode", () => {
-		const paths = ["a", "b"];
-
-		assert.deepEqual(placeOfMode("document", { mode: "template", path: "b" }, paths), { mode: "document", path: "b" });
-		assert.deepEqual(placeOfMode("template", { mode: "document", path: "b" }, paths), { mode: "template", path: "b" });
-		assert.deepEqual(placeOfMode("document", BLANK, paths), BLANK);
+	it("gives the place of a mode button: the first entry of its list", () => {
+		assert.deepEqual(placeOfMode("document", ["d1", "d2"], ["t1"]), { mode: "document", path: "d1" });
+		assert.deepEqual(placeOfMode("template", ["d1"], ["t1", "t2"]), { mode: "template", path: "t1" });
 	});
 
-	it("gives the first template for the templates mode from the blank document, and none without templates", () => {
-		assert.deepEqual(placeOfMode("template", BLANK, ["a", "b"]), { mode: "template", path: "a" });
-		assert.equal(placeOfMode("template", BLANK, []), null);
+	it("gives the blank document without documents, and no template without templates", () => {
+		assert.deepEqual(placeOfMode("document", [], ["t1"]), BLANK);
+		assert.equal(placeOfMode("template", ["d1"], []), null);
 	});
 });
 
 describe("byFolder", () => {
-	it("groups the templates by folder, in the order they first appear", () => {
+	it("groups the entries by folder, in the order they first appear", () => {
 		const groups = byFolder([{ path: "a/a1" }, { path: "a/b/y" }, { path: "a/c" }, { path: "root" }]);
-		assert.deepEqual(groups.map((g) => [g.folder, g.templates.map((t) => t.path)]),
+		assert.deepEqual(groups.map((g) => [g.folder, g.entries.map((t) => t.path)]),
 			[["a", ["a/a1", "a/c"]], ["a/b", ["a/b/y"]], ["", ["root"]]]);
 		assert.deepEqual(byFolder([]), []);
 	});

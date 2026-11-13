@@ -2,7 +2,7 @@
 # Each name has a single definition in the whole namespace. The values that the types do not check (a port above
 # 65535, a folder that does not exist, a variable that is not set) are checked when the file is read.
 Schema (@stxt.schema): dev.stxt.press
-	Description: The configuration of a server of stxt-press: where it listens, its token, its resources and templates folders, which routes are on, its limits and the options of the templates. Relative paths are relative to the folder of the file.
+	Description: The configuration of a server of stxt-press: where it listens, its token, its resources, templates and documents folders, which routes are on, its limits and the options of the templates and documents. Relative paths are relative to the folder of the file.
 
 	Node: Server
 		Type: GROUP
@@ -24,6 +24,8 @@ Schema (@stxt.schema): dev.stxt.press
 				Max: 1
 			Child: Image folder
 			Child: Template folder
+				Max: 1
+			Child: Document folder
 				Max: 1
 			Child: Routes
 				Max: 1
@@ -47,7 +49,7 @@ Schema (@stxt.schema): dev.stxt.press
 		Description: Whether the resources are opened when the first request needs them instead of when the server starts, without warm up. By default false, so that resources that are missing are seen before the first request.
 	Node: Warm up
 		Type: BOOLEAN
-		Description: Whether the server warms up before answering: it reads the whole resources folder and converts every template with its sample data, to PDF and to SVG, so that the first request is as fast as the next ones. Until it ends, every request, /health too, is answered with 503 (SERVER_STARTING). A template that cannot be converted is a warning in the log. By default true, and false with Lazy init: true; both true is an error.
+		Description: Whether the server warms up before answering: it reads the whole resources folder and converts every template with its sample data and every document, to PDF and to SVG, so that the first request is as fast as the next ones. Until it ends, every request, /health too, is answered with 503 (SERVER_STARTING). A template or a document that cannot be converted is a warning in the log. By default true, and false with Lazy init: true; both true is an error.
 	Node: Resource folder
 		Type: INLINE
 		Description: The resources folder, with the fonts in fonts/ and the images in images/. By default resources, next to this file. Not with Font folder or Image folder.
@@ -65,7 +67,10 @@ Schema (@stxt.schema): dev.stxt.press
 		Description: The first segments of the paths of the images of the folder: with logos, Image: logos/a.png is its file a.png.
 	Node: Template folder
 		Type: INLINE
-		Description: The templates folder of /print and /templates. Without it, the server has no templates.
+		Description: The templates folder of /print/templates and /templates. Without it, the server has no templates.
+	Node: Document folder
+		Type: INLINE
+		Description: The documents folder of /print/documents and /documents: layout documents converted as they are, with their chain of styles as in the templates folder and without data. Without it, the server has no documents.
 	Node: Producer
 		Type: INLINE
 		Description: The software that the PDFs of the server and of the commands render and print name as their producer, in their document information and their XMP. By default stxt-press and stxt-pdf with their versions, such as stxt-press 0.1.0 (stxt-pdf 0.17.0).
@@ -80,15 +85,20 @@ Schema (@stxt.schema): dev.stxt.press
 				Max: 1
 			Child: Templates
 				Max: 1
+			Child: Documents
+				Max: 1
 	Node: Editor
 		Type: BOOLEAN
-		Description: Whether the index (GET /) and the web editor (GET /editor and /editor/{path}) are on, with their files under /assets/ and /fonts, which only the previews of the editor use. The pages are served without token; they ask for the token when the API answers 401. By default true.
+		Description: Whether the index (GET /) and the web editor (GET /editor, /editor/templates/{path} and /editor/documents/{path}) are on, with their files under /assets/ and /fonts, which only the previews of the editor use. The pages are served without token; they ask for the token when the API answers 401. By default true.
 	Node: Render
 		Type: BOOLEAN
 		Description: Whether POST /render, which converts any document, is on. By default true.
 	Node: Templates
 		Type: BOOLEAN
 		Description: Whether /templates, which shows the texts and the sample data of the templates, is on. By default true.
+	Node: Documents
+		Type: BOOLEAN
+		Description: Whether /documents, which shows the texts of the documents, is on. By default true.
 
 	Node: Limits
 		Type: GROUP
@@ -137,7 +147,7 @@ Schema (@stxt.schema): dev.stxt.press
 
 	Node: Template options
 		Type: GROUP
-		Description: The options of the engine for every template of /print, the same as the options of a body of /render.
+		Description: The options of the engine for every template and every document of /print, the same as the options of a body of /render.
 		Children:
 			Child: PDF UA
 				Max: 1

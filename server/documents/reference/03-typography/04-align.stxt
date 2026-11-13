@@ -1,0 +1,68 @@
+# Typography: Align left, right, center and justify on the same paragraph.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · Alignment
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 20
+			Vertical: top
+			Box:
+				Margin: 0 0 16 0
+		For style: cell
+			Grow: 1
+			Base size: 0
+		For style: demo
+			Box:
+				Padding: 8
+				Border: 0.5
+				Border color: rule
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: Alignment
+		Paragraph: `Align` places each line in the width of its box. With `justify`, the spaces stretch so that each line reaches both sides, except the last line of the paragraph.
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: Align: left
+						Style: label
+					Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread.
+						Style: demo
+						Typography:
+							Align: left
+			Item:
+				Block:
+					Style: cell
+					Text: Align: right
+						Style: label
+					Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread.
+						Style: demo
+						Typography:
+							Align: right
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: Align: center
+						Style: label
+					Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread.
+						Style: demo
+						Typography:
+							Align: center
+			Item:
+				Block:
+					Style: cell
+					Text: Align: justify
+						Style: label
+					Paragraph: The Saturday market returns to the main square with more stalls than ever: vegetables from the market gardens, cheese from the hills and bread.
+						Style: demo
+						Typography:
+							Align: justify

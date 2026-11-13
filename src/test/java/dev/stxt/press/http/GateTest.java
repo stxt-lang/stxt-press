@@ -58,7 +58,7 @@ class GateTest {
     private final ServerConfig config = ServerConfig.DEFAULT;
     private final Conversions conversions = new Conversions(() -> SHARED, config.concurrentConversions(),
             config.timeout());
-    private final Gate gate = new Gate(new Routes(conversions, null, config), null);
+    private final Gate gate = new Gate(new Routes(conversions, null, null, config), null);
 
     /**
      * A PDF that fails once its status is sent (the client cuts the connection) is not answered with an error, which

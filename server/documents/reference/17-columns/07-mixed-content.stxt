@@ -1,0 +1,66 @@
+# Columns: any in-flow element goes inside a Columns (headings, lists, images, tables), and a Block with Keep together is not broken between columns.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Columns · Mixed content
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Size: 11
+				Line height: 14
+				Bold: true
+				Color: accent
+			Box:
+				Margin: 0 0 4 0
+		For element: List
+			Box:
+				Padding: 0 0 0 12
+				Margin: 0 0 6 0
+			Typography:
+				Size: 9
+				Line height: 12.5
+		For style: box
+			Box:
+				Padding: 6
+				Margin: 0 0 6 0
+				Background: sand
+			Typography:
+				Size: 9
+				Line height: 12.5
+			Break:
+				Keep together: true
+	Section:
+		Text: Columns
+			Style: topic
+		Heading 1:
+			Text: Mixed content
+		Paragraph: A `Columns` stacks any in-flow element as a `Block` does, and breaks it between columns with the rules of the page breaks. A `Block` with `Keep together: true` moves whole to the next column.
+			Style: intro
+		Columns:
+			Column count: 3
+			Gap: 14
+			Heading 2:
+				Text: The market
+			Paragraph: The Saturday market returns to the main square with more stalls than ever.
+			Image: examples/newsletter/market.jpg
+				Alt: Stalls of the market in the main square
+				Box:
+					Width: 100%
+					Margin: 0 0 6 0
+			List:
+				Marker: bullet
+				List item:
+					Text: Vegetables from the gardens
+				List item:
+					Text: Cheese from the hills
+				List item:
+					Text: Wood-fired bread
+			Heading 2:
+				Text: The walk
+			Paragraph: The residents' association is organizing a walk along the river, from the old bridge at ten in the morning to the mill.
+			Block:
+				Style: box
+				Text: Keep together: true. This block is not broken between two columns: it moves whole to the next one when it does not fit.
+			Paragraph: Registration is open until Friday at the public library, and the walk is free for members.

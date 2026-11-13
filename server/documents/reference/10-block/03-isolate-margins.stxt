@@ -1,0 +1,40 @@
+# Block: Isolate margins keeps the margins of the first and the last child inside the block.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Block · Isolate margins
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: piece
+			Box:
+				Margin: 16 0 16 0
+				Padding: 6 8
+				Background: tint
+		For style: holder
+			Box:
+				Background: sand
+	Section:
+		Text: Block
+			Style: topic
+		Heading 1:
+			Text: Isolate margins
+		Paragraph: Without border or padding, the margins of the first and the last child come out of the block and its background does not cover them. With `Isolate margins: true` they stay inside.
+			Style: intro
+		Text: Isolate margins: false (by default)
+			Style: label
+		Block:
+			Style: sample
+			Block:
+				Style: holder
+				Text: Margin 16 above and below, outside the sand background.
+					Style: piece
+		Text: Isolate margins: true
+			Style: label
+		Block:
+			Style: sample
+			Block:
+				Style: holder
+				Isolate margins: true
+				Text: Margin 16 above and below, inside the sand background.
+					Style: piece

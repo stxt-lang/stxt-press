@@ -1,0 +1,76 @@
+# Styles: the properties of an element (Gap, Marker, Column sizes...) given once in a rule.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Styles · Element properties in rules
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: dish
+			Gap: 12
+			Box:
+				Margin: 0 0 6 0
+				Padding: 0 0 6 0
+				Border: 0 0 0.5 0
+				Border color: rule
+		For style: name
+			Grow: 1
+		For style: price
+			Typography:
+				Bold: true
+		For element: List
+			Marker: dash
+			Box:
+				Padding: 0 0 0 14
+		For element: Table
+			Column sizes: * 70
+			Column align: left right
+		For element: Cell
+			Box:
+				Padding: 3 6
+	Section:
+		Text: Styles
+			Style: topic
+		Heading 1:
+			Text: Element properties in rules
+		Paragraph: Besides `Box`, `Typography` and `Break`, a rule gives the properties that say how an element looks or distributes its content: the `Gap` of a `Stack`, the `Marker` of a `List`, the `Column sizes` of a `Table`. `Grow`, `Shrink` and `Base size` belong to the `Item` and come from the rule of the element inside it.
+			Style: intro
+		Text: For style: dish (Gap: 12) and For style: name (Grow: 1)
+			Style: label
+		Stack:
+			Style: dish
+			Item:
+				Text: Red prawn croquettes
+					Style: name
+			Item:
+				Text: 9.50
+					Style: price
+		Stack:
+			Style: dish
+			Box:
+				Margin: 0 0 16 0
+			Item:
+				Text: Confit artichokes with ham
+					Style: name
+			Item:
+				Text: 12.00
+					Style: price
+		Text: For element: List (Marker: dash)
+			Style: label
+		List:
+			Box:
+				Margin: 0 0 16 0
+			List item:
+				Paragraph: The list declares no marker: the rule gives it.
+			List item:
+				Paragraph: Every list of the document gets the same one.
+		Text: For element: Table (Column sizes: * 70, Column align: left right)
+			Style: label
+		Table:
+			Body rows:
+				Row:
+					Cell: Walnut chair
+					Cell: 145.00
+				Row:
+					Cell: Dining table
+					Cell: 890.00

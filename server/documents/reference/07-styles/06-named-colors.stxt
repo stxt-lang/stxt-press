@@ -1,0 +1,56 @@
+# Styles: Named color, a color declared once with a name and written by that name everywhere.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Styles · Named colors
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		Named color: brand #12315A
+		Named color: brand-light #DCE6F2
+		Named color: brand-mid #2E6F9E
+		Named color: signal #B3261E
+		For style: panel
+			Box:
+				Margin: 0 0 12 0
+				Padding: 10
+				Background: brand-light
+				Border: 0 0 0 4
+				Border color: brand
+			Typography:
+				Color: brand
+		For style: banner
+			Box:
+				Height: 60
+				Padding: 10
+				Background: linear(90, brand, brand-mid)
+			Typography:
+				Size: 16
+				Bold: true
+				Color: #FFFFFF
+		For style: alert
+			Typography:
+				Color: signal
+				Bold: true
+	Section:
+		Text: Styles
+			Style: topic
+		Heading 1:
+			Text: Named colors
+		Paragraph: `Named color` declares a color once in `Styles`, with a name and its value. The name then goes wherever a color goes: `Color`, `Border color`, `Background` (also inside a gradient) and `Separator color`. Changing the palette is changing these lines.
+			Style: intro
+		Text: Named color: brand #12315A, brand-light #DCE6F2, brand-mid #2E6F9E, signal #B3261E
+			Style: label
+		Paragraph: Background: brand-light, Border color: brand, Color: brand.
+			Style: panel
+		Text: Background: linear(90, brand, brand-mid)
+			Style: label
+		Block:
+			Style: banner
+			Text: Quarterly report
+		Text: Color: signal
+			Style: label
+			Box:
+				Margin: 12 0 4 0
+		Paragraph: Payment overdue since 30 October.
+			Style: alert

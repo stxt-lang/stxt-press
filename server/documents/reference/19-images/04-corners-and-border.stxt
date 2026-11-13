@@ -1,0 +1,58 @@
+# Images: Corner radius clips the image, and Padding and Border go around it without distorting it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · Corners and border
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Images
+			Style: topic
+		Heading 1:
+			Text: Corners and border
+		Paragraph: An `Image` is a box: `Corner radius` clips the image with its corners, and `50%` on a square box gives a circle. `Padding`, `Border` and `Background` go around the image, which keeps its proportion inside.
+			Style: intro
+		Stack:
+			Gap: 24
+			Vertical: top
+			Item:
+				Block:
+					Text: Corner radius: 10
+						Style: label
+					Image: examples/catalog/silla.jpg
+						Alt: Walnut chair with a wool seat
+						Box:
+							Width: 120
+							Corner radius: 10
+			Item:
+				Block:
+					Text: Corner radius: 50%
+						Style: label
+					Image: examples/resume/photo.jpg
+						Alt: Portrait of a woman
+						Box:
+							Width: 120
+							Corner radius: 50%
+			Item:
+				Block:
+					Text: Padding: 6, Border: 1, Background
+						Style: label
+					Image: examples/catalog/mesa.jpg
+						Alt: Walnut dining table
+						Box:
+							Width: 120
+							Padding: 6
+							Border: 1
+							Border color: rule
+							Background: #FFFFFF
+		Text: Corner radius: 0 40 0 40, Fit: crop in a wide box
+			Style: label
+			Box:
+				Margin: 16 0 4 0
+		Image: examples/catalog/escritorio.jpg
+			Alt: Walnut desk
+			Fit: crop
+			Box:
+				Width: 100%
+				Height: 120
+				Corner radius: 0 40 0 40

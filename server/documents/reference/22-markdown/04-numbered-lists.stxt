@@ -1,0 +1,41 @@
+# Markdown: numbered lists with Number markers per level, and lists written with 1) that number with a parenthesis.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Numbered lists
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Numbered lists
+		Paragraph: Lists written with `1.` are numbered with `Number markers`, one per level: `decimal`, `lower-alpha`, `upper-alpha`, `lower-roman` or `upper-roman`. A list written with `1)` takes a parenthesis instead of a period. A list that starts at another number keeps it.
+			Style: intro
+		Text: Number markers: decimal lower-alpha lower-roman
+			Style: label
+		Markdown:
+			Number markers: decimal lower-alpha lower-roman
+			Content >>
+				1. Switch off the power.
+				2. Remove the cover.
+				   1. Keep the screws.
+				   2. Lift the front.
+				      1. From the bottom edge.
+				      2. Without forcing it.
+				3. Connect the wires.
+		Text: Number markers: upper-roman, written with 1)
+			Style: label
+		Markdown:
+			Number markers: upper-roman
+			Content >>
+				1) Scope of the agreement.
+				2) Duration.
+				3) Termination.
+		Text: Number markers: upper-alpha, starting at 4
+			Style: label
+		Markdown:
+			Number markers: upper-alpha
+			Content >>
+				4. Fourth appendix.
+				5. Fifth appendix.

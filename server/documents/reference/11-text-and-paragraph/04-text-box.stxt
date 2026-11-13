@@ -1,0 +1,53 @@
+# Text and Paragraph: a text is a box, with its width, padding, border and background around its lines.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text and Paragraph · A text is a box
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Text and Paragraph
+			Style: topic
+		Heading 1:
+			Text: A text is a box
+		Paragraph: A `Text` or a `Paragraph` takes the full width unless it declares `Width`, and measures the height of its lines. Its `Box` adds padding, border and background around them.
+			Style: intro
+		Text: Width: auto (by default)
+			Style: label
+		Text: The full width of the page area.
+			Box:
+				Margin: 0 0 14 0
+				Padding: 6 8
+				Background: tint
+		Text: Width: fit
+			Style: label
+		Text: As wide as its text.
+			Box:
+				Width: fit
+				Margin: 0 0 14 0
+				Padding: 6 8
+				Background: tint
+		Text: Width: 200, Align: right
+			Style: label
+		Paragraph: Two hundred points wide, so this paragraph breaks into several lines aligned to the right.
+			Typography:
+				Align: right
+			Box:
+				Width: 200
+				Margin: 0 0 14 0
+				Padding: 6 8
+				Background: tint
+		Text: Border: 1, Corner radius: 10, Margin: 0 auto
+			Style: label
+		Text: A centered badge
+			Typography:
+				Bold: true
+				Color: accent
+				Align: center
+			Box:
+				Width: 160
+				Margin: 0 auto
+				Padding: 4 10
+				Border: 1
+				Border color: accent
+				Corner radius: 10

@@ -1,0 +1,42 @@
+# Text and Paragraph: Rotate on a Text sets it vertically, and a rotated Paragraph needs a Width.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text and Paragraph · Rotated text
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: spine
+			Typography:
+				Bold: true
+				Color: accent
+	Section:
+		Text: Text and Paragraph
+			Style: topic
+		Heading 1:
+			Text: Rotated text
+		Paragraph: With `Rotate`, a text is written turned and takes the rectangle that encloses it. Without `Width`, a rotated text keeps its text on one line. A long rotated paragraph declares the `Width` of its lines before turning.
+			Style: intro
+		Text: Rotate: -90
+			Style: label
+		Block:
+			Style: sample
+			Text: Archive 2026
+				Style: spine
+				Rotate: -90
+		Text: Rotate: 90
+			Style: label
+		Block:
+			Style: sample
+			Text: Archive 2026
+				Style: spine
+				Rotate: 90
+		Text: Rotate: -90 with Width: 160
+			Style: label
+		Block:
+			Style: sample
+			Paragraph: A paragraph of several lines, broken at 160 points and then turned a quarter to the left.
+				Rotate: -90
+				Box:
+					Width: 160
+					Margin: 0

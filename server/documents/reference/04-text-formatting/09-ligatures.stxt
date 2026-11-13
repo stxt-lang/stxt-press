@@ -1,0 +1,41 @@
+# Text formatting: Ligatures false and true, with the fi, fl, ffi and ffl of IBM Plex Sans and Serif.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Ligatures
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: result
+			Box:
+				Margin: 0 0 14 0
+			Typography:
+				Font: IBM Plex Serif
+				Size: 32
+				Line height: 40
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Ligatures
+		Paragraph: Some fonts have one glyph for a pair of letters such as fi or fl. By default each letter is its own glyph. With `Ligatures: true`, those of the font are used. They do not change what is read or copied, and a `Letter spacing` other than 0 turns them off.
+			Style: intro
+		Text: Ligatures: false  (the default)
+			Style: label
+		Text: office · affluent · flow · fifty
+			Style: result
+			Typography:
+				Ligatures: false
+		Text: Ligatures: true
+			Style: label
+		Text: office · affluent · flow · fifty
+			Style: result
+			Typography:
+				Ligatures: true
+		Text: Ligatures: true, IBM Plex Sans
+			Style: label
+		Text: office · affluent · flow · fifty
+			Style: result
+			Typography:
+				Font: IBM Plex Sans
+				Ligatures: true

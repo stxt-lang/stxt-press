@@ -1,0 +1,101 @@
+# Footnotes: every Footnote number format, one section each (one page each), with two notes per section.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · Number formats
+	Page:
+		Paper: A6
+		Orientation: landscape
+		Margin: 10mm
+	Styles:
+		For style: format
+			Typography:
+				Font: IBM Plex Mono
+				Size: 9
+				Color: accent
+			Box:
+				Margin: 0 0 6 0
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: Number formats
+		Paragraph: `Footnote number format` in a `Section` writes its calls and notes in digits, letters, Roman numerals or symbols. Each page of this document is a section with another format and `Footnote numbering: restart`, so each one starts at the first symbol.
+			Style: intro
+		Text: Footnote number format: decimal  (default)
+			Style: format
+		Paragraph: The deposit[^d1] is returned at the end of the contract[^d2].
+		Footnote:
+			Id: d1
+			Paragraph: One month of rent.
+		Footnote:
+			Id: d2
+			Paragraph: Within thirty days.
+	Section:
+		Footnote numbering: restart
+		Footnote number format: lower-alpha
+		Text: Footnote number format: lower-alpha
+			Style: format
+		Paragraph: The deposit[^a1] is returned at the end of the contract[^a2].
+		Footnote:
+			Id: a1
+			Paragraph: One month of rent.
+		Footnote:
+			Id: a2
+			Paragraph: Within thirty days.
+	Section:
+		Footnote numbering: restart
+		Footnote number format: upper-alpha
+		Text: Footnote number format: upper-alpha
+			Style: format
+		Paragraph: The deposit[^ua1] is returned at the end of the contract[^ua2].
+		Footnote:
+			Id: ua1
+			Paragraph: One month of rent.
+		Footnote:
+			Id: ua2
+			Paragraph: Within thirty days.
+	Section:
+		Footnote numbering: restart
+		Footnote number format: lower-roman
+		Text: Footnote number format: lower-roman
+			Style: format
+		Paragraph: The deposit[^r1] is returned at the end of the contract[^r2].
+		Footnote:
+			Id: r1
+			Paragraph: One month of rent.
+		Footnote:
+			Id: r2
+			Paragraph: Within thirty days.
+	Section:
+		Footnote numbering: restart
+		Footnote number format: upper-roman
+		Text: Footnote number format: upper-roman
+			Style: format
+		Paragraph: The deposit[^ur1] is returned at the end of the contract[^ur2].
+		Footnote:
+			Id: ur1
+			Paragraph: One month of rent.
+		Footnote:
+			Id: ur2
+			Paragraph: Within thirty days.
+	Section:
+		Footnote numbering: restart
+		Footnote number format: symbols
+		Text: Footnote number format: symbols
+			Style: format
+		Paragraph: The deposit[^s1] is returned at the end of the contract[^s2]. Keys[^s3], parking[^s4] and storage[^s5] go apart.
+		Footnote:
+			Id: s1
+			Paragraph: One month of rent.
+		Footnote:
+			Id: s2
+			Paragraph: Within thirty days.
+		Footnote:
+			Id: s3
+			Paragraph: Two sets.
+		Footnote:
+			Id: s4
+			Paragraph: Space 14.
+		Footnote:
+			Id: s5
+			Paragraph: In the basement, after the fourth symbol the first one doubles.

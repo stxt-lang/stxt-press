@@ -1,0 +1,47 @@
+# Images: a letterhead in PDF as preprinted paper, a Page overlay behind the content that reaches the edges of the page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · Preprinted paper
+	Page:
+		Paper: A4
+		Margin: 140 72 80 72
+	Styles:
+		For style: letter
+			Typography:
+				Font: IBM Plex Serif
+				Size: 10.5
+				Line height: 16
+	Section:
+		Page overlay:
+			Pages: first
+			Offset: -140 -72 -80 -72
+			Layer: -1
+			Image: examples/letterhead/letterhead.pdf
+				Box:
+					Width: 100%
+					Height: 100%
+		Page overlay:
+			Pages: not-first
+			Offset: -140 -72 -80 -72
+			Layer: -1
+			Image: examples/letterhead/letterhead.pdf
+				PDF page: 2
+				Box:
+					Width: 100%
+					Height: 100%
+		Text: Images
+			Style: topic
+		Heading 1:
+			Text: Preprinted paper
+		Paragraph: Each sheet is a page of a PDF in a `Page overlay` with `Layer: -1`, behind the content. A negative `Offset` equal to the page margin takes it to the edges of the paper, and `Width` and `Height` at 100% make the image fill it. The first sheet uses `PDF page: 1` and the rest `PDF page: 2`, with `Pages: first` and `Pages: not-first`. Preprinted paper is decoration, so it has no `Alt`.
+			Style: intro
+		Paragraph: Olot, October 20, 2025
+			Style: letter
+		Paragraph: We are sending the proposal for renewing the dining room furniture, with the details of each piece and its delivery time.
+			Style: letter
+		Paragraph: The following sheet carries the letterhead of the following sheets.
+			Style: letter
+			Break:
+				After: page
+		Paragraph: Second sheet of the letter, on the paper of PDF page 2.
+			Style: letter

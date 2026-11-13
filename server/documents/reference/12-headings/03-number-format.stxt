@@ -1,0 +1,55 @@
+# Headings: Number format per level, with decimal, lower-alpha, upper-alpha, lower-roman and upper-roman.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Headings · Number format
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Numbered: true
+				Number format: upper-roman
+		For element: Heading 3
+			Typography:
+				Numbered: true
+				Number format: upper-alpha
+		For element: Heading 4
+			Typography:
+				Numbered: true
+				Number format: decimal
+		For element: Heading 5
+			Typography:
+				Numbered: true
+				Number format: lower-alpha
+		For element: Heading 6
+			Typography:
+				Numbered: true
+				Number format: lower-roman
+	Section:
+		Text: Headings
+			Style: topic
+		Heading 1:
+			Text: Number format
+		Paragraph: `Number format` writes the number of a level in digits, letters or roman numerals. Each level of the full number keeps the format of its own heading: `II.B.1.a.i`.
+			Style: intro
+		Heading 2:
+			Text: upper-roman
+		Heading 2:
+			Text: upper-roman, the second one
+		Heading 3:
+			Text: upper-alpha
+		Heading 3:
+			Text: upper-alpha, the second one
+		Heading 4:
+			Text: decimal
+		Heading 5:
+			Text: lower-alpha
+		Heading 5:
+			Text: lower-alpha, the second one
+		Heading 6:
+			Text: lower-roman
+		Heading 6:
+			Text: lower-roman, the second one
+		Heading 6:
+			Text: lower-roman, the third one

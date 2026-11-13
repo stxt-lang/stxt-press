@@ -1,0 +1,35 @@
+# The look shared by the documents about references and links: the page footer and the boxes that are referred to.
+Styles (dev.stxt.pdf):
+	For element: Page overlay
+		Typography:
+			Size: 8
+			Line height: 10
+			Color: muted
+	For element: Heading 2
+		Typography:
+			Size: 13
+			Line height: 17
+			Bold: true
+			Color: accent
+		Box:
+			Margin: 12 0 6 0
+	For element: Heading 3
+		Typography:
+			Size: 11
+			Line height: 15
+			Bold: true
+		Box:
+			Margin: 10 0 4 0
+	# The box a reference or a link points to.
+	For style: target
+		Box:
+			Margin: 0 0 12 0
+			Padding: 8 10
+			Border: 0 0 0 3
+			Border color: accent
+			Background: tint
+	# What a link looks like: the engine gives it no look of its own.
+	For style: link
+		Typography:
+			Color: accent
+			Bold: true

@@ -1,0 +1,316 @@
+# Boarding passes of a return trip, one per page, on a custom page size of 210 × 99 mm (Width and Height in Page).
+# Each pass is a card with rounded corners over a grey sheet: a Grid of two columns, the pass and the stub, split by
+# a dashed line (Border style: dashed) with two notches cut at its ends (Page overlay circles of the colour of the
+# sheet). The airports and the flight time share a baseline (Vertical: baseline in a Stack) although their sizes
+# differ, the details go in a Grid of labels and values, the pass carries the PDF417 barcode that gate readers scan
+# (Barcode format: pdf417, with the data of the IATA boarding pass) and the stub, a Code 128 of the booking
+# reference with its readable text. The airline mark is a small SVG.
+Document (dev.stxt.pdf):
+	Page:
+		Width: 210mm
+		Height: 99mm
+		Margin: 6mm
+	Title: Boarding passes · Ingrid Halvorsen · Lisbon and Oslo
+	Subject: Boarding passes of booking EK7Q2M, flights NW418 and NW419
+	Author: Northwind Air
+	Language: en
+	Page overlay:
+		Id: sheet
+		Offset: -6mm
+		Layer: -2
+		Box:
+			Background: #DCE4E8
+	Page overlay:
+		Id: notch-top
+		Offset: -3mm auto auto 135mm
+		Block:
+			Style: notch
+	Page overlay:
+		Id: notch-bottom
+		Offset: auto auto -3mm 135mm
+		Block:
+			Style: notch
+	Section:
+		Id: outbound
+		Grid:
+			Id: pass-outbound
+			Style: pass
+			Area:
+				Block:
+					Style: main
+					Stack:
+						Style: band
+						Item:
+							Image: documents/boarding-pass/northwind.svg
+								Style: logo
+						Item:
+							Grow: 1
+							Text: Northwind Air
+								Style: airline
+						Item:
+							Text: Boarding pass
+								Style: band-label
+					Block:
+						Style: main-body
+						Stack:
+							Style: route
+							Item:
+								Block:
+									Text: LIS
+										Style: airport
+									Text: Lisbon · 07:40
+										Style: city
+							Item:
+								Text: →
+									Style: arrow
+							Item:
+								Block:
+									Text: OSL
+										Style: airport
+									Text: Oslo · 12:05
+										Style: city
+							Item:
+								Grow: 1
+								Text: 3 h 25 min · direct
+									Style: duration
+						Grid:
+							Style: fields
+							Area: 1 1 1 2
+								Block:
+									Text: Passenger
+										Style: label
+									Text: Halvorsen / Ingrid Ms
+										Style: value
+							Area:
+								Block:
+									Text: Flight
+										Style: label
+									Text: NW418
+										Style: value
+							Area:
+								Block:
+									Text: Date
+										Style: label
+									Text: 14 Jul 2026
+										Style: value
+							Area:
+								Block:
+									Text: Boarding
+										Style: label
+									Text: 07:00
+										Style: value accent
+							Area:
+								Block:
+									Text: Gate
+										Style: label
+									Text: 14
+										Style: value accent
+							Area:
+								Block:
+									Text: Seat
+										Style: label
+									Text: 14C
+										Style: value accent
+							Area:
+								Block:
+									Text: Zone
+										Style: label
+									Text: 3
+										Style: value
+						Stack:
+							Style: scan
+							Item:
+								Barcode: M1HALVORSEN/INGRID    EK7Q2MP LISOSLNW 0418 195Y014C0057 100
+									Id: bcbp-outbound
+									Barcode format: pdf417
+									Alt: PDF417 boarding pass barcode for flight NW418, seat 14C
+									Style: pdf417
+							Item:
+								Grow: 1
+								Paragraph: The gate closes **20 minutes** before departure. Hand luggage: one bag of up to 8 kg and one personal item.
+									Style: note
+			Area:
+				Block:
+					Style: stub
+					Text: Northwind Air
+						Style: stub-airline
+					Grid:
+						Style: stub-fields
+						Area: 1 1 1 2
+							Block:
+								Text: Passenger
+									Style: label
+								Text: Halvorsen / Ingrid Ms
+									Style: value small
+						Area:
+							Block:
+								Text: Flight
+									Style: label
+								Text: NW418
+									Style: value small
+						Area:
+							Block:
+								Text: Route
+									Style: label
+								Text: LIS → OSL
+									Style: value small
+						Area:
+							Block:
+								Text: Seat
+									Style: label
+								Text: 14C
+									Style: value small accent
+						Area:
+							Block:
+								Text: Gate
+									Style: label
+								Text: 14
+									Style: value small accent
+					Barcode: EK7Q2M418
+						Id: stub-outbound
+						Barcode format: code-128
+						Readable text: true
+						Alt: Code 128 barcode of booking EK7Q2M on flight NW418
+						Style: code128
+	Section:
+		Id: return
+		Grid:
+			Id: pass-return
+			Style: pass
+			Area:
+				Block:
+					Style: main
+					Stack:
+						Style: band
+						Item:
+							Image: documents/boarding-pass/northwind.svg
+								Style: logo
+						Item:
+							Grow: 1
+							Text: Northwind Air
+								Style: airline
+						Item:
+							Text: Boarding pass
+								Style: band-label
+					Block:
+						Style: main-body
+						Stack:
+							Style: route
+							Item:
+								Block:
+									Text: OSL
+										Style: airport
+									Text: Oslo · 18:50
+										Style: city
+							Item:
+								Text: →
+									Style: arrow
+							Item:
+								Block:
+									Text: LIS
+										Style: airport
+									Text: Lisbon · 21:30
+										Style: city
+							Item:
+								Grow: 1
+								Text: 3 h 40 min · direct
+									Style: duration
+						Grid:
+							Style: fields
+							Area: 1 1 1 2
+								Block:
+									Text: Passenger
+										Style: label
+									Text: Halvorsen / Ingrid Ms
+										Style: value
+							Area:
+								Block:
+									Text: Flight
+										Style: label
+									Text: NW419
+										Style: value
+							Area:
+								Block:
+									Text: Date
+										Style: label
+									Text: 21 Jul 2026
+										Style: value
+							Area:
+								Block:
+									Text: Boarding
+										Style: label
+									Text: 18:10
+										Style: value accent
+							Area:
+								Block:
+									Text: Gate
+										Style: label
+									Text: D7
+										Style: value accent
+							Area:
+								Block:
+									Text: Seat
+										Style: label
+									Text: 09A
+										Style: value accent
+							Area:
+								Block:
+									Text: Zone
+										Style: label
+									Text: 2
+										Style: value
+						Stack:
+							Style: scan
+							Item:
+								Barcode: M1HALVORSEN/INGRID    EK7Q2MP OSLLISNW 0419 202Y009A0031 100
+									Id: bcbp-return
+									Barcode format: pdf417
+									Alt: PDF417 boarding pass barcode for flight NW419, seat 09A
+									Style: pdf417
+							Item:
+								Grow: 1
+								Paragraph: The gate closes **20 minutes** before departure. Keep your passport or identity card at hand until you board.
+									Style: note
+			Area:
+				Block:
+					Style: stub
+					Text: Northwind Air
+						Style: stub-airline
+					Grid:
+						Style: stub-fields
+						Area: 1 1 1 2
+							Block:
+								Text: Passenger
+									Style: label
+								Text: Halvorsen / Ingrid Ms
+									Style: value small
+						Area:
+							Block:
+								Text: Flight
+									Style: label
+								Text: NW419
+									Style: value small
+						Area:
+							Block:
+								Text: Route
+									Style: label
+								Text: OSL → LIS
+									Style: value small
+						Area:
+							Block:
+								Text: Seat
+									Style: label
+								Text: 09A
+									Style: value small accent
+						Area:
+							Block:
+								Text: Gate
+									Style: label
+								Text: D7
+									Style: value small accent
+					Barcode: EK7Q2M419
+						Id: stub-return
+						Barcode format: code-128
+						Readable text: true
+						Alt: Code 128 barcode of booking EK7Q2M on flight NW419
+						Style: code128

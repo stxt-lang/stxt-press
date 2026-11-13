@@ -1,0 +1,54 @@
+# Grid: columns sized by their content, with auto, narrowest and natural.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Columns sized by their content
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Columns sized by their content
+		Paragraph: `natural` is the width of the content without breaking any line, and `narrowest` is the width of its longest word. `auto` lies between the two and takes its part of the leftover space when there is no fraction.
+			Style: intro
+		Text: Column sizes: natural natural
+			Style: label
+		Grid:
+			Column sizes: natural natural
+			Area:
+				Text: Walnut chair
+					Style: tile
+			Area:
+				Text: Solid walnut with an oil finish
+					Style: pale
+		Text: Column sizes: narrowest narrowest
+			Style: label
+		Grid:
+			Column sizes: narrowest narrowest
+			Area:
+				Text: Walnut chair
+					Style: tile
+			Area:
+				Text: Solid walnut with an oil finish
+					Style: pale
+		Text: Column sizes: auto auto  (the leftover space goes to both)
+			Style: label
+		Grid:
+			Column sizes: auto auto
+			Area:
+				Text: Walnut chair
+					Style: tile
+			Area:
+				Text: Solid walnut with an oil finish
+					Style: pale
+		Text: Column sizes: auto 200  (a long text in the auto column)
+			Style: label
+		Grid:
+			Column sizes: auto 200
+			Area:
+				Text: The auto column does not grow past its natural width when the line would not fit: here it breaks the text into lines to leave room for the column of 200.
+					Style: tile
+			Area:
+				Text: 200
+					Style: pale

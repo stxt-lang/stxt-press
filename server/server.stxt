@@ -12,12 +12,15 @@ Server (dev.stxt.press):
 	# The fonts in fonts/, one folder for each family, and the images in images/, by the path a document gives them
 	# (Image: examples/menu/emblem.svg).
 	Resource folder: resources
-	# The templates of /print: each one with its document, its styles and its sample data.
+	# The templates of /print/templates: each one with its document, its styles and its sample data.
 	Template folder: templates
+	# The documents of /print/documents: layout documents converted as they are, each one with its styles.
+	Document folder: documents
 	# Routes:
 	#     Editor: true
 	#     Render: true
 	#     Templates: true
+	#     Documents: true
 	# Limits:
 	#     Max body size: 2097152
 	#     Timeout: 30

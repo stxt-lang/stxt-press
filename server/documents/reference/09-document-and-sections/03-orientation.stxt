@@ -1,0 +1,30 @@
+# Document and sections: Orientation: landscape for a section in the middle of a portrait document.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Document and sections · Orientation
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Document and sections
+			Style: topic
+		Heading 1:
+			Text: Orientation
+		Paragraph: `Orientation: landscape` swaps the width and the height of the `Paper`. A section that declares only the orientation keeps the paper and the margins of the document: page 2 is the same A5, turned.
+			Style: intro
+		Text: Page: Paper: A5  (portrait, the default)
+			Style: card
+	Section:
+		Page:
+			Orientation: landscape
+		Text: Page: Orientation: landscape  (in the section)
+			Style: card
+		Paragraph: A wide table or a chart goes better on a landscape page.
+	Section:
+		Text: Page: Paper: A5  (portrait again, from the document)
+			Style: card

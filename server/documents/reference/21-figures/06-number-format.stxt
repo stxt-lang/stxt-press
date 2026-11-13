@@ -1,0 +1,57 @@
+# Figures: Number format and Number label in the figure Typography, and Numbered: false for a figure without a number.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Figures · Number format and unnumbered figures
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: plate
+			Typography:
+				Number format: upper-roman
+				Number label: Plate {number} ·
+	Section:
+		Text: Figures
+			Style: topic
+		Heading 1:
+			Text: Number format and unnumbered figures
+		Paragraph: `Number format` writes the number in letters or Roman numerals and `Number label` sets what goes around it, with `{number}` where it goes. `Numbered: false` leaves a figure without a number, and the next one continues the count.
+			Style: intro
+		Grid:
+			Column sizes: 52mm 52mm 52mm
+			Gap: 16
+			Vertical: top
+			Area:
+				Block:
+					Text: Number format: upper-roman
+						Style: label
+					Figure:
+						Style: plate
+						Caption: Desk.
+						Image: examples/catalog/escritorio.jpg
+							Alt: Walnut desk
+							Box:
+								Width: 100%
+			Area:
+				Block:
+					Text: Numbered: false
+						Style: label
+					Figure:
+						Typography:
+							Numbered: false
+						Caption: Mirror, without a number.
+						Image: examples/catalog/espejo.jpg
+							Alt: Round mirror with a walnut frame
+							Box:
+								Width: 100%
+			Area:
+				Block:
+					Text: (the count continues)
+						Style: label
+					Figure:
+						Style: plate
+						Caption: Lamp.
+						Image: examples/catalog/lampara.jpg
+							Alt: Floor lamp
+							Box:
+								Width: 100%

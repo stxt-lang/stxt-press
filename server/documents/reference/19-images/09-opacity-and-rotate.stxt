@@ -1,0 +1,61 @@
+# Images: Opacity makes an image faint and Rotate turns it in place, taking the rectangle that encloses it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · Opacity and Rotate
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Images
+			Style: topic
+		Heading 1:
+			Text: Opacity and Rotate
+		Paragraph: `Opacity` paints the image, with its background and its border, at a percentage. `Rotate` turns the image around its center, clockwise in degrees, and the box in the flow takes the rectangle that encloses it rotated, so the boxes around it move aside.
+			Style: intro
+		Stack:
+			Gap: 20
+			Vertical: top
+			Box:
+				Margin: 0 0 16 0
+			Item:
+				Block:
+					Text: Opacity: 100%
+						Style: label
+					Image: examples/catalog/taburete.jpg
+						Alt: Walnut stool
+						Box:
+							Width: 110
+			Item:
+				Block:
+					Text: Opacity: 50%
+						Style: label
+					Image: examples/catalog/taburete.jpg
+						Alt: Walnut stool
+						Opacity: 50%
+						Box:
+							Width: 110
+			Item:
+				Block:
+					Text: Opacity: 15%
+						Style: label
+					Image: examples/catalog/taburete.jpg
+						Alt: Walnut stool
+						Opacity: 15%
+						Box:
+							Width: 110
+		Text: Rotate: 90 and Rotate: -20
+			Style: label
+		Image: examples/newsletter/trail.jpg
+			Alt: A path between meadows with mountains in the background
+			Rotate: 90
+			Box:
+				Width: 150
+				Margin: 0 0 10 0
+		Image: examples/newsletter/trail.jpg
+			Alt: A path between meadows with mountains in the background
+			Rotate: -20
+			Box:
+				Width: 150
+		Paragraph: The paragraph after the rotated images starts below the rectangle that encloses the last one.
+			Box:
+				Margin: 10 0 0 0

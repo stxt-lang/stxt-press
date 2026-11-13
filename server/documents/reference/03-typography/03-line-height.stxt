@@ -1,0 +1,82 @@
+# Typography: Line height in points and in percent of the size.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · Line height
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 16
+			Vertical: top
+			Box:
+				Margin: 0 0 16 0
+		For style: cell
+			Grow: 1
+			Base size: 0
+		For style: lines
+			Box:
+				Padding: 0 6
+				Background: linear(180, #EEF3F8, #FFFFFF)
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: Line height
+		Paragraph: Each line measures exactly `Line height` and the letters are centered in it. A number is points and a percentage is relative to the `Size` of the text (120% by default).
+			Style: intro
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: Size: 10, Line height: 11
+						Style: label
+					Paragraph: The quarterly figures show steady growth in every region, with the strongest results in the north and a slower start in the islands.
+						Typography:
+							Line height: 11
+			Item:
+				Block:
+					Style: cell
+					Text: Size: 10, Line height: 14
+						Style: label
+					Paragraph: The quarterly figures show steady growth in every region, with the strongest results in the north and a slower start in the islands.
+						Typography:
+							Line height: 14
+			Item:
+				Block:
+					Style: cell
+					Text: Size: 10, Line height: 20
+						Style: label
+					Paragraph: The quarterly figures show steady growth in every region, with the strongest results in the north and a slower start in the islands.
+						Typography:
+							Line height: 20
+		Stack:
+			Style: row
+			Item:
+				Block:
+					Style: cell
+					Text: Size: 16, Line height: 100%
+						Style: label
+					Paragraph: Sixteen points with lines of sixteen points.
+						Typography:
+							Size: 16
+							Line height: 100%
+			Item:
+				Block:
+					Style: cell
+					Text: Size: 16, Line height: 120%
+						Style: label
+					Paragraph: Sixteen points with lines of 19.2 points.
+						Typography:
+							Size: 16
+							Line height: 120%
+			Item:
+				Block:
+					Style: cell
+					Text: Size: 16, Line height: 150%
+						Style: label
+					Paragraph: Sixteen points with lines of 24 points.
+						Typography:
+							Size: 16
+							Line height: 150%

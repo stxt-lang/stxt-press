@@ -1,0 +1,71 @@
+# Stack: across pages, Split items: true breaks a row that does not fit and false moves it whole to the next page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Split items
+	Page:
+		Paper: A6
+		Margin: 12mm
+	Styles:
+		For element: Paragraph
+			Typography:
+				Size: 8
+				Line height: 11
+		For style: column
+			Box:
+				Padding: 6
+				Background: sand
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Split items
+		Paragraph: A row taller than what is left of the page is broken there, each item on its own, with `Split items: true` (the default). With `false` it moves whole to the next page.
+			Style: intro
+		Paragraph: Below, the first row declares Split items: false and the second one keeps the default. Both are taller than what is left of their page.
+		Text: Split items: false
+			Style: label
+		Stack:
+			Split items: false
+			Gap: 8
+			Item:
+				Grow: 1
+				Base size: 0
+				Block:
+					Style: column
+					Paragraph: This row does not fit in what is left of its page, so it moves whole to the next page.
+					Paragraph: Its items are never broken.
+					Paragraph: The space it leaves on the previous page stays empty.
+					Paragraph: A row is only broken with false when it does not fit on a whole page either.
+					Paragraph: The label above it goes with it, because a label keeps with the next box.
+					Paragraph: The previous page keeps only the text above it.
+					Paragraph: This row ends here.
+			Item:
+				Grow: 1
+				Base size: 0
+				Block:
+					Style: column
+					Paragraph: The second item goes with it.
+		Text: Split items: true
+			Style: label
+		Stack:
+			Gap: 8
+			Item:
+				Grow: 1
+				Base size: 0
+				Block:
+					Style: column
+					Paragraph: The row of this Stack starts under the previous one and continues on the next page, because it is split where the page ends.
+					Paragraph: Each item breaks between its own lines.
+					Paragraph: The first part of the row fills the page.
+					Paragraph: The rest of the row goes on at the top of the next page.
+					Paragraph: The background of each item is broken with it.
+					Paragraph: Widows and orphans still apply to each paragraph of an item.
+					Paragraph: Here the first item is the taller one, so it sets where the row ends.
+			Item:
+				Grow: 1
+				Base size: 0
+				Block:
+					Style: column
+					Paragraph: The second item is broken at the same height as the first one, in parallel.
+					Paragraph: Its last lines go on the next page.
+					Paragraph: Both items keep their width on the two pages.

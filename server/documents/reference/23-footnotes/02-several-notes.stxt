@@ -1,0 +1,25 @@
+# Footnotes: several notes, numbered in the order of their calls and not in the order they are written.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · Several notes
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: Several notes
+		Paragraph: Notes are numbered in the order of their first call. Here the notes are written before the text, in another order, and still come out 1, 2 and 3.
+			Style: intro
+		Footnote:
+			Id: plan
+			Paragraph: The plan was approved at the October meeting.
+		Footnote:
+			Id: stores
+			Paragraph: In Girona and in Vic.
+		Footnote:
+			Id: source
+			Paragraph: Figures from the annual report, closed on December 31.
+		Paragraph: Sales grew by 12% in the quarter[^source], with two new stores[^stores] open since spring.
+		Paragraph: The plan for next year[^plan] keeps the same number of stores.

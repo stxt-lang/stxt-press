@@ -1,0 +1,63 @@
+# Typography: Font and Size, required in every text, and the three families of the server.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Typography · Font and size
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: sample-line
+			Box:
+				Margin: 0 0 14 0
+	Section:
+		Text: Typography
+			Style: topic
+		Heading 1:
+			Text: Font and size
+		Paragraph: There is no default font: every text needs a `Font` and a `Size`, its own or inherited. The font is named by its family, as its files declare it. This server has IBM Plex Sans, IBM Plex Serif and IBM Plex Mono.
+			Style: intro
+		Text: Font: IBM Plex Sans
+			Style: label
+		Text: Walnut chairs, oak tables and wool cushions.
+			Style: sample-line
+			Typography:
+				Font: IBM Plex Sans
+				Size: 16
+		Text: Font: IBM Plex Serif
+			Style: label
+		Text: Walnut chairs, oak tables and wool cushions.
+			Style: sample-line
+			Typography:
+				Font: IBM Plex Serif
+				Size: 16
+		Text: Font: IBM Plex Mono
+			Style: label
+		Text: Walnut chairs, oak tables and wool cushions.
+			Style: sample-line
+			Typography:
+				Font: IBM Plex Mono
+				Size: 16
+		Text: Size: 8, 10, 14, 20 and 32
+			Style: label
+		Text: Size 8 · the smallest print of a footer
+			Typography:
+				Size: 8
+		Text: Size 10 · the body text of this reference
+			Typography:
+				Size: 10
+		Text: Size 14 · a subtitle
+			Typography:
+				Size: 14
+		Text: Size 20 · a heading
+			Typography:
+				Size: 20
+		Text: Size 32 · a cover
+			Typography:
+				Size: 32
+		Text: Size: 4mm  (a size in millimeters, 11.34 points)
+			Style: label
+			Box:
+				Margin: 14 0 4 0
+		Text: The size is a length, so it also accepts millimeters.
+			Typography:
+				Size: 4mm

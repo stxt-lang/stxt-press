@@ -1,0 +1,26 @@
+# The look of the figures of this folder: their spacing, the label before their number, the captions and the cells of
+# the tables inside them.
+Styles (dev.stxt.pdf):
+	For element: Figure
+		Typography:
+			Number label: Figure {number}.
+		Box:
+			Margin: 4 0 16 0
+	For style: table-figure
+		Typography:
+			Number label: Table {number}.
+	For element: Caption
+		Typography:
+			Size: 8.5
+			Line height: 12
+			Color: muted
+		Box:
+			Margin: 4 0 4 0
+	For element: Cell
+		Box:
+			Padding: 3 6
+			Border: 0 0 0.5 0
+			Border color: rule
+	For element: Header cell
+		Typography:
+			Bold: true

@@ -1,0 +1,38 @@
+# Markdown: the inline marks: bold, italic, underline, strikethrough, code, links, styled runs and escapes.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Inline formatting
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: price
+			Typography:
+				Color: #A12A1E
+				Bold: true
+		For style: brand
+			Typography:
+				Font: IBM Plex Serif
+				Italic: true
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Inline formatting
+		Paragraph: Inside a `Markdown` the marks of a line work as in `Markup: markdown`. The code goes in the `Code font` of the `Typography`, a link is underlined and `[text]{name}` takes the look of the `For style: name` rule. A backslash writes a mark as it is.
+			Style: intro
+		Markdown:
+			Content >>
+				**Bold**, *italic* and ***both***. ++Underlined++ and ~~struck through~~.
+
+				The command `mvn test` runs the tests, in the code font.
+
+				The [website](https://stxt.dev) and the [section on prices](#prices) are links.
+
+				A subscription to [The Gazette]{brand} costs [€12.50]{price} a month.
+
+				Written as they are: \*not italic\*, \[not a link\] and \`not code\`.
+
+				## Prices {#prices}
+
+				The prices include VAT.

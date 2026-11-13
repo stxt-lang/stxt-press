@@ -1,0 +1,37 @@
+# Text and Paragraph: Link on a text, and links on part of a line with Markup: markdown.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text and Paragraph · Links
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: link
+			Typography:
+				Color: accent
+	Section:
+		Text: Text and Paragraph
+			Style: topic
+		Heading 1:
+			Text: Links
+		Paragraph: `Link` makes the whole text clickable and does not change its look: the color here comes from a style. With `Markup: markdown`, `[text](target)` links only part of a line, and that part is underlined.
+			Style: intro
+		Text: Link: mailto:info@example.com
+			Style: label
+		Text: Write to info@example.com
+			Style: link
+			Link: mailto:info@example.com
+			Box:
+				Margin: 0 0 14 0
+		Text: Link: https://stxt.dev
+			Style: label
+		Text: The STXT website
+			Style: link
+			Link: https://stxt.dev
+			Box:
+				Margin: 0 0 14 0
+		Text: Markup: markdown with [the website](https://stxt.dev)
+			Style: label
+		Paragraph: The specification is on [the website](https://stxt.dev), and the contact address is [info@example.com](mailto:info@example.com).
+			Typography:
+				Markup: markdown

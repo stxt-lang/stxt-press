@@ -1,0 +1,59 @@
+# Tables: Gap separates the cells, with one value or two (rows, columns).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Gap
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Background: tint
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Gap
+		Paragraph: `Gap` on the `Table` leaves space between the cells. With one value it is the same between rows and between columns, and with two it is rows first, then columns.
+			Style: intro
+		Text: Gap: 0 (by default)
+			Style: label
+		Table:
+			Column sizes: * * *
+			Body rows:
+				Row:
+					Cell: A1
+					Cell: B1
+					Cell: C1
+				Row:
+					Cell: A2
+					Cell: B2
+					Cell: C2
+		Text: Gap: 6
+			Style: label
+		Table:
+			Column sizes: * * *
+			Gap: 6
+			Body rows:
+				Row:
+					Cell: A1
+					Cell: B1
+					Cell: C1
+				Row:
+					Cell: A2
+					Cell: B2
+					Cell: C2
+		Text: Gap: 2 16
+			Style: label
+		Table:
+			Column sizes: * * *
+			Gap: 2 16
+			Body rows:
+				Row:
+					Cell: A1
+					Cell: B1
+					Cell: C1
+				Row:
+					Cell: A2
+					Cell: B2
+					Cell: C2

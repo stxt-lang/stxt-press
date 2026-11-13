@@ -1,0 +1,32 @@
+# What the Markdown documents of this folder share: the headings that a Markdown generates, the room for the markers of
+# its lists and the cells of its tables. Each document declares the rules it shows.
+Styles (dev.stxt.pdf):
+	For element: Heading 2
+		Typography:
+			Size: 14
+			Line height: 18
+			Bold: true
+		Box:
+			Margin: 10 0 6 0
+	For element: Heading 3
+		Typography:
+			Size: 11
+			Line height: 15
+			Bold: true
+		Box:
+			Margin: 8 0 4 0
+	For element: List
+		Box:
+			Padding: 0 0 0 22
+			Margin: 0 0 8 0
+		For element: Paragraph
+			Box:
+				Margin: 0 0 3 0
+	For element: Cell
+		Box:
+			Padding: 3 6
+			Border: 0 0 0.5 0
+			Border color: rule
+	For element: Header cell
+		Typography:
+			Bold: true

@@ -1,0 +1,43 @@
+# Columns: a long text flows through the columns of one page and goes on in the first column of the next, with a title across between two Columns.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Columns · Across pages
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For style: across
+			Typography:
+				Size: 13
+				Line height: 16
+				Bold: true
+			Box:
+				Margin: 4 0 8 0
+	Section:
+		Text: Columns
+			Style: topic
+		Heading 1:
+			Text: Across pages
+		Paragraph: At the end of a page the content goes on in the first column of the next one, and only the last page is balanced. A title across the page goes outside, between two `Columns`.
+			Style: intro
+		Columns:
+			Column count: 2
+			Gap: 14
+			Paragraph: The valley has two villages, one on each bank of the river, joined by a stone bridge that has stood since the fourteenth century. For most of their history the two villages lived apart, each with its own market, its own church and its own festival.
+			Paragraph: The road along the river was built in the nineteenth century, when the textile mills arrived. The mills needed the water of the river and the workers of both villages, and the old rivalry turned into a shared trade.
+			Paragraph: Today the mills are closed, and some of them have become workshops, a library and a small museum of the textile trade. The museum keeps the looms of the last mill, which still work on the first Sunday of every month.
+			Paragraph: The bridge is closed to cars since last year. The council has planted trees along both banks and the walk from one village to the other takes twenty minutes.
+			Paragraph: In autumn the beech forests of the north slope turn red and orange, and the paths that climb to the hermitage are the busiest of the year. The hermitage has a small refuge that opens on weekends from October to December.
+			Paragraph: The south slope is drier and covered with holm oaks and pines. It is the side of the vineyards, which have come back in the last twenty years after almost disappearing.
+			Paragraph: Three wineries make wine with the grapes of the valley, and two of them open their cellars to visitors on Saturday mornings, with a tasting of the young wines of the year.
+			Paragraph: The cheese of the valley is made with the milk of the sheep that graze on the high meadows in summer. It is a hard cheese, cured for at least six months in the caves under the old mill.
+			Paragraph: The two villages share a bus line to the town, with six buses a day on weekdays and three on weekends. The bus stops at the bridge, at the museum and at the square of each village.
+			Paragraph: The valley has no hotel, but there are eleven rural houses and a campsite by the river, which opens from Easter to the end of September.
+		Text: A title across the page, between two Columns
+			Style: across
+		Columns:
+			Column count: 2
+			Gap: 14
+			Paragraph: After the title the second Columns starts with its own columns, under it. Its last page is balanced too.
+			Paragraph: The festival of the valley is in the last week of August, with music in both squares and a market on the bridge.
+			Paragraph: On the last night there are fireworks over the river, which can be seen from both villages.

@@ -1,0 +1,69 @@
+# The shared look of the language reference: the base typography, the heading and the explanation that open each
+# document, the small labels over each variant and the frame around a sample. Each document declares the rest itself.
+Styles (dev.stxt.pdf):
+	Named color: ink #1F2933
+	Named color: muted #52606D
+	Named color: accent #1B5E8C
+	Named color: rule #CBD2D9
+	Named color: tint #EEF3F8
+	Named color: sand #F4F1EA
+	For element: Document
+		Typography:
+			Font: IBM Plex Sans
+			Size: 10
+			Line height: 14
+			Color: ink
+			Code font: IBM Plex Mono
+	For element: Heading 1
+		Typography:
+			Size: 20
+			Line height: 24
+			Bold: true
+			Color: accent
+		Box:
+			Margin: 0 0 6 0
+	For element: Paragraph
+		Box:
+			Margin: 0 0 8 0
+	# The topic, over the heading.
+	For style: topic
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8
+			Line height: 11
+			Weight: 600
+			Color: muted
+			Case: uppercase
+			Letter spacing: 1
+		Box:
+			Margin: 0 0 2 0
+		Break:
+			Keep with next: true
+	# What the document shows, under the heading.
+	For style: intro
+		Typography:
+			Color: muted
+			Markup: markdown
+		Box:
+			Margin: 0 0 18 0
+			Padding: 0 0 10 0
+			Border: 0 0 0.5 0
+			Border color: rule
+	# The name of a variant over it, usually the property that makes it (Align: center).
+	For style: label
+		Typography:
+			Font: IBM Plex Mono
+			Size: 8
+			Line height: 11
+			Color: muted
+		Box:
+			Margin: 0 0 4 0
+		Break:
+			Keep with next: true
+	# A frame around a sample, to see its edges.
+	For style: sample
+		Box:
+			Margin: 0 0 14 0
+			Padding: 8
+			Border: 0.5
+			Border color: rule

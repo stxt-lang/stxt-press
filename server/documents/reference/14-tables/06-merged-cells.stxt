@@ -1,0 +1,98 @@
+# Tables: Span merges cells across columns and across rows.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Merged cells
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Border: 0.5
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+			Box:
+				Background: tint
+		For style: merged
+			Box:
+				Background: sand
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Merged cells
+		Paragraph: `Span: rows columns` makes a cell take several. `Span: 1 3` is three columns of its row. `Span: 2 1` is two rows of its column, and the row below leaves that column out: it writes one cell fewer.
+			Style: intro
+		Text: Span: 1 2 in the header, Span: 1 3 in the footer
+			Style: label
+		Table:
+			Column sizes: * 60 60 60 60
+			Column align: left right right right right
+			Header rows:
+				Row:
+					Cell: Product
+					Cell: First half
+						Span: 1 2
+						Typography:
+							Align: center
+					Cell: Second half
+						Span: 1 2
+						Typography:
+							Align: center
+				Row:
+					Cell:
+					Cell: Q1
+					Cell: Q2
+					Cell: Q3
+					Cell: Q4
+			Body rows:
+				Row:
+					Cell: Chairs
+					Cell: 120
+					Cell: 135
+					Cell: 128
+					Cell: 150
+				Row:
+					Cell: Tables
+					Cell: 40
+					Cell: 38
+					Cell: 45
+					Cell: 52
+			Footer rows:
+				Row:
+					Cell: Notes
+					Cell: Units sold, without returns.
+						Style: merged
+						Span: 1 4
+						Typography:
+							Align: left
+		Text: Span: 2 1 and Span: 3 1
+			Style: label
+		Table:
+			Column sizes: 90 * *
+			Header rows:
+				Row:
+					Cell: Day
+					Cell: Room
+					Cell: Session
+			Body rows:
+				Row:
+					Cell: Monday
+						Style: merged
+						Span: 3 1
+						Vertical: center
+					Cell: Room A
+						Span: 2 1
+						Vertical: center
+					Cell: Opening
+				Row:
+					Cell: Keynote
+				Row:
+					Cell: Room B
+					Cell: Workshops
+				Row:
+					Cell: Tuesday
+					Cell: Room A
+					Cell: Closing

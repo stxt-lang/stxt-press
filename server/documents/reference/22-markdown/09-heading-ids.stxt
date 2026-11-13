@@ -1,0 +1,28 @@
+# Markdown: a heading with {#id} gets that Id, so it can be linked to and cited with {page of} and {number of}.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Heading ids
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Numbered: true
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Heading ids
+		Paragraph: A heading that ends with `{#id}` has that `Id`, which is not painted. A link to `#id` leads to it and `{{page of: id}}` and `{{number of: id}}` cite it. Here the `Heading 2` are numbered by a rule.
+			Style: intro
+		Markdown:
+			Content >>
+				## Installation {#installation}
+
+				Read section {number of: wiring}, on page {page of: wiring}, before
+				connecting anything. The [wiring section](#wiring) has the diagram.
+
+				## Wiring {#wiring}
+
+				The live wire goes to terminal L. Back to [installation](#installation).

@@ -1,0 +1,52 @@
+# Lists: Marker bullet, dash and none, and the left Padding of the list where the marker hangs.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Lists · Bullets
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Lists
+			Style: topic
+		Heading 1:
+			Text: Bullets
+		Paragraph: A `List` holds its `List item` elements one below another, each with a marker that hangs in the left `Padding` of the list. `Marker` is required: `bullet`, `dash` or `none`. The padding here comes from a rule in the `.styles.stxt` of this folder.
+			Style: intro
+		Text: Marker: bullet
+			Style: label
+		List:
+			Marker: bullet
+			List item:
+				Paragraph: Fresh pasta, made in the morning.
+			List item:
+				Paragraph: Tomato sauce from the garden.
+			List item:
+				Paragraph: Aged cheese from the hills.
+		Text: Marker: dash
+			Style: label
+		List:
+			Marker: dash
+			List item:
+				Paragraph: Fresh pasta, made in the morning.
+			List item:
+				Paragraph: Tomato sauce from the garden.
+			List item:
+				Paragraph: Aged cheese from the hills.
+		Text: Marker: none
+			Style: label
+		List:
+			Marker: none
+			List item:
+				Paragraph: Fresh pasta, made in the morning.
+			List item:
+				Paragraph: Tomato sauce from the garden.
+			List item:
+				Paragraph: Aged cheese from the hills.
+		Text: Marker: bullet, with Padding: 0 0 0 40
+			Style: label
+		List:
+			Marker: bullet
+			Box:
+				Padding: 0 0 0 40
+			List item:
+				Paragraph: A wider indent: the marker stays next to the text, aligned to the right of the padding.

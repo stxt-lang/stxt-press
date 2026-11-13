@@ -1,0 +1,58 @@
+# Text formatting: small images within a line of text, written ![alt](path), as tall as the letters.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Images in the sentence
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: source
+			Typography:
+				Font: IBM Plex Mono
+				Size: 9
+				Color: muted
+		For style: result
+			Box:
+				Margin: 0 0 14 0
+			Typography:
+				Markup: markdown
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Images in the sentence
+		Paragraph: With `Markup: markdown`, an image written as in Markdown goes within the line, as tall as the letters and aligned with them. It behaves like one more word. The text in brackets is what a screen reader reads, and empty brackets make it decorative.
+			Style: intro
+		Text: Included ![Yes](documents/check.svg) in every plan, excluded ![No](documents/cross.svg) in the basic one.
+			Style: source
+		Text: Included ![Yes](documents/check.svg) in every plan, excluded ![No](documents/cross.svg) in the basic one.
+			Style: result
+			Typography:
+				Size: 12
+		Text: The same image at Size: 10, 16 and 24
+			Style: label
+		Text: A favorite ![Favorite](documents/star.svg) of our customers.
+			Style: result
+			Typography:
+				Size: 10
+		Text: A favorite ![Favorite](documents/star.svg) of our customers.
+			Style: result
+			Typography:
+				Size: 16
+		Text: A favorite ![Favorite](documents/star.svg) of our customers.
+			Style: result
+			Typography:
+				Size: 24
+		Text: A decorative image: ![](examples/menu/emblem.svg)
+			Style: source
+		Text: ![](examples/menu/emblem.svg) Menu of the day ![](examples/menu/emblem.svg)
+			Style: result
+			Typography:
+				Size: 18
+				Align: center
+		Text: A clickable image: [![Nogal Workshop](examples/brand/nogal.svg)](https://stxt.dev)
+			Style: source
+		Text: Made by [![Nogal Workshop](examples/brand/nogal.svg)](https://stxt.dev) in Olot.
+			Style: result
+			Typography:
+				Size: 14

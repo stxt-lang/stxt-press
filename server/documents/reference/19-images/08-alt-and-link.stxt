@@ -1,0 +1,43 @@
+# Images: Alt makes an image a figure that a screen reader reads, without it the image is decorative, and Link makes it clickable.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · Alt and Link
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Images
+			Id: top
+			Style: topic
+		Heading 1:
+			Text: Alt and Link
+		Paragraph: An image with `Alt` is a figure of the tagged PDF and a screen reader reads that text. Without `Alt` it is decoration and is skipped, which suits ornaments and backgrounds. `Link` makes the whole image lead to an address or to a box of the document.
+			Style: intro
+		Text: Alt: Taller Nogal  (content, read)
+			Style: label
+		Image: examples/brand/nogal.svg
+			Alt: Taller Nogal
+			Box:
+				Width: 200
+				Margin: 0 0 16 0
+		Text: No Alt  (decorative, skipped)
+			Style: label
+		Image: examples/menu/ornament.svg
+			Box:
+				Width: 200
+				Margin: 0 0 16 0
+		Text: Link: https://tallernogal.example
+			Style: label
+		Image: examples/brand/nogal.svg
+			Alt: Taller Nogal, website
+			Link: https://tallernogal.example
+			Box:
+				Width: 200
+				Margin: 0 0 16 0
+		Text: Link: #top  (the first line of this document)
+			Style: label
+		Image: examples/menu/emblem.svg
+			Alt: Back to the start of the document
+			Link: #top
+			Box:
+				Width: 60

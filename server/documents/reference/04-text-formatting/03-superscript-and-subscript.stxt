@@ -1,0 +1,55 @@
+# Text formatting: Position superscript and subscript in the rule of a styled part.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Superscript and subscript
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: source
+			Typography:
+				Font: IBM Plex Mono
+				Size: 9
+				Color: muted
+		For style: result
+			Box:
+				Margin: 0 0 14 0
+			Typography:
+				Size: 14
+				Line height: 20
+				Markup: markdown
+		For style: sup
+			Typography:
+				Position: superscript
+		For style: sub
+			Typography:
+				Position: subscript
+		For style: note-mark
+			Typography:
+				Position: superscript
+				Color: #B3261E
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Superscript and subscript
+		Paragraph: A styled part whose rule declares `Position: superscript` or `subscript` is painted at 70% of the size, above or below the baseline, without changing the height of the line. `Position` is only valid in the rule of a styled part.
+			Style: intro
+		Text: The 1[st]{sup} floor, of 85 m[2]{sup}, emits 12 kg of CO[2]{sub} a year.
+			Style: source
+		Text: The 1[st]{sup} floor, of 85 m[2]{sup}, emits 12 kg of CO[2]{sub} a year.
+			Style: result
+		Text: H[2]{sub}O, x[n+1]{sup} and Stxt[®]{sup}.
+			Style: source
+		Text: H[2]{sub}O, x[n+1]{sup} and Stxt[®]{sup}.
+			Style: result
+		Text: With more in the rule and in the marks: [a]{note-mark} and **[2]{sub}**
+			Style: source
+		Text: A red note mark[a]{note-mark} and a bold subscript N**[2]{sub}**.
+			Style: result
+		Text: The line keeps its height: a paragraph with superscripts in several lines
+			Style: label
+		Paragraph: Water boils at 100 °C at sea level, and the area of a circle is πr[2]{sup}. The formula of glucose is C[6]{sub}H[12]{sub}O[6]{sub}, and the 2[nd]{sup} and 3[rd]{sup} editions of the manual describe it in the same terms, with the lines of the paragraph evenly spaced.
+			Style: sample
+			Typography:
+				Markup: markdown

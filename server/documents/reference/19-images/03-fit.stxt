@@ -1,0 +1,55 @@
+# Images: Fit says how an image fills a box of another proportion (inside, crop, stretch).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · Fit
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: framed
+			Box:
+				Width: 140
+				Height: 140
+				Background: sand
+				Border: 0.5
+				Border color: rule
+	Section:
+		Text: Images
+			Style: topic
+		Heading 1:
+			Text: Fit
+		Paragraph: With `Width` and `Height` the box has its own proportion. `Fit: inside` (the default) shows the whole image centered, `crop` fills the box and crops what is left over, and `stretch` fills it distorting the image.
+			Style: intro
+		Text: The photograph: 1200 × 780 pixels, wider than tall
+			Style: label
+		Image: examples/newsletter/market.jpg
+			Alt: Stalls of the market in the main square
+			Box:
+				Width: 140
+				Margin: 0 0 16 0
+		Stack:
+			Gap: 20
+			Item:
+				Block:
+					Text: Fit: inside
+						Style: label
+					Image: examples/newsletter/market.jpg
+						Alt: Stalls of the market in the main square
+						Style: framed
+						Fit: inside
+			Item:
+				Block:
+					Text: Fit: crop
+						Style: label
+					Image: examples/newsletter/market.jpg
+						Alt: Stalls of the market in the main square
+						Style: framed
+						Fit: crop
+			Item:
+				Block:
+					Text: Fit: stretch
+						Style: label
+					Image: examples/newsletter/market.jpg
+						Alt: Stalls of the market in the main square
+						Style: framed
+						Fit: stretch

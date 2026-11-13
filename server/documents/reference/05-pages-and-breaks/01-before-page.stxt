@@ -1,0 +1,31 @@
+# Pages and breaks: Before: page starts a box on a new page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Pages and breaks · Break before
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Pages and breaks
+			Style: topic
+		Heading 1:
+			Text: Break before
+		Paragraph: With `Before: page` in its `Break`, a box starts on a new page even when there is room left on the current one. The second block below declares it and opens page 2.
+			Style: intro
+		Block:
+			Style: marked
+			Text: Break: (none)
+				Style: label
+			Paragraph: This block follows the explanation on the first page, as usual.
+		Block:
+			Style: marked
+			Break:
+				Before: page
+			Text: Break: Before: page
+				Style: label
+			Paragraph: This block starts at the top of page 2, although page 1 had room for it.

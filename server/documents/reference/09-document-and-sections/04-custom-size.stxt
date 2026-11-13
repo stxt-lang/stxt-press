@@ -1,0 +1,17 @@
+# Document and sections: a page of any size, with Width and Height instead of Paper.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Document and sections · Custom page size
+	Page:
+		Width: 160mm
+		Height: 100mm
+		Margin: 8mm
+	Section:
+		Text: Document and sections
+			Style: topic
+		Heading 1:
+			Text: Custom page size
+		Paragraph: Without `Paper`, the page measures what `Width` and `Height` say, in points or millimeters: a ticket, a label, a card. This page is 160 × 100 mm.
+			Style: intro
+		Text: Page: Width: 160mm, Height: 100mm, Margin: 8mm
+			Style: card

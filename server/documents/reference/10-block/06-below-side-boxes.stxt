@@ -1,0 +1,38 @@
+# Block: Below side boxes moves a box under the side box before it, and a box with a background goes below on its own.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Block · Below side boxes
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: aside
+			Box:
+				Width: 140
+				Height: 90
+				Margin: 0 14 8 0
+				Padding: 8
+				Background: tint
+	Section:
+		Text: Block
+			Style: topic
+		Heading 1:
+			Text: Below side boxes
+		Paragraph: The first paragraph after a side box runs beside it. One with `Below side boxes: true` starts under the box. A box with a background or a border goes below without asking, because it would be painted over the side box.
+			Style: intro
+		Block:
+			Side: left
+			Style: aside
+			Text: Side box, 90 high
+		Paragraph: This paragraph runs beside the side box.
+		Paragraph: This one says Below side boxes: true, so it starts under the box, with the full width of the page.
+			Below side boxes: true
+		Block:
+			Side: left
+			Style: aside
+			Text: Another side box
+		Paragraph: A paragraph beside the second box.
+		Text: This text has a background, so it goes below the side box without asking.
+			Box:
+				Padding: 6 8
+				Background: sand

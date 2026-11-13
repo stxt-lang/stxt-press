@@ -1,0 +1,44 @@
+# Markdown: code blocks between fences and indented, styled with For element: Code block.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Code blocks
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Code block
+			Typography:
+				Size: 9
+				Line height: 13
+			Box:
+				Margin: 0 0 10 0
+				Padding: 8 10
+				Background: sand
+				Corner radius: 4
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Code blocks
+		Paragraph: A block between three backticks or three tildes, or indented four spaces, is a `Code block`: preformatted text in the `Code font`. It has no look of its own, `For element: Code block` gives it the background and the padding. A language tag after the fence is an error.
+			Style: intro
+		Markdown:
+			Content >>
+				Between backticks:
+
+				```
+				$ thermostat --status
+				temperature   21.5 °C
+				setpoint      22.0 °C
+				```
+
+				Between tildes:
+
+				~~~
+				Reference: 2026-014
+				~~~
+
+				Indented four spaces:
+
+				    mvn -o test
+				    mvn -o package

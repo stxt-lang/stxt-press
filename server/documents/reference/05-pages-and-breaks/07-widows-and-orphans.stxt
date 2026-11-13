@@ -1,0 +1,39 @@
+# Pages and breaks: Widows and Orphans, the lines of a paragraph that a page break may not leave alone.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Pages and breaks · Widows and orphans
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Page overlay:
+		Offset: auto 0 -24 0
+		Text: Page {page} of {pages}
+			Typography:
+				Align: right
+	Section:
+		Text: Pages and breaks
+			Style: topic
+		Heading 1:
+			Text: Widows and orphans
+		Paragraph: When a paragraph is split, `Orphans` is the least number of its lines that stay at the end of the page and `Widows` the least that move to the next one. Both are 2 by default. The paragraph below asks for 4 of each, so it breaks earlier than the room on page 1 would allow.
+			Style: intro
+		Block:
+			Style: filler
+			Box:
+				Height: 220
+			Text: A filler block, 220 points high, so that the paragraph below starts near the end of the page.
+		Text: Typography: Orphans: 4, Widows: 4
+			Style: label
+		Paragraph:
+			Style: marked
+			Typography:
+				Orphans: 4
+				Widows: 4
+			Content >>
+				The walnut for this collection comes from trees felled in winter, when the sap is low, and dried in the
+				open air for two years before it reaches the workshop. Each board is then planed by hand and checked
+				for knots and cracks. Only the boards that pass go to the cutting table, where the parts of each chair
+				are marked with a template. The joints are cut with chisels, glued with hide glue and pressed for a
+				day. After a light sanding, the wood takes three coats of linseed oil, one each week, and a last coat
+				of beeswax. The seat is woven from natural wool on a frame of ash. The whole process takes six weeks,
+				and every chair carries the initials of the person who made it under the seat.

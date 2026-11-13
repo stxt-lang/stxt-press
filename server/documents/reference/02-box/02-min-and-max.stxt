@@ -1,0 +1,51 @@
+# The box: Min width, Max width, Min height and Max height limit the size that the content or a percentage gives.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: The box · Minimum and maximum
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: demo
+			Box:
+				Margin: 0 0 16 0
+				Padding: 6 8
+				Background: tint
+				Border: 0 0 0 2
+				Border color: accent
+	Section:
+		Text: The box
+			Style: topic
+		Heading 1:
+			Text: Minimum and maximum
+		Paragraph: A size between two limits is written with its minimum and its maximum. The maximum is applied first and then the minimum.
+			Style: intro
+		Text: Width: 30%, Min width: 200
+			Style: label
+		Text: 30% would be 154 points. The minimum makes it 200.
+			Style: demo
+			Box:
+				Width: 30%
+				Min width: 200
+		Text: Max width: 260
+			Style: label
+		Paragraph: Without a width, this paragraph would take the whole line. Its maximum stops it at 260 points, and the text breaks to fit in them.
+			Style: demo
+			Box:
+				Max width: 260
+		Text: Min height: 70
+			Style: label
+		Text: One line of text in a box at least 70 points high.
+			Style: demo
+			Box:
+				Min height: 70
+		Text: Max height: 60, Overflow: shrink
+			Style: label
+		Paragraph: A box with a maximum height and more text than fits in it would be an error. With Overflow: shrink, its text gets smaller until it fits in the 60 points that the maximum leaves. The letters stop at the Min size of its Typography.
+			Style: demo
+			Box:
+				Width: 260
+				Max height: 60
+				Overflow: shrink
+			Typography:
+				Line height: 120%

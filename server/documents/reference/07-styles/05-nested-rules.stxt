@@ -1,0 +1,46 @@
+# Styles: a rule inside another applies only inside the elements the outer rule reaches.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Styles · Rules inside rules
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: card
+			Box:
+				Margin: 0 0 14 0
+				Padding: 12
+				Background: sand
+				Corner radius: 6
+			For element: Paragraph
+				Box:
+					Margin: 0
+				Typography:
+					Font: IBM Plex Serif
+			For style: body
+				Box:
+					Margin: 6 0 0 0
+					Padding: 8
+					Border: 0 0 0 2
+					Border color: accent
+	Section:
+		Text: Styles
+			Style: topic
+		Heading 1:
+			Text: Rules inside rules
+		Paragraph: A `For element` or `For style` written inside another rule applies only inside the elements that the outer rule reaches. Here the rules inside `For style: card` change the paragraphs and give the `body` block its look, but only in a card. A style that only has a rule inside another, like `body`, is an error outside it.
+			Style: intro
+		Text: Outside a card: the usual paragraph
+			Style: label
+		Paragraph: This paragraph keeps the font and the margin of the base styles.
+		Text: Style: card, with its nested For element: Paragraph and For style: body
+			Style: label
+		Block:
+			Style: card
+			Paragraph: Inside the card, the paragraphs are serif and have no margin.
+			Block:
+				Style: body
+				Paragraph: This block has the look of body because it is inside a card.
+			Stack:
+				Item:
+					Paragraph: The rule reaches any depth: this paragraph is inside a Stack inside the card.

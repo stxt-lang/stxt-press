@@ -1,0 +1,66 @@
+# Text formatting: a part of a line in another color or font, written [text]{style} and styled with a For style rule.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Styled parts
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: source
+			Typography:
+				Font: IBM Plex Mono
+				Size: 9
+				Color: muted
+		For style: result
+			Box:
+				Margin: 0 0 14 0
+			Typography:
+				Size: 13
+				Line height: 18
+				Markup: markdown
+		For style: price
+			Typography:
+				Color: #B3261E
+				Bold: true
+		For style: brand
+			Typography:
+				Font: IBM Plex Serif
+				Italic: true
+		For style: tag
+			Typography:
+				Case: uppercase
+				Letter spacing: 1
+				Weight: 600
+				Color: accent
+		For style: light
+			Typography:
+				Weight: 300
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Styled parts
+		Paragraph: With `Markup: markdown`, a text in brackets followed by a style name in braces takes the `For style` rule of that name: color, font, weight, italic, case, small caps and letter spacing. The size and the line height stay those of the box.
+			Style: intro
+		Text: A subscription to [The Gazette]{brand} costs [€12.50]{price} a month.
+			Style: source
+		Text: A subscription to [The Gazette]{brand} costs [€12.50]{price} a month.
+			Style: result
+		Text: [New]{tag} Walnut chair with a wool seat.
+			Style: source
+		Text: [New]{tag} Walnut chair with a wool seat.
+			Style: result
+		Text: The marks add to the style: [**12.50 EUR**]{light} and **[12.50 EUR]{light}** are bold even with Weight: 300.
+			Style: source
+		Text: The marks add to the style: [**12.50 EUR**]{light} and **[12.50 EUR]{light}** are bold even with Weight: 300.
+			Style: result
+		Text: A link with a styled part: [[see the price]{price}](https://stxt.dev).
+			Style: source
+		Text: A link with a styled part: [[see the price]{price}](https://stxt.dev).
+			Style: result
+		Text: The same For style rule can style a whole box
+			Style: label
+		Text: €12.50
+			Style: price
+			Typography:
+				Size: 20

@@ -1,0 +1,27 @@
+# Figures: a figure as a side box, with the text running beside it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Figures · Side figure
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Figures
+			Style: topic
+		Heading 1:
+			Text: Side figure
+		Paragraph: With `Side: left` and a `Width`, the figure goes to the left with its caption and the paragraphs that follow it run beside it. Its `Margin` is the gap to the text.
+			Style: intro
+		Figure:
+			Side: left
+			Box:
+				Width: 60mm
+				Margin: 0 12 6 0
+			Caption: The Pla de les Eres trail in October.
+			Image: examples/newsletter/trail.jpg
+				Alt: A trail between meadows with mountains behind
+				Box:
+					Width: 100%
+		Paragraph: October is the month of the beech forest. The trail of Pla de les Eres climbs gently through the meadows and enters the forest after half an hour, where the leaves turn from green to copper in a few weeks.
+		Paragraph: The walk takes about three hours there and back. It starts at the car park of the old factory and follows the river to a small waterfall, where many walkers stop to eat before going back.
+		Paragraph: The path is marked with yellow signs at every crossing. In wet weather the stretch along the river gets muddy, and boots are a better choice than trainers.

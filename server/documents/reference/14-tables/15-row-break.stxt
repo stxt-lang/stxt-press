@@ -1,0 +1,61 @@
+# Tables: Break on a body Row forces a page break before it, or keeps two rows on the same page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Breaks between rows
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For element: Cell
+			Box:
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+		For style: group
+			Typography:
+				Bold: true
+				Color: accent
+			Box:
+				Background: tint
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Breaks between rows
+		Paragraph: A body `Row` accepts `Break`, which is that of its cells. `Before: page` starts the row on a new page, with the header repeated. `Keep with next: true` keeps a group title with the row below it. A cell does not accept `Break`.
+			Style: intro
+		Table:
+			Column sizes: * 70
+			Column align: left right
+			Header rows:
+				Row:
+					Cell: Product
+					Cell: Price
+			Body rows:
+				Row:
+					Style: group
+					Break:
+						Keep with next: true
+					Cell: Chairs (Keep with next: true)
+						Span: 1 2
+				Row:
+					Cell: Walnut chair
+					Cell: 145.00
+				Row:
+					Cell: Oak chair
+					Cell: 130.00
+				Row:
+					Style: group
+					Break:
+						Before: page
+						Keep with next: true
+					Cell: Tables (Before: page, Keep with next: true)
+						Span: 1 2
+				Row:
+					Cell: Dining table
+					Cell: 890.00
+				Row:
+					Cell: Coffee table
+					Cell: 320.00

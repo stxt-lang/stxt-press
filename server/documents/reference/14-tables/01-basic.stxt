@@ -1,0 +1,56 @@
+# Tables: a basic table with Header rows, Body rows and Footer rows over the columns of Column sizes.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Tables · Basic table
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Header cell
+			Typography:
+				Bold: true
+		For element: Footer cell
+			Typography:
+				Bold: true
+	Section:
+		Text: Tables
+			Style: topic
+		Heading 1:
+			Text: Basic table
+		Paragraph: A `Table` has `Header rows` (optional), `Body rows` and `Footer rows` (optional), in that order, each with its `Row` elements and each row with its `Cell` elements from left to right. `Column sizes` is required, and every row fills all the columns exactly. An empty cell is written `Cell:` with nothing after it.
+			Style: intro
+		Table:
+			Column sizes: * 60 80 80
+			Column align: left right right right
+			Header rows:
+				Row:
+					Cell: Item
+					Cell: Qty
+					Cell: Price
+					Cell: Amount
+			Body rows:
+				Row:
+					Cell: Walnut chair
+					Cell: 12
+					Cell: 145.00
+					Cell: 1,740.00
+				Row:
+					Cell: Dining table
+					Cell: 1
+					Cell: 890.00
+					Cell: 890.00
+				Row:
+					Cell: Delivery
+					Cell:
+					Cell:
+					Cell: 0.00
+			Footer rows:
+				Row:
+					Cell: Total
+					Cell:
+					Cell:
+					Cell: 2,630.00

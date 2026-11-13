@@ -1,0 +1,46 @@
+# Block: Rotate turns a block with all it contains, and the block takes the rectangle that encloses it rotated.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Block · Rotate
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: card
+			Box:
+				Width: 160
+				Padding: 8 10
+				Margin: 0 auto
+				Background: tint
+				Border: 0 0 0 3
+				Border color: accent
+	Section:
+		Text: Block
+			Style: topic
+		Heading 1:
+			Text: Rotate
+		Paragraph: `Rotate` turns the block around its center, in degrees clockwise. In the flow the block takes the rectangle that encloses it once rotated, so the text before and after it moves aside.
+			Style: intro
+		Text: Rotate: -8
+			Style: label
+		Block:
+			Style: sample
+			Block:
+				Style: card
+				Rotate: -8
+				Text: A card turned 8 degrees
+					Typography:
+						Bold: true
+				Text: Background, border and text turn together.
+		Text: Rotate: 90
+			Style: label
+		Block:
+			Style: sample
+			Block:
+				Style: card
+				Rotate: 90
+				Text: A card turned 90 degrees
+					Typography:
+						Bold: true
+				Text: It now takes its width as height.
+		Paragraph: The frames show the room each rotated block takes in the flow.

@@ -1,0 +1,29 @@
+# What the table of contents documents of this folder share: the look of the chapter and section headings they list,
+# and the spacing of the entries.
+Styles (dev.stxt.pdf):
+	For element: Heading 2
+		Typography:
+			Size: 14
+			Line height: 18
+			Bold: true
+		Box:
+			Margin: 12 0 6 0
+	For element: Heading 3
+		Typography:
+			Size: 11
+			Line height: 15
+			Bold: true
+		Box:
+			Margin: 8 0 4 0
+	For element: TOC 1
+		Box:
+			Margin: 0 0 3 0
+	# The title over a table of contents, a Text that is not a heading.
+	For style: contents
+		Typography:
+			Size: 12
+			Line height: 16
+			Weight: 600
+			Color: accent
+		Box:
+			Margin: 6 0 6 0

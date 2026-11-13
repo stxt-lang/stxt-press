@@ -22,7 +22,6 @@ import dev.stxt.press.Options;
 import dev.stxt.press.Press;
 import dev.stxt.press.http.Requests.Format;
 import dev.stxt.press.templates.Template;
-import dev.stxt.press.templates.TemplateException;
 import dev.stxt.press.templates.Templates;
 
 /**
@@ -30,18 +29,22 @@ import dev.stxt.press.templates.Templates;
  *
  * <table>
  * <caption>Routes</caption>
- * <tr><td>{@code GET /print/{path}}</td><td>The template filled with its sample data</td></tr>
- * <tr><td>{@code POST /print/{path}}</td><td>The template filled with the body, the JSON data as they are</td></tr>
+ * <tr><td>{@code GET /print/templates/{path}}</td><td>The template filled with its sample data</td></tr>
+ * <tr><td>{@code POST /print/templates/{path}}</td><td>The template filled with the body, the JSON data as they
+ * are</td></tr>
+ * <tr><td>{@code GET /print/documents/{path}}</td><td>A document of the documents folder, as it is</td></tr>
  * <tr><td>{@code POST /render}</td><td>Any document ({@link RenderBody})</td></tr>
  * <tr><td>{@code GET /templates}</td><td>The templates, with what files each one has</td></tr>
  * <tr><td>{@code GET /templates/{path}}</td><td>The texts of a template</td></tr>
+ * <tr><td>{@code GET /documents}</td><td>The documents, with what files each one has</td></tr>
+ * <tr><td>{@code GET /documents/{path}}</td><td>The texts of a document</td></tr>
  * <tr><td>{@code GET /schema}</td><td>The schema {@code dev.stxt.pdf} of the engine</td></tr>
  * <tr><td>{@code GET /fonts}</td><td>The font families of the server, and its faces with their files, for the editor</td></tr>
  * <tr><td>{@code GET /fonts/{id}}</td><td>The file of a face, by its SHA-256, for the editor</td></tr>
  * <tr><td>{@code GET /health}</td><td>That the service is alive, and its versions, without token</td></tr>
- * <tr><td>{@code GET /}</td><td>The index: the templates and the routes, without token</td></tr>
- * <tr><td>{@code GET /editor}, {@code GET /editor/{path}}</td><td>The web editor, blank or on a template, without
- * token</td></tr>
+ * <tr><td>{@code GET /}</td><td>The index: the templates, the documents and the routes, without token</td></tr>
+ * <tr><td>{@code GET /editor}, {@code GET /editor/templates/{path}}, {@code GET /editor/documents/{path}}</td><td>The
+ * web editor, blank, on a template or on a document, without token</td></tr>
  * <tr><td>{@code GET /assets/{file}}</td><td>The scripts and styles of the index and the editor, without token</td></tr>
  * </table>
  *
@@ -96,6 +99,8 @@ final class Routes {
     private final Conversions conversions;
     /** The templates folder, or {@code null} if the server has none. */
     private final Templates templates;
+    /** The documents folder, or {@code null} if the server has none. */
+    private final Templates documents;
     private final ServerConfig config;
     /** The text of the schema of the engine, read once. */
     private final byte[] schema;
@@ -109,10 +114,12 @@ final class Routes {
     /**
      * @param conversions the converter of the server and the conversions that run at once
      * @param templates the templates folder, or {@code null} if the server has none
+     * @param documents the documents folder, or {@code null} if the server has none
      */
-    Routes(Conversions conversions, Templates templates, ServerConfig config) {
+    Routes(Conversions conversions, Templates templates, Templates documents, ServerConfig config) {
         this.conversions = conversions;
         this.templates = templates;
+        this.documents = documents;
         this.config = config;
         this.schema = DocumentSchema.text().getBytes(StandardCharsets.UTF_8);
         boolean editor = config.editor();
@@ -123,18 +130,28 @@ final class Routes {
                 // it opens a URL. They ask for it when the API answers 401.
                 new Route("/", Match.EXACT, Access.OPEN, editor, GET, NONE,
                         (exchange, rest, parameters) -> WebFiles.send(exchange, "index.html")),
-                new Route("/editor", Match.EXACT, Access.OPEN, editor, GET, Set.of("mode"),
-                        (exchange, rest, parameters) -> editor(exchange, null, parameters)),
-                new Route("/editor/", Match.PREFIX, Access.OPEN, editor, GET, Set.of("mode"), Routes::editor),
+                new Route("/editor", Match.EXACT, Access.OPEN, editor, GET, NONE,
+                        (exchange, rest, parameters) -> editor(exchange, null)),
+                new Route("/editor/templates/", Match.PREFIX, Access.OPEN, editor, GET, NONE,
+                        (exchange, rest, parameters) -> editor(exchange, rest)),
+                new Route("/editor/documents/", Match.PREFIX, Access.OPEN, editor, GET, NONE,
+                        (exchange, rest, parameters) -> editor(exchange, rest)),
                 new Route("/assets/", Match.PREFIX, Access.OPEN, editor, GET, NONE,
                         (exchange, rest, parameters) -> asset(exchange, rest)),
-                new Route("/print/", Match.PREFIX, Access.TOKEN, true, GET_POST, CONVERT_PARAMETERS, this::print),
+                new Route("/print/templates/", Match.PREFIX, Access.TOKEN, true, GET_POST, CONVERT_PARAMETERS,
+                        this::print),
+                new Route("/print/documents/", Match.PREFIX, Access.TOKEN, true, GET, CONVERT_PARAMETERS,
+                        this::printDocument),
                 new Route("/render", Match.EXACT, Access.TOKEN, config.render(), POST, CONVERT_PARAMETERS,
                         (exchange, rest, parameters) -> render(exchange, parameters)),
                 new Route("/templates", Match.EXACT, Access.TOKEN, config.templates(), GET, NONE,
-                        (exchange, rest, parameters) -> list(exchange)),
+                        (exchange, rest, parameters) -> list(exchange, templates, Templates.Kind.TEMPLATE)),
                 new Route("/templates/", Match.PREFIX, Access.TOKEN, config.templates(), GET, NONE,
-                        (exchange, rest, parameters) -> template(exchange, rest)),
+                        (exchange, rest, parameters) -> texts(exchange, templates, Templates.Kind.TEMPLATE, rest)),
+                new Route("/documents", Match.EXACT, Access.TOKEN, config.documents(), GET, NONE,
+                        (exchange, rest, parameters) -> list(exchange, documents, Templates.Kind.DOCUMENT)),
+                new Route("/documents/", Match.PREFIX, Access.TOKEN, config.documents(), GET, NONE,
+                        (exchange, rest, parameters) -> texts(exchange, documents, Templates.Kind.DOCUMENT, rest)),
                 new Route("/schema", Match.EXACT, Access.TOKEN, true, GET, NONE,
                         (exchange, rest, parameters) -> Responses.send(exchange, 200, Responses.STXT_TYPE, schema)),
                 new Route("/fonts", Match.EXACT, Access.TOKEN, editor, GET, NONE,
@@ -145,12 +162,12 @@ final class Routes {
 
     /**
      * Warms the server up: creates its converter, which reads the whole resources folder, and converts its templates
-     * ({@link WarmUp}).
+     * and its documents ({@link WarmUp}).
      *
      * @throws dev.stxt.pdf.model.StxtPdfException if the converter cannot be created: its resources
      */
     WarmUp.Result warmUp() {
-        return conversions.warmUp(templates, config.templateOptions());
+        return conversions.warmUp(templates, documents, config.templateOptions());
     }
 
     /** Answers the request with the first route of {@link #table} that it matches and that is on. */
@@ -191,15 +208,14 @@ final class Routes {
     }
 
     /**
-     * {@code GET /editor} ({@code path} {@code null}) and {@code GET /editor/{path}}: the page is the same for every
-     * template, and whether it exists is not looked at, since that would tell it without token. The page asks
-     * {@code /templates/{path}} for it, with the token.
+     * {@code GET /editor} ({@code path} {@code null}), {@code GET /editor/templates/{path}} and
+     * {@code GET /editor/documents/{path}}: the page is the same for every template and document, and whether it exists
+     * is not looked at, since that would tell it without token. The page asks {@code /templates/{path}} or
+     * {@code /documents/{path}} for it, with the token.
      */
-    private static void editor(HttpExchange exchange, String path, Map<String, String> parameters)
-            throws IOException, HttpError {
-        Requests.mode(parameters);
+    private static void editor(HttpExchange exchange, String path) throws IOException, HttpError {
         if (path != null && !Templates.isPath(path)) {
-            throw new HttpError(404, HttpError.NOT_FOUND, "There is no route /editor/" + path);
+            throw new HttpError(404, HttpError.NOT_FOUND, "There is no route " + exchange.getRequestURI().getRawPath());
         }
         WebFiles.send(exchange, "editor.html");
     }
@@ -255,16 +271,27 @@ final class Routes {
         throw new HttpError(404, HttpError.NOT_FOUND, "There is no font " + id);
     }
 
-    /** {@code GET} and {@code POST /print/{path}}. */
+    /** {@code GET} and {@code POST /print/templates/{path}}. */
     private void print(HttpExchange exchange, String path, Map<String, String> parameters) throws Exception {
         Format format = Requests.format(parameters);
-        Template template = template(path);
-        Options options = Requests.debug(parameters) ? config.templateOptions().withDebug(true)
-                : config.templateOptions();
+        Template template = get(templates, Templates.Kind.TEMPLATE, path);
+        Options options = options(parameters);
         Job job = exchange.getRequestMethod().equals("POST")
                 ? template.job(options, Requests.text(Requests.body(exchange, config.maxBodySize())))
                 : template.job(options);
         conversions.respond(exchange, job, format, template.name());
+    }
+
+    /** {@code GET /print/documents/{path}}: the document as it is, with its chain of styles. */
+    private void printDocument(HttpExchange exchange, String path, Map<String, String> parameters) throws Exception {
+        Format format = Requests.format(parameters);
+        Template document = get(documents, Templates.Kind.DOCUMENT, path);
+        conversions.respond(exchange, document.job(options(parameters)), format, document.name());
+    }
+
+    /** {@return the options of the templates and the documents, with the outlines if the request asks for them} */
+    private Options options(Map<String, String> parameters) throws HttpError {
+        return Requests.debug(parameters) ? config.templateOptions().withDebug(true) : config.templateOptions();
     }
 
     /** {@code POST /render}. */
@@ -274,22 +301,31 @@ final class Routes {
         conversions.respond(exchange, job, format, null);
     }
 
-    /** {@code GET /templates}. */
-    private void list(HttpExchange exchange) throws Exception {
+    /**
+     * {@code GET /templates} and {@code GET /documents}: the paths, each with whether it has its own styles and, a
+     * template, sample data.
+     */
+    private static void list(HttpExchange exchange, Templates folder, Templates.Kind kind) throws Exception {
         List<Map<String, Object>> list = new ArrayList<>();
-        for (Templates.Entry entry : templates == null ? List.<Templates.Entry>of() : templates.list()) {
+        for (Templates.Entry entry : folder == null ? List.<Templates.Entry>of() : folder.list()) {
             Map<String, Object> item = new LinkedHashMap<>();
             item.put("path", entry.path());
             item.put("styles", entry.styles());
-            item.put("data", entry.data());
+            if (kind == Templates.Kind.TEMPLATE) {
+                item.put("data", entry.data());
+            }
             list.add(item);
         }
-        Responses.sendJson(exchange, 200, Map.of("templates", list));
+        Responses.sendJson(exchange, 200, Map.of(kind.noun() + "s", list));
     }
 
-    /** {@code GET /templates/{path}}: the texts of a template, its data as the text of its file. */
-    private void template(HttpExchange exchange, String path) throws Exception {
-        Template template = template(path);
+    /**
+     * {@code GET /templates/{path}} and {@code GET /documents/{path}}: the texts of a template, its data as the text of
+     * its file, or of a document, without data.
+     */
+    private static void texts(HttpExchange exchange, Templates folder, Templates.Kind kind, String path)
+            throws Exception {
+        Template template = get(folder, kind, path);
         List<Map<String, Object>> styles = new ArrayList<>();
         for (Job.Styles item : template.styles()) {
             styles.add(Map.of("path", item.name(), "text", item.text()));
@@ -298,15 +334,17 @@ final class Routes {
         body.put("path", template.path());
         body.put("document", template.document());
         body.put("styles", styles);
-        body.put("data", template.data());
+        if (kind == Templates.Kind.TEMPLATE) {
+            body.put("data", template.data());
+        }
         Responses.sendJson(exchange, 200, body);
     }
 
-    private Template template(String path) throws IOException, HttpError {
-        if (templates == null) {
-            throw new HttpError(404, TemplateException.NOT_FOUND, "There is no template " + path
-                    + ": the server has no templates folder");
+    /** {@return the template or the document of {@code path} in {@code folder}, which may be {@code null}} */
+    private static Template get(Templates folder, Templates.Kind kind, String path) throws IOException {
+        if (folder == null) {
+            throw kind.notFound(path, "the server has no " + kind.noun() + "s folder");
         }
-        return templates.get(path);
+        return folder.get(path);
     }
 }

@@ -1,0 +1,54 @@
+# Text formatting: Case none, uppercase, lowercase and capitalize, which change how the text is painted and not the text.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Case
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: result
+			Box:
+				Margin: 0 0 14 0
+			Typography:
+				Size: 16
+				Line height: 22
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Case
+		Paragraph: `Case` paints the text in uppercase, in lowercase or with the first letter of each word in capitals. The text is written normally and a screen reader, or a copy from the PDF, gets it as written. Every line below is written "Customer details of the Nogal workshop".
+			Style: intro
+		Text: Case: none  (the default)
+			Style: label
+		Text: Customer details of the Nogal workshop
+			Style: result
+			Typography:
+				Case: none
+		Text: Case: uppercase
+			Style: label
+		Text: Customer details of the Nogal workshop
+			Style: result
+			Typography:
+				Case: uppercase
+		Text: Case: lowercase
+			Style: label
+		Text: Customer details of the Nogal workshop
+			Style: result
+			Typography:
+				Case: lowercase
+		Text: Case: capitalize
+			Style: label
+		Text: Customer details of the Nogal workshop
+			Style: result
+			Typography:
+				Case: capitalize
+		Text: A label: Case: uppercase with Letter spacing: 1 and Size: 8
+			Style: label
+		Text: Customer details
+			Typography:
+				Case: uppercase
+				Letter spacing: 1
+				Size: 8
+				Weight: 600
+				Color: accent

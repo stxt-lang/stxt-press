@@ -1,0 +1,64 @@
+# References and links: {number of: id} writes the number of a list item, a numbered heading or a figure.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: References and links · Number of a box
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Heading 2
+			Typography:
+				Numbered: true
+		For element: Heading 3
+			Typography:
+				Numbered: true
+		For element: List
+			Box:
+				Padding: 0 0 0 20
+				Margin: 0 0 10 0
+		For element: Figure
+			Typography:
+				Number label: Figure {number}.
+			Box:
+				Margin: 4 0 10 0
+		For element: Caption
+			Typography:
+				Size: 8.5
+				Color: muted
+			Box:
+				Margin: 4 0 0 0
+	Section:
+		Text: References and links
+			Style: topic
+		Heading 1:
+			Text: Number of a box
+		Paragraph: `{{number of: id}}` writes the number that the engine gives a box: the number of an item of a numbered list (`b`), the complete number of a numbered heading (`1.2`) or the number of a figure (`1`), without its label.
+			Style: intro
+		Text: Paragraph: ... clause {{number of: payment}} ... section {{number of: install}} ... figure {{number of: emblem}}.
+			Style: label
+		Paragraph: Payment follows clause {number of: payment}, the steps are in section {number of: install} and the emblem is in figure {number of: emblem}.
+			Style: target
+		Heading 2:
+			Text: Terms
+		List:
+			Marker: lower-alpha
+			Marker suffix: parenthesis
+			List item:
+				Paragraph: The goods travel at the risk of the buyer.
+			List item:
+				Id: payment
+				Paragraph: Payment is made within 30 days. (Id: payment)
+		Heading 3:
+			Text: Delivery
+		Paragraph: Delivery takes two weeks.
+		Heading 3:
+			Id: install
+			Text: Installation (Id: install)
+		Paragraph: The installation is done by the workshop.
+		Figure:
+			Id: emblem
+			Caption: The emblem of the workshop (Id: emblem).
+			Image: examples/menu/emblem.svg
+				Alt: Emblem of the workshop
+				Box:
+					Width: 60

@@ -1,0 +1,10 @@
+# The indent of the lists in the documents of the lists topic: the left Padding leaves room for the marker.
+Styles (dev.stxt.pdf):
+	For element: List
+		Box:
+			Margin: 0 0 12 0
+			Padding: 0 0 0 20
+	For element: List item
+		Trim margins: both
+		Box:
+			Margin: 0 0 4 0

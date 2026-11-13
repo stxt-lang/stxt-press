@@ -1,0 +1,47 @@
+# Figures: In table of contents: false keeps a figure numbered but out of the list of figures.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Figures · Out of the list of figures
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: TOC 1
+			Box:
+				Margin: 0 0 3 0
+	Section:
+		Text: Figures
+			Style: topic
+		Heading 1:
+			Text: Out of the list of figures
+		Paragraph: A `Table of contents` with `Entries: figures` lists the figures with their caption and page. A figure with `In table of contents: false` keeps its number and does not appear in that list.
+			Style: intro
+		Text: Table of contents (Entries: figures)
+			Style: label
+		Table of contents:
+			Style: sample
+			Entries: figures
+		Stack:
+			Gap: 16
+			Item:
+				Figure:
+					Caption: Chair.
+					Image: examples/catalog/silla.jpg
+						Alt: Walnut chair
+						Box:
+							Width: 40mm
+			Item:
+				Figure:
+					In table of contents: false
+					Caption: Detail of the seat, not listed.
+					Image: examples/catalog/taburete.jpg
+						Alt: Walnut stool seen from above
+						Box:
+							Width: 40mm
+			Item:
+				Figure:
+					Caption: Bookcase.
+					Image: examples/catalog/estanteria.jpg
+						Alt: Walnut bookcase
+						Box:
+							Width: 40mm

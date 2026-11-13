@@ -1,0 +1,38 @@
+# Barcodes: a barcode rotated in the flow, and a QR code that is also a link.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · Rotation and link
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: Rotation and link
+		Paragraph: `Rotate` turns a `Barcode` about its center, as an `Image`, and the box takes the rectangle that encloses it. `Link` makes the whole code clickable without changing how it looks.
+			Style: intro
+		Stack:
+			Gap: 30
+			Vertical: top
+			Item:
+				Block:
+					Text: Rotate: -90
+						Style: label
+					Barcode: ORD-2026-0147
+						Alt: Order ORD-2026-0147
+						Barcode format: code-128
+						Readable text: true
+						Rotate: -90
+						Box:
+							Width: 60mm
+							Height: 14mm
+			Item:
+				Block:
+					Text: Link: https://stxt.dev
+						Style: label
+					Barcode: https://stxt.dev
+						Alt: QR code with the address https://stxt.dev
+						Link: https://stxt.dev
+						Box:
+							Width: 30mm

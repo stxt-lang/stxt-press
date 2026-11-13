@@ -1,0 +1,89 @@
+# Grid: Row sizes fixes the height of each row, in points, as a fraction or as a percentage of a Grid with Height.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Grid · Row sizes
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Grid
+			Style: topic
+		Heading 1:
+			Text: Row sizes
+		Paragraph: Without `Row sizes` each row measures its tallest item. `Row sizes` gives one track per row, with the same forms as the columns. Fractions and percentages share a height, so they need a `Height` on the `Grid`.
+			Style: intro
+		Text: No Row sizes: each row as tall as its content
+			Style: label
+		Grid:
+			Column sizes: * *
+			Gap: 4
+			Area:
+				Text: One line
+					Style: tile
+			Area:
+				Text: Two lines, because this text is long enough to break in its column
+					Style: pale
+			Area:
+				Text: Row 2
+					Style: pale
+			Area:
+				Text: Row 2
+					Style: tile
+		Text: Row sizes: 30 60
+			Style: label
+		Grid:
+			Column sizes: * *
+			Gap: 4
+			Row sizes: 30 60
+			Area:
+				Text: 30
+					Style: tile
+			Area:
+				Text: 30
+					Style: pale
+			Area:
+				Text: 60
+					Style: pale
+			Area:
+				Text: 60
+					Style: tile
+		Text: Height: 120, Row sizes: * 2*
+			Style: label
+		Grid:
+			Column sizes: * *
+			Gap: 4
+			Row sizes: * 2*
+			Box:
+				Height: 120
+			Area:
+				Text: *
+					Style: tile
+			Area:
+				Text: *
+					Style: pale
+			Area:
+				Text: 2*
+					Style: pale
+			Area:
+				Text: 2*
+					Style: tile
+		Text: Height: 120, Row sizes: 25% auto
+			Style: label
+		Grid:
+			Column sizes: * *
+			Gap: 4
+			Row sizes: 25% auto
+			Box:
+				Height: 120
+			Area:
+				Text: 25%
+					Style: tile
+			Area:
+				Text: 25%
+					Style: pale
+			Area:
+				Text: auto
+					Style: pale
+			Area:
+				Text: auto
+					Style: tile

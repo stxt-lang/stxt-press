@@ -1,0 +1,74 @@
+# Styles: the rules for table cells by position (Header cell, Odd row cell...) and by column (For column).
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Styles · Rules for table cells
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For element: Cell
+			Box:
+				Padding: 4 6
+		For element: Header cell
+			Typography:
+				Bold: true
+				Color: #FFFFFF
+			Box:
+				Background: accent
+		For element: Body cell
+			Box:
+				Border: 0 0 0.5 0
+				Border color: rule
+		For element: Even row cell
+			Box:
+				Background: sand
+		For element: Footer cell
+			Typography:
+				Bold: true
+			Box:
+				Border: 1.5 0 0 0
+				Border color: accent
+		For column: 2 3
+			Typography:
+				Align: right
+		For column: 1
+			Typography:
+				Italic: true
+	Section:
+		Text: Styles
+			Style: topic
+		Heading 1:
+			Text: Rules for table cells
+		Paragraph: The cells of a table take rules by their place: `Header cell`, `Body cell` and `Footer cell` by part, `Odd row cell` and `Even row cell` for zebra stripes in the body, and `For column` for the cells that start in a column or a range of columns. No cell of this table declares anything.
+			Style: intro
+		Text: Header cell, Body cell, Even row cell, Footer cell, For column: 1, For column: 2 3
+			Style: label
+		Table:
+			Column sizes: * 80 80
+			Header rows:
+				Row:
+					Cell: Item
+					Cell: Qty
+					Cell: Amount
+			Body rows:
+				Row:
+					Cell: Walnut chair
+					Cell: 12
+					Cell: 1,740.00
+				Row:
+					Cell: Dining table
+					Cell: 1
+					Cell: 890.00
+				Row:
+					Cell: Wool cushion
+					Cell: 12
+					Cell: 216.00
+				Row:
+					Cell: Delivery
+					Cell: 1
+					Cell: 60.00
+			Footer rows:
+				Row:
+					Cell: Total
+					Cell:
+					Cell: 2,906.00

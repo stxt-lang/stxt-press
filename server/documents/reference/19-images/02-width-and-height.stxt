@@ -1,0 +1,50 @@
+# Images: with Width or Height the other side follows the proportion of the image, and Margin: 0 auto centers it.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Images · Width and Height
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Images
+			Style: topic
+		Heading 1:
+			Text: Width and Height
+		Paragraph: With one of `Width` or `Height`, the other comes from the proportion of the file. A percentage is of the width of the container (under the three images), and `Margin: 0 auto` centers an image with a width.
+			Style: intro
+		Stack:
+			Gap: 20
+			Vertical: bottom
+			Box:
+				Margin: 0 0 16 0
+			Item:
+				Block:
+					Text: Width: 120
+						Style: label
+					Image: examples/newsletter/trail.jpg
+						Alt: A path between meadows with mountains in the background
+						Box:
+							Width: 120
+			Item:
+				Block:
+					Text: Height: 120
+						Style: label
+					Image: examples/newsletter/trail.jpg
+						Alt: A path between meadows with mountains in the background
+						Box:
+							Height: 120
+			Item:
+				Block:
+					Text: Height: 60
+						Style: label
+					Image: examples/newsletter/trail.jpg
+						Alt: A path between meadows with mountains in the background
+						Box:
+							Height: 60
+		Text: Width: 50%, Margin: 0 auto
+			Style: label
+		Image: examples/newsletter/trail.jpg
+			Alt: A path between meadows with mountains in the background
+			Box:
+				Width: 50%
+				Margin: 0 auto

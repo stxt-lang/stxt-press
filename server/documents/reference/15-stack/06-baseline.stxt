@@ -1,0 +1,82 @@
+# Stack: Vertical: baseline aligns texts of different sizes in a row by the line their letters rest on.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Stack · Baseline
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: row
+			Gap: 6
+			Box:
+				Margin: 0 0 14 0
+				Padding: 6
+				Border: 0.5
+				Border color: rule
+		For style: big
+			Typography:
+				Size: 28
+				Line height: 32
+				Bold: true
+	Section:
+		Text: Stack
+			Style: topic
+		Heading 1:
+			Text: Baseline
+		Paragraph: With `Vertical: baseline` in a row, the first line of text of each item sits on one baseline. An item without text, such as an image, rests its bottom edge on it.
+			Style: intro
+		Text: Vertical: top
+			Style: label
+		Stack:
+			Style: row
+			Vertical: top
+			Item:
+				Text: TOTAL
+			Item:
+				Text: 1,234.56
+					Style: big
+			Item:
+				Text: EUR
+		Text: Vertical: baseline
+			Style: label
+		Stack:
+			Style: row
+			Vertical: baseline
+			Item:
+				Text: TOTAL
+			Item:
+				Text: 1,234.56
+					Style: big
+			Item:
+				Text: EUR
+		Text: Vertical: baseline, with an image and a padded block
+			Style: label
+		Stack:
+			Style: row
+			Vertical: baseline
+			Item:
+				Image: examples/menu/emblem.svg
+					Box:
+						Width: 24
+			Item:
+				Text: Nogal
+					Style: big
+			Item:
+				Block:
+					Box:
+						Padding: 10 6
+						Background: sand
+					Text: Since 1987
+		Text: Item with Vertical: top in a baseline row
+			Style: label
+		Stack:
+			Style: row
+			Vertical: baseline
+			Item:
+				Text: TOTAL
+			Item:
+				Text: 1,234.56
+					Style: big
+			Item:
+				Vertical: top
+				Text: EUR

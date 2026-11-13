@@ -1,0 +1,82 @@
+# Frame and overlays: Opacity paints a positioned box, with everything it contains, faint over what lies beneath.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Frame and overlays · Opacity
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: disc
+			Box:
+				Width: 90
+				Height: 90
+				Corner radius: 50%
+				Background: accent
+	Section:
+		Text: Frame and overlays
+			Style: topic
+		Heading 1:
+			Text: Opacity
+		Paragraph: `Opacity` goes from `0%` (nothing is seen) to `100%` (opaque). The whole box is made faint as one piece: two boxes that overlap inside it do not show through each other. It only changes how the box is painted, never the layout.
+			Style: intro
+		Text: Overlay without Opacity, with Opacity: 60% and with Opacity: 25%
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 0 0 auto 0
+				Block:
+					Box:
+						Height: 50
+						Margin: 50 0 0 0
+						Background: sand
+			Overlay:
+				Offset: 30 auto auto 30
+				Block:
+					Style: disc
+			Overlay:
+				Offset: 30 auto auto 180
+				Opacity: 60%
+				Block:
+					Style: disc
+			Overlay:
+				Offset: 30 auto auto 330
+				Opacity: 25%
+				Block:
+					Style: disc
+		Text: Opacity: 50% on an Overlay with two overlapping discs: they are made faint together
+			Style: label
+		Frame:
+			Style: stage
+			Overlay:
+				Offset: 30 auto auto 30
+				Opacity: 50%
+				Box:
+					Width: 160
+					Height: 90
+				Overlay:
+					Offset: 0 auto auto 0
+					Block:
+						Style: disc
+				Overlay:
+					Offset: 0 auto auto 60
+					Block:
+						Style: disc
+			Overlay:
+				Offset: 30 auto auto 250
+				Block:
+					Box:
+						Width: 90
+						Height: 90
+						Corner radius: 50%
+						Background: #1B5E8C80
+			Overlay:
+				Offset: 30 auto auto 310
+				Block:
+					Box:
+						Width: 90
+						Height: 90
+						Corner radius: 50%
+						Background: #1B5E8C80
+		Paragraph: On the right, for comparison, two discs with a color of 50% opacity (#1B5E8C80): each one is faint on its own, and the overlap is darker.
+			Style: note

@@ -1,0 +1,44 @@
+# Footnotes: a note that starts with a paragraph and goes on with a list and a table.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Footnotes · A list and a table in a note
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For element: Footnote
+			For element: List
+				Marker: dash
+				Box:
+					Padding: 0 0 0 10
+			For element: Cell
+				Box:
+					Padding: 1 4
+					Border: 0 0 0.5 0
+					Border color: rule
+	Section:
+		Text: Footnotes
+			Style: topic
+		Heading 1:
+			Text: A list and a table in a note
+		Paragraph: A note starts with a `Paragraph`, a `Text` or a `Markdown`, which gets the number. After it may come more paragraphs, lists, tables and blocks. Nested rules in `For element: Footnote` style them only inside notes.
+			Style: intro
+		Paragraph: The fee depends on the plan chosen[^plans] and is billed every month.
+		Footnote:
+			Id: plans
+			Paragraph: The plans include:
+			List:
+				List item:
+					Text: support by email,
+				List item:
+					Text: one hour of training.
+			Table:
+				Column sizes: * 20mm
+				Column align: left right
+				Body rows:
+					Row:
+						Cell: Basic
+						Cell: €9
+					Row:
+						Cell: Professional
+						Cell: €19

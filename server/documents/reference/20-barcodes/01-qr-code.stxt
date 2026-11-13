@@ -1,0 +1,37 @@
+# Barcodes: a QR code at its natural size and with a Width.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Barcodes · QR code
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: cell
+			Box:
+				Margin: 0 0 14 0
+	Section:
+		Text: Barcodes
+			Style: topic
+		Heading 1:
+			Text: QR code
+		Paragraph: A `Barcode` without `Barcode format` is a QR code generated from its value. Without `Width` it measures its modules at 0.5 mm each, quiet zone included. With `Width` the other side follows, because a QR code is square. `Alt` is required.
+			Style: intro
+		Text: (natural size)
+			Style: label
+		Barcode: https://stxt.dev
+			Style: cell
+			Alt: QR code with the address https://stxt.dev
+		Text: Width: 30mm
+			Style: label
+		Barcode: https://stxt.dev
+			Style: cell
+			Alt: QR code with the address https://stxt.dev
+			Box:
+				Width: 30mm
+		Text: Width: 160
+			Style: label
+		Barcode: https://stxt.dev
+			Style: cell
+			Alt: QR code with the address https://stxt.dev
+			Box:
+				Width: 160

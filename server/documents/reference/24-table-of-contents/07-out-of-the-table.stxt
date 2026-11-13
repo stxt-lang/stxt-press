@@ -1,0 +1,32 @@
+# Table of contents: In table of contents: false keeps a heading out of the table while it stays a heading.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Table of contents · Headings left out
+	Page:
+		Paper: A5
+		Margin: 15mm
+	Styles:
+		For element: TOC 2
+			Box:
+				Padding: 0 0 0 14
+				Margin: 0 0 3 0
+	Section:
+		Text: Table of contents
+			Style: topic
+		Heading 1:
+			In table of contents: false
+			Text: Headings left out
+		Paragraph: A heading with `In table of contents: false` is still a heading, with its bookmark and its level, but has no entry. It is the usual choice for the title of a cover or of the table of contents itself, as the title of this page.
+			Style: intro
+		Table of contents:
+			Style: sample
+		Heading 2:
+			Text: Listed section
+		Paragraph: This section has an entry.
+		Heading 2:
+			In table of contents: false
+			Text: Section left out
+		Paragraph: This one has none, but it still appears in the bookmarks of the PDF.
+		Heading 2:
+			Text: Another listed section
+		Paragraph: This section has an entry again.

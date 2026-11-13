@@ -1,0 +1,41 @@
+# Pages and breaks: {page} and {pages} in a footer repeated on every page.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Pages and breaks · Page numbers
+	Page:
+		Paper: A5
+		Margin: 15mm 15mm 22mm 15mm
+	Page overlay:
+		Offset: auto 0 -40 0
+		Box:
+			Padding: 6 0 0 0
+			Border: 0.5 0 0 0
+			Border color: rule
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Nogal Workshop · Catalog 2026
+			Item:
+				Text: Page {page} of {pages}
+					Typography:
+						Align: right
+	Section:
+		Text: Pages and breaks
+			Style: topic
+		Heading 1:
+			Text: Page numbers
+		Paragraph: In any text, `{page}` writes the number of the page and `{pages}` the last number of the count. The footer of this document is a `Page overlay` with both, so each of its three pages carries its own number.
+			Style: intro
+		Text: Text: Page {{page}} of {{pages}}
+			Style: label
+		Paragraph: The footer at the bottom of this page says "Page 1 of 3". The next two pages are forced with `Before: page`.
+		Block:
+			Style: marked
+			Break:
+				Before: page
+			Paragraph: The second page. Its footer says "Page 2 of 3".
+		Block:
+			Style: marked
+			Break:
+				Before: page
+			Paragraph: The third and last page. Its footer says "Page 3 of 3".

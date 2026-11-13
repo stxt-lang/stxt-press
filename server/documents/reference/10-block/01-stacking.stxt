@@ -1,0 +1,52 @@
+# Block: children stacked from top to bottom, each with the full width unless it declares its own.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Block · Stacking
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: piece
+			Box:
+				Padding: 6 8
+				Margin: 0 0 6 0
+				Background: tint
+	Section:
+		Text: Block
+			Style: topic
+		Heading 1:
+			Text: Stacking
+		Paragraph: A `Block` places its children one below another, in document order. A child without `Width` takes the full width of the block, and one with `Width` and `Margin: 0 auto` is centered.
+			Style: intro
+		Text: Block with three children
+			Style: label
+		Block:
+			Style: sample
+			Text: First child: the full width.
+				Style: piece
+			Text: Second child: Width 50%, at the left.
+				Style: piece
+				Box:
+					Width: 50%
+			Text: Third child: Width 50%, Margin 0 auto.
+				Style: piece
+				Box:
+					Width: 50%
+					Margin: 0 auto 6 auto
+		Text: Height: 120 (the block measures what it declares)
+			Style: label
+		Block:
+			Style: sample
+			Box:
+				Height: 120
+			Text: One child in a block of a fixed height.
+				Style: piece
+		Text: Typography: Italic: true, Color: accent (inherited by the children)
+			Style: label
+		Block:
+			Style: sample
+			Typography:
+				Italic: true
+				Color: accent
+			Text: Both texts inherit the typography of their block.
+			Text: Only Typography is inherited: Box and Break are not.
