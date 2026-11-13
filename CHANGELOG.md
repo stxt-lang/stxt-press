@@ -144,6 +144,6 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   `Content-Type: application/json` (`415`, `CONTENT_TYPE_NOT_VALID`) and `If-Match` (`428`, `VERSION_REQUIRED`). The
   `GET` of a template or a document gives its `ETag` and whether it is saved (`writable`).
 - In the editor, **Save** and Ctrl+S, with `Save` on: the files that changed, asking first for a `.styles.stxt` of a
-  folder. Each half of the editor, and the PDF of the index, has a button that puts it over the whole window, and Esc
-  puts it back (the idea of the editor of `pdf_gen`). The buttons say how long they took (`PDF in 312 ms.`).
+  folder. Each half of the editor, and the PDF of the index, has a button that puts it over the window, under the bar,
+  which keeps its buttons and gets a cross that puts it back, as Esc does (the idea of the editor of `pdf_gen`). The buttons say how long they took (`PDF in 312 ms.`).
 - The `server.stxt` of `server/` listens on `127.0.0.1:8082`, and has `Save: true`.

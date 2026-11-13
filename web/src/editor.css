@@ -619,8 +619,9 @@ main.index {
 }
 
 /* Full window for a part (maximize.ts): the button shows when the mouse is over the part, at its bottom right, out of
-   the scroll bars (at the top it would hide the menu of the PDF viewer); the part over the window has a strip at the
-   top for the button, so that it hides nothing. */
+   the scroll bars (at the top it would hide the menu of the PDF viewer). The part over the window goes under the bar
+   of the page (its top is set by the script, from the height of the bar), which keeps its buttons and gets the cross
+   that puts it back. */
 .maximizable {
 	position: relative;
 }
@@ -640,8 +641,7 @@ main.index {
 }
 
 .maximizable:hover > .maximize,
-.maximize:focus-visible,
-.maximized > .maximize {
+.maximize:focus-visible {
 	opacity: 1;
 }
 
@@ -657,14 +657,19 @@ main.index {
 	z-index: 1000;
 	height: auto !important;
 	margin: 0;
-	padding: 2.4rem 0.75rem 0.75rem !important;
+	padding: 0.75rem !important;
 	background: #fff;
 }
 
+/* Over the window, the cross of the bar puts it back. */
 .maximized > .maximize {
-	top: 0.4rem;
-	bottom: auto;
-	right: 0.75rem;
+	display: none;
+}
+
+.bar .restore {
+	padding: 0.15rem 0.6rem;
+	font-size: 15px;
+	line-height: 1.4;
 }
 
 body.with-maximized {

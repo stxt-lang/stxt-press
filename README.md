@@ -157,7 +157,8 @@ file (the data, the document, each styles document), with a dot when the file ha
 schema (amber); on the right, the output of the last button. **Preview** shows the SVG pages (with **Outlines**, the
 outlines of the boxes) and **PDF** the PDF in the viewer of the browser, with a link that downloads it with its name;
 for a template, **Fill** shows the filled document. Each one says how long it took. Each half has a button, at its
-bottom right, that puts it over the whole window, and Esc puts it back; the PDF of the index has it too. An
+bottom right, that puts it over the window, under the bar, which keeps its buttons and gets a cross that puts it back,
+as Esc does; the PDF of the index has it too. An
 error of the server is marked in its panel, on its line, and its tab is shown. The document panel validates against
 the schema of `/schema`, for a template only while the data panel is empty: a document with Slots is validated
 by the server, once filled. A window narrower than 900 px shows one column, and the page scrolls.
