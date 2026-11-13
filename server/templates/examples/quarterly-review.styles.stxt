@@ -1,0 +1,283 @@
+# Styles of the quarterly review template: those of the document documents/examples/quarterly-review.
+Styles (dev.stxt.pdf):
+	Named color: harbour #0F4C45
+	Named color: coral #C2410C
+	Named color: sea #E3F0EC
+	Named color: slate #4A5A58
+	Named color: line #CFDDD8
+	For element: Document
+		Typography:
+			Code font: IBM Plex Mono
+			Kerning: true
+			Ligatures: true
+			Size: 16
+			Line height: 22
+			Color: #18211F
+			Markup: markdown
+	For style: strip
+		Box:
+			Width: 12
+			Height: 100%
+			Background: linear(180, harbour, #2F8F7E)
+	For style: deck-footer
+		Typography:
+			Size: 10
+			Color: slate
+	For style: title-slide
+		Box:
+			Height: 100%
+			Padding: 92 80 0 80
+			Background: linear(135, #0A332F, harbour, #17655A)
+		Typography:
+			Color: #FFFFFF
+	For style: eyebrow
+		Typography:
+			Size: 13
+			Bold: true
+			Case: uppercase
+			Letter spacing: 2
+			Color: #FFCDB0
+		Box:
+			Margin: 0 0 14 0
+	For element: Heading 1
+		Typography:
+			Size: 64
+			Line height: 70
+			Bold: true
+			Letter spacing: -1
+		Box:
+			Margin: 0 0 12 0
+	For style: title-sub
+		Typography:
+			Size: 24
+			Line height: 32
+			Color: #D5EBE6
+		Box:
+			Width: 620
+			Margin: 0 0 64 0
+	For style: presenters
+		Gap: 48
+		Box:
+			Padding: 18 0 0 0
+			Border: 1 0 0 0
+			Border color: #5FA597
+	For style: presenter
+		Typography:
+			Size: 16
+			Bold: true
+	For style: presenter-role
+		Typography:
+			Size: 13
+			Color: #D5EBE6
+	For style: slide
+		Box:
+			Height: 100%
+		Break:
+			Before: page
+	For element: Heading 2
+		Typography:
+			Size: 34
+			Line height: 40
+			Bold: true
+			Color: harbour
+		Box:
+			Margin: 0 0 24 0
+	For style: slide-note
+		Typography:
+			Size: 15
+			Line height: 21
+			Color: slate
+	For style: agenda-grid
+		Column sizes: 280 *
+		Row sizes: auto *
+		Gap: 0 48
+		Box:
+			Height: 100%
+	For style: agenda
+		Marker: decimal
+		Box:
+			Padding: 0 0 0 40
+		Typography:
+			Size: 20
+			Line height: 28
+			Color: harbour
+		For element: List item
+			Box:
+				Margin: 0 0 18 0
+				Padding: 0 0 18 0
+				Border: 0 0 1 0
+				Border color: line
+		For element: Paragraph
+			Typography:
+				Color: #18211F
+	For style: tiles
+		Column sizes: repeat(4, *)
+		Gap: 20
+		Box:
+			Margin: 12 0 36 0
+	For style: tile
+		Box:
+			Padding: 22 20
+			Background: sea
+			Corner radius: 8
+	For style: tile-figure
+		Typography:
+			Size: 38
+			Line height: 44
+			Bold: true
+			Color: harbour
+	For style: tile-label
+		Typography:
+			Size: 15
+			Line height: 20
+		Box:
+			Margin: 2 0 14 0
+	For style: tile-change
+		Typography:
+			Size: 13
+			Bold: true
+			Color: slate
+	For style: up
+		Typography:
+			Color: #B23A0A
+	For style: chart-and-notes
+		Column sizes: * 250
+		Gap: 40
+	For style: chart-title
+		Typography:
+			Size: 13
+			Color: slate
+		Box:
+			Margin: 0 0 12 0
+	For style: bar-row
+		Column sizes: 120 * 56
+		Gap: 12
+		Vertical: center
+		Box:
+			Margin: 0 0 12 0
+	For style: bar-label
+		Typography:
+			Size: 15
+	For style: bar-value
+		Typography:
+			Size: 15
+			Bold: true
+			Align: right
+	For style: bar-track
+		Box:
+			Background: #F0F4F3
+			Corner radius: 0 4 4 0
+	For style: bar
+		Box:
+			Height: 30
+			Background: harbour
+			Corner radius: 0 4 4 0
+	For style: highlight
+		Box:
+			Background: coral
+	For style: callout
+		Box:
+			Padding: 18 20
+			Border: 0 0 0 4
+			Border color: coral
+			Background: #FDF0E9
+		Typography:
+			Size: 15
+			Line height: 21
+		For element: Paragraph
+			Box:
+				Margin: 0 0 10 0
+	For style: callout-label
+		Typography:
+			Size: 12
+			Bold: true
+			Case: uppercase
+			Letter spacing: 1.5
+			Color: #B23A0A
+		Box:
+			Margin: 0 0 8 0
+	For style: fleet-table
+		Column sizes: * 150 150 130
+		Column align: left right right right
+		Box:
+			Margin: 0 0 24 0
+	For element: Cell
+		Box:
+			Padding: 10 12
+			Border: 0 0 1 0
+			Border color: line
+	For element: Header cell
+		Typography:
+			Size: 13
+			Bold: true
+			Color: slate
+			Case: uppercase
+			Letter spacing: 1
+		Box:
+			Border: 0 0 2 0
+			Border color: harbour
+	For column: 3
+		Typography:
+			Bold: true
+			Color: harbour
+	For style: timeline
+		Column sizes: repeat(4, *)
+		Gap: 14 10
+	For style: quarter
+		Typography:
+			Size: 14
+			Bold: true
+			Color: slate
+			Letter spacing: 1
+		Box:
+			Padding: 0 0 6 4
+			Border: 0 0 2 0
+			Border color: line
+	For style: phase
+		Box:
+			Padding: 14 18
+			Corner radius: 8
+	For style: phase-a
+		Box:
+			Background: harbour
+		Typography:
+			Color: #FFFFFF
+	For style: phase-b
+		Box:
+			Background: sea
+			Border: 0 0 0 4
+			Border color: harbour
+			Corner radius: 0 8 8 0
+	For style: phase-c
+		Box:
+			Background: #FDF0E9
+			Border: 0 0 0 4
+			Border color: coral
+			Corner radius: 0 8 8 0
+	For style: phase-title
+		Typography:
+			Size: 18
+			Line height: 24
+			Bold: true
+	For style: phase-detail
+		Typography:
+			Size: 14
+			Line height: 19
+	For style: closing
+		Column sizes: * 200
+		Gap: 60
+		Vertical: center
+		Box:
+			Height: 100%
+	For style: closing-link
+		Typography:
+			Size: 20
+			Bold: true
+			Color: coral
+		Box:
+			Margin: 20 0 0 0
+	For style: closing-qr
+		Box:
+			Width: 200
+		Typography:
+			Color: harbour

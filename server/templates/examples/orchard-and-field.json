@@ -1,0 +1,88 @@
+{
+  "chapter": "4",
+  "title": "Orchard and Field",
+  "subject": "Two autumn recipes: roast squash with sage brown butter, and a pear and walnut cake",
+  "keywords": "cookbook, autumn, squash, pear, walnut",
+  "first_page": 87,
+  "intro": "October is when the kitchen slows down. The squash have hardened their skins in the field, the late pears are finally soft enough to eat, and the walnuts have dropped onto the lane by the gate. These two recipes use all three, and both are better made a day ahead.",
+  "intro_more": "Neither asks for much: an oven, a heavy pan and some patience while the butter turns brown or the cake cools. Buy squash that feel heavy for their size, and pears that give a little at the neck.",
+  "plate": {
+    "id": "fig-pears",
+    "caption": "Comice and Conference pears, with walnuts from the lane.",
+    "image": "documents/recipes/pears.svg",
+    "alt": "Drawing of two pears, one yellow and one russet, with two walnuts"
+  },
+  "recipes": [
+    {
+      "id": "squash",
+      "title": "Roast squash with sage brown butter",
+      "yield": "Serves 4",
+      "prep": "15 min",
+      "oven": "45 min at 200 °C",
+      "lead": "A whole tray of squash, roasted until the edges catch, then dressed with butter cooked to the colour of hazelnuts and crisp sage leaves. Serve it with bread for the butter, or next to a roast chicken.",
+      "ingredient_list": {
+        "ingredients": [
+          {"text": "1 kg squash (onion or butternut)"},
+          {"text": "2 tbsp olive oil"},
+          {"text": "1 tsp flaky salt"},
+          {"text": "60 g butter"},
+          {"text": "16 sage leaves"},
+          {"text": "1 small garlic clove"},
+          {"text": "½ lemon"},
+          {"text": "40 g hazelnuts, toasted"}
+        ],
+        "method": [
+          {"text": "Heat the oven to 200 °C. Halve the squash, scoop out the seeds and cut it into wedges about 3 cm thick. There is no need to peel an onion squash; the skin softens as it roasts."},
+          {"text": "Toss the wedges with the oil and salt on a large tray, in a single layer. Roast for 40 to 45 minutes, turning once, until soft and dark at the edges."},
+          {"text": "Meanwhile, melt the butter in a light-coloured pan over a medium heat. When it foams, add the sage and the sliced garlic and swirl until the butter smells of nuts and the leaves are crisp, about 3 minutes."},
+          {"text": "Take the pan off the heat and squeeze in the lemon. Spoon the butter and leaves over the squash and scatter with the chopped hazelnuts."}
+        ]
+      },
+      "notes": {
+        "drawing": "documents/recipes/squash.svg",
+        "paragraphs": [
+          "The butter is ready when the solids at the bottom of the pan turn golden brown and the foam settles. A light pan shows the colour; in a dark one it is easy to go too far, and burnt butter tastes bitter.",
+          "Onion squash and butternut roast in the same time. A pumpkin grown for carving is too watery for this: it steams instead of browning.",
+          "The squash keeps for two days in the fridge. Warm it in the oven and make the butter fresh."
+        ]
+      },
+      "variations": {
+        "items": [
+          {"name": "With blue cheese", "text": "Crumble 80 g of a soft blue over the hot squash just before the butter goes on."},
+          {"name": "With lentils", "text": "Fold the squash through 250 g of cooked green lentils and a spoonful of mustard for a main course."},
+          {"name": "With chilli", "text": "Add a pinch of chilli flakes to the butter with the sage."},
+          {"name": "Without dairy", "text": "Fry the sage in olive oil and finish it with the lemon and a little honey."}
+        ]
+      }
+    },
+    {
+      "id": "cake",
+      "title": "Pear and walnut cake",
+      "yield": "Makes one 22 cm cake",
+      "prep": "25 min",
+      "oven": "50 min at 170 °C",
+      "lead": "A plain, damp cake with pears pressed into the top. It is at its best the day after baking, when the crumb has taken on the pear juice.",
+      "quantity_table": {
+        "caption": "Quantities for a 22 cm round tin and for a 900 g loaf tin.",
+        "tins": ["Round tin", "Loaf tin"],
+        "rows": [
+          {"ingredient": "Ripe pears", "amounts": ["3", "2"]},
+          {"ingredient": "Soft butter", "amounts": ["150 g", "110 g"]},
+          {"ingredient": "Light brown sugar", "amounts": ["140 g", "100 g"]},
+          {"ingredient": "Eggs, at room temperature", "amounts": ["3", "2"]},
+          {"ingredient": "Plain flour", "amounts": ["120 g", "90 g"]},
+          {"ingredient": "Ground walnuts", "amounts": ["80 g", "60 g"]},
+          {"ingredient": "Baking powder", "amounts": ["2 tsp", "1½ tsp"]},
+          {"ingredient": "Salt and a pinch of cinnamon", "shared": "the same for both"}
+        ],
+        "method": [
+          {"text": "Heat the oven to 170 °C and line the tin with baking paper. Peel and quarter the pears and take out the cores."},
+          {"text": "Beat the butter and sugar until pale, about 4 minutes. Add the eggs one at a time, with a spoonful of the flour after each one so the mixture does not split."},
+          {"text": "Fold in the rest of the flour, the walnuts, the baking powder, the salt and the cinnamon. Spread the batter in the tin."},
+          {"text": "Press the pear quarters into the top, cut side down. Bake for 50 minutes, until a skewer comes out clean, and leave the cake in its tin for 15 minutes before turning it out."}
+        ]
+      },
+      "tip": {"title": "Hard pears?", "text": "Poach the quarters in syrup for 5 minutes first."}
+    }
+  ]
+}

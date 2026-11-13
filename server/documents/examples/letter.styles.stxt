@@ -1,0 +1,40 @@
+# Styles of the business letter of a furniture workshop: those of the template templates/examples/letter, which are
+# those of the "letter" example of stxt-pdf, with its base typography.
+Styles (dev.stxt.pdf):
+	For element: Document
+		Typography:
+			Font: IBM Plex Serif
+			Size: 10.5
+			Line height: 16
+			Color: #2A2623
+	For element: Paragraph
+		Box:
+			Margin: 0 0 9 0
+	For element: List
+		Box:
+			Padding: 0 0 0 22
+			Margin: 0 0 9 0
+	For element: List item
+		Box:
+			Margin: 0 0 3 0
+	For style: small
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8
+			Line height: 12
+			Color: #6B5B4E
+	For style: subject
+		Typography:
+			Bold: true
+			Color: #3B2A1E
+		Box:
+			Margin: 0 0 14 0
+			Padding: 8 0
+			Border: 0.5 0 0.5 0
+			Border color: #B5651D
+	For element: Page overlay
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Color: #817265
+			Align: center

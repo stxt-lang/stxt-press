@@ -1,0 +1,185 @@
+# Styles of the poster template: those of the document documents/examples/blue-hour.
+Styles (dev.stxt.pdf):
+	Named color: moonlight #F4E3B5
+	Named color: brass #E7B75F
+	Named color: mist #B9C4E4
+	Named color: ink #0B1530
+	For element: Document
+		Typography:
+			Code font: IBM Plex Mono
+			Kerning: true
+			Ligatures: true
+			Color: #FFFFFF
+			Size: 11
+			Line height: 15
+	For style: moon
+		Box:
+			Width: 330
+			Height: 330
+			Corner radius: 50%
+			Background: linear(200, #FFF4D6, moonlight, #C9A55A)
+	For style: ring-inner
+		Box:
+			Width: 450
+			Height: 450
+			Corner radius: 50%
+			Border: 2
+			Border color: moonlight
+	For style: ring-outer
+		Box:
+			Width: 590
+			Height: 590
+			Corner radius: 50%
+			Border: 1
+			Border color: moonlight
+			Border style: dashed
+	For style: ribbon
+		Typography:
+			Size: 13
+			Bold: true
+			Color: ink
+			Align: center
+			Case: uppercase
+			Letter spacing: 2
+		Box:
+			Width: 300
+			Padding: 9 0
+			Background: brass
+	For style: masthead
+		Box:
+			Padding: 150 64 0 64
+	For style: kicker
+		Typography:
+			Size: 12
+			Bold: true
+			Color: brass
+			Case: uppercase
+			Letter spacing: 3
+		Box:
+			Margin: 0 0 6 0
+	For element: Heading 1
+		Typography:
+			Font: IBM Plex Serif
+			Bold: true
+			Size: 168
+			Line height: 146
+			Letter spacing: -6
+			Color: #FFFFFF
+		Box:
+			Margin: 0
+	For style: tagline
+		Typography:
+			Font: IBM Plex Serif
+			Italic: true
+			Size: 30
+			Line height: 38
+			Color: moonlight
+		Box:
+			Margin: 18 0 0 4
+	For id: dates
+		Box:
+			Padding: 16 0 0 0
+			Border: 1.5 0 0 0
+			Border color: brass
+	For style: date-days
+		Typography:
+			Font: IBM Plex Serif
+			Bold: true
+			Size: 54
+			Line height: 58
+			Color: brass
+	For style: date-month
+		Typography:
+			Font: IBM Plex Serif
+			Size: 26
+			Color: #FFFFFF
+	For style: date-note
+		Typography:
+			Size: 12
+			Align: right
+			Color: mist
+			Case: uppercase
+			Letter spacing: 1.5
+	For style: programme
+		Box:
+			Margin: 70 64 0 64
+	For style: night
+		Box:
+			Padding: 16 0 0 0
+			Border: 4 0 0 0
+			Border color: brass
+	For style: night-name
+		Typography:
+			Font: IBM Plex Serif
+			Bold: true
+			Size: 26
+			Line height: 30
+	For style: night-theme
+		Typography:
+			Size: 10.5
+			Italic: true
+			Color: mist
+		Box:
+			Margin: 2 0 14 0
+	For style: slot
+		Vertical: baseline
+		Gap: 10
+		Box:
+			Padding: 10 0
+			Border: 0 0 0.5 0
+			Border color: #5A6A9C
+	For style: time
+		Typography:
+			Font: IBM Plex Mono
+			Size: 10
+			Color: brass
+	For style: act
+		Typography:
+			Size: 13.5
+			Line height: 17
+	For style: headliner
+		Typography:
+			Bold: true
+			Color: moonlight
+	For style: footer
+		Box:
+			Padding: 22 64 40 64
+			Background: #0B1530E6
+			Border: 1 0 0 0
+			Border color: #3E5A9A
+	For style: qr
+		Box:
+			Width: 92
+			Padding: 6
+			Background: #FFFFFF
+			Corner radius: 4
+		Typography:
+			Color: ink
+	For style: footer-label
+		Typography:
+			Size: 10
+			Bold: true
+			Color: brass
+			Case: uppercase
+			Letter spacing: 1.5
+	For style: footer-url
+		Typography:
+			Font: IBM Plex Serif
+			Size: 22
+			Line height: 30
+			Bold: true
+	For style: footer-note
+		Typography:
+			Size: 10
+			Color: mist
+	For style: venue
+		Box:
+			Padding: 0 0 0 18
+			Border: 0 0 0 1
+			Border color: #5A6A9C
+	For style: venue-name
+		Typography:
+			Font: IBM Plex Serif
+			Size: 16
+			Line height: 22
+			Bold: true

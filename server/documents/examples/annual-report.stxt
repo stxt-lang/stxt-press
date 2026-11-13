@@ -1,0 +1,556 @@
+# Annual report of a renewable energy cooperative: the template templates/examples/annual-report filled with its
+# sample data, which gives the "annual-report" example of stxt-pdf. Here it is a document, printed as it is; its look
+# is in annual-report.styles.stxt.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 56 56 70 56
+	Title: Annual Report 2025 · Cooperativa Solvent
+	Language: en
+	Page overlay:
+		Id: footer
+		Offset: auto 0 -42 0
+		Box:
+			Padding: 6 0 0 0
+			Border: 0.5 0 0 0
+			Border color: rule
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Cooperativa Solvent · Annual Report 2025
+			Item:
+				Text: Page {page} of {pages}
+	Section:
+		Id: front-cover
+		Page numbering: none
+		Inherit page overlays: false
+		Page:
+			Margin: 0
+		Frame:
+			Id: cover
+			Box:
+				Width: 210mm
+				Height: 297mm
+				Background: navy
+			Typography:
+				Color: white
+			Image: examples/report/cover.jpg
+				Id: cover-photo
+				Box:
+					Width: 100%
+			Overlay:
+				Id: cover-fade
+				Offset: 250 0 auto 0
+				Box:
+					Height: 90
+					Background: linear(180, #12315A00, navy)
+			Block:
+				Box:
+					Padding: 36 56 0 56
+				Text: Annual report · Fiscal year 2025
+					Typography:
+						Size: 9
+						Bold: true
+						Color: #F2A65A
+						Case: uppercase
+						Letter spacing: 2
+					Box:
+						Margin: 0 0 10 0
+				Heading 1:
+					In table of contents: false
+					Box:
+						Margin: 0 0 14 0
+						Padding: 0
+						Border: 0
+					Typography:
+						Numbered: false
+						Font: IBM Plex Serif
+						Bold: true
+						Size: 44
+						Line height: 48
+						Color: white
+					Text: A year of sun
+					Text: and of wind
+				Text: Cooperativa Solvent · Local renewable energy in the Garrotxa
+					Typography:
+						Font: IBM Plex Serif
+						Italic: true
+						Size: 14
+						Line height: 20
+						Color: rule
+					Box:
+						Margin: 0 0 90 0
+				Stack:
+					Gap: 30
+					Item:
+						Grow: 1
+						Block:
+							Text: 2,384 MWh
+								Typography:
+									Font: IBM Plex Serif
+									Size: 22
+									Bold: true
+							Text: of clean energy produced
+								Typography:
+									Size: 8.5
+									Color: rule
+					Item:
+						Grow: 1
+						Block:
+							Text: 8,412
+								Typography:
+									Font: IBM Plex Serif
+									Size: 22
+									Bold: true
+							Text: customers supplied
+								Typography:
+									Size: 8.5
+									Color: rule
+					Item:
+						Grow: 1
+						Block:
+							Text: €312k
+								Typography:
+									Font: IBM Plex Serif
+									Size: 22
+									Bold: true
+							Text: net result for the year
+								Typography:
+									Size: 8.5
+									Color: rule
+			Text: Approved by the General Assembly of members on March 21, 2026.
+				Typography:
+					Size: 8
+					Color: #8FA4BF
+				Box:
+					Margin: 120 56 0 56
+	Section:
+		Id: body
+		Block:
+			Id: contents
+			Heading 1:
+				In table of contents: false
+				Text: Contents
+				Typography:
+					Numbered: false
+			Table of contents:
+				Id: toc
+				Levels: 1 1
+		Block:
+			Id: letter
+			Box:
+				Margin: 30 0 0 0
+			Heading 1:
+				Text: Letter from the President
+			Paragraph: When we founded Solvent, eleven years ago, we had three rooftops, a borrowed windmill and more enthusiasm than money. Today we produce energy for more than eight thousand homes, shops and businesses in the county, and we do it without leaving it: what we generate here is consumed here.
+				Style: lead
+			Paragraph: 2025 has been the year of **consolidation**. We commissioned the Les Preses solar park, expanded the one at Sant Joan and repowered the three oldest wind turbines. We produced 11% more than the previous year and closed the year with a positive result for the fifth year in a row.
+			Paragraph: None of this is the work of one person. It is the result of the work of the twenty-three people on our staff, of the more than twelve hundred members who make the decisions in the assembly, and of a network of local suppliers who have installed every kilowatt with their hands and with good judgment.
+			Paragraph: This report tells what we have achieved, and also what it has cost us and what we still have to do. We invite you to read it with a critical eye: a cooperative improves by asking questions.
+			Paragraph: With warm regards and eager to keep going,
+			Text: Carme Vidal i Roca
+				Typography:
+					Font: IBM Plex Serif
+					Bold: true
+					Size: 11
+				Box:
+					Margin: 14 0 0 0
+			Text: President of the Governing Council
+				Typography:
+					Size: 8.5
+					Color: slate
+			Heading 2:
+				Text: Milestones of the year
+			Grid:
+				Id: milestones
+				Column sizes: repeat(4, *)
+				Gap: 14
+				Area:
+					Block:
+						Style: milestone
+						Text: March
+							Style: kicker
+						Text: The assembly approves the 2024 accounts with 94% of the votes.
+				Area:
+					Block:
+						Style: milestone
+						Text: June
+							Style: kicker
+						Text: The 1.6 MWp Les Preses solar park is connected to the grid.
+				Area:
+					Block:
+						Style: milestone
+						Text: September
+							Style: kicker
+						Text: Repowering works on the three wind turbines are completed.
+				Area:
+					Block:
+						Style: milestone
+						Text: November
+							Style: kicker
+						Text: We reach customer number 8,000, a bakery in Sant Feliu.
+		Block:
+			Id: figures
+			Style: section
+			Heading 1:
+				Text: The year in figures
+			Grid:
+				Id: tiles
+				Column sizes: repeat(3, *)
+				Gap: 12
+				Box:
+					Margin: 0 0 18 0
+				Area:
+					Block:
+						Style: tile
+						Text: 2,384 MWh
+							Style: figure
+						Text: of renewable production, 11% more than in 2024
+							Style: caption
+				Area:
+					Block:
+						Style: tile
+						Text: 8,412
+							Style: figure
+						Text: customers supplied, among homes, shops, industry and public bodies
+							Style: caption
+				Area:
+					Block:
+						Style: tile
+						Text: 15,900 t
+							Style: figure
+						Text: of CO₂ avoided since 2019, the year of the first installation
+							Style: caption
+				Area:
+					Block:
+						Style: tile
+						Text: 1,204
+							Style: figure
+						Text: members, eighty-seven more than the previous year
+							Style: caption
+				Area:
+					Block:
+						Style: tile
+						Text: 23
+							Style: figure
+						Text: people on the staff, 48% of them women
+							Style: caption
+				Area:
+					Block:
+						Style: tile
+						Text: €1.35M
+							Style: figure
+						Text: invested in new generation and storage
+							Style: caption
+			Heading 2:
+				Text: Monthly production
+			Image: examples/report/en/chart-production.svg
+				Id: chart-production
+				Alt: Bar chart of the monthly production in 2025, in MWh: from 98 in December to 306 in July
+				Box:
+					Width: 100%
+			Text: Monthly renewable energy production in 2025, in MWh. The peak, in July, with 306 MWh.
+				Style: caption
+			Paragraph: Production follows the curve of the sun: from November to January it drops below 125 MWh, and between May and August it exceeds 250. Wind partly makes up for the winter, which is why adding a fourth wind turbine, planned for 2026, is one of our priorities.
+		Block:
+			Id: customers
+			Style: section
+			Heading 1:
+				Text: Customers and community
+			Paragraph: A cooperative exists for those who use it. This year we served 8,412 customers, 46% of them households.
+				Style: lead
+			Columns:
+				Id: community
+				Column count: 2
+				Gap: 26
+				Separator: 0.5
+				Separator color: rule
+				Box:
+					Margin: 0 0 14 0
+				Markdown:
+					Bullet markers: bullet
+					Content >>
+						## Households
+						
+						We added 412 households, most of them in Garrotxa villages that had no local supply offer. The **stable price** tariff held all year, including the winter months.
+						
+						## Shops and businesses
+						
+						A third of our non-residential customers are bakeries, workshops and small industries that cover part of their consumption with the solar installation we fitted on their roof.
+						
+						## Energy communities
+						
+						We supported the creation of **five local energy communities**, in which neighbors share the production of a single roof. Each one received free training and legal advice.
+						
+						## Solidarity fund
+						
+						One percent of our turnover goes to a fund that pays the bills of families in vulnerable situations: this year, 61 households.
+			Image: examples/report/en/chart-mix.svg
+				Id: chart-mix
+				Alt: Donut chart of customers by type: households 46%, shops 27%, industry 19% and public bodies 8%
+				Box:
+					Width: 100%
+			Text: Breakdown of the 8,412 customers by customer type.
+				Style: caption
+		Block:
+			Id: results
+			Style: section
+			Heading 1:
+				Text: Financial results
+			Paragraph: The accounts for the year, in thousands of euros. Revenue grows by 11.5% and the result by 33.9%, after absorbing the higher depreciation of the new installations.
+				Style: lead
+			Table:
+				Id: accounts
+				Column sizes: * 80 80 80
+				Column align: left right right right
+				Box:
+					Margin: 0 0 18 0
+				Header rows:
+					Row:
+						Cell: Item
+						Cell: 2025
+						Cell: 2024
+						Cell: Change
+				Body rows:
+					Row:
+						Cell: Energy sales
+							Row header: true
+						Cell: 4,128
+						Cell: 3,774
+						Cell: +9.4%
+					Row:
+						Cell: Services and maintenance
+							Row header: true
+						Cell: 792
+						Cell: 640
+						Cell: +23.8%
+					Row:
+						Cell: Operating expenses
+							Row header: true
+						Cell: −3,980
+						Cell: −3,612
+						Cell: +10.2%
+					Row:
+						Cell: Depreciation
+							Row header: true
+						Cell: −540
+						Cell: −498
+						Cell: +8.4%
+					Row:
+						Cell: Financial result
+							Row header: true
+						Cell: −88
+						Cell: −71
+						Cell: +23.9%
+				Footer rows:
+					Row:
+						Style: total
+						Cell: Net result for the year
+							Row header: true
+						Cell: 312
+						Cell: 233
+						Cell: +33.9%
+			Heading 2:
+				Text: Where the investment went
+			Table:
+				Column sizes: repeat(3, auto)
+				Column align: left right right
+				Header rows:
+					Row:
+						Cell: Project
+						Cell: Investment (€k)
+						Cell: Capacity
+				Body rows:
+					Row:
+						Cell: Les Preses solar park
+						Cell: 780
+						Cell: 1.6 MWp
+					Row:
+						Cell: Sant Joan expansion
+						Cell: 310
+						Cell: 0.6 MWp
+					Row:
+						Cell: Wind turbine repowering
+						Cell: 190
+						Cell: 0.9 MW
+					Row:
+						Cell: Community warehouse batteries
+						Cell: 70
+						Cell: 0.2 MWh
+			Text: 100% of the investment was financed with contributions from members, with no debt to financial institutions.
+				Style: caption
+				Box:
+					Margin: 8 0 0 0
+		Block:
+			Id: environment
+			Style: section
+			Heading 1:
+				Text: Environment
+			Image: examples/report/en/chart-savings.svg
+				Id: chart-savings
+				Alt: Line chart of the cumulative tonnes of CO₂ avoided: from 0 in 2019 to 15,900 in 2025
+				Box:
+					Width: 100%
+			Text: Cumulative tonnes of CO₂ avoided since 2019, in thousands.
+				Style: caption
+			Block:
+				Style: quote
+				Text: Every kilowatt-hour we produce here is one that does not have to be brought from far away, or burned.
+			Heading 2:
+				Text: Commitments for 2026
+			List:
+				Marker: decimal
+				List item:
+					Paragraph: Exceed 2,700 MWh of production with the fourth wind turbine and the Les Preses expansion.
+				List item:
+					Paragraph: Cut the emissions of the maintenance vehicle fleet to zero; today it has two diesel vans.
+				List item:
+					Paragraph: Publish the carbon footprint of the whole supplier chain, with the help of the university.
+				List item:
+					Paragraph: Plant four thousand native trees on land provided by the town councils of the county.
+			Heading 2:
+				Text: Environmental indicators
+			Table:
+				Id: indicators
+				Column sizes: * 70 70 70
+				Column align: left right right right
+				Header rows:
+					Row:
+						Cell: Indicator
+						Cell: 2023
+						Cell: 2024
+						Cell: 2025
+				Body rows:
+					Row:
+						Cell: Renewable production (MWh)
+							Row header: true
+						Cell: 1,930
+						Cell: 2,148
+						Cell: 2,384
+					Row:
+						Cell: CO₂ avoided in the year (t)
+							Row header: true
+						Cell: 2,800
+						Cell: 3,600
+						Cell: 4,300
+					Row:
+						Cell: Waste recovered (%)
+							Row header: true
+						Cell: 82
+						Cell: 87
+						Cell: 91
+					Row:
+						Cell: Water used at the plants (m³)
+							Row header: true
+						Cell: 640
+						Cell: 590
+						Cell: 540
+		Block:
+			Id: governance
+			Style: section
+			Heading 1:
+				Text: Governance and next steps
+			Paragraph: The Governing Council is elected every four years by the assembly. It has seven members: four are worker members and three are consumer members.
+				Style: lead
+			Table:
+				Id: board
+				Column sizes: * * 104
+				Column align: left left right
+				Box:
+					Margin: 0 0 18 0
+				Header rows:
+					Row:
+						Cell: Name
+						Cell: Position
+						Cell: In office since
+				Body rows:
+					Row:
+						Cell: Carme Vidal i Roca
+							Row header: true
+						Cell: President
+						Cell: 2019
+					Row:
+						Cell: Oriol Pagès Vila
+							Row header: true
+						Cell: Vice President
+						Cell: 2019
+					Row:
+						Cell: Núria Serra Comas
+							Row header: true
+						Cell: Secretary
+						Cell: 2023
+					Row:
+						Cell: Jordi Casas Font
+							Row header: true
+						Cell: Treasurer
+						Cell: 2023
+					Row:
+						Cell: Anna Bosch Puig
+							Row header: true
+						Cell: Consumer member representative
+						Cell: 2023
+			Heading 2:
+				Text: What comes next
+			Markdown:
+				Bullet markers: dash
+				Number markers: lower-alpha
+				Content >>
+					The **General Assembly** of March 21 approved these lines of work for the next fiscal year:
+					
+					1. Open a customer service office in Olot, with afternoon hours.
+					2. Launch the time-of-use tariff for customers with an electric car.
+					3. Double the storage capacity of the community warehouse.
+					
+					Members can propose items for the agenda one month in advance.
+			Heading 2:
+				Text: 2026 schedule
+			Table:
+				Id: calendar
+				Column sizes: 170 * * * *
+				Column align: left right right right right
+				Box:
+					Margin: 0 0 6 0
+				Header rows:
+					Row:
+						Cell: Activity
+						Cell: Q1
+						Cell: Q2
+						Cell: Q3
+						Cell: Q4
+				Body rows:
+					Row:
+						Cell: Customer office in Olot
+							Row header: true
+						Cell: Works and opening
+							Span: 1 2
+							Style: bar
+						Cell:
+						Cell:
+					Row:
+						Cell: Time-of-use tariff
+							Row header: true
+						Cell:
+						Cell: Design and testing
+							Span: 1 2
+							Style: bar
+						Cell:
+					Row:
+						Cell: Warehouse storage
+							Row header: true
+						Cell:
+						Cell:
+						Cell: Expansion
+							Span: 1 2
+							Style: bar
+					Row:
+						Cell: Fourth wind turbine
+							Row header: true
+						Cell: Permits, construction and commissioning
+							Span: 1 3
+							Style: bar
+						Cell:
+			Text: Cooperativa Solvent, S. Coop. Ltda. · Polígono de la Canya, nave 6 · 17800 Olot · solvent.example
+				Link: https://solvent.example
+				Style: caption
+				Box:
+					Margin: 22 0 0 0

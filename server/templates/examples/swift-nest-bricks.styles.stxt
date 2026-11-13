@@ -1,0 +1,208 @@
+# Styles of the research article template: those of the document documents/examples/swift-nest-bricks.
+Styles (dev.stxt.pdf):
+	Named color: journal #1F4E79
+	Named color: grey #5A6068
+	Named color: rule #C9CED6
+	For element: Document
+		Typography:
+			Code font: IBM Plex Mono
+			Kerning: true
+			Ligatures: true
+			Font: IBM Plex Serif
+			Size: 9.5
+			Line height: 13
+			Color: #22262B
+			Markup: markdown
+			Numbered: true
+	For element: Paragraph
+		Typography:
+			Align: justify
+			Line breaking: optimal
+			Hyphenate: true
+		Box:
+			Margin: 0 0 5 0
+	For style: sup
+		Typography:
+			Position: superscript
+	For style: journal
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8
+			Bold: true
+			Color: journal
+			Case: uppercase
+			Letter spacing: 1.5
+		Box:
+			Margin: 0 0 8 0
+			Padding: 0 0 6 0
+			Border: 0 0 2 0
+			Border color: journal
+	For element: Heading 1
+		Typography:
+			Font: IBM Plex Sans
+			Size: 10.5
+			Line height: 14
+			Bold: true
+			Color: journal
+		Box:
+			Margin: 12 0 5 0
+	For element: Heading 2
+		Typography:
+			Font: IBM Plex Sans
+			Size: 9.5
+			Line height: 13
+			Bold: true
+			Italic: true
+			Color: #22262B
+		Box:
+			Margin: 8 0 3 0
+	For style: paper-title
+		Typography:
+			Size: 22
+			Line height: 27
+			Color: #22262B
+			Numbered: false
+		Box:
+			Margin: 4 0 10 0
+	For style: unnumbered
+		Typography:
+			Numbered: false
+	For style: authors
+		Typography:
+			Font: IBM Plex Sans
+			Size: 11
+			Line height: 15
+			Align: left
+			Hyphenate: false
+		Box:
+			Margin: 0 0 3 0
+	For style: affiliations
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8
+			Line height: 11
+			Color: grey
+			Align: left
+			Hyphenate: false
+		Box:
+			Margin: 0 0 12 0
+	For style: abstract
+		Box:
+			Padding: 10 14 6 14
+			Margin: 0 0 16 0
+			Background: #EEF3F8
+			Border: 0 0 0 3
+			Border color: journal
+	For style: abstract-label
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8
+			Bold: true
+			Color: journal
+			Case: uppercase
+			Letter spacing: 1.2
+		Box:
+			Margin: 0 0 4 0
+	For style: keywords
+		Typography:
+			Size: 8.5
+			Align: left
+	For style: body
+		Column count: 2
+		Gap: 7mm
+		Balance columns: true
+	For element: Figure
+		Box:
+			Margin: 6 0 10 0
+		Typography:
+			Number label: Figure {number}.
+	For id: tab-sites
+		Typography:
+			Number label: Table {number}.
+	For element: Caption
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Line height: 10
+			Color: grey
+		Box:
+			Margin: 4 0 4 0
+	For style: data
+		Column sizes: * auto auto auto auto
+		Column align: left right right right right
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Line height: 10
+	For element: Cell
+		Box:
+			Padding: 3 4
+	For element: Header cell
+		Typography:
+			Bold: true
+			Color: journal
+		Box:
+			Border: 1 0 0.75 0
+			Border color: journal
+	For element: Footer cell
+		Typography:
+			Bold: true
+		Box:
+			Border: 0.75 0 1 0
+			Border color: journal
+	For element: Body cell
+		Box:
+			Border: 0 0 0.5 0
+			Border color: rule
+	For style: findings
+		Marker: bullet
+		Box:
+			Padding: 0 0 0 12
+			Margin: 0 0 5 0
+		For element: Paragraph
+			Typography:
+				Align: left
+			Box:
+				Margin: 0 0 2 0
+	For style: references
+		Marker: decimal
+		Box:
+			Padding: 0 0 0 16
+		Typography:
+			Size: 8
+			Line height: 11
+		For element: Paragraph
+			Typography:
+				Align: left
+				Hyphenate: false
+			Box:
+				Margin: 0 0 3 0
+	For element: Footnote area
+		Typography:
+			Size: 7.5
+			Line height: 10
+		Box:
+			Margin: 8 0 0 0
+			Padding: 4 0 0 0
+			Border: 0.5 0 0 0
+			Border color: grey
+	For element: Footnote
+		For element: Paragraph
+			Typography:
+				Align: left
+			Box:
+				Margin: 0 0 2 0
+	For style: running-head
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Color: grey
+		Box:
+			Padding: 0 0 3 0
+			Border: 0 0 0.5 0
+			Border color: rule
+	For style: folio
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Color: grey

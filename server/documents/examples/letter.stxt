@@ -1,0 +1,104 @@
+# Business letter of a furniture workshop: the template templates/examples/letter filled with its sample data, which
+# gives the "letter" example of stxt-pdf. Here it is a document, printed as it is; its look is in letter.styles.stxt.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 44 72 64 72
+	Title: Furniture proposal for the Mirador del Valle
+	Language: en
+	Section:
+		Page overlay:
+			Id: footer
+			Offset: auto 0 -42 0
+			Text: Taller Nogal S.L. · Tax ID B-17482930 · Carrer de la Farga, 14 · 17800 Olot · tallernogal.example
+				Link: https://tallernogal.example
+		Stack:
+			Id: letterhead
+			Horizontal: justify
+			Vertical: bottom
+			Box:
+				Margin: 0 0 24 0
+				Padding: 0 0 12 0
+				Border: 0 0 1.5 0
+				Border color: #3B2A1E
+			Item:
+				Image: examples/brand/nogal.svg
+					Alt: Nogal, furniture workshop
+					Box:
+						Width: 150
+			Item:
+				Block:
+					Text: Carrer de la Farga, 14 · 17800 Olot
+						Style: small
+						Typography:
+							Align: right
+					Text: 972 00 11 22 · tallernogal.example
+						Link: https://tallernogal.example
+						Style: small
+						Typography:
+							Align: right
+		Text: Olot, October 20, 2025
+			Id: date
+			Typography:
+				Align: right
+			Box:
+				Margin: 0 0 16 0
+		Block:
+			Id: recipient
+			Box:
+				Margin: 0 0 16 0
+			Text: Mr. Ramon Puig Casals
+				Typography:
+					Bold: true
+			Text: Management, Hotel Mirador del Valle
+			Text: Camí del Mirador, s/n
+			Text: 17850 Besalú (Girona)
+		Text: Subject: furniture renovation proposal · Ref. P-2025-118
+			Id: subject
+			Style: subject
+		Markdown:
+			Id: body
+			Bullet markers: dash
+			Typography:
+				Align: justify
+				Line breaking: optimal
+			Content >>
+				Dear Mr. Puig,
+				
+				Thank you for welcoming us at the Mirador del Valle last Thursday. Having walked through the eighteen rooms and the breakfast room, we enclose our proposal to renew the furniture before the spring season.
+				
+				Our approach starts from a simple premise: that **every piece should age well**. We work solid walnut and oak from managed forests in the region, with traditional joinery and oil finishes that can be repaired without sanding down the whole piece. For your hotel we propose:
+				
+				- an oak desk and chair for each room, with a natural finish;
+				- a 180 cm *dining table* for the breakfast room, with ++six chairs++ to match;
+				- walnut wall shelves and mirrors for the corridors on both floors.
+				
+				Production takes **ten weeks** from acceptance of the quote. If you confirm before November 15, we can deliver and install everything between February 2 and 6, while the hotel is closed for the holidays and without disturbing your guests.
+				
+				We would love you to visit the workshop to see the woods and try the chairs. We are open Monday to Friday, and Joan, our master cabinetmaker, will explain each joint to you.
+				
+				Kind regards,
+		Image: examples/letter/signature.svg
+			Id: signature
+			Box:
+				Width: 128
+				Margin: 4 0 2 0
+		Text: Laia Soler Vidal
+			Id: name
+			Typography:
+				Bold: true
+		Text: Sales Director · Taller Nogal
+			Style: small
+			Typography:
+				Font: IBM Plex Serif
+				Italic: true
+				Size: 9.5
+		Paragraph: P.S. We enclose the catalog of finishes with samples of both woods; if you prefer, we can bring them to the hotel.
+			Id: postscript
+			Style: small
+			Typography:
+				Font: IBM Plex Serif
+				Italic: true
+				Size: 9.5
+			Box:
+				Margin: 14 0 0 0

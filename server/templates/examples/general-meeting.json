@@ -1,0 +1,19 @@
+{
+  "date": "4 November 2026",
+  "weekday": "Wednesday",
+  "start": "7:00 pm",
+  "end": "8:50 pm",
+  "subject": "Draft minutes of the autumn general meeting: roof repairs, the 2027 budget and the garden",
+  "stamp": {"text": "Draft · for approval"},
+  "place": "Community room, 14 Linden Street",
+  "chair": "Dolores Achebe",
+  "secretary": "Sam Whitfield",
+  "present": 31,
+  "households": 42,
+  "quorum": 22,
+  "minutes": "## Opening and agenda\n\nThe chair opened the meeting at 7:02 pm and welcomed two new households, from flats 3B and 7A. The agenda sent on 21 October was approved with one change:\n\n- ~~Item 6: bicycle storage~~ was *withdrawn* and moves to the January meeting, when the quotes will be in.\n- Apologies were received from nine households.\n\n## Minutes of the last meeting\n\nThe minutes of the meeting of 9 July were approved without changes (proposed by flat 2A, seconded by flat 5C).\n\n## Roof repairs\n\nJuan Ferraro, for the maintenance group, reported on the survey of the roof carried out on 12 September[^survey]. The survey found:\n\n1. Slipped and broken slates over flats 6A to 6D, which let water into the loft in heavy rain.\n2. Corroded valley gutters on the north side, which should be replaced, not patched.\n3. Lead flashing around the two chimneys that is past its life:\n   - the east chimney needs it now;\n   - the west chimney can wait until 2028.\n\nThree contractors quoted for the work. The group recommended **Hallam Roofing**, which was not the cheapest but offered a ten-year guarantee and could start in March.\n\n> We would rather pay once for a roof that lasts than three times for one that leaks.\n>\n> Juan Ferraro, maintenance group\n\n### Decision\n\nThe meeting agreed to the recommendation. The work will be paid for from the repairs reserve, which stands at £61,400, and the reserve will be rebuilt over four years.\n\n## Budget for 2027\n\nThe treasurer presented the draft budget. Rents rise by 3.2%, below inflation, and the service charge stays the same. The figures are in the [budget pack](https://lindenstreet.example/members/budget-2027) sent to members.\n\n### Questions from members\n\n- Flat 4D asked why insurance rises by 11%. The treasurer explained that the insurer has raised prices for all flats built before 1950, and that two other quotes were higher.\n- Flat 1B asked to publish the accounts on the members' site. Agreed: the file will be at `members/accounts/2026.pdf`.\n\n## Motions\n\n| No. | Motion | For | Against | Abstain | Result |\n|:---:|--------|----:|--------:|--------:|:------:|\n| 1 | Approve the roof repairs by Hallam Roofing, £48,900 | 29 | 1 | 1 | Carried |\n| 2 | Approve the 2027 budget and a rent rise of 3.2% | 26 | 3 | 2 | Carried |\n| 3 | Turn the east lawn into a vegetable garden | 14 | 15 | 2 | Not carried |\n\nMotion 3 will come back in a new form: the garden group will propose a smaller plot that keeps half of the lawn[^garden].\n\n---\n\n## Actions\n\n| Action | Who | By |\n|--------|-----|---:|\n| Sign the contract with Hallam Roofing | Treasurer | 30 Nov 2026 |\n| Tell flats 6A to 6D the dates of the roof work | Maintenance group | 15 Jan 2027 |\n| Publish the 2026 accounts on the members' site | Secretary | 15 Dec 2026 |\n| Bring a new garden proposal | Garden group | Next meeting |\n\n## Next meeting\n\nThe next general meeting is on ++Wednesday 13 January 2027++ at 7:00 pm in the community room. The chair closed the meeting at 8:50 pm.",
+  "footnotes": [
+    {"id": "survey", "text": "The full survey, with photographs of each defect, is available from the secretary."},
+    {"id": "garden", "text": "Members who abstained or voted against were invited to join the garden group to help shape the new proposal."}
+  ]
+}

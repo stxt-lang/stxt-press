@@ -74,13 +74,14 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   `GET /fonts/{id}` gives the file of a face: the SVG pages name their fonts and do not carry them. Both are for the
   previews of the editor and are turned off with it (`Editor: false`): no other client needs the files of the fonts.
 - `server/`, a server folder to start a project from: its `server.stxt`, the fonts IBM Plex Sans, Serif and Mono and
-  the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/examples/`: one for each
-  example of `stxt-pdf` (an invoice, a letter, a resume, an annual report, a newsletter, a menu, a contract, a manual,
-  a catalog, a certificate and a timetable), with Slots for what changes from one document to another, its styles and
-  its sample data, which give the pages of the example, and a `.styles.stxt` with the base typography for a new
-  template of the folder; and documents in `documents/`: complete examples of other
-  kinds of documents (`examples/`) and a reference of the layout language, one small document for each use, with a
-  line that says what it shows (`reference/`). Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, for the
+  the images of the examples of `stxt-pdf` in `resources/`, and complete examples, the same as templates in
+  `templates/examples/` and as documents in `documents/examples/`: one for each example of `stxt-pdf` (an invoice, a
+  letter, a resume, an annual report, a newsletter, a menu, a contract, a manual, a catalog, a certificate and a
+  timetable), which with its sample data gives the pages of the example, and eight more (a poster, a boarding pass, a
+  recipe book, a paper, slides, a datasheet, shipping labels and minutes). Each template has Slots for what changes
+  from one document to another, its styles and its sample data, and filled with them is its document; each folder has
+  a `.styles.stxt` with the base typography for a new one. In `documents/reference/`, a reference of the layout
+  language, one small document for each use, with a line that says what it shows. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, for the
   editors with discovery. `start --config server/server.stxt` starts it.
 - `start.sh`, and `start.bat` for Windows, in `server/`: they start the server of the folder with the
   `stxt-press.jar` beside them, which `mvn package` copies there, so the folder is a whole server that can be copied

@@ -30,9 +30,9 @@ import dev.stxt.press.templates.Templates;
 /**
  * The server folder of the project ({@code server/}), the start of a project and the one of the Docker image: its
  * {@code server.stxt} is valid, every template converts with its sample data and the resources of the folder, every
- * example of {@code stxt-pdf} has its template, which with its sample data gives the pages of the example, the fonts
- * and the images are the same as those of {@code ../stxt-pdf/resources}, and the schemas of {@code .stxt/} are those of
- * the jar.
+ * example of {@code stxt-pdf} has its template, which with its sample data gives the pages of the example, the complete
+ * examples are each a document and a template that give the same, the fonts and the images are the same as those of
+ * {@code ../stxt-pdf/resources}, and the schemas of {@code .stxt/} are those of the jar.
  */
 class ServerFolderTest {
 
@@ -137,6 +137,52 @@ class ServerFolderTest {
                     assertEquals(press.svg(expected), press.svg(templates.get(entry.getValue()).job(options)),
                             entry.getValue() + " with its sample data is not " + entry.getKey());
                 }));
+    }
+
+    /** The complete examples are the same in the two folders: each one is a document and a template. */
+    @Test
+    void theExamplesAreDocumentsAndTemplates() throws ConfigException, IOException {
+        ServerFile server = server();
+        List<String> templates = examples(new Templates(server.templateFolder()));
+        List<String> documents = examples(new Templates(server.documentFolder(), Templates.Kind.DOCUMENT));
+
+        assertFalse(templates.isEmpty(), "no examples in server/templates/examples/");
+        assertEquals(templates, documents, "the examples of server/templates/ and of server/documents/");
+    }
+
+    /**
+     * Each example template, filled with its sample data, is its document, and both have the same chain of styles: so
+     * the two look the same, whatever the comments say.
+     */
+    @TestFactory
+    Stream<DynamicTest> everyExampleTemplateWithItsSampleDataIsItsDocument() throws ConfigException, IOException {
+        ServerFile server = server();
+        Templates templates = new Templates(server.templateFolder());
+        Templates documents = new Templates(server.documentFolder(), Templates.Kind.DOCUMENT);
+        return examples(templates).stream().map(path -> DynamicTest.dynamicTest(path, () -> {
+            Template template = templates.get(path);
+            Template document = documents.get(path);
+
+            assertEquals(withoutComments(document.document()), withoutComments(Press.fill(template.document(),
+                    template.data())), path + " with its sample data is not the document " + path);
+            assertEquals(chain(document), chain(template), "the styles of " + path);
+        }));
+    }
+
+    /** {@return the paths under {@code examples/} of a folder} */
+    private static List<String> examples(Templates folder) throws IOException {
+        return folder.list().stream().map(Templates.Entry::path).filter(path -> path.startsWith("examples/")).toList();
+    }
+
+    /** {@return each styles file of the chain, by its name, without its comments} */
+    private static List<String> chain(Template template) {
+        return template.styles().stream().map(styles -> styles.name() + "\n" + withoutComments(styles.text())).toList();
+    }
+
+    /** {@return the text with LF, without its comment lines and without blank lines at its end} */
+    private static String withoutComments(String text) {
+        return lines(text).lines().filter(line -> !line.strip().startsWith("#")).collect(Collectors.joining("\n"))
+                .stripTrailing();
     }
 
     @Test

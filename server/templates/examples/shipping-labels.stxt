@@ -1,0 +1,82 @@
+# Shipping label template of a seed merchant: the document documents/examples/shipping-labels with Slots for each
+# dispatch. The sheet of eight labels for A4 label paper (two columns of four labels of 99.1 × 67.7 mm: a Grid with
+# fixed column and row sizes, and the margins of the sheet in Page), the merchant as sender and the layout of a label
+# are part of the template; the date of the dispatch, the first and last order, and the labels come in the data, one
+# object per label: its number on the sheet, the service with the style of its band, the parcel and the number of
+# parcels of the order, the recipient with the lines of the address, the order, the weight without its unit, the routing
+# code and the SSCC. Each label has the service written vertically in a coloured band (a Text with Rotate: -90, which
+# takes the rectangle of the rotated text, centred in a vertical Stack), a GS1-128 barcode with the SSCC and its
+# readable text, and a Data Matrix with the routing code, the order and the weight for the sorting machines. The name of
+# the recipient has a fixed height and Overflow: shrink, so a long name gets smaller, on two lines, instead of pushing
+# the barcode out of the label. The dotted outline of each label is for checking the sheet on screen; it falls on the
+# cuts of the paper. shipping-labels.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 13.1mm 4.65mm
+	Title: Shipping labels · Willow & Moss · Dispatch of ${date}
+	Subject: Eight parcel labels with SSCC barcodes for orders ${first_order} to ${last_order}
+	Author: Willow & Moss Seeds
+	Language: en
+	Section:
+		Grid:
+			Id: sheet
+			Style: sheet
+			Area: [labels]
+				Stack:
+					Id: label-${number}
+					Style: label
+					Item:
+						Stack:
+							Style: band ${band}
+							Item:
+								Block:
+									Text: <service>
+										Style: service
+										Rotate: -90
+					Item:
+						Grow: 1
+						Base size: 0
+						Block:
+							Style: label-body
+							Stack:
+								Style: label-head
+								Item:
+									Grow: 1
+									Base size: 0
+									Text: From Willow & Moss Seeds, York YO1 6JB
+										Style: sender
+								Item:
+									Text: ${parcel} of ${parcels}
+										Style: parcel
+							Stack:
+								Style: address-row
+								Item:
+									Grow: 1
+									Base size: 0
+									Block:
+										Text: Deliver to
+											Style: deliver-to
+										Text: <recipient>
+											Style: to-name
+										Text: [address]<text>
+											Style: to-line
+								Item:
+									Barcode: ${route} ${order} ${weight}kg
+										Style: matrix
+										Barcode format: data-matrix
+										Alt: Data Matrix with the routing code ${route} and order ${order}
+							Barcode: (00)${sscc}
+								Style: sscc
+								Barcode format: gs1-128
+								Readable text: true
+								Alt: GS1-128 barcode with the SSCC ${sscc} of parcel ${parcel} of ${parcels} of order ${order}
+							Stack:
+								Style: label-foot
+								Item:
+									Text: Order ${order}
+								Item:
+									Text: ${weight} kg
+								Item:
+									Text: Route ${route}
+										Style: route

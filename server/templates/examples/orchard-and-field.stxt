@@ -1,0 +1,166 @@
+# Cookbook chapter template: the document documents/examples/orchard-and-field with Slots for each chapter of The
+# Slow Autumn Kitchen. The book (its title, its author and its language), the layout of the opener and of a recipe and
+# their labels are part of the template; the number and the title of the chapter, its subject and keywords, the number
+# of its first page, the opening paragraphs, the plate and the recipes come in the data. A recipe has its id, title,
+# yield, preparation and oven times and lead, and either an "ingredient_list", with the ingredients and the method
+# side by side, or a "quantity_table", a numbered table of the quantities for two tins with the method below it in two
+# columns. A row of the table has either one amount for each tin or one "shared" by both, in a cell that spans the two
+# columns. The cook's notes with their drawing, the variations and a tip are optional. The paragraphs are Markdown.
+# orchard-and-field.json has the sample data.
+#
+# A5 pages printed on both sides: Mirror margins gives the even pages the wide margin on the right, and the folios go
+# on the outer edge with two Page overlay, one for the odd pages, with the title of the book, and one for the even
+# ones, with the recipe in effect as a running head ({heading 2}). The chapter starts at the page in the data (Page
+# numbering: restart, First number). The opener has a drop cap (Drop cap: 3), an illustration as a numbered Figure
+# ("Plate 1.") and the list of recipes as a Table of contents of the Heading 2 level. Each recipe starts on a new page
+# with its details on a shared baseline. The ingredients go in a List whose markers are a leaf drawn in SVG (Marker:
+# image), with the method as a numbered List beside them, in a Grid. The cook's notes run around a small illustration
+# (Side: right), the variations go in two Columns, and the quantity table has a numbered caption. The body text is IBM
+# Plex Serif, justified with optimal line breaking and hyphenation (Language: en-GB).
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A5
+		Margin: 16mm 14mm 18mm 20mm
+		Mirror margins: true
+	Title: ${title} · Chapter ${chapter} of The Slow Autumn Kitchen
+	Subject: <subject>
+	Author: Hanna Brookes
+	Keywords: <keywords>
+	Language: en-GB
+	Page overlay:
+		Id: folio-odd
+		Pages: odd
+		Offset: auto 0 -11mm 0
+		Style: folio
+		Stack:
+			Horizontal: right
+			Gap: 10
+			Item:
+				Text: The Slow Autumn Kitchen
+					Style: folio-title
+			Item:
+				# A value that starts with {page} would be the navigation {page}: the empty ${?_} in front, which no
+				# data fills, makes the whole value text.
+				Text: ${?_}{page}
+					Style: folio-number
+	Page overlay:
+		Id: folio-even
+		Pages: even
+		Offset: auto 0 -11mm 0
+		Style: folio
+		Stack:
+			Gap: 10
+			Item:
+				Text: ${?_}{page}
+					Style: folio-number
+			Item:
+				Text: {heading 2}
+					Style: folio-title
+	Section:
+		Id: chapter
+		Page numbering: restart
+		First number: <first_page>
+		Block:
+			Id: opener
+			Text: Chapter ${chapter}
+				Style: chapter-number
+			Heading 1:
+				Text: <title>
+			Paragraph: <intro>
+				Style: intro
+				Drop cap: 3
+			Paragraph: <?intro_more>
+				Style: intro-more
+			Figure: {plate}
+				Id: <id>
+				Caption: <caption>
+				Image: <image>
+					Alt: <alt>
+					Box:
+						Width: 62%
+			Text: In this chapter
+				Style: list-label
+			Table of contents:
+				Id: recipes-toc
+				Levels: 2 2
+		Block: [recipes]
+			Id: <id>
+			Style: recipe
+			Heading 2:
+				Text: <title>
+			Stack:
+				Style: details
+				Item:
+					Text: <yield>
+						Style: detail-main
+				Item:
+					Text: Prep ${prep}
+						Style: detail
+				Item:
+					Text: Oven ${oven}
+						Style: detail
+			Paragraph: <lead>
+				Style: lead
+			# The ingredients and the method side by side.
+			Grid: {?ingredient_list}
+				Style: recipe-grid
+				Area:
+					Block:
+						Style: ingredients
+						Text: Ingredients
+							Style: list-label
+						List:
+							Style: leaves
+							List item: [ingredients]
+								Text: <text>
+				Area:
+					Block:
+						Text: Method
+							Style: list-label
+						List:
+							Style: steps
+							List item: [method]
+								Paragraph: <text>
+			# The quantities for each tin, with a cell that spans the two for a quantity shared by both, and the method
+			# below in two columns.
+			Figure: {?quantity_table}
+				Id: ${id}-quantities
+				Caption: <caption>
+				Table:
+					Style: quantities
+					Header rows:
+						Row:
+							Cell: Ingredient
+							Cell: [tins]
+					Body rows:
+						Row: [rows]
+							Cell: <ingredient>
+								Row header: true
+							Cell: [?amounts]
+							Cell: <?shared>
+								Style: span-note
+								Span: 1 2
+			Text: {?quantity_table}Method
+				Style: list-label
+			Columns: {?quantity_table}
+				Style: method-columns
+				List:
+					Style: steps
+					List item: [method]
+						Paragraph: <text>
+			Heading 3: {?notes}
+				Text: Cook’s notes
+			Image: {?notes}<drawing>
+				Style: side-drawing
+				Side: right
+			Paragraph: {?notes}[paragraphs]
+			Block: {?variations}
+				Style: variations
+				Text: Variations
+					Style: list-label
+				Columns:
+					Style: variation-columns
+					Paragraph: [items]**${name}.** ${text}
+			Block: {?tip}
+				Style: tip
+				Paragraph: **${title}** ${text}

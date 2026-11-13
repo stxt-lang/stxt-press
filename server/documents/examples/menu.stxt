@@ -1,0 +1,329 @@
+# Restaurant menu: the template templates/examples/menu filled with its sample data, which gives the "menu" example of
+# stxt-pdf. Here it is a document, printed as it is; its look is in menu.styles.stxt.
+Document (dev.stxt.pdf):
+	Page:
+		Width: 420
+		Height: 700
+		Margin: 50 54 52 54
+	Title: Menu · Restaurante La Cala
+	Language: en
+	Section:
+		Page overlay:
+			Id: paper
+			Offset: -50 -54 -52 -54
+			Layer: -2
+			Box:
+				Background: #FBF6EA
+		Page overlay:
+			Id: frame-outer
+			Offset: -30 -34 -32 -34
+			Layer: -1
+			Box:
+				Corner radius: 10
+				Border: 1.2
+				Border color: #14365C
+		Page overlay:
+			Id: frame-inner
+			Offset: -24 -28 -26 -28
+			Layer: -1
+			Box:
+				Corner radius: 4
+				Border: 0.5
+				Border color: #926829
+		Page overlay:
+			Id: footer
+			Pages: not-first
+			Offset: auto 0 -19 0
+			Typography:
+				Font: IBM Plex Sans
+				Size: 7
+				Align: center
+			Text: Cadaqués · La Cala · {page} / {pages}
+		Block:
+			Id: front
+			Image: examples/menu/emblem.svg
+				Id: emblem
+				Alt: Emblem of La Cala restaurant, with the sun and the waves
+				Box:
+					Width: 78
+					Margin: 0 auto 4 auto
+			Heading 1:
+				Text: Menu
+			Text: Market and seafood cuisine
+				Typography:
+					Italic: true
+					Size: 11
+					Align: center
+					Color: #14365C
+				Box:
+					Margin: 0 0 8 0
+			Image: examples/menu/ornament.svg
+				Box:
+					Width: 100%
+					Margin: 0 0 2 0
+			Heading 2:
+				Text: To start
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Crystal bread with ripe tomato
+							Style: name
+						Text: With Cantabrian anchovies and Empordà olive oil
+							Style: desc
+				Item:
+					Text: 9
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: House Russian salad
+							Style: name
+						Text: With wild bluefin tuna belly
+							Style: desc
+				Item:
+					Text: 11
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Red prawn croquetas
+							Style: name
+						Text: Six pieces, with saffron aioli
+							Style: desc
+				Item:
+					Text: 13
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Confit artichokes
+							Style: name
+						Text: With Ibérico ham and a slow-cooked egg yolk
+							Style: desc
+				Item:
+					Text: 14
+						Style: price
+			Heading 2:
+				Text: From the sea
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Brothy rice with langoustines and squid
+							Style: name
+						Text: Price per person, minimum two. Cooked to order: about 25 minutes
+							Style: desc
+				Item:
+					Text: 26
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Suquet, rockfish stew
+							Style: name
+						Text: With potato and ground almonds, as made on the boats
+							Style: desc
+				Item:
+					Text: 24
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Oven-baked wild sea bass
+							Style: name
+						Text: With fennel, lemon and boulangère potatoes
+							Style: desc
+				Item:
+					Text: 27
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Chargrilled octopus
+							Style: name
+						Text: With potato purée and La Vera smoked paprika
+							Style: desc
+				Item:
+					Text: 22
+						Style: price
+			Heading 2:
+				Text: From the land
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Chargrilled Ibérico pork presa
+							Style: name
+						Text: With seasonal mushrooms and red wine sauce
+							Style: desc
+				Item:
+					Text: 21
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Grandma's cannelloni
+							Style: name
+						Text: The St. Stephen's Day recipe, with nutmeg béchamel
+							Style: desc
+				Item:
+					Text: 15
+						Style: price
+		Block:
+			Id: back
+			Break:
+				Before: page
+			Heading 2:
+				Text: Desserts
+				Box:
+					Margin: 0 0 9 0
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Crema catalana
+							Style: name
+						Text: Catalan custard, torched to order, with Ceylon cinnamon
+							Style: desc
+				Item:
+					Text: 7
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Creamy cheesecake
+							Style: name
+						Text: With house-made fig jam
+							Style: desc
+				Item:
+					Text: 8
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Artisan sheep's milk ice cream
+							Style: name
+						Text: Three scoops, choice of vanilla, honey or lemon
+							Style: desc
+				Item:
+					Text: 7
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Pear poached in red wine
+							Style: name
+						Text: With cinnamon ice cream
+							Style: desc
+				Item:
+					Text: 8
+						Style: price
+			Image: examples/menu/ornament.svg
+				Box:
+					Width: 100%
+					Margin: 10 0 0 0
+			Heading 2:
+				Text: Wines and drinks by the glass
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: House white
+							Style: name
+						Text: White Garnatxa, D. O. Empordà
+							Style: desc
+				Item:
+					Text: 4.50
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Cava Brut Nature Reserva
+							Style: name
+						Text: Penedès, bottle-fermented sparkling wine
+							Style: desc
+				Item:
+					Text: 5.00
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: Young red
+							Style: name
+						Text: Garnatxa and Carignan, D. O. Empordà
+							Style: desc
+				Item:
+					Text: 4.50
+						Style: price
+			Stack:
+				Style: dish
+				Item:
+					Block:
+						Text: House vermouth
+							Style: name
+						Text: With soda, an olive and a slice of orange
+							Style: desc
+				Item:
+					Text: 4.00
+						Style: price
+			Block:
+				Id: tasting
+				Box:
+					Margin: 18 0 12 0
+					Padding: 14 16
+					Corner radius: 6
+					Border: 1.2
+					Border color: #14365C
+					Background: #FFFFFF
+				Text: Tasting menu
+					Typography:
+						Font: IBM Plex Sans
+						Size: 8
+						Bold: true
+						Color: #926829
+						Case: uppercase
+						Letter spacing: 2
+						Align: center
+				Text: Seven courses, from market to table
+					Typography:
+						Size: 12
+						Bold: true
+						Align: center
+						Color: #14365C
+					Box:
+						Margin: 3 0 3 0
+				Text: Chosen every day by the kitchen from the fish and vegetables that come into the harbor. For the whole table.
+					Typography:
+						Italic: true
+						Size: 8.5
+						Align: center
+						Color: #6E675C
+				Text: **€54**  ·  wine pairing, €24 extra
+					Typography:
+						Font: IBM Plex Sans
+						Markup: markdown
+						Size: 10
+						Align: center
+						Color: #14365C
+					Box:
+						Margin: 8 0 0 0
+			Text: **VAT included.** If you have any allergy or intolerance, please tell your server: almost every dish can be adapted.
+				Typography:
+					Font: IBM Plex Sans
+					Markup: markdown
+					Size: 7
+					Align: center
+					Color: #776F64

@@ -1,0 +1,181 @@
+# Boarding pass template of an airline: the document documents/examples/boarding-pass with Slots for each booking.
+# The layout of Northwind Air (the card over the grey sheet, the band with its mark, the labels of the details, the
+# stub and the notches) is part of the template; the travellers and the trip in the title, the booking and its
+# flights, and the passes, one per page, come in the data. A pass has its id, the passenger, the flight, the date,
+# the two airports with their cities and times, the duration, the boarding time, the gate, the seat, the zone, the
+# data of the PDF417 barcode (the IATA boarding pass), the note beside it and the code of the Code 128 barcode of the
+# stub. The note is Markdown. boarding-pass.json has the sample data.
+#
+# Each pass is a card with rounded corners over a grey sheet, on a custom page size of 210 × 99 mm (Width and Height
+# in Page): a Grid of two columns, the pass and the stub, split by a dashed line (Border style: dashed) with two
+# notches cut at its ends (Page overlay circles of the colour of the sheet). The airports and the flight time share a
+# baseline (Vertical: baseline in a Stack) although their sizes differ, the details go in a Grid of labels and values,
+# the pass carries the PDF417 barcode that gate readers scan (Barcode format: pdf417) and the stub, a Code 128 of the
+# booking reference with its readable text. The airline mark is a small SVG.
+Document (dev.stxt.pdf):
+	Page:
+		Width: 210mm
+		Height: 99mm
+		Margin: 6mm
+	Title: Boarding passes · ${travellers} · ${trip}
+	Subject: Boarding passes of booking ${booking}, flights ${flights}
+	Author: Northwind Air
+	Language: en
+	Page overlay:
+		Id: sheet
+		Offset: -6mm
+		Layer: -2
+		Box:
+			Background: #DCE4E8
+	Page overlay:
+		Id: notch-top
+		Offset: -3mm auto auto 135mm
+		Block:
+			Style: notch
+	Page overlay:
+		Id: notch-bottom
+		Offset: auto auto -3mm 135mm
+		Block:
+			Style: notch
+	Section: [passes]
+		Id: <id>
+		Grid:
+			Id: pass-${id}
+			Style: pass
+			Area:
+				Block:
+					Style: main
+					Stack:
+						Style: band
+						Item:
+							Image: documents/boarding-pass/northwind.svg
+								Style: logo
+						Item:
+							Grow: 1
+							Text: Northwind Air
+								Style: airline
+						Item:
+							Text: Boarding pass
+								Style: band-label
+					Block:
+						Style: main-body
+						Stack:
+							Style: route
+							Item:
+								Block:
+									Text: <from>
+										Style: airport
+									Text: ${from_city} · ${departure}
+										Style: city
+							Item:
+								Text: →
+									Style: arrow
+							Item:
+								Block:
+									Text: <to>
+										Style: airport
+									Text: ${to_city} · ${arrival}
+										Style: city
+							Item:
+								Grow: 1
+								Text: <duration>
+									Style: duration
+						Grid:
+							Style: fields
+							Area: 1 1 1 2
+								Block:
+									Text: Passenger
+										Style: label
+									Text: <passenger>
+										Style: value
+							Area:
+								Block:
+									Text: Flight
+										Style: label
+									Text: <flight>
+										Style: value
+							Area:
+								Block:
+									Text: Date
+										Style: label
+									Text: <date>
+										Style: value
+							Area:
+								Block:
+									Text: Boarding
+										Style: label
+									Text: <boarding>
+										Style: value accent
+							Area:
+								Block:
+									Text: Gate
+										Style: label
+									Text: <gate>
+										Style: value accent
+							Area:
+								Block:
+									Text: Seat
+										Style: label
+									Text: <seat>
+										Style: value accent
+							Area:
+								Block:
+									Text: Zone
+										Style: label
+									Text: <zone>
+										Style: value
+						Stack:
+							Style: scan
+							Item:
+								Barcode: <barcode>
+									Id: bcbp-${id}
+									Barcode format: pdf417
+									Alt: PDF417 boarding pass barcode for flight ${flight}, seat ${seat}
+									Style: pdf417
+							Item:
+								Grow: 1
+								Paragraph: <note>
+									Style: note
+			Area:
+				Block:
+					Style: stub
+					Text: Northwind Air
+						Style: stub-airline
+					Grid:
+						Style: stub-fields
+						Area: 1 1 1 2
+							Block:
+								Text: Passenger
+									Style: label
+								Text: <passenger>
+									Style: value small
+						Area:
+							Block:
+								Text: Flight
+									Style: label
+								Text: <flight>
+									Style: value small
+						Area:
+							Block:
+								Text: Route
+									Style: label
+								Text: ${from} → ${to}
+									Style: value small
+						Area:
+							Block:
+								Text: Seat
+									Style: label
+								Text: <seat>
+									Style: value small accent
+						Area:
+							Block:
+								Text: Gate
+									Style: label
+								Text: <gate>
+									Style: value small accent
+					Barcode: <stub_barcode>
+						Id: stub-${id}
+						Barcode format: code-128
+						Readable text: true
+						Alt: Code 128 barcode of booking ${booking} on flight ${flight}
+						Style: code128

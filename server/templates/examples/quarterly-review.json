@@ -1,0 +1,75 @@
+{
+  "quarter": "Third quarter 2026",
+  "period": "Q3 2026",
+  "previous_period": "Q3 2025",
+  "subject": "Results of the Harbour Bikes public bike share in July, August and September 2026, and plans for 2027",
+  "slug": "2026-q3",
+  "cover": {
+    "meeting": "Board meeting of 14 October 2026",
+    "subtitle": "More riders, fewer empty docks, and what we plan for 2027",
+    "presenters": [
+      {"name": "Priya Natarajan", "role": "Head of operations"},
+      {"name": "Jonas Weber", "role": "Data and planning"}
+    ]
+  },
+  "agenda": {
+    "note": "Twenty minutes, then questions. The figures are for 1 July to 30 September 2026.",
+    "items": [
+      {"text": "**The quarter in four numbers.** Trips, riders, availability and income."},
+      {"text": "**Where people ride.** Trips by district, and the new waterfront stations."},
+      {"text": "**Fleet and docks.** E-bikes, repairs and rebalancing."},
+      {"text": "**2027.** The three projects we ask the board to approve."}
+    ]
+  },
+  "figures": {
+    "title": "The quarter in four numbers",
+    "tiles": [
+      {"figure": "412,800", "label": "trips", "change": "+18% on Q3 2025", "trend": "up"},
+      {"figure": "38,950", "label": "active riders", "change": "+11% on Q3 2025", "trend": "up"},
+      {"figure": "96.4%", "label": "docks available at peak", "change": "target 95%"},
+      {"figure": "£1.18M", "label": "income from fares", "change": "+9% on Q3 2025", "trend": "up"}
+    ],
+    "note": "August broke the record for a single month, with 151,200 trips. Rain on eleven days in September brought the quarter back to the forecast."
+  },
+  "districts": {
+    "title": "Where people ride",
+    "chart_title": "Trips starting in each district, in thousands",
+    "bars": [
+      {"label": "City Centre", "width": "100%", "value": "138.2"},
+      {"label": "Waterfront", "width": "72%", "value": "99.6", "style": "highlight"},
+      {"label": "University", "width": "58%", "value": "80.4"},
+      {"label": "Old Town", "width": "39%", "value": "53.9"},
+      {"label": "Eastfield", "width": "29%", "value": "40.7"}
+    ],
+    "callout": {
+      "title": "Waterfront",
+      "paragraphs": [
+        "The six stations opened in June already start one trip in four of the district’s total.",
+        "Busiest dock: **Ferry Terminal**, with 610 trips a day in August."
+      ]
+    }
+  },
+  "fleet": {
+    "title": "Fleet and docks",
+    "rows": [
+      {"item": "Bikes in service, daily average", "previous": "1,420", "current": "1,610", "change": "+190"},
+      {"item": "of which e-bikes", "previous": "300", "current": "520", "change": "+220"},
+      {"item": "Trips per bike and day", "previous": "2.7", "current": "2.8", "change": "+0.1"},
+      {"item": "Repairs completed", "previous": "3,940", "current": "3,515", "change": "−11%"},
+      {"item": "Bikes moved by van to rebalance docks", "previous": "21,300", "current": "16,800", "change": "−21%"}
+    ],
+    "note": "Rebalancing fell by a fifth after the new pricing rewarded trips that end at empty docks."
+  },
+  "plans": {
+    "title": "2027: three projects for approval",
+    "projects": [
+      {"row": "2", "from": "1", "quarters": "2", "style": "phase-a", "title": "Eastfield extension", "detail": "12 new stations, 180 bikes · £640k"},
+      {"row": "3", "from": "2", "quarters": "3", "style": "phase-b", "title": "All-electric fleet in the hills", "detail": "Replace 400 pedal bikes in Old Town and University · £1.1M"},
+      {"row": "4", "from": "1", "quarters": "4", "style": "phase-c", "title": "One card for bus, ferry and bike", "detail": "With the transport authority, from the January fare change · no capital cost"}
+    ]
+  },
+  "closing": {
+    "note": "The slides, the data for each station and the full report are on the board’s site.",
+    "qr_alt": "QR code that leads to the slides and the report of the third quarter"
+  }
+}

@@ -1,0 +1,77 @@
+# Styles of the course certificate of a ceramics school: those of the template templates/examples/certificate, which
+# are those of the "certificate" example of stxt-pdf, with its base typography.
+Styles (dev.stxt.pdf):
+	For element: Document
+		Typography:
+			Font: IBM Plex Serif
+			Size: 11
+			Line height: 16
+			Color: #2A2D3A
+			Align: center
+	For element: Heading 1
+		Typography:
+			Size: 42
+			Line height: 48
+			Bold: true
+			Color: #14305E
+		Box:
+			Margin: 0 0 14 0
+	For element: Heading 2
+		Typography:
+			Size: 21
+			Line height: 27
+			Bold: true
+			Color: #14305E
+		Box:
+			Margin: 6 0 8 0
+	For style: school
+		Typography:
+			Font: IBM Plex Sans
+			Size: 10
+			Bold: true
+			Color: #926829
+			Case: uppercase
+			Letter spacing: 3
+		Box:
+			Margin: 0 0 8 0
+	For style: aside
+		Typography:
+			Italic: true
+			Size: 13
+			Color: #5E6070
+	For style: name
+		Typography:
+			Size: 40
+			Line height: 46
+			Italic: true
+			Color: #14305E
+		Box:
+			Width: 470
+			Margin: 2 auto 8 auto
+			Padding: 0 0 4 0
+			Border: 0 0 1 0
+			Border color: #926829
+	For style: corner
+		Box:
+			Width: 14
+			Height: 14
+			Corner radius: 50%
+			Background: #926829
+	For style: line
+		Box:
+			Padding: 5 0 0 0
+			Border: 0.75 0 0 0
+			Border color: #2A2D3A
+		Typography:
+			Size: 10
+			Line height: 14
+	For element: Page overlay
+		Typography:
+			Font: IBM Plex Sans
+			Size: 7.5
+			Color: #6F707F
+	For style: serial
+		Typography:
+			Color: #926829
+			Case: uppercase
+			Letter spacing: 1.5

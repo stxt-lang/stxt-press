@@ -1,0 +1,56 @@
+# Styles of the restaurant menu: those of the template templates/examples/menu, which are those of the "menu" example
+# of stxt-pdf, with its base typography.
+Styles (dev.stxt.pdf):
+	For element: Document
+		Typography:
+			Font: IBM Plex Serif
+			Size: 9.5
+			Line height: 13
+			Color: #2B2B2B
+	For element: Heading 1
+		Typography:
+			Size: 22
+			Line height: 26
+			Bold: true
+			Align: center
+			Color: #14365C
+		Box:
+			Margin: 0
+	For element: Heading 2
+		Typography:
+			Font: IBM Plex Sans
+			Size: 8
+			Bold: true
+			Color: #926829
+			Align: center
+			Case: uppercase
+			Letter spacing: 2
+		Box:
+			Margin: 16 0 9 0
+	For element: Page overlay
+		Typography:
+			Color: #776F64
+	For style: name
+		Typography:
+			Bold: true
+			Size: 10.5
+	For style: desc
+		Typography:
+			Italic: true
+			Size: 8.5
+			Color: #6E675C
+		Box:
+			Margin: 1 0 0 0
+	For style: price
+		Typography:
+			Font: IBM Plex Sans
+			Bold: true
+			Size: 9.5
+			Color: #14365C
+			Align: right
+	For style: dish
+		Gap: 12
+		For element: Block
+			Grow: 1
+		Box:
+			Margin: 0 0 7 0

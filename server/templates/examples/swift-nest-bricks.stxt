@@ -1,0 +1,129 @@
+# Research article template of a journal: the document documents/examples/swift-nest-bricks with Slots for the
+# article. The journal, its layout, the running head and the folio, the abstract box and the closing Acknowledgements
+# and References are part of the template; the article comes in the data: its metadata, the volume, year and pages of
+# the issue, the title, the authors and their affiliations (with their superscript marks), the abstract, the sections,
+# the acknowledgements, the references and the footnotes. Each section has its parts, and each part an optional
+# subsection heading, its paragraphs, its figures (each one with a table or an image) and a list of findings; the texts
+# are Markdown, with the citations and cross-references of the document ({number of: id}). swift-nest-bricks.json has
+# the sample data.
+# The title, the authors and the abstract go across the page and the body in two Columns, where the headings, the
+# figures and the table flow from one column to the next. The sections are numbered headings (Numbered: 1, 2, 2.1...),
+# and the running head of every page but the first is the section in effect ({heading 1: first}, the first section
+# that starts on the page, in a Page overlay with Pages: not-first). The figures and the table have numbered captions
+# ("Figure 1.", "Table 1.") that the text cites with {number of: id} and {page of: id}, the citations are the numbers
+# of the items of the reference list ([{number of: ref-id}], each one a link to its item) and the footnotes sit at the
+# bottom of the page of their call. The affiliation marks are superscript styled runs ([1]{sup}, Position:
+# superscript). Hyphenation in US English and optimal line breaking give the justified columns an even colour.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 24mm 18mm 22mm 18mm
+	Title: <title>
+	Subject: <subject>
+	Author: <author>
+	Keywords: <keywords>
+	Language: en-US
+	Page overlay:
+		Id: running-head
+		Pages: not-first
+		Offset: -14mm 0 auto 0
+		Style: running-head
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: ${short_authors} · ${short_title}
+			Item:
+				Text: {heading 1: first}
+	Page overlay:
+		Id: folio
+		Offset: auto 0 -13mm 0
+		Style: folio
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Urban Ecology Notes ${volume} (${year}) ${page_range}
+			Item:
+				# A value that starts with {page} would be the navigation {page}: the empty ${?_} in front, which no
+				# data fills, makes the whole value text.
+				Text: ${?_}{page}
+	Section:
+		Page numbering: restart
+		First number: <first_page>
+		Block:
+			Id: front
+			Text: Urban Ecology Notes · ${type}
+				Style: journal
+			Heading 1:
+				Id: title
+				Style: paper-title
+				In table of contents: false
+				Text: ${title}
+			Paragraph: <authors>
+				Style: authors
+			Paragraph: ${affiliations} · Correspondence: [${email}](mailto:${email})
+				Style: affiliations
+			Block: {abstract}
+				Style: abstract
+				Text: Abstract
+					Style: abstract-label
+				Paragraph: <text>
+				Paragraph: **Keywords:** ${keywords}
+					Style: keywords
+		Columns:
+			Id: body
+			Style: body
+			# Each section is a Block with its heading and its parts, and each part (a subsection, or the paragraphs and
+			# figures between two figures) is another Block. They have no box of their own.
+			Block: [sections]
+				Heading 1:
+					Id: <id>
+					Text: <title>
+				Block: [parts]
+					Heading 2: {?subsection}
+						Id: <id>
+						Text: <title>
+					Paragraph: [?paragraphs]
+					Figure: [?figures]
+						Id: <id>
+						Caption: <caption>
+						Table: {?table}
+							Style: data
+							Header rows:
+								Row:
+									Cell: [columns]
+							Body rows:
+								Row: [rows]
+									Cell: <name>
+										Row header: true
+									Cell: [values]
+							Footer rows: {?total}
+								Row:
+									Cell: <name>
+										Row header: true
+									Cell: [values]
+						Image: <?image>
+							Alt: <alt>
+							Box:
+								Width: 100%
+					List: {?findings}
+						Style: findings
+						List item: [items]
+							Paragraph: <text>
+			Heading 1:
+				Id: acknowledgements
+				Style: unnumbered
+				Text: Acknowledgements
+			Paragraph: <acknowledgements>
+			Heading 1:
+				Id: references
+				Style: unnumbered
+				Text: References
+			List:
+				Style: references
+				List item: [references]
+					Id: <id>
+					Paragraph: <text>
+			# The footnotes, each one called from the text with [^id].
+			Footnote: [footnotes]
+				Id: <id>
+				Paragraph: <text>

@@ -1,0 +1,48 @@
+{
+  "travellers": "Ingrid Halvorsen",
+  "trip": "Lisbon and Oslo",
+  "booking": "EK7Q2M",
+  "flights": "NW418 and NW419",
+  "passes": [
+    {
+      "id": "outbound",
+      "passenger": "Halvorsen / Ingrid Ms",
+      "flight": "NW418",
+      "date": "14 Jul 2026",
+      "from": "LIS",
+      "from_city": "Lisbon",
+      "departure": "07:40",
+      "to": "OSL",
+      "to_city": "Oslo",
+      "arrival": "12:05",
+      "duration": "3 h 25 min · direct",
+      "boarding": "07:00",
+      "gate": "14",
+      "seat": "14C",
+      "zone": "3",
+      "barcode": "M1HALVORSEN/INGRID    EK7Q2MP LISOSLNW 0418 195Y014C0057 100",
+      "note": "The gate closes **20 minutes** before departure. Hand luggage: one bag of up to 8 kg and one personal item.",
+      "stub_barcode": "EK7Q2M418"
+    },
+    {
+      "id": "return",
+      "passenger": "Halvorsen / Ingrid Ms",
+      "flight": "NW419",
+      "date": "21 Jul 2026",
+      "from": "OSL",
+      "from_city": "Oslo",
+      "departure": "18:50",
+      "to": "LIS",
+      "to_city": "Lisbon",
+      "arrival": "21:30",
+      "duration": "3 h 40 min · direct",
+      "boarding": "18:10",
+      "gate": "D7",
+      "seat": "09A",
+      "zone": "2",
+      "barcode": "M1HALVORSEN/INGRID    EK7Q2MP OSLLISNW 0419 202Y009A0031 100",
+      "note": "The gate closes **20 minutes** before departure. Keep your passport or identity card at hand until you board.",
+      "stub_barcode": "EK7Q2M419"
+    }
+  ]
+}

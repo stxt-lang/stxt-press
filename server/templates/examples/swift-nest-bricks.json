@@ -1,0 +1,113 @@
+{
+  "title": "Occupancy of integrated nest bricks by common swifts in retrofitted housing",
+  "subject": "Four breeding seasons of nest brick monitoring on twelve retrofitted apartment blocks in Northfield",
+  "author": "Maren Holt, Tomás Ferreira, Aiyana Brooks",
+  "keywords": "Apus apus, nest bricks, building retrofit, urban birds, monitoring",
+  "short_authors": "Holt, Ferreira and Brooks",
+  "short_title": "Swift nest bricks in retrofitted housing",
+  "volume": "12",
+  "year": "2026",
+  "page_range": "41–42",
+  "first_page": "41",
+  "type": "Research article",
+  "authors": "Maren Holt[1]{sup}, Tomás Ferreira[2]{sup} and Aiyana Brooks[1]{sup}",
+  "affiliations": "[1]{sup} Department of Ecology, Northfield University · [2]{sup} Northfield City Housing Trust",
+  "email": "m.holt@northfield-uni.example",
+  "abstract": {
+    "text": "Energy retrofits seal the gaps under roofs where common swifts (*Apus apus*) nest. We followed 96 nest bricks built into the new insulation of twelve apartment blocks, and 48 boxes mounted on the surface of the same façades, for four breeding seasons. Occupancy of the integrated bricks rose from 18% in the first season to 66% in the fourth, and stayed below 40% in the surface boxes. Bricks on north and east façades, and those more than 9 m above the ground, were occupied earlier. Playing swift calls during the first season doubled early occupancy. We conclude that integrated bricks are an effective, low-cost measure when they are planned with the insulation and placed high on the cooler façades.",
+    "keywords": "Apus apus; nest bricks; building retrofit; urban birds; monitoring"
+  },
+  "sections": [
+    {
+      "id": "introduction",
+      "title": "Introduction",
+      "parts": [
+        {"paragraphs": ["The common swift breeds almost only in buildings in much of Europe. It nests in cavities under roof tiles, behind fascia boards and in holes in old masonry, and it returns to the same cavity every year [[{number of: ref-mayer}](#ref-mayer)]. When a building is insulated from the outside, those cavities are covered, often while the birds are away in Africa, and a colony can lose all its sites in a single winter [[{number of: ref-ostrowski}](#ref-ostrowski)].", "Two measures are common. A *nest brick* is a hollow block built into the wall or the insulation, flush with the façade, with an entrance slot on its lower face. A *surface box* is fixed to the finished wall. Bricks are cheaper to maintain and do not affect the appearance of the building, but they must be planned before the works begin[^planning].", "This study compares both measures on the same buildings over four breeding seasons and asks which placement leads to faster occupancy."]}
+      ]
+    },
+    {
+      "id": "methods",
+      "title": "Methods",
+      "parts": [
+        {
+          "subsection": {"id": "sites", "title": "Study sites"},
+          "paragraphs": [
+            "The twelve blocks belong to the Northfield City Housing Trust and were insulated between October 2021 and March 2022. All of them had held swift nests before the works. The sites are described in Table {number of: tab-sites}, and the position of the bricks on a typical façade is shown in Figure {number of: fig-facade}."
+          ],
+          "figures": [
+            {
+              "id": "tab-sites",
+              "caption": "The twelve blocks grouped by district, with the bricks and boxes installed.",
+              "table": {
+                "columns": ["District", "Blocks", "Height (m)", "Bricks", "Boxes"],
+                "rows": [
+                  {"name": "Marsh Lane", "values": ["4", "12–15", "32", "16"]},
+                  {"name": "Hollins", "values": ["5", "9–12", "40", "20"]},
+                  {"name": "Old Wharf", "values": ["3", "15–18", "24", "12"]}
+                ],
+                "total": {"name": "Total", "values": ["12", "9–18", "96", "48"]}
+              }
+            },
+            {"id": "fig-facade", "caption": "A typical façade: four bricks below the eaves, two boxes on the gable.", "image": "documents/paper/facade.svg", "alt": "Drawing of a four-storey façade with four nest bricks just below the eaves and two boxes mounted on the gable end"}
+          ]
+        },
+        {
+          "subsection": {"id": "monitoring", "title": "Monitoring"},
+          "paragraphs": [
+            "Every brick and box was checked from the ground at dusk on six evenings between 20 May and 25 July of each year, from 2022 to 2025. A site was counted as occupied when an adult entered it at least twice on separate evenings[^occupied]. On half of the blocks, chosen at random, swift calls were played from a speaker on the roof for one hour before dusk during May and June of 2022.",
+            "The effect of season, measure, façade orientation and height on occupancy was estimated with a mixed logistic model, with the block as a random effect."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "results",
+      "title": "Results",
+      "parts": [
+        {
+          "paragraphs": [
+            "Occupancy grew in each season for both measures, but faster for the bricks (Figure {number of: fig-occupancy}). By 2025, 63 of the 96 bricks (66%) and 18 of the 48 boxes (38%) were occupied. The difference was already clear in the second season (odds ratio 2.1, 95% CI 1.3–3.4)."
+          ],
+          "figures": [
+            {"id": "fig-occupancy", "caption": "Share of nest sites occupied in each breeding season.", "image": "documents/paper/occupancy.svg", "alt": "Bar chart of the occupancy of nest sites per season. Integrated bricks: 18% in 2022, 41% in 2023, 57% in 2024 and 66% in 2025. Surface boxes: 12%, 27%, 35% and 38%."}
+          ]
+        },
+        {"paragraphs": ["Bricks on north and east façades were occupied one season earlier than those facing south or west, where the temperature inside a test brick reached 41 °C on sunny afternoons. Height mattered as well: no brick below 9 m was occupied before the third season.", "On the blocks where calls were played, occupancy in 2022 was 26%, against 11% on the others. The difference narrowed in later years and was no longer significant in 2025."]}
+      ]
+    },
+    {
+      "id": "discussion",
+      "title": "Discussion",
+      "parts": [
+        {"paragraphs": ["Integrated bricks were taken up faster than surface boxes on the same buildings (Figure {number of: fig-occupancy}, page {page of: fig-occupancy}), which agrees with earlier, shorter studies [[{number of: ref-ostrowski}](#ref-ostrowski), [{number of: ref-lindgren}](#ref-lindgren)]. A likely reason is the climate inside the cavity: the brick sits within the insulation, while the box takes the full heat of the wall[^temperature].", "Calls attract prospecting birds, which then return to the site in the following year. They are most useful in the first season, when the colony has just lost its old cavities and is looking for new ones.", "Our blocks were similar to each other, and the results may not hold for brick terraces or for buildings without a former colony. The cost figures, discussed in the trust’s report [[{number of: ref-nchc}](#ref-nchc)], are those of 2022."]}
+      ]
+    },
+    {
+      "id": "conclusions",
+      "title": "Conclusions",
+      "parts": [
+        {
+          "findings": {
+            "items": [
+              {"text": "Plan nest bricks with the insulation, not after it."},
+              {"text": "Place them on the north and east façades, more than 9 m above the ground."},
+              {"text": "Play swift calls during the first season after the works."}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "acknowledgements": "We thank the tenants of the twelve blocks for their patience, and the volunteers of the Northfield Swift Group for 2,300 hours of evening watches.",
+  "references": [
+    {"id": "ref-mayer", "text": "Mayer, L. and Sato, K. (2019). Site fidelity of common swifts in central European towns. *Journal of Avian Ecology* 41: 112–125."},
+    {"id": "ref-ostrowski", "text": "Ostrowski, P. (2021). Loss of swift colonies after façade insulation in Poland. *Urban Birds* 8: 33–47."},
+    {"id": "ref-lindgren", "text": "Lindgren, E., Holt, M. and Varga, B. (2023). Nest boxes and bricks for swifts: a two-year trial. *Bird Conservation Notes* 15: 201–210."},
+    {"id": "ref-nchc", "text": "Northfield City Housing Trust (2022). *Retrofit programme 2021–2022: final report*. Northfield."}
+  ],
+  "footnotes": [
+    {"id": "planning", "text": "A brick added after the works means cutting the new insulation and its render again, which costs about four times as much."},
+    {"id": "occupied", "text": "One entry may be a prospecting bird. Two entries on separate evenings are the usual criterion for a breeding pair."},
+    {"id": "temperature", "text": "Loggers in two bricks and two boxes on a south façade recorded a mean afternoon maximum of 31 °C in the bricks and 37 °C in the boxes in July 2024."}
+  ]
+}

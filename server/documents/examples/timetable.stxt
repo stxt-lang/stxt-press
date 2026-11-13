@@ -1,0 +1,277 @@
+# Weekly school timetable: the template templates/examples/timetable filled with its sample data, which gives the
+# "timetable" example of stxt-pdf. Here it is a document, printed as it is; its look is in timetable.styles.stxt.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Orientation: landscape
+		Margin: 40 46 46 46
+	Title: Class 2B timetable · School year 2025–26
+	Language: en
+	Section:
+		Page overlay:
+			Id: footer
+			Offset: auto 0 -30 0
+			Stack:
+				Horizontal: justify
+				Item:
+					Text: CEIP Pla de les Eres · Olot
+				Item:
+					Text: Timetable valid from September 8, 2025 to June 19, 2026
+		Stack:
+			Id: masthead
+			Vertical: center
+			Gap: 14
+			Box:
+				Margin: 0 0 16 0
+			Item:
+				Image: examples/planner/icon.png
+					Alt: Calendar icon
+					Box:
+						Width: 50
+			Item:
+				Grow: 1
+				Block:
+					Heading 1:
+						Text: Class 2B timetable
+					Text: School year 2025–26 · Class teacher: Marta Ferrer
+						Typography:
+							Size: 11
+							Color: #55655D
+			Item:
+				Block:
+					Text: Start 9:00 · End 16:00
+						Typography:
+							Bold: true
+							Align: right
+					Text: Recess from 11:00 to 11:30
+						Typography:
+							Size: 8.5
+							Align: right
+							Color: #55655D
+		Table:
+			Id: timetable
+			Column sizes: 92 repeat(5, *)
+			Gap: 3
+			Box:
+				Margin: 0 0 14 0
+			Header rows:
+				Row:
+					Cell:
+					Cell: Monday
+					Cell: Tuesday
+					Cell: Wednesday
+					Cell: Thursday
+					Cell: Friday
+			Body rows:
+				Row:
+					Cell: 9:00 – 10:00
+						Row header: true
+						Style: hour
+					Cell: Math
+						Style: slot math
+					Cell: Language
+						Style: slot lang
+					Cell: English
+						Style: slot eng
+					Cell: Math
+						Style: slot math
+					Cell: Science
+						Style: slot sci
+				Row:
+					Cell: 10:00 – 11:00
+						Row header: true
+						Style: hour
+					Cell: Language
+						Style: slot lang
+					Cell: Math
+						Style: slot math
+					Cell: Science
+						Style: slot sci
+					Cell: Language
+						Style: slot lang
+					Cell: English
+						Style: slot eng
+				Row:
+					Cell:
+						Row header: true
+						Style: hour
+					Cell: Recess · 11:00 – 11:30
+						Span: 1 5
+						Style: break
+				Row:
+					Cell: 11:30 – 12:30
+						Row header: true
+						Style: hour
+					Cell: Science
+						Style: slot sci
+					Cell: Music
+						Style: slot music
+					Cell: Math
+						Style: slot math
+					Cell: Art
+						Style: slot art
+					Cell: Language
+						Style: slot lang
+				Row:
+					Cell: 12:30 – 13:30
+						Row header: true
+						Style: hour
+					Cell: Physical education
+						Style: slot pe
+					Cell: English
+						Style: slot eng
+					Cell: Language
+						Style: slot lang
+					Cell: Science
+						Style: slot sci
+					Cell: Math
+						Style: slot math
+				Row:
+					Cell:
+						Row header: true
+						Style: hour
+					Cell: Lunch and playground · 13:30 – 15:00
+						Span: 1 5
+						Style: break
+				Row:
+					Cell: 15:00 – 16:00
+						Row header: true
+						Style: hour
+					Cell: Workshop
+						Style: slot lab
+					Cell: Physical education
+						Style: slot pe
+					Cell: Homeroom
+						Style: slot tutor
+					Cell: Workshop
+						Style: slot lab
+					Cell: Project
+						Style: slot proj
+		Stack:
+			Id: legend
+			Wrap items: true
+			Gap: 6 16
+			Box:
+				Margin: 0 0 12 0
+				Padding: 8 0
+				Border: 0.5 0 0 0
+				Border color: #CAD3CD
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot math
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: Math
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot lang
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: Language
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot eng
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: English
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot sci
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: Science
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot music
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: Music
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot art
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: Art
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot pe
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: Physical education
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot lab
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: Workshop
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot tutor
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: Homeroom
+			Item:
+				Stack:
+					Style: legend
+					Item:
+						Block:
+							Style: slot proj
+							Box:
+								Width: 11
+								Height: 11
+					Item:
+						Text: Project
+		Markdown:
+			Id: notes
+			Bullet markers: bullet
+			Typography:
+				Size: 8.5
+			Content >>
+				- On **Physical education** days, students bring sportswear and a bottle of water.
+				- The afternoon **workshops** rotate by term: ceramics, vegetable garden and robotics.
+				- **Recess** and **lunch** are supervised by school staff; families can pick up their children from 15:00.

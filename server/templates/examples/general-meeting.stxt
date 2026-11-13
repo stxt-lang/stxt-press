@@ -1,0 +1,90 @@
+# Meeting minutes template of a housing co-operative: the document documents/examples/general-meeting with Slots for
+# each general meeting. The co-operative, the layout, the labels of the meeting details and the signature blocks are
+# part of the template; the date and times of the meeting, the subject, the place, the chair and the secretary (who
+# takes the minutes and signs them), the attendance and the quorum, the minutes and their footnotes come in the data.
+# The minutes are one Markdown, with numbered headings (Numbered in the rules of Heading 2 and Heading 3), lists with
+# their own markers per level (Bullet markers, Number markers), and block quotes and rules that the engine styles with
+# the For element rules of Block quote and Divider; the footnotes it calls ([^id]) are objects with their Id and text.
+# The meeting details are a Grid of labels and values above it, and the signatures a Stack kept together. The stamp is a
+# Page overlay rotated 8 degrees that appears only on the first page (Pages: first); it is optional, and without it in
+# the data the minutes come out unstamped. general-meeting.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: Letter
+		Margin: 54 72 62 72
+	Title: Minutes of the general meeting of ${date} · Linden Street Housing Co-operative
+	Subject: <subject>
+	Author: Linden Street Housing Co-operative
+	Language: en-US
+	Page overlay: {?stamp}
+		Id: stamp
+		Pages: first
+		Offset: -30 -20 auto auto
+		Rotate: 8
+		Layer: 2
+		Text: <text>
+			Style: stamp
+	Page overlay:
+		Id: footer
+		Offset: auto 0 -40 0
+		Style: footer
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Linden Street Housing Co-operative · General meeting, ${date}
+			Item:
+				Text: Page {page} of {pages}
+	Section:
+		Text: Linden Street Housing Co-operative
+			Style: org
+		Heading 1:
+			Text: Minutes of the general meeting
+		Grid:
+			Id: details
+			Style: details
+			Area:
+				Text: Date
+					Style: detail-label
+			Area:
+				Text: ${weekday} ${date}, ${start} to ${end}
+			Area:
+				Text: Place
+					Style: detail-label
+			Area:
+				Text: <place>
+			Area:
+				Text: Chair
+					Style: detail-label
+			Area:
+				Text: <chair>
+			Area:
+				Text: Minutes
+					Style: detail-label
+			Area:
+				Text: ${secretary}, secretary
+			Area:
+				Text: Present
+					Style: detail-label
+			Area:
+				Text: ${present} of ${households} member households, so the meeting was quorate (the quorum is ${quorum})
+		Markdown:
+			Id: minutes
+			Style: minutes
+			Content >>
+				<minutes>
+		Footnote: [footnotes]
+			Id: <id>
+			Paragraph: <text>
+		Stack:
+			Id: signatures
+			Style: signatures
+			Item:
+				Grow: 1
+				Block:
+					Style: signature
+					Text: ${chair}, chair
+			Item:
+				Grow: 1
+				Block:
+					Style: signature
+					Text: ${secretary}, secretary

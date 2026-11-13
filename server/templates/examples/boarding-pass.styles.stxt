@@ -1,0 +1,155 @@
+# Styles of the boarding pass template: those of the document documents/examples/boarding-pass.
+Styles (dev.stxt.pdf):
+	Named color: petrol #0E4D64
+	Named color: accent #B4530F
+	Named color: muted #5B6B73
+	Named color: line #C5D1D6
+	For element: Document
+		Typography:
+			Code font: IBM Plex Mono
+			Kerning: true
+			Ligatures: true
+			Size: 9
+			Line height: 12
+			Color: #17242A
+	For style: notch
+		Box:
+			Width: 6mm
+			Height: 6mm
+			Corner radius: 50%
+			Background: #DCE4E8
+	For style: pass
+		Column sizes: * 60mm
+		Box:
+			Height: 87mm
+			Background: #FFFFFF
+			Corner radius: 10
+	For style: main
+		Box:
+			Corner radius: 10 0 0 10
+	For style: band
+		Vertical: center
+		Gap: 8
+		Box:
+			Padding: 8 16
+			Background: petrol
+			Corner radius: 10 0 0 0
+		Typography:
+			Color: #FFFFFF
+	For style: logo
+		Box:
+			Width: 20
+	For style: airline
+		Typography:
+			Size: 12
+			Bold: true
+			Letter spacing: 0.3
+	For style: band-label
+		Typography:
+			Size: 8
+			Bold: true
+			Case: uppercase
+			Letter spacing: 1.5
+			Color: #CFE6EE
+	For style: main-body
+		Box:
+			Padding: 10 16 0 16
+	For style: route
+		Vertical: baseline
+		Gap: 12
+		Box:
+			Padding: 0 0 8 0
+			Margin: 0 0 8 0
+			Border: 0 0 0.75 0
+			Border color: line
+	For style: airport
+		Typography:
+			Size: 34
+			Line height: 36
+			Bold: true
+			Letter spacing: 1
+			Color: petrol
+	For style: city
+		Typography:
+			Size: 8.5
+			Color: muted
+	For style: arrow
+		Typography:
+			Size: 22
+			Color: accent
+	For style: duration
+		Typography:
+			Size: 8.5
+			Align: right
+			Color: muted
+	For style: fields
+		Column sizes: repeat(4, *)
+		Gap: 6 10
+		Box:
+			Margin: 0 0 8 0
+	For style: label
+		Typography:
+			Size: 6.5
+			Bold: true
+			Color: muted
+			Case: uppercase
+			Letter spacing: 0.8
+		Box:
+			Margin: 0 0 1 0
+	For style: value
+		Typography:
+			Size: 11.5
+			Line height: 14
+			Bold: true
+	For style: small
+		Typography:
+			Size: 9.5
+			Line height: 12
+	For style: accent
+		Typography:
+			Color: accent
+	For style: scan
+		Vertical: center
+		Gap: 14
+	For style: pdf417
+		Box:
+			Width: 170
+	For style: note
+		Typography:
+			Size: 7.5
+			Line height: 10.5
+			Color: muted
+			Markup: markdown
+	For style: stub
+		Box:
+			Height: 100%
+			Padding: 12 14 10 14
+			Border: 0 0 0 1
+			Border style: dashed
+			Border color: line
+	For style: stub-airline
+		Typography:
+			Size: 8
+			Bold: true
+			Case: uppercase
+			Letter spacing: 1.5
+			Color: petrol
+		Box:
+			Margin: 0 0 8 0
+			Padding: 0 0 6 0
+			Border: 0 0 0.75 0
+			Border color: line
+	For style: stub-fields
+		Column sizes: repeat(2, *)
+		Gap: 6 8
+		Box:
+			Margin: 0 0 10 0
+	For style: code128
+		Quiet zone: 4
+		Box:
+			Width: 100%
+			Height: 36
+		Typography:
+			Font: IBM Plex Mono
+			Size: 7
+			Color: #17242A

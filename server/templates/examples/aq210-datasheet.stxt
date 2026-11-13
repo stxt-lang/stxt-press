@@ -1,0 +1,164 @@
+# Data sheet template of a maker of building sensors: the document documents/examples/aq210-datasheet with Slots for
+# the product. The layout of Kestrel Sensing (the header with the logo, the footer, the headings, the key features box
+# and the tables) is part of the template; the number and revision of the data sheet, the model and its name, the
+# features, the overview, the two views, the variants to order with their EAN, the specifications, the terminals and
+# the small print come in the data. A Slot repeats a single Row, so the specifications are one list of rows: the
+# first row of a group carries the group and the span of its cell ("3 1", rows and columns), and the rows after it
+# only the parameter and the value. In the same way, a terminal whose signal also takes the next one carries
+# "span": "2 1", and the next terminal comes alone. The paragraphs are Markdown. aq210-datasheet.json has the sample
+# data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 30mm 16mm 20mm 16mm
+	Title: ${model} ${product} · Data sheet
+	Subject: <subject>
+	Author: Kestrel Sensing Ltd
+	Keywords: <keywords>
+	Language: en
+	# The header with the logo and the document number and the footer with the revision and "Page 1 of 2" are Page
+	# overlay of the document.
+	Page overlay:
+		Id: header
+		Offset: -21mm 0 auto 0
+		Style: header
+		Stack:
+			Vertical: center
+			Gap: 8
+			Item:
+				Image: documents/datasheet/kestrel.svg
+					Alt: Kestrel Sensing
+					Style: logo
+			Item:
+				Grow: 1
+				Text: Kestrel Sensing
+					Style: company
+			Item:
+				Text: Data sheet ${number}
+					Style: doc-number
+	Page overlay:
+		Id: footer
+		Offset: auto 0 -12mm 0
+		Style: footer
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Revision ${revision} · ${date} · Specifications may change without notice · kestrel-sensing.example
+			Item:
+				Text: Page {page} of {pages}
+	Section:
+		Block:
+			Id: hero
+			Style: hero
+			Text: <category>
+				Style: eyebrow
+			Heading 1:
+				Text: ${model} ${product}
+			Text: <tagline>
+				Style: tagline
+		Heading 2:
+			Text: Overview
+		# The key features are a side box (Side: right) that the overview runs beside, and the next heading goes below
+		# it (Below side boxes); its list marks each feature with a check drawn in SVG (Marker: image).
+		Block:
+			Id: features
+			Style: features
+			Side: right
+			Text: Key features
+				Style: box-label
+			List:
+				Style: checks
+				List item: [features]
+					Text: <text>
+		Paragraph: [overview]
+		Heading 2:
+			Text: Dimensions
+			Below side boxes: true
+		# The front view and the dimension drawing are one Figure with a Block (two SVG images side by side).
+		Figure: {views}
+			Id: fig-views
+			Alt: <alt>
+			Caption: <caption>
+			Block:
+				Stack:
+					Style: views
+					Item:
+						Image: <front>
+							Style: view-front
+					Item:
+						Image: <drawing>
+							Style: view-drawing
+		Heading 2:
+			Text: Ordering information
+		# The ordering table carries the EAN-13 barcode of each variant in a cell, with its digits under the bars
+		# (Readable text).
+		Table:
+			Id: ordering
+			Style: order-table
+			Header rows:
+				Row:
+					Cell: Part number
+					Cell: Variant
+					Cell: EAN
+			Body rows:
+				Row: [variants]
+					Cell: <part>
+						Row header: true
+						Style: part
+					Cell: <description>
+					Cell:
+						Barcode: <ean>
+							Barcode format: ean-13
+							Readable text: true
+							Alt: EAN-13 barcode of part ${part}
+							Style: ean
+		Block:
+			Id: specifications
+			Break:
+				Before: page
+			Heading 2:
+				Text: Specifications
+			# The specification tables group their rows with cells that span several rows or columns (Span: 3 1,
+			# Span: 1 2), share their borders (Merge borders, from a rule) and align each column (Column align, and For
+			# column for the signals in IBM Plex Mono).
+			Table:
+				Id: specs
+				Style: spec-table
+				Header rows:
+					Row:
+						Cell: Group
+						Cell: Parameter
+						Cell: Value
+				Body rows:
+					Row: [specifications]
+						Cell: <?group>
+							Span: <span>
+							Style: group
+						Cell: <parameter>
+						Cell: <value>
+					Row:
+						Cell: Notes
+							Style: group
+						Cell: <specification_notes>
+							Span: 1 2
+							Style: note-cell
+			Heading 2:
+				Text: Terminals
+			Table:
+				Id: terminals
+				Style: terminal-table
+				Header rows:
+					Row:
+						Cell: Terminal
+						Cell: Signal
+						Cell: Function
+				Body rows:
+					Row: [terminals]
+						Cell: <terminal>
+							Row header: true
+						Cell: <?signal>
+							Span: <?span>
+						Cell: <?function>
+							Span: <?span>
+			Paragraph: <small_print>
+				Style: small-print

@@ -1,0 +1,144 @@
+# Course certificate of a ceramics school: the template templates/examples/certificate filled with its sample data,
+# which gives the "certificate" example of stxt-pdf. Here it is a document, printed as it is; its look is in
+# certificate.styles.stxt.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Orientation: landscape
+		Margin: 64 80 56 80
+	Title: Certificate of Completion · Handmade Ceramics
+	Language: en
+	Section:
+		Page overlay:
+			Id: paper
+			Offset: -64 -80 -56 -80
+			Layer: -3
+			Box:
+				Background: #FBF7EC
+		Page overlay:
+			Id: frame-outer
+			Offset: -48 -62 -40 -62
+			Layer: -2
+			Box:
+				Border: 5
+				Border color: #14305E
+		Page overlay:
+			Id: frame-middle
+			Offset: -38 -52 -30 -52
+			Layer: -2
+			Box:
+				Border: 1.5
+				Border color: #926829
+		Page overlay:
+			Id: frame-inner
+			Offset: -32 -46 -24 -46
+			Layer: -2
+			Box:
+				Border: 0.5
+				Border color: #14305E
+		Page overlay:
+			Offset: -45 auto auto -59
+			Layer: -1
+			Block:
+				Style: corner
+		Page overlay:
+			Offset: -45 -59 auto auto
+			Layer: -1
+			Block:
+				Style: corner
+		Page overlay:
+			Offset: auto auto -37 -59
+			Layer: -1
+			Block:
+				Style: corner
+		Page overlay:
+			Offset: auto -59 -37 auto
+			Layer: -1
+			Block:
+				Style: corner
+		Page overlay:
+			Id: footer
+			Offset: auto 0 -22 0
+			Stack:
+				Horizontal: center
+				Vertical: center
+				Gap: 8
+				Item:
+					Barcode: https://escuelaceramica.example/verificar/cer-2025-0412
+						Id: verification
+						Alt: QR code to verify the certificate
+						Box:
+							Width: 48
+						Typography:
+							Color: #14305E
+				Item:
+					Text: Verifiable at escuelaceramica.example/verificar
+						Link: https://escuelaceramica.example/verificar/cer-2025-0412
+		Page overlay:
+			Id: serial
+			Offset: 363.5 auto auto -31
+			Rotate: -90
+			Rotate origin: top left
+			Box:
+				Width: 260
+			Text: Certificate no. cer-2025-0412
+				Style: serial
+		Text: Valle Ceramics School
+			Style: school
+		Heading 1:
+			Text: Certificate of Completion
+		Text: Presented to
+			Style: aside
+		Text: Elena Ruiz Navarro
+			Id: recipient
+			Style: name
+		Text: for having successfully completed the course
+			Style: aside
+		Heading 2:
+			Text: Handmade Ceramics: From Clay to Finished Piece
+		Text: A course of 40 class hours, held in Olot from September 8 to October 24, 2025, with a final grade of Outstanding.
+			Box:
+				Width: 500
+				Margin: 0 auto 18 auto
+		Stack:
+			Id: signatures
+			Horizontal: justify
+			Vertical: bottom
+			Item:
+				Block:
+					Box:
+						Width: 220
+					Image: examples/certificate/signature-director.svg
+						Alt: Signature of the school director
+						Box:
+							Width: 140
+							Margin: 0 auto
+					Block:
+						Style: line
+						Text: Montserrat Puig Vila
+							Typography:
+								Bold: true
+						Text: Director of the School
+			Item:
+				Block:
+					Image: examples/certificate/en/seal.svg
+						Id: seal
+						Alt: Seal of excellence of the school
+						Rotate: -8
+						Box:
+							Width: 100
+			Item:
+				Block:
+					Box:
+						Width: 220
+					Image: examples/certificate/signature-teacher.svg
+						Alt: Signature of the course instructor
+						Box:
+							Width: 140
+							Margin: 0 auto
+					Block:
+						Style: line
+						Text: Martí Roca Font
+							Typography:
+								Bold: true
+						Text: Course Instructor

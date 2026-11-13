@@ -1,0 +1,64 @@
+{
+  "number": "DS-AQ210-EN",
+  "revision": "C",
+  "date": "2026-09-15",
+  "model": "AQ-210",
+  "product": "Indoor Air Quality Sensor",
+  "subject": "Specifications, wiring and ordering information of the AQ-210 CO₂, temperature and humidity sensor",
+  "keywords": "CO2 sensor, NDIR, Modbus RTU, BACnet MS/TP, data sheet",
+  "category": "Building automation · Air quality",
+  "tagline": "CO₂, temperature and relative humidity in one wall-mounted unit, with Modbus RTU and BACnet MS/TP on the same terminals.",
+  "features": [
+    {"text": "Dual-beam NDIR CO₂ sensor, no recalibration for 15 years"},
+    {"text": "±(30 ppm + 3%) CO₂ accuracy"},
+    {"text": "Modbus RTU and BACnet MS/TP, chosen by DIP switch"},
+    {"text": "Two 0–10 V outputs and one relay"},
+    {"text": "Three-colour status ring"},
+    {"text": "24 V AC/DC, under 1.2 W"}
+  ],
+  "overview": [
+    "The AQ-210 measures carbon dioxide, temperature and relative humidity in offices, classrooms and meeting rooms, and sends them to the building management system so that ventilation follows the people in the room rather than a timetable.",
+    "Its dual-beam NDIR cell compares the measuring beam with a reference beam on every reading, so it does not drift with age and needs no automatic baseline correction. This makes it suitable for rooms that are never empty, such as hospital wards and control rooms.",
+    "The coloured ring on the front tells the people in the room how fresh the air is: green below 800 ppm, amber up to 1,200 ppm and red above. The thresholds can be changed over the bus, and the ring can be turned off."
+  ],
+  "views": {
+    "alt": "Front view of the AQ-210 showing the CO₂ reading on its display, and a dimension drawing of the front and the side: 86 by 86 mm, 27 mm deep",
+    "caption": "Front of the unit and its dimensions in millimetres. It fits a standard single back box.",
+    "front": "documents/datasheet/aq210-front.svg",
+    "drawing": "documents/datasheet/aq210-dimensions.svg"
+  },
+  "variants": [
+    {"part": "AQ-210-W", "description": "CO₂, temperature and humidity, white housing", "ean": "506012345001"},
+    {"part": "AQ-210-WD", "description": "As AQ-210-W, with a display of the readings instead of the ring", "ean": "506012345002"},
+    {"part": "AQ-210-B", "description": "CO₂, temperature and humidity, black housing", "ean": "506012345003"}
+  ],
+  "specifications": [
+    {"group": "Carbon dioxide", "span": "3 1", "parameter": "Range", "value": "400 to 5,000 ppm"},
+    {"parameter": "Accuracy", "value": "±(30 ppm + 3% of reading) at 25 °C"},
+    {"parameter": "Response time (τ63)", "value": "120 s in still air"},
+    {"group": "Temperature", "span": "2 1", "parameter": "Range", "value": "0 to 50 °C"},
+    {"parameter": "Accuracy", "value": "±0.3 °C from 15 to 35 °C"},
+    {"group": "Relative humidity", "span": "2 1", "parameter": "Range", "value": "0 to 95% RH, non-condensing"},
+    {"parameter": "Accuracy", "value": "±2% RH from 20 to 80% RH"},
+    {"group": "Outputs", "span": "3 1", "parameter": "Analogue", "value": "2 × 0–10 V, 2 mA maximum load"},
+    {"parameter": "Relay", "value": "1 × SPST, 1 A at 30 V DC"},
+    {"parameter": "Bus", "value": "RS-485, Modbus RTU or BACnet MS/TP, 9,600 to 76,800 baud"},
+    {"group": "Power", "span": "2 1", "parameter": "Supply", "value": "24 V AC ±15% or 15 to 35 V DC"},
+    {"parameter": "Consumption", "value": "1.2 W maximum, 0.6 W typical"},
+    {"group": "Housing", "span": "3 1", "parameter": "Material", "value": "PC/ABS, flame class UL 94 V-0, white RAL 9003"},
+    {"parameter": "Protection", "value": "IP30"},
+    {"parameter": "Operating environment", "value": "0 to 50 °C, 0 to 95% RH, non-condensing"}
+  ],
+  "specification_notes": "The accuracy figures apply after 15 minutes of warm-up. Accuracy of CO₂ includes the repeatability and the effect of pressure between 950 and 1,050 hPa.",
+  "terminals": [
+    {"terminal": "1", "signal": "G", "function": "Supply, 24 V AC or + DC"},
+    {"terminal": "2", "signal": "G0", "function": "Supply common"},
+    {"terminal": "3", "signal": "A+ / B−", "function": "RS-485 bus, polarity marked on the board", "span": "2 1"},
+    {"terminal": "4"},
+    {"terminal": "5", "signal": "AO1", "function": "0–10 V output, CO₂ (0 to 2,000 ppm by default)"},
+    {"terminal": "6", "signal": "AO2", "function": "0–10 V output, temperature (0 to 50 °C by default)"},
+    {"terminal": "7", "signal": "NO / C", "function": "Relay contact, closes above 1,200 ppm by default", "span": "2 1"},
+    {"terminal": "8"}
+  ],
+  "small_print": "Each unit is supplied with its mounting plate, two screws and an installation sheet. Configuration software and the BACnet PICS can be downloaded from [kestrel-sensing.example/aq210](https://kestrel-sensing.example/aq210)."
+}

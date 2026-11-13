@@ -1,0 +1,493 @@
+# Catalog of a furniture workshop: the template templates/examples/catalog filled with its sample data, which gives
+# the "catalog" example of stxt-pdf. Here it is a document, printed as it is; its look is in catalog.styles.stxt.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 54 50 64 50
+	Title: 2026 Catalog · Taller Nogal
+	Language: en
+	Page overlay:
+		Id: footer
+		Offset: auto 0 -40 0
+		Box:
+			Padding: 6 0 0 0
+			Border: 0.5 0 0 0
+			Border color: #DCCFB8
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Taller Nogal · 2026 Catalog · tallernogal.example
+					Link: https://tallernogal.example
+			Item:
+				Text: Page {page} of {pages}
+	Section:
+		Id: front-cover
+		Page numbering: none
+		Inherit page overlays: false
+		Page:
+			Margin: 0
+		Frame:
+			Id: cover
+			Box:
+				Width: 210mm
+				Height: 297mm
+				Background: #2B1E15
+			Typography:
+				Color: #FFFFFF
+			Block:
+				Box:
+					Padding: 64 56 0 56
+				Image: examples/brand/nogal-mark-white.svg
+					Id: cover-mark
+					Box:
+						Width: 74
+						Margin: 0 0 26 0
+				Text: Catalog
+					Typography:
+						Size: 10
+						Bold: true
+						Color: #F3C27C
+						Case: uppercase
+						Letter spacing: 4
+					Box:
+						Margin: 0 0 8 0
+				Heading 1:
+					In table of contents: false
+					Box:
+						Margin: 0 0 14 0
+					Typography:
+						Font: IBM Plex Serif
+						Bold: true
+						Size: 46
+						Line height: 50
+						Color: #FFFFFF
+					Text: Furniture that
+					Text: ages well
+				Text: Solid wood from the region, carpentry joints and oil finishes. Pieces for a lifetime, made in Olot since 1987.
+					Typography:
+						Font: IBM Plex Serif
+						Italic: true
+						Size: 13
+						Line height: 19
+						Color: #D8C7B0
+					Box:
+						Width: 360
+						Margin: 0 0 56 0
+				Grid:
+					Id: cover-products
+					Column sizes: repeat(4, *)
+					Gap: 8
+					Area:
+						Image: examples/catalog/silla.jpg
+							Box:
+								Width: 100%
+								Height: 108
+					Area:
+						Image: examples/catalog/mesa.jpg
+							Box:
+								Width: 100%
+								Height: 108
+					Area:
+						Image: examples/catalog/lampara.jpg
+							Box:
+								Width: 100%
+								Height: 108
+					Area:
+						Image: examples/catalog/estanteria.jpg
+							Box:
+								Width: 100%
+								Height: 108
+				Text: 2026 Collection · Prices include VAT · Valid until December 31, 2026
+					Typography:
+						Size: 8
+						Color: #A89A88
+					Box:
+						Margin: 150 0 0 0
+	Section:
+		Id: body
+		Block:
+			Id: index
+			Heading 1:
+				In table of contents: false
+				Text: Contents
+			Paragraph: Each piece, with the page of its product sheet.
+				Style: lead
+			Table of contents:
+				Id: toc
+				Levels: 1 2
+		Block:
+			Id: dining
+			Break:
+				Before: page
+			Heading 1:
+				Text: Dining and living room
+			Paragraph: Chairs, tables and shelves for a home that is lived in. Each piece is made to order; the usual lead time is six weeks.
+				Style: lead
+			Grid:
+				Id: grid-dining
+				Column sizes: * *
+				Gap: 18
+				Area:
+					Block:
+						Style: card
+						Frame:
+							Image: examples/catalog/silla.jpg
+								Alt: Olot Chair
+						Block:
+							Style: body
+							Stack:
+								Style: spread
+								Item:
+									Heading 2:
+										Style: product
+										Text: Olot Chair
+								Item:
+									Text: MN-022
+										Style: ref
+							Paragraph: Solid oak with a rush seat, assembled without a single nail.
+							Stack:
+								Style: spread
+								Box:
+									Margin: 6 0 0 0
+								Item:
+									Text: 46 × 44 × 86 cm
+										Style: dims
+								Item:
+									Text: €118
+										Style: price
+				Area:
+					Block:
+						Style: card
+						Frame:
+							Image: examples/catalog/mesa.jpg
+								Alt: Besalú Table
+						Block:
+							Style: body
+							Stack:
+								Style: spread
+								Item:
+									Heading 2:
+										Style: product
+										Text: Besalú Table
+								Item:
+									Text: MN-014
+										Style: ref
+							Paragraph: Solid walnut with a one-piece top and legs joined with dovetails.
+							Stack:
+								Style: spread
+								Box:
+									Margin: 6 0 0 0
+								Item:
+									Text: 180 × 90 × 75 cm
+										Style: dims
+								Item:
+									Text: €640
+										Style: price
+				Area:
+					Block:
+						Style: card
+						Frame:
+							Image: examples/catalog/lampara.jpg
+								Alt: Sol Lamp
+							Overlay:
+								Offset: 18 -12 auto auto
+								Rotate: 40
+								Style: new
+								Box:
+									Width: 96
+								Text: New
+						Block:
+							Style: body
+							Stack:
+								Style: spread
+								Item:
+									Heading 2:
+										Style: product
+										Text: Sol Lamp
+								Item:
+									Text: MN-063
+										Style: ref
+							Paragraph: Turned walnut base and natural linen shade. Two-meter fabric cord.
+							Stack:
+								Style: spread
+								Box:
+									Margin: 6 0 0 0
+								Item:
+									Text: Ø 38 × 52 cm
+										Style: dims
+								Item:
+									Text: €139
+										Style: price
+				Area:
+					Block:
+						Style: card
+						Frame:
+							Image: examples/catalog/taburete.jpg
+								Alt: Cal Stool
+						Block:
+							Style: body
+							Stack:
+								Style: spread
+								Item:
+									Heading 2:
+										Style: product
+										Text: Cal Stool
+								Item:
+									Text: MN-049
+										Style: ref
+							Paragraph: Round oak seat with three splayed legs. Stacks two at a time.
+							Stack:
+								Style: spread
+								Box:
+									Margin: 6 0 0 0
+								Item:
+									Text: Ø 34 × 46 / 62 / 74 cm
+										Style: dims
+								Item:
+									Text: €64
+										Style: price
+		Block:
+			Id: rest
+			Break:
+				Before: page
+			Heading 1:
+				Text: Bedroom and study
+			Paragraph: For the entrance hall, the bedroom and the work corner. Every piece can be ordered in walnut or in oak, with the finish you prefer.
+				Style: lead
+			Grid:
+				Id: grid-rest
+				Column sizes: * *
+				Gap: 18
+				Area:
+					Block:
+						Style: card
+						Frame:
+							Image: examples/catalog/estanteria.jpg
+								Alt: Fageda Bookcase
+						Block:
+							Style: body
+							Stack:
+								Style: spread
+								Item:
+									Heading 2:
+										Style: product
+										Text: Fageda Bookcase
+								Item:
+									Text: MN-031
+										Style: ref
+							Paragraph: Walnut with five adjustable shelves and slotted sides. Fixes to the wall.
+							Stack:
+								Style: spread
+								Box:
+									Margin: 6 0 0 0
+								Item:
+									Text: 90 × 30 × 180 cm
+										Style: dims
+								Item:
+									Text: €215
+										Style: price
+				Area:
+					Block:
+						Style: card
+						Frame:
+							Image: examples/catalog/banco.jpg
+								Alt: Mirador Bench
+						Block:
+							Style: body
+							Stack:
+								Style: spread
+								Item:
+									Heading 2:
+										Style: product
+										Text: Mirador Bench
+								Item:
+									Text: MN-040
+										Style: ref
+							Paragraph: Hall bench with a seat upholstered in wool from local sheep.
+							Stack:
+								Style: spread
+								Box:
+									Margin: 6 0 0 0
+								Item:
+									Text: 120 × 40 × 46 cm
+										Style: dims
+								Item:
+									Text: €189.50
+										Style: price
+				Area:
+					Block:
+						Style: card
+						Frame:
+							Image: examples/catalog/espejo.jpg
+								Alt: Lluna Mirror
+						Block:
+							Style: body
+							Stack:
+								Style: spread
+								Item:
+									Heading 2:
+										Style: product
+										Text: Lluna Mirror
+								Item:
+									Text: MN-057
+										Style: ref
+							Paragraph: Oval mirror with a solid walnut frame and concealed hanging hardware.
+							Stack:
+								Style: spread
+								Box:
+									Margin: 6 0 0 0
+								Item:
+									Text: 70 × 100 cm
+										Style: dims
+								Item:
+									Text: €96
+										Style: price
+				Area:
+					Block:
+						Style: card
+						Frame:
+							Image: examples/catalog/escritorio.jpg
+								Alt: Torre Desk
+							Overlay:
+								Offset: 18 -12 auto auto
+								Rotate: 40
+								Style: new
+								Box:
+									Width: 96
+								Text: New
+						Block:
+							Style: body
+							Stack:
+								Style: spread
+								Item:
+									Heading 2:
+										Style: product
+										Text: Torre Desk
+								Item:
+									Text: MN-071
+										Style: ref
+							Paragraph: Oak with a three-drawer pedestal and cable outlet. Rounded edges.
+							Stack:
+								Style: spread
+								Box:
+									Margin: 6 0 0 0
+								Item:
+									Text: 130 × 60 × 75 cm
+										Style: dims
+								Item:
+									Text: €420
+										Style: price
+		Block:
+			Id: woods
+			Break:
+				Before: page
+			Heading 1:
+				Text: Woods and finishes
+			Paragraph: We work only with solid wood from managed forests in the region, air-dried for at least two years.
+				Style: lead
+			Table:
+				Id: wood-table
+				Column sizes: 70 * 90 *
+				Box:
+					Margin: 0 0 22 0
+				Header rows:
+					Row:
+						Cell: Wood
+						Cell: Character
+						Cell: Origin
+						Cell: Finishes
+				Body rows:
+					Row:
+						Cell: Walnut
+							Row header: true
+							Typography:
+								Bold: true
+						Cell: Dark, warm and with a strong grain
+						Cell: La Garrotxa
+						Cell: Natural oil, beeswax, dark walnut stain
+					Row:
+						Cell: Oak
+							Row header: true
+							Typography:
+								Bold: true
+						Cell: Light, fine-grained and very durable
+						Cell: Pyrenees
+						Cell: White or natural oil, soap
+					Row:
+						Cell: Cherry
+							Row header: true
+							Typography:
+								Bold: true
+						Cell: Reddish, darkens with light
+						Cell: Sierra del Cadí
+						Cell: Natural oil
+					Row:
+						Cell: Ash
+							Row header: true
+							Typography:
+								Bold: true
+						Cell: Light and flexible, ideal for curved pieces
+						Cell: La Garrotxa
+						Cell: White oil, natural
+			Heading 2:
+				Text: How we work
+				Box:
+					Margin: 0 0 10 0
+			Grid:
+				Id: steps
+				Column sizes: repeat(3, *)
+				Gap: 20
+				Box:
+					Margin: 0 0 26 0
+				Area:
+					Block:
+						Text: 01
+							Style: step-number
+						Heading 3:
+							Text: Visit and measuring
+						Paragraph: We come to your home, take measurements and listen to what you need. The visit is free of charge.
+				Area:
+					Block:
+						Text: 02
+							Style: step-number
+						Heading 3:
+							Text: Design and quote
+						Paragraph: Within a week we send you the design, the proposed wood and a fixed quote.
+				Area:
+					Block:
+						Text: 03
+							Style: step-number
+						Heading 3:
+							Text: Making
+						Paragraph: We make the pieces in the workshop, then deliver and assemble them, so you do not have to take care of anything.
+			Block:
+				Id: contact
+				Box:
+					Background: #3B2A1E
+					Padding: 22 26
+				Typography:
+					Color: #FFFFFF
+				Stack:
+					Gap: 24
+					Vertical: center
+					Item:
+						Image: examples/brand/nogal-mark-white.svg
+							Box:
+								Width: 56
+					Item:
+						Grow: 1
+						Block:
+							Text: Visit the workshop
+								Typography:
+									Font: IBM Plex Serif
+									Size: 15
+									Bold: true
+							Text: Carrer de la Farga, 14 · Polígono Les Torres · 17800 Olot
+								Typography:
+									Color: #D8C7B0
+								Box:
+									Margin: 3 0 0 0
+							Text: Monday to Friday, 8 a.m. to 6 p.m. · 972 00 11 22 · pedidos@tallernogal.example
+								Link: mailto:pedidos@tallernogal.example
+								Typography:
+									Color: #D8C7B0

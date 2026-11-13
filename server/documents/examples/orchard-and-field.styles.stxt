@@ -8,6 +8,9 @@ Styles (dev.stxt.pdf):
 	Named color: cream #F6F0E3
 	For element: Document
 		Typography:
+			Code font: IBM Plex Mono
+			Kerning: true
+			Ligatures: true
 			Font: IBM Plex Serif
 			Size: 9.5
 			Line height: 13.5

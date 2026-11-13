@@ -1,0 +1,245 @@
+# Resume: the template templates/examples/resume filled with its sample data, which gives the "resume" example of
+# stxt-pdf. Here it is a document, printed as it is; its look is in resume.styles.stxt.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+	Title: Marta Ferrer Soler · Product Designer
+	Language: en
+	Section:
+		Grid:
+			Id: page
+			Column sizes: 190 *
+			Row sizes: *
+			Box:
+				Height: 100%
+			Area:
+				Block:
+					Id: sidebar
+					Style: side
+					Image: examples/resume/photo.jpg
+						Alt: Portrait of Marta Ferrer
+						Box:
+							Width: 100%
+							Corner radius: 50%
+							Margin: 0 0 4 0
+					Text: Contact
+						Style: side-title
+					Text: marta.ferrer@correo.example
+						Link: mailto:marta.ferrer@correo.example
+					Text: +34 600 112 233
+					Text: Girona, Spain
+					Text: martaferrer.example
+						Link: https://martaferrer.example
+					Text: Tools
+						Style: side-title
+					Block:
+						Text: Figma
+						Block:
+							Style: track
+							Block:
+								Style: fill
+								Box:
+									Width: 95%
+					Block:
+						Text: User research
+						Block:
+							Style: track
+							Block:
+								Style: fill
+								Box:
+									Width: 90%
+					Block:
+						Text: Design systems
+						Block:
+							Style: track
+							Block:
+								Style: fill
+								Box:
+									Width: 92%
+					Block:
+						Text: Accessibility (WCAG)
+						Block:
+							Style: track
+							Block:
+								Style: fill
+								Box:
+									Width: 85%
+					Block:
+						Text: HTML and CSS
+						Block:
+							Style: track
+							Block:
+								Style: fill
+								Box:
+									Width: 72%
+					Text: Languages
+						Style: side-title
+					Text: Catalan and Spanish · native
+					Text: English · C1
+					Text: French · B1
+					Text: Interests
+						Style: side-title
+					Paragraph: Ceramics, trail running, botanical illustration and seasonal cooking.
+			Area:
+				Block:
+					Id: main
+					Box:
+						Padding: 40 36 36 34
+					Heading 1:
+						Text: Marta Ferrer Soler
+					Text: Product Designer · UX/UI
+						Typography:
+							Size: 12.5
+							Color: #1F7A7A
+						Box:
+							Margin: 2 0 14 0
+					Paragraph: I design digital products that people understand the first time. Eight years across a studio, a cooperative and in-house product, always close to the people who use what gets built: I research, prototype, test and ship with the development team, not after it.
+						Typography:
+							Align: justify
+					Stack:
+						Id: figures
+						Gap: 10
+						Box:
+							Margin: 14 0 0 0
+							Padding: 10 0
+							Border: 0.5 0 0.5 0
+							Border color: #BFD9D7
+						Item:
+							Grow: 1
+							Block:
+								Text: +40
+									Style: figure
+								Text: projects delivered
+									Style: caption
+						Item:
+							Grow: 1
+							Block:
+								Text: 71%
+									Style: figure
+								Text: conversion in customer onboarding
+									Style: caption
+						Item:
+							Grow: 1
+							Block:
+								Text: 6
+									Style: figure
+								Text: teams sharing one design system
+									Style: caption
+						Item:
+							Grow: 1
+							Block:
+								Text: 4
+									Style: figure
+								Text: designers mentored
+									Style: caption
+					Heading 2:
+						Text: Experience
+					Grid:
+						Id: jobs
+						Column sizes: *
+						Gap: 14
+						Area:
+							Grid:
+								Column sizes: 70 *
+								Gap: 12
+								Area:
+									Text: 2022 – present
+										Style: dates
+								Area:
+									Block:
+										Text: Senior Product Designer
+											Style: role
+										Text: Cobalto · fintech · Barcelona
+											Style: place
+										List:
+											List item:
+												Text: I lead the design system used by six teams and four applications.
+													Typography:
+														Markup: markdown
+											List item:
+												Text: Customer onboarding redesign: conversion rose from 54% to 71%.
+													Typography:
+														Markup: markdown
+											List item:
+												Text: Mentor to four junior designers.
+													Typography:
+														Markup: markdown
+						Area:
+							Grid:
+								Column sizes: 70 *
+								Gap: 12
+								Area:
+									Text: 2018 – 2022
+										Style: dates
+								Area:
+									Block:
+										Text: UX Designer
+											Style: role
+										Text: Estudio Pimienta · Girona
+											Style: place
+										List:
+											List item:
+												Text: Projects for museums, city councils and local businesses.
+													Typography:
+														Markup: markdown
+											List item:
+												Text: Weekly user research workshop, open to clients.
+													Typography:
+														Markup: markdown
+											List item:
+												Text: **Premio Sol Digital 2021** for the best interaction design.
+													Typography:
+														Markup: markdown
+						Area:
+							Grid:
+								Column sizes: 70 *
+								Gap: 12
+								Area:
+									Text: 2016 – 2018
+										Style: dates
+								Area:
+									Block:
+										Text: Graphic Designer
+											Style: role
+										Text: Cooperativa La Fàbrica · Olot
+											Style: place
+										List:
+											List item:
+												Text: Branding, posters and websites for small cooperatives.
+													Typography:
+														Markup: markdown
+					Heading 2:
+						Text: Education
+					Grid:
+						Id: education
+						Column sizes: *
+						Gap: 8
+						Area:
+							Grid:
+								Column sizes: 70 *
+								Gap: 12
+								Area:
+									Text: 2016
+										Style: dates
+								Area:
+									Block:
+										Text: Master's in Interaction Design
+											Style: role
+										Text: Escola Superior de Disseny d'Olot
+											Style: place
+						Area:
+							Grid:
+								Column sizes: 70 *
+								Gap: 12
+								Area:
+									Text: 2014
+										Style: dates
+								Area:
+									Block:
+										Text: Bachelor's in Product Design and Development
+											Style: role
+										Text: Escola Superior de Disseny d'Olot
+											Style: place
+					Heading 2:
+						Text: Talks and publications
+					Paragraph: “*Designing for people in a hurry*”, Barcelona UX Days (2024) · “*Accessibility without frills*”, article in *Interfaz* magazine (2023) · Juror at the Premios Sol Digital (2024).

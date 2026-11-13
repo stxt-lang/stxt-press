@@ -7,6 +7,9 @@ Styles (dev.stxt.pdf):
 	Named color: ink #0B1530
 	For element: Document
 		Typography:
+			Code font: IBM Plex Mono
+			Kerning: true
+			Ligatures: true
 			Color: #FFFFFF
 			Size: 11
 			Line height: 15

@@ -1,0 +1,146 @@
+# Poster template of a jazz festival: the document documents/examples/blue-hour with Slots for each edition. The
+# design (the night sky, the moon, the waves, the type and the layout of the programme and of the foot) and the
+# presenter are part of the template; the name and the title lines of the edition, the tagline, the ribbon, the
+# dates, the nights with their sets, the tickets link, the prices and the venue come in the data. A set that is the
+# headliner of its night carries "style": "headliner", added to the style of the act. The QR code and the link take
+# the tickets address without https://. blue-hour.json has the sample data.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A3
+		Margin: 0
+	Title: ${name} · ${tagline}
+	Subject: <subject>
+	Language: en
+	Section:
+		# The night-blue background is a gradient in a Page overlay with a negative Layer.
+		Page overlay:
+			Id: night
+			Offset: 0
+			Layer: -3
+			Box:
+				Background: linear(180, #0B1530, #18254F, #2B2560)
+		# The moon and its rings are boxes with Corner radius: 50% made faint with Opacity; they go partly off the page,
+		# so they are Overlay inside a Page overlay with Overflow: clip, which cuts them at its edges.
+		Page overlay:
+			Id: sky
+			Offset: 0
+			Layer: -2
+			Box:
+				Overflow: clip
+			Overlay:
+				Id: ring-outer
+				Offset: -10 -280 auto auto
+				Opacity: 20%
+				Block:
+					Style: ring-outer
+			Overlay:
+				Id: ring-inner
+				Offset: 60 -210 auto auto
+				Opacity: 35%
+				Block:
+					Style: ring-inner
+			Overlay:
+				Id: moon
+				Offset: 120 -150 auto auto
+				Opacity: 85%
+				Block:
+					Style: moon
+		# The waves are a small SVG, also faint.
+		Page overlay:
+			Id: water
+			Offset: auto 0 160 0
+			Layer: -1
+			Opacity: 70%
+			Image: documents/poster/waves.svg
+				Box:
+					Width: 100%
+		# The ribbon across the corner is an Overlay rotated −12 degrees.
+		Overlay:
+			Id: ribbon
+			Offset: 58 auto auto 40
+			Rotate: -12
+			Layer: 2
+			Text: <ribbon>
+				Style: ribbon
+		# The title is set at 168 points in IBM Plex Serif with a negative Letter spacing, one Text per line.
+		Block:
+			Id: masthead
+			Style: masthead
+			Text: Port Ellery Arts Council presents
+				Style: kicker
+			Heading 1:
+				Text: [title]
+			Text: <tagline>
+				Style: tagline
+			Stack: {dates}
+				Id: dates
+				Vertical: baseline
+				Gap: 14
+				Box:
+					Margin: 34 0 0 0
+				Item:
+					Text: <days>
+						Style: date-days
+				Item:
+					Text: <month>
+						Style: date-month
+				Item:
+					Grow: 1
+					Text: <note>
+						Style: date-note
+		# The programme is a Grid of three columns, one per night, with each time and act on the same baseline
+		# (Vertical: baseline in a Stack).
+		Grid:
+			Id: programme
+			Column sizes: repeat(3, *)
+			Gap: 26
+			Style: programme
+			Area: [nights]
+				Block:
+					Style: night
+					Text: <name>
+						Style: night-name
+					Text: <theme>
+						Style: night-theme
+					Stack: [sets]
+						Style: slot
+						Item:
+							Text: <time>
+								Style: time
+						Item:
+							Grow: 1
+							Text: <act>
+								Style: act ${?style}
+		# At the foot, an Overlay anchored to the bottom of the page with the venue and a QR code that leads to the
+		# tickets.
+		Overlay:
+			Id: footer
+			Offset: auto 0 0 0
+			Style: footer
+			Stack:
+				Vertical: center
+				Gap: 22
+				Item:
+					Barcode: https://${tickets}
+						Id: tickets-qr
+						Alt: QR code that leads to the ticket page of the festival
+						Style: qr
+				Item:
+					Grow: 1
+					Block:
+						Text: Tickets and full programme
+							Style: footer-label
+						Text: <tickets>
+							Style: footer-url
+							Link: https://${tickets}
+						Text: <prices>
+							Style: footer-note
+				Item:
+					Block: {venue}
+						Style: venue
+						Text: <name>
+							Style: venue-name
+						Text: <address>
+							Style: footer-note
+						Text: <access>
+							Style: footer-note

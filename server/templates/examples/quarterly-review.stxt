@@ -1,0 +1,208 @@
+# Quarterly review template of a public bike share: the document documents/examples/quarterly-review with Slots for the
+# content of each quarter. The slide layouts, the operator, the footer and the address of the board's site are part of
+# the template; the quarter, the meeting, the presenters and the content of each slide come in the data, one object per
+# slide: the agenda, the key-figure tiles, the bars of the chart (with the Width of each bar, written in the data), the
+# rows of the fleet table, the projects of the timeline (the row, the first quarter and the number of quarters of each)
+# and the note of the closing slide. quarterly-review.json has the sample data.
+# A slide deck in 16:9 (Width: 960, Height: 540 in Page): one slide per page, each one a Block as tall as the page
+# area (Height: 100%) that starts a new page (Before: page). The title slide is a section of its own, with a gradient
+# background, no slide number and no footer of the deck (Inherit page overlays: false). The footer, with the slide
+# number of the total ({page} / {pages}), is a Page overlay of the document, and the accent strip at the left edge,
+# another one with a negative Layer.
+Document (dev.stxt.pdf):
+	Page:
+		Width: 960
+		Height: 540
+		Margin: 44 60 56 60
+	Title: Harbour Bikes · ${quarter} review
+	Subject: <subject>
+	Author: Harbour Bikes operations team
+	Language: en
+	Page overlay:
+		Id: strip
+		Offset: -44 auto -56 -60
+		Layer: -1
+		Block:
+			Style: strip
+	Page overlay:
+		Id: deck-footer
+		Offset: auto 0 -36 0
+		Style: deck-footer
+		Stack:
+			Horizontal: justify
+			Item:
+				Text: Harbour Bikes · ${period} review
+			Item:
+				# A value that starts with {page} would be the navigation {page}: the empty ${?_} in front, which no
+				# data fills, makes the whole value text.
+				Text: ${?_}{page} / {pages}
+	Section:
+		Id: cover
+		Inherit page overlays: false
+		Page numbering: none
+		Page:
+			Width: 960
+			Height: 540
+			Margin: 0
+		Block: {cover}
+			Id: title-slide
+			Style: title-slide
+			Text: Quarterly review · ${meeting}
+				Style: eyebrow
+			Heading 1:
+				Text: ${quarter}
+				In table of contents: false
+			Text: <subtitle>
+				Style: title-sub
+			Stack:
+				Style: presenters
+				Item: [presenters]
+					Block:
+						Text: <name>
+							Style: presenter
+						Text: <role>
+							Style: presenter-role
+	Section:
+		Id: deck
+		# The agenda: an Area map with the title and the note on the left and the list on the right.
+		Block: {agenda}
+			Id: agenda
+			Style: slide
+			Grid:
+				Style: agenda-grid
+				Area map >>
+					title list
+					note  list
+				Area: title
+					Heading 2:
+						Text: Agenda
+				Area: note
+					Paragraph: <note>
+						Style: slide-note
+				Area: list
+					List:
+						Style: agenda
+						List item: [items]
+							Paragraph: <text>
+		# Four key-figure tiles; a change that went up has the style up.
+		Block: {figures}
+			Id: figures
+			Style: slide
+			Heading 2:
+				Text: <title>
+			Grid:
+				Style: tiles
+				Area: [tiles]
+					Block:
+						Style: tile
+						Text: <figure>
+							Style: tile-figure
+						Text: <label>
+							Style: tile-label
+						Text: <change>
+							Style: tile-change ${?trend}
+			Paragraph: <note>
+				Style: slide-note
+		# A bar chart drawn with boxes: the Width of each bar is the percentage of its value over the largest one.
+		Block: {districts}
+			Id: districts
+			Style: slide
+			Heading 2:
+				Text: <title>
+			Grid:
+				Style: chart-and-notes
+				Area:
+					Block:
+						Text: <chart_title>
+							Style: chart-title
+						Grid: [bars]
+							Style: bar-row
+							Area:
+								Text: <label>
+									Style: bar-label
+							Area:
+								Block:
+									Style: bar-track
+									Block:
+										Style: bar ${?style}
+										Box:
+											Width: <width>
+							Area:
+								Text: <value>
+									Style: bar-value
+				Area:
+					Block: {callout}
+						Style: callout
+						Text: <title>
+							Style: callout-label
+						Paragraph: [paragraphs]
+		Block: {fleet}
+			Id: fleet
+			Style: slide
+			Heading 2:
+				Text: <title>
+			Table:
+				Style: fleet-table
+				Header rows:
+					Row:
+						Cell:
+						Cell: ${previous_period}
+						Cell: ${period}
+						Cell: Change
+				Body rows:
+					Row: [rows]
+						Cell: <item>
+							Row header: true
+						Cell: <previous>
+						Cell: <current>
+						Cell: <change>
+			Paragraph: <note>
+				Style: slide-note
+		# A timeline whose phases span several quarters: each project is an Area in its own row, from its first
+		# quarter, as many quarters wide as it lasts ("Area: 2 1 1 2").
+		Block: {plans}
+			Id: plans
+			Style: slide
+			Heading 2:
+				Text: <title>
+			Grid:
+				Style: timeline
+				Area: 1 1
+					Text: Q1
+						Style: quarter
+				Area: 1 2
+					Text: Q2
+						Style: quarter
+				Area: 1 3
+					Text: Q3
+						Style: quarter
+				Area: 1 4
+					Text: Q4
+						Style: quarter
+				Area: [projects]${row} ${from} 1 ${quarters}
+					Block:
+						Style: phase ${style}
+						Text: <title>
+							Style: phase-title
+						Text: <detail>
+							Style: phase-detail
+		# The closing slide, with a QR code to the deck on the board's site.
+		Block: {closing}
+			Id: questions
+			Style: slide
+			Grid:
+				Style: closing
+				Area:
+					Block:
+						Heading 2:
+							Text: Questions
+						Paragraph: <note>
+							Style: slide-note
+						Text: harbourbikes.example/board/${slug}
+							Style: closing-link
+							Link: https://harbourbikes.example/board/${slug}
+				Area:
+					Barcode: https://harbourbikes.example/board/${slug}
+						Id: deck-qr
+						Alt: <qr_alt>
+						Style: closing-qr

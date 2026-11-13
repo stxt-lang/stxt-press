@@ -18,11 +18,12 @@ On Windows, `start.bat`. The server listens on `http://127.0.0.1:8080/`, where t
 | `resources/images/examples/` | The images of the examples of stxt-pdf, the ones the templates use |
 | `resources/images/documents/` | The images of the documents of `documents/`, small hand-written SVGs |
 | `.stxt/` | The schemas `dev.stxt.pdf` (layout documents and styles) and `dev.stxt.press` (`server.stxt`), found by the editors that support [discovery](https://stxt.dev/stxt-discovery-ref) for every file of the folder: VS Code with the STXT extension, the `stxt` command |
-| `templates/examples/` | Templates of `/print`, one for each example of stxt-pdf, side by side (`invoice`, `letter`, `annual-report`…), each one with its styles and its sample data, and a `.styles.stxt` with the base typography for a new template |
-| `documents/examples/` | Documents of `/documents` of other kinds than the templates, complete, side by side (`blue-hour`, `boarding-pass`…), each with its styles |
+| `templates/examples/` | The complete examples as templates of `/print`, side by side, each one with its styles and its sample data: one for each example of stxt-pdf (`invoice`, `letter`, `annual-report`…) and others (`blue-hour`, `boarding-pass`…); and a `.styles.stxt` with the base typography for a new template |
+| `documents/examples/` | The same examples as documents of `/documents`, each one its template filled with its sample data, with the same styles |
 | `documents/reference/` | A reference of the layout language: one small document for each use, by topic (`14-tables/`, `20-barcodes/`…), each starting with what it shows |
 
 The fonts and the images of `resources/images/examples/` are copies of those of `../stxt-pdf/resources`, and the
-schemas, of those inside `stxt-press.jar`; a test checks that they are the same, that each template with its sample
-data gives the pages of its example, and that every document converts. A template with Slots validates only once filled: the editor
+schemas, of those inside `stxt-press.jar`; a test checks that they are the same, that each template of an example of
+stxt-pdf with its sample data gives the pages of that example, that each example template with its sample data is its
+document of `documents/examples/`, and that every document converts. A template with Slots validates only once filled: the editor
 marks the Slot of a node without value, such as `Row: [lines]`, until then.

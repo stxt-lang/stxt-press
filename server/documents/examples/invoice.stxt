@@ -1,0 +1,234 @@
+# Invoice of a furniture workshop: the template templates/examples/invoice filled with its sample data, which gives
+# the "invoice" example of stxt-pdf. Here it is a document, printed as it is; its look is in invoice.styles.stxt.
+Document (dev.stxt.pdf):
+	Page:
+		Paper: A4
+		Margin: 44 44 60 44
+	Title: Invoice 2025-0147
+	Language: en
+	Section:
+		Page overlay:
+			Id: footer
+			Offset: auto 0 -34 0
+			Box:
+				Padding: 6 0 0 0
+				Border: 0.5 0 0 0
+				Border color: #DCCFB8
+			Stack:
+				Horizontal: justify
+				Item:
+					Text: Taller Nogal S.L. · Registered in the Girona Commercial Register, volume 2217, folio 88
+				Item:
+					Text: Page {page} of {pages}
+		Stack:
+			Id: masthead
+			Horizontal: justify
+			Vertical: center
+			Box:
+				Margin: 0 0 30 0
+			Item:
+				Image: examples/brand/nogal.svg
+					Alt: Nogal, furniture workshop
+					Box:
+						Width: 172
+			Item:
+				Stack:
+					Gap: 10
+					Vertical: baseline
+					Item:
+						Text: Invoice
+							Typography:
+								Size: 28
+								Bold: true
+								Color: #3B2A1E
+								Line height: 30
+								Case: uppercase
+								Letter spacing: 2
+					Item:
+						Text: No. 2025-0147
+							Typography:
+								Size: 12
+								Color: #A65C1B
+		Grid:
+			Id: parties
+			Column sizes: * *
+			Gap: 18
+			Box:
+				Margin: 0 0 18 0
+			Area:
+				Block:
+					Style: party
+					Text: From
+						Style: label
+					Text: Taller Nogal S.L.
+						Style: strong
+					Text: Tax ID B-17482930
+					Text: Carrer de la Farga, 14 · Polígono Les Torres
+					Text: 17800 Olot (Girona)
+					Text: administracion@tallernogal.example
+						Link: mailto:administracion@tallernogal.example
+			Area:
+				Block:
+					Style: party
+					Text: Bill to
+						Style: label
+					Text: Hotel Mirador del Valle, S.A.
+						Style: strong
+					Text: Tax ID A-08827416
+					Text: Camí del Mirador, s/n
+					Text: 17850 Besalú (Girona)
+					Text: compras@miradordelvalle.example
+						Link: mailto:compras@miradordelvalle.example
+		Grid:
+			Id: strip
+			Column sizes: repeat(4, *)
+			Box:
+				Margin: 0 0 22 0
+				Padding: 9 14
+				Border: 0.5 0 0.5 0
+				Border color: #A65C1B
+			Area:
+				Block:
+					Text: Issue date
+						Style: label
+					Text: October 14, 2025
+			Area:
+				Block:
+					Text: Due date
+						Style: label
+					Text: November 13, 2025
+			Area:
+				Block:
+					Text: Payment method
+						Style: label
+					Text: Bank transfer, 30 days
+			Area:
+				Block:
+					Text: Order
+						Style: label
+					Text: PO-2025-311
+		Table:
+			Id: lines
+			Column sizes: 54 * 38 64 94
+			Column align: left left right right right
+			Box:
+				Margin: 0 0 24 0
+			Header rows:
+				Row:
+					Cell: Ref.
+					Cell: Description
+					Cell: Qty
+					Cell: Price
+					Cell: Amount
+			Body rows:
+				Row:
+					Cell: MN-014
+					Cell: Solid walnut dining table, 180 × 90 cm
+						Row header: true
+					Cell: 6
+					Cell: €640.00
+					Cell: €3,840.00
+				Row:
+					Cell: MN-022
+					Cell: Oak chair with rush seat
+						Row header: true
+					Cell: 24
+					Cell: €118.00
+					Cell: €2,832.00
+				Row:
+					Cell: MN-031
+					Cell: Modular wall shelving, five shelves
+						Row header: true
+					Cell: 8
+					Cell: €215.00
+					Cell: €1,720.00
+				Row:
+					Cell: MN-040
+					Cell: Upholstered entryway bench
+						Row header: true
+					Cell: 4
+					Cell: €189.50
+					Cell: €758.00
+				Row:
+					Cell: MN-057
+					Cell: Oval mirror with walnut frame, 70 × 100 cm
+						Row header: true
+					Cell: 12
+					Cell: €96.00
+					Cell: €1,152.00
+				Row:
+					Cell: SV-001
+					Cell: Delivery and on-site assembly (two fitters, one day)
+						Row header: true
+					Cell: 1
+					Cell: €480.00
+					Cell: €480.00
+				Row:
+					Cell: SV-004
+					Cell: Natural oil and beeswax finish
+						Row header: true
+					Cell: 1
+					Cell: €260.00
+					Cell: €260.00
+			Footer rows:
+				Row:
+					Cell: Taxable base
+						Row header: true
+						Span: 1 4
+					Cell: €11,042.00
+				Row:
+					Cell: VAT (21%)
+						Row header: true
+						Span: 1 4
+					Cell: €2,318.82
+				Row:
+					Style: total
+					Cell: Total due
+						Row header: true
+						Span: 1 4
+					Cell: €13,360.82
+		Grid:
+			Id: payment
+			Column sizes: * *
+			Gap: 18
+			Area:
+				Stack:
+					Gap: 12
+					Item:
+						Grow: 1
+						Block:
+							Typography:
+								Markup: markdown
+								Code font: IBM Plex Mono
+							Text: Payment details
+								Style: label
+							Paragraph: **`ES91 2100 0418 4502 0005 1332`**
+							Paragraph: Caixa Girona · BIC `CAIXESBBXXX`
+							Paragraph: Include the **invoice number** in the payment reference.
+					Item:
+						Barcode:
+							Id: payment-qr
+							Alt: QR code to pay the invoice by transfer: €13,360.82 to Taller Nogal S.L.
+							Box:
+								Width: 76
+							Content >>
+								BCD
+								002
+								1
+								SCT
+								CAIXESBBXXX
+								Taller Nogal S.L.
+								ES9121000418450200051332
+								EUR13360.82
+								
+								
+								Invoice 2025-0147
+			Area:
+				Block:
+					Text: Terms
+						Style: label
+					Paragraph: The furniture remains the property of the workshop until the invoice is paid in full. **Five-year** warranty on frame and hardware; solid wood may vary slightly in tone, as befits a living material.
+						Typography:
+							Size: 8
+							Color: #5C4E43
+							Markup: markdown

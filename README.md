@@ -288,13 +288,15 @@ The folder [`server/`](server/) is a whole server, to copy anywhere and to start
 `start.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
 `127.0.0.1:8080`, turns `Save` on (for the editor of this machine) and shows the other nodes commented with their
 defaults; the fonts IBM Plex Sans, Serif and Mono and
-the images of the examples of stxt-pdf in `resources/`; and side by side in `templates/examples/`, one template for
-each example of stxt-pdf (`invoice`, `letter`, `resume`, `annual-report`, `newsletter`, `menu`, `contract`, `manual`,
-`catalog`, `certificate` and `timetable`), with Slots for what changes from one document to another, its styles and its sample data,
-which give the example, and a `.styles.stxt` with the base typography, which a new template of the folder takes and
-those of the examples set again; and in `documents/`, documents printed as they are: complete examples of other kinds of
-documents side by side in `documents/examples/`, and in `documents/reference/` a reference of the layout language, one small
-document for each use, with a line that says what it shows. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, so that an editor
+the images of the examples of stxt-pdf in `resources/`; side by side in `templates/examples/`, complete examples as
+templates, with Slots for what changes from one document to another, their styles and their sample data: one for each
+example of stxt-pdf (`invoice`, `letter`, `resume`, `annual-report`, `newsletter`, `menu`, `contract`, `manual`,
+`catalog`, `certificate` and `timetable`), which give the example, and others (`blue-hour`, `boarding-pass`,
+`orchard-and-field`, `swift-nest-bricks`, `quarterly-review`, `aq210-datasheet`, `shipping-labels` and
+`general-meeting`), with a `.styles.stxt` with the base typography, which a new template of the folder takes and those
+of the examples set again; and in `documents/`, documents printed as they are: in `documents/examples/` the same
+examples, each one its template filled with its sample data, and in `documents/reference/` a reference of the layout
+language, one small document for each use, with a line that says what it shows. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, so that an editor
 with discovery (VS Code with the STXT extension) checks and completes every file of the folder. `server/start.sh`
 starts it, from any working directory, and
 `java -jar server/stxt-press.jar print examples/invoice -o invoice.pdf --config server/server.stxt` prints its

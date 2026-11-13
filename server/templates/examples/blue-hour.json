@@ -1,0 +1,51 @@
+{
+  "name": "Blue Hour",
+  "title": ["Blue", "Hour"],
+  "tagline": "A jazz weekend by the water",
+  "subject": "Poster of the Blue Hour jazz festival, Port Ellery, 14 to 16 August 2026",
+  "ribbon": "Free entry before 8 pm",
+  "dates": {
+    "days": "14–16",
+    "month": "August 2026",
+    "note": "Three nights · Twelve bands · One harbour"
+  },
+  "nights": [
+    {
+      "name": "Friday",
+      "theme": "Opening night on the pier",
+      "sets": [
+        {"time": "19:00", "act": "The Saltmarsh Trio"},
+        {"time": "20:30", "act": "Ines Okafor Quartet"},
+        {"time": "22:00", "act": "Harbour Big Band", "style": "headliner"},
+        {"time": "23:45", "act": "Late jam, open stage"}
+      ]
+    },
+    {
+      "name": "Saturday",
+      "theme": "Voices and strings",
+      "sets": [
+        {"time": "18:30", "act": "Port Ellery Youth Ensemble"},
+        {"time": "20:00", "act": "Marta Villanueva"},
+        {"time": "21:30", "act": "Night Ferry"},
+        {"time": "23:00", "act": "Theo Lindqvist & The Tides", "style": "headliner"}
+      ]
+    },
+    {
+      "name": "Sunday",
+      "theme": "Brunch to blue hour",
+      "sets": [
+        {"time": "12:00", "act": "Brass on the Green"},
+        {"time": "16:00", "act": "Duo Amaral"},
+        {"time": "18:30", "act": "Clara Wynn Sextet"},
+        {"time": "20:15", "act": "Closing set at sunset", "style": "headliner"}
+      ]
+    }
+  ],
+  "tickets": "bluehour.example/tickets",
+  "prices": "Weekend pass £48 · One night £20 · Under 16 free with an adult",
+  "venue": {
+    "name": "Old Customs Pier",
+    "address": "Quay Street, Port Ellery",
+    "access": "Step-free access · Seats for every set"
+  }
+}
