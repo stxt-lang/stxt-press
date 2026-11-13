@@ -146,13 +146,14 @@ curl -X PUT -H 'Content-Type: application/json' -H 'If-None-Match: *' \
 `GET /` is the index, which fills the window in two halves, as the editor. On the left, a tab for the documents (the
 one it opens with), one for the templates and one for the routes of the API. The documents and the templates tabs
 show the tree of their folders, with how many entries each one has, and the entries of the folder chosen and of those
-below it, each with a link to the editor and a **PDF** button. To the right of the name of the folder, with `Save` on,
+below it, each with a link to the editor and the buttons **SVG** and **PDF**. To the right of the name of the folder, with `Save` on,
 **New document** (or **New template**) asks for a name, which can have only letters, digits, `-` and `_` and cannot be
 that of one in the folder, creates it there with a page that has its name as title and heading, and opens it in the
 editor; its look comes from the `.styles.stxt` of its folders. Without `Save`, the documents tab has there **Blank
-document**, the editor without a file, which is not kept. On the right, the PDF
-of the last **PDF** button, in the viewer of the browser, with links to edit it and to download it with its name; the
-entry it is of is marked in its list. Choosing a folder leaves only its branch open. What the index shows is in its
+document**, the editor without a file, which is not kept. On the right, what the last of those buttons gave, with a
+link to edit it: **SVG** shows its pages, with the fonts of the server, faster since no PDF is written (with the
+documents of `examples/`, 20 to 40 % less time in the server); **PDF** shows the PDF in the viewer of the browser,
+with a link to download it with its name. The entry it is of is marked in its list. Choosing a folder leaves only its branch open. What the index shows is in its
 hash (`/#documents/reference/01-values`), and the name of the editor goes back to the folder of what it shows.
 
 The editor is a page to try a document or a template against the server. It is opened from the index, where another

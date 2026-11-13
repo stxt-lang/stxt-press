@@ -1,14 +1,15 @@
 /**
  * The index of stxt-press, at GET /, in two halves, as the editor. On the left a tab for the documents of the server,
  * one for its templates and one for the routes of the API; the documents and the templates tabs show the tree of their
- * folders and the entries of the folder chosen and those below it, each with a link to the editor and a button that
- * shows its PDF. On the right, that PDF, in the viewer of the browser.
+ * folders and the entries of the folder chosen and those below it, each with a link to the editor and two buttons that
+ * show it. On the right, its SVG pages or its PDF, in the viewer of the browser.
  * What it shows is in its hash (`#documents/reference/01-values`, see `parseIndexHash`), so a reload or the back button
  * shows it again. It does not load the editors: they are in editor.js.
  */
 import { $, askToken, call, errorOf, say } from "./api";
 import { maximizable } from "./maximize";
-import { createRequest, newEntryPath, took } from "./model";
+import { createRequest, newEntryPath, printUrl, took } from "./model";
+import { loadFonts, renderPages } from "./pages";
 import { ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, parseIndexHash, placeUrl, visibleRows } from "./place";
 import type { FolderRow, IndexPlace, Place } from "./place";
 
@@ -21,10 +22,10 @@ interface Entry {
 
 type ListTab = "templates" | "documents";
 
-/** What each list tab shows, its title, and the route of the PDF of one of its entries. */
-const LISTS: Record<ListTab, { mode: Place["mode"]; title: string; print: string }> = {
-	templates: { mode: "template", title: "Templates", print: "/print" },
-	documents: { mode: "document", title: "Documents", print: "/documents" },
+/** What each list tab shows, and its title. */
+const LISTS: Record<ListTab, { mode: Place["mode"]; title: string }> = {
+	templates: { mode: "template", title: "Templates" },
+	documents: { mode: "document", title: "Documents" },
 };
 
 /**
@@ -39,9 +40,9 @@ const lists: Record<ListTab, { entries?: Entry[]; writable?: boolean; problem?: 
 const open: Record<ListTab, Set<string>> = { templates: new Set(), documents: new Set() };
 /** The last folder shown in each list tab, which its tab button goes back to. */
 const lastFolder: Record<ListTab, string | null> = { templates: null, documents: null };
-/** The entry whose PDF the right half shows or is asking for, marked in its list. */
+/** The entry the right half shows or is asking for, marked in its list. */
 let previewed: { tab: ListTab; path: string } | undefined;
-/** Counts the PDFs asked for, so that the answer of one left behind is not shown over the next. */
+/** Counts the previews asked for, so that the answer of one left behind is not shown over the next. */
 let previews = 0;
 /** The `blob:` URL of the PDF shown, freed when another one takes its place. */
 let previewUrl: string | undefined;
@@ -99,11 +100,12 @@ function nameOf(path: string): string {
 }
 
 /**
- * Shows the PDF of an entry in the right half, with links to edit it and to download it with its name (the viewer would
- * save it with the random name of the blob). While it is converted, the PDF before stays; an answer that comes after
- * another PDF was asked for is not shown.
+ * Shows an entry in the right half: its PDF in the viewer of the browser, with a link to download it with its name
+ * (the viewer would save it with the random name of the blob), or its SVG pages, which come faster since no PDF is
+ * written, with the fonts of the server (pages.ts); and a link to edit it. While it is converted, what was shown
+ * stays; an answer that comes after another one was asked for is not shown.
  */
-async function preview(tab: ListTab, path: string): Promise<void> {
+async function preview(tab: ListTab, path: string, format: "pdf" | "svg"): Promise<void> {
 	const seq = ++previews;
 	previewed = { tab, path };
 	markPreviewed();
@@ -111,7 +113,7 @@ async function preview(tab: ListTab, path: string): Promise<void> {
 	title.textContent = `${path} · converting…`;
 	title.classList.remove("error");
 	const started = performance.now();
-	const response = await call("GET", `${LISTS[tab].print}/${path}`);
+	const response = await call("GET", printUrl(LISTS[tab].mode, path, format));
 	if (seq !== previews) {
 		return;
 	}
@@ -123,26 +125,53 @@ async function preview(tab: ListTab, path: string): Promise<void> {
 		}
 		return;
 	}
-	const pdf = await response.blob();
-	const ms = performance.now() - started;
-	if (seq !== previews) {
-		return;
-	}
-	if (previewUrl) {
-		URL.revokeObjectURL(previewUrl);
-	}
-	previewUrl = URL.createObjectURL(pdf);
-	title.textContent = `${path} · ${took("PDF", ms)}`;
 	const frame = $<HTMLIFrameElement>("preview-frame");
-	frame.src = previewUrl;
-	frame.hidden = false;
+	const pagesHost = $("preview-pages");
+	const download = $<HTMLAnchorElement>("preview-download");
+	if (format === "svg") {
+		const pages = ((await response.json()) as { pages: string[] }).pages;
+		// The fonts once, the first time: an SVG names its fonts and does not carry them.
+		await loadFonts();
+		if (seq !== previews) {
+			return;
+		}
+		renderPages(pagesHost, pages);
+		const ms = performance.now() - started;
+		title.textContent = `${path} · ${took(pages.length === 1 ? "1 page" : `${pages.length} pages`, ms)}`;
+		freePdf();
+		frame.hidden = true;
+		pagesHost.hidden = false;
+		pagesHost.scrollTop = 0;
+		download.hidden = true;
+	} else {
+		const pdf = await response.blob();
+		const ms = performance.now() - started;
+		if (seq !== previews) {
+			return;
+		}
+		freePdf();
+		previewUrl = URL.createObjectURL(pdf);
+		title.textContent = `${path} · ${took("PDF", ms)}`;
+		frame.src = previewUrl;
+		frame.hidden = false;
+		pagesHost.hidden = true;
+		pagesHost.replaceChildren();
+		download.href = previewUrl;
+		download.download = `${nameOf(path)}.pdf`;
+		download.hidden = false;
+	}
 	const edit = $<HTMLAnchorElement>("preview-edit");
 	edit.href = placeUrl({ mode: LISTS[tab].mode, path });
 	edit.hidden = false;
-	const download = $<HTMLAnchorElement>("preview-download");
-	download.href = previewUrl;
-	download.download = `${nameOf(path)}.pdf`;
-	download.hidden = false;
+}
+
+/** Frees the PDF shown, if any, when something else takes its place. */
+function freePdf(): void {
+	if (previewUrl) {
+		$<HTMLIFrameElement>("preview-frame").src = "about:blank";
+		URL.revokeObjectURL(previewUrl);
+		previewUrl = undefined;
+	}
 }
 
 /** Marks in the list the entry whose PDF the right half shows. */
@@ -300,7 +329,8 @@ function showEntries(tab: ListTab, entries: Entry[], folder: string): void {
 			item.appendChild(link(nameOf(entry.path), placeUrl({ mode: LISTS[tab].mode, path: entry.path })));
 			item.appendChild(element("span", marks(entry), "muted"));
 			const actions = item.appendChild(element("span", undefined, "links"));
-			actions.appendChild(button("PDF", "quiet small", () => void preview(tab, entry.path)));
+			actions.appendChild(button("SVG", "quiet small", () => void preview(tab, entry.path, "svg")));
+			actions.appendChild(button("PDF", "quiet small", () => void preview(tab, entry.path, "pdf")));
 		}
 	}
 	markPreviewed();

@@ -65,8 +65,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - The index, at `GET /`, without token, filling the window in two halves: on the left a tab for the documents (the
   one it opens with), one for the templates and one for the routes of the API; the
   documents and the templates tabs show the tree of their folders, each with how many entries it has, and the entries
-  of the folder chosen and below it, each with a link to the editor and a PDF button. On the right, the PDF of the last
-  PDF button, in the viewer of the browser, with links to edit and to download it. What it shows is in its hash (`/#documents/reference/01-values`), and the
+  of the folder chosen and below it, each with a link to the editor and the buttons SVG and PDF. On the right, what
+  the last of them gave, with a link to edit it: the SVG pages, with the fonts of the server, faster since no PDF is
+  written, or the PDF in the viewer of the browser, with a link to download it. What it shows is in its hash (`/#documents/reference/01-values`), and the
   name of the editor links back to the folder of what it shows. The files of the index and the
   editor are served under `/assets/`. It is turned off with the editor.
 - `GET /fonts` also lists the faces of the fonts (family, weight, style and the SHA-256 of the file), and

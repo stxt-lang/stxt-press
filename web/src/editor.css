@@ -307,14 +307,16 @@ main.workspace {
 	border: 1px solid var(--line);
 }
 
-#pages {
+#pages,
+#preview-pages {
 	overflow: auto;
 	padding: 0.75rem;
 	background: var(--surface);
 	border: 1px solid var(--line);
 }
 
-#pages .page {
+#pages .page,
+#preview-pages .page {
 	display: block;
 	width: fit-content;
 	max-width: 100%;
@@ -443,11 +445,20 @@ main.index {
 	white-space: nowrap;
 }
 
-#preview-frame {
+#preview-frame,
+#preview-pages {
 	flex: 1 1 0;
 	min-height: 0;
 	width: 100%;
+}
+
+#preview-frame {
 	border: 1px solid var(--line);
+}
+
+#preview-pages[hidden],
+#preview-frame[hidden] {
+	display: none;
 }
 
 .index li.current {
@@ -569,7 +580,8 @@ main.index {
 		display: block;
 	}
 
-	#preview-frame {
+	#preview-frame,
+	#preview-pages {
 		flex: none;
 		height: 40rem;
 	}

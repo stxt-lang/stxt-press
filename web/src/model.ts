@@ -383,6 +383,14 @@ export function createRequest(mode: "template" | "document", path: string): { ur
 	};
 }
 
+/**
+ * The URL that prints a template of the server with its sample data (`/print`) or a document as it is
+ * (`/documents`): a PDF, or its SVG pages (`?format=svg`), which come faster since no PDF is written.
+ */
+export function printUrl(mode: "template" | "document", path: string, format: "pdf" | "svg"): string {
+	return `/${mode === "template" ? "print" : "documents"}/${path}${format === "svg" ? "?format=svg" : ""}`;
+}
+
 /** The message of something that took `ms` milliseconds: `Converted in 312 ms.`, `Converted in 1.4 s.` */
 export function took(what: string, ms: number): string {
 	return `${what} in ${ms < 1000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`}.`;

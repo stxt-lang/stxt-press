@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
-	createRequest, curl, documentPanels, fileName, isUnchanged, jsonErrorLine, newDocumentText, newEntryPath, parseData, request, saveRequest, serverMessage, tabState, tabs,
+	createRequest, curl, documentPanels, fileName, isUnchanged, jsonErrorLine, newDocumentText, newEntryPath, parseData, printUrl, request, saveRequest, serverMessage, tabState, tabs,
 	target, templatePanels, took, validatesDocument,
 } from "../src/model.ts";
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
@@ -494,5 +494,14 @@ describe("a new template or document", () => {
 		assert.deepEqual(createRequest("document", "examples/poster"),
 			{ url: "/files/documents/examples/poster", body: JSON.stringify({ document: text }) });
 		assert.equal(createRequest("template", "examples/poster").url, "/files/templates/examples/poster");
+	});
+});
+
+describe("the previews of the index", () => {
+	it("print a template with /print and a document with /documents, as a PDF or as SVG pages", () => {
+		assert.equal(printUrl("template", "examples/invoice", "pdf"), "/print/examples/invoice");
+		assert.equal(printUrl("template", "examples/invoice", "svg"), "/print/examples/invoice?format=svg");
+		assert.equal(printUrl("document", "examples/blue-hour", "pdf"), "/documents/examples/blue-hour");
+		assert.equal(printUrl("document", "examples/blue-hour", "svg"), "/documents/examples/blue-hour?format=svg");
 	});
 });
