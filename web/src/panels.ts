@@ -81,8 +81,11 @@ export function stxtPanel(value: string, options: { readOnly?: boolean; onChange
 
 function jsonPanel(value: string, onChange: () => void): Panel {
 	const element = section();
+	// With the class of the STXT panels, the look of @stxt-lang/editor: the same gutter, fonts and colours, dark too.
+	const holder = element.appendChild(document.createElement("div"));
+	holder.className = "stxt-editor";
 	const view = new EditorView({
-		parent: element,
+		parent: holder,
 		state: EditorState.create({
 			doc: value,
 			extensions: [

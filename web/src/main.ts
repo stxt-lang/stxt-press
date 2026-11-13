@@ -18,6 +18,7 @@ import { clearPanels, mark, panelOf, setSchema, showPanels, texts, unmarkAll, va
 import type { Panel } from "./panels";
 import { BLANK, indexHashOf, parsePlace, placeUrl } from "./place";
 import type { Place } from "./place";
+import { setupThemeToggle } from "./theme";
 
 /** The mode of what the page shows: a document (blank, or of the server) or a template. */
 let mode: Place["mode"] = "document";
@@ -289,6 +290,7 @@ async function show(place: Place): Promise<void> {
 }
 
 async function start(): Promise<void> {
+	setupThemeToggle($("theme-toggle"));
 	$("save").onclick = () => void save();
 	$("fill").onclick = () => void run("stxt");
 	$("preview").onclick = () => void run("svg");

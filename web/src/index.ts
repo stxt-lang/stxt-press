@@ -13,6 +13,7 @@ import { createRequest, newEntryPath, printUrl, took } from "./model";
 import { loadFonts, renderPages } from "./pages";
 import { ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, parseIndexHash, placeUrl, visibleRows } from "./place";
 import type { FolderRow, IndexPlace, Place } from "./place";
+import { setupThemeToggle } from "./theme";
 
 /** An entry of `GET /files/templates` or `GET /files/documents`: a document has no `data`. */
 interface Entry {
@@ -431,6 +432,7 @@ async function load(tab: ListTab): Promise<void> {
 }
 
 async function start(): Promise<void> {
+	setupThemeToggle($("theme-toggle"));
 	$("token").onclick = () => void askToken().then(() => location.reload());
 	$("schema").onclick = () => void openFromApi("/schema", "text/plain; charset=utf-8");
 	document.querySelectorAll<HTMLButtonElement>(".modes button").forEach((b) => {

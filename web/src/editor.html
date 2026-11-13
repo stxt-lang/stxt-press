@@ -7,6 +7,8 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
 	<link rel="preload" href="/assets/russo-one-latin.woff2" as="font" type="font/woff2" crossorigin>
+	<!-- The theme, before the first paint: the one chosen, or the system's (theme.ts) -->
+	<script src="/assets/theme.js"></script>
 	<link rel="stylesheet" href="/assets/editor.css">
 	<script src="/assets/editor.js" defer></script>
 </head>
@@ -23,6 +25,7 @@
 			<a id="download" class="download" hidden>Download</a>
 		</div>
 		<button type="button" id="token" class="quiet">Token</button>
+		<button type="button" id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Dark theme" title="Switch to the dark theme"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"></path></svg></button>
 	</header>
 	<main class="workspace">
 		<section class="inputs" aria-label="Input">

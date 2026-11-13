@@ -36,6 +36,27 @@
 	--mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 }
 
+/* The dark theme, the `data-theme` of <html> (theme.ts): the values of the dark theme of the playground, which has the
+   hues of the dark theme of @stxt-lang/editor. The editors take that one, built into editor.css before these rules. */
+:root[data-theme="dark"] {
+	color-scheme: dark;
+
+	--bar: #0e3a5c;
+	--accent: #6db3f2;
+	--accent-hover: #8cc4f5;
+	--on-accent: #0b1016;
+	--text: #d3dae1;
+	--muted: #8a96a3;
+	--panel: #0b1016;
+	--surface: #10171e;
+	--border: #24323f;
+	--active: #1f3449;
+	--subtle: #18222c;
+	--error: #ff8a80;
+	--warning: #e6c35c;
+	--backdrop: rgba(0, 0, 0, 0.6);
+}
+
 *,
 *::before,
 *::after {
@@ -231,6 +252,23 @@ a.button.small {
 	margin-left: auto;
 }
 
+/* An icon instead of a word: the theme button, last in the bar, as in the playground. Pressed is the dark theme. */
+.bar .theme-toggle {
+	flex: none;
+	padding: 0.15rem 0.3rem;
+}
+
+.theme-toggle svg {
+	display: block;
+	width: 1.1rem;
+	height: 1.1rem;
+}
+
+.bar .theme-toggle[aria-pressed="true"] {
+	background: #fff;
+	color: var(--bar);
+}
+
 #versions {
 	font-size: 12px;
 	color: #fff;
@@ -414,6 +452,7 @@ main.workspace {
 }
 
 /* The editors are delimited by the layout, not by a border of their own, as the editor of the playground. */
+#panels .stxt-editor,
 #panels .cm-editor {
 	border: 0;
 }
@@ -464,7 +503,7 @@ main.workspace {
 }
 
 #filled .cm-editor {
-	border: 1px solid var(--border);
+	border: 0;
 }
 
 #pages,

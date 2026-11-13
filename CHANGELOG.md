@@ -166,3 +166,6 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   document list of the playground, the file tabs underlined in the accent, the parts of the editor meeting at a border
   without gaps, and the dialogs as cards over a dimmed page, with Cancel before the main button. The pages have the
   favicon of STXT, and `/assets/` serves `.png` and `.txt` files with their types.
+- The dark theme of the playground in the index and the editor: a button at the end of the bar switches it, and while
+  none is chosen the pages follow the system. The choice is kept in the browser. The editors take the dark stylesheet of
+  `@stxt-lang/editor`, the JSON data panel included, which now has the look of the STXT panels in both themes.
