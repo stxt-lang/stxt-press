@@ -258,7 +258,7 @@ written in the file, only the name of its variable.
 
 The folder [`server/`](server/) is a whole server, to copy anywhere and to start a project from: `start.sh` and
 `start.bat`, which start it; `stxt-press.jar`, which `mvn package` copies there; its `server.stxt`, which listens on
-`127.0.0.1:8082`, turns `Save` on (for the editor of this machine) and `Warm up` off (it answers at once), and shows the other nodes commented with their
+`127.0.0.1:8082`, turns `Save` on (for the editor of this machine) and shows the other nodes commented with their
 defaults; the fonts IBM Plex Sans, Serif and Mono and
 the images of the examples of stxt-pdf in `resources/`; and in `templates/`, one template for each example of
 stxt-pdf (`invoices/invoice`, `letters/letter`, `resumes/resume`, `reports/annual-report`, `newsletters/newsletter`,
