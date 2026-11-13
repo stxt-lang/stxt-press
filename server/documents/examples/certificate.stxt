@@ -7,6 +7,7 @@ Document (dev.stxt.pdf):
 		Orientation: landscape
 		Margin: 64 80 56 80
 	Title: Certificate of Completion · Handmade Ceramics
+	Keywords: certificate, ceramics, course
 	Language: en
 	Section:
 		Page overlay:
@@ -123,6 +124,7 @@ Document (dev.stxt.pdf):
 				Block:
 					Image: examples/certificate/en/seal.svg
 						Id: seal
+						Opacity: 85%
 						Alt: Seal of excellence of the school
 						Rotate: -8
 						Box:

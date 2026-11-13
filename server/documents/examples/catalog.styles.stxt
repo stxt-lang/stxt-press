@@ -40,8 +40,9 @@ Styles (dev.stxt.pdf):
 	For element: Cell
 		Box:
 			Padding: 6 8
-			Border: 0 0 0.5 0
+			Border: 0 0 0.75 0
 			Border color: #DCCFB8
+			Border style: dotted
 	For element: Page overlay
 		Typography:
 			Size: 7.5

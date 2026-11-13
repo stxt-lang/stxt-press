@@ -6,6 +6,7 @@ Document (dev.stxt.pdf):
 		Paper: A4
 		Margin: 56 56 70 56
 	Title: Annual Report 2025 · Cooperativa Solvent
+	Keywords: annual report, 2025, cooperative, renewable energy, accounts
 	Language: en
 	Page overlay:
 		Id: footer
@@ -125,6 +126,7 @@ Document (dev.stxt.pdf):
 				Box:
 					Margin: 120 56 0 56
 	Section:
+		Footnote number format: symbols
 		Id: body
 		Block:
 			Id: contents
@@ -345,11 +347,16 @@ Document (dev.stxt.pdf):
 				Footer rows:
 					Row:
 						Style: total
-						Cell: Net result for the year
+						Cell: Net result for the year[^audit]
 							Row header: true
+							Typography:
+								Markup: markdown
 						Cell: 312
 						Cell: 233
 						Cell: +33.9%
+			Footnote:
+				Id: audit
+				Paragraph: Accounts audited by Auditors de la Garrotxa, S.L.P., with an unqualified opinion.
 			Heading 2:
 				Text: Where the investment went
 			Table:
@@ -400,6 +407,7 @@ Document (dev.stxt.pdf):
 				Text: Commitments for 2026
 			List:
 				Marker: decimal
+				Marker suffix: parenthesis
 				List item:
 					Paragraph: Exceed 2,700 MWh of production with the fourth wind turbine and the Les Preses expansion.
 				List item:

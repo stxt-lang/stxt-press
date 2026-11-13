@@ -1,4 +1,4 @@
-# Tables: Merge borders draws the border between two cells once, the wider of the two.
+# Tables: Merge borders, true by default, draws the border between two cells once, the wider of the two; false, both.
 Document (dev.stxt.pdf):
 	Language: en
 	Title: Tables · Merge borders
@@ -16,17 +16,17 @@ Document (dev.stxt.pdf):
 			Box:
 				Border: 0.5 0.5 1.5 0.5
 				Border color: accent
-		For style: merged
+		For style: separate
 			Box:
-				Merge borders: true
+				Merge borders: false
 	Section:
 		Text: Tables
 			Style: topic
 		Heading 1:
 			Text: Merge borders
-		Paragraph: With a `Border` on each cell, two neighbors draw two lines side by side. `Merge borders: true` in the `Box` of the `Table` draws the line between two cells once, centered on it, with the wider border and its color: the line under the header is the 1.5 of the header.
+		Paragraph: With a `Border` on each cell, the line between two cells is drawn once, centered on it, with the wider border and its color: the line under the header is the 1.5 of the header. With `Merge borders: false` in the `Box` of the `Table`, each cell draws its own border, and two neighbors draw two lines side by side.
 			Style: intro
-		Text: Merge borders: false (by default)
+		Text: Merge borders: true  (the default)
 			Style: label
 		Table:
 			Column sizes: * 60 60
@@ -45,10 +45,10 @@ Document (dev.stxt.pdf):
 					Cell: Professional
 					Cell: 19.00
 					Cell: 190.00
-		Text: Merge borders: true
+		Text: Merge borders: false
 			Style: label
 		Table:
-			Style: merged
+			Style: separate
 			Column sizes: * 60 60
 			Column align: left right right
 			Header rows:

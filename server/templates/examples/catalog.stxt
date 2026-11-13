@@ -8,6 +8,7 @@ Document (dev.stxt.pdf):
 		Paper: A4
 		Margin: 54 50 64 50
 	Title: ${year} Catalog · Taller Nogal
+	Keywords: catalog, ${year}, furniture, Taller Nogal
 	Language: en
 	Page overlay:
 		Id: footer

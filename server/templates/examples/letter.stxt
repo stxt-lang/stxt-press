@@ -8,6 +8,7 @@ Document (dev.stxt.pdf):
 		Paper: A4
 		Margin: 44 72 64 72
 	Title: <title>
+	Keywords: <keywords>
 	Language: en
 	Section:
 		Page overlay:

@@ -13,8 +13,6 @@ Document (dev.stxt.pdf):
 					Border color: muted
 					Border style: dashed
 		For style: dotted
-			Box:
-				Merge borders: true
 			For element: Cell
 				Box:
 					Border: 1
@@ -47,7 +45,7 @@ Document (dev.stxt.pdf):
 				Row:
 					Cell: Signature of the supplier
 					Cell: Date
-		Text: Border style: dotted, with Merge borders: true and a solid header
+		Text: Border style: dotted, with the borders merged and a solid header
 			Style: label
 		Table:
 			Style: dotted

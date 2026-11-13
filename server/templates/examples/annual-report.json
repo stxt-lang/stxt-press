@@ -63,6 +63,7 @@
       {"item": "Financial result", "current": "−88", "previous": "−71", "change": "+23.9%"}
     ],
     "total": {"item": "Net result for the year", "current": "312", "previous": "233", "change": "+33.9%"},
+    "audit": "Accounts audited by Auditors de la Garrotxa, S.L.P., with an unqualified opinion.",
     "investments": [
       {"project": "Les Preses solar park", "amount": "780", "capacity": "1.6 MWp"},
       {"project": "Sant Joan expansion", "amount": "310", "capacity": "0.6 MWp"},

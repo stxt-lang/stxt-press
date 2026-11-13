@@ -8,6 +8,7 @@ Document (dev.stxt.pdf):
 		Paper: A4
 		Margin: 38 44 58 44
 	Title: Gaceta del Valle · ${month}
+	Keywords: newsletter, Gaceta del Valle, ${month}
 	Language: en
 	Section:
 		Page overlay:
@@ -137,6 +138,7 @@ Document (dev.stxt.pdf):
 			Gap: 22
 			Separator: 0.5
 			Separator color: rule
+			Separator style: dotted
 			Box:
 				Margin: 0 0 14 0
 			Markdown:

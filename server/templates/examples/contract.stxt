@@ -9,6 +9,7 @@ Document (dev.stxt.pdf):
 		Paper: A4
 		Margin: 92 70 80 70
 	Title: Design services agreement · ${reference}
+	Keywords: <keywords>
 	Language: en
 	Section:
 		Page overlay:

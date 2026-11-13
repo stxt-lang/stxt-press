@@ -10,6 +10,7 @@ Document (dev.stxt.pdf):
 		Paper: A4
 		Margin: 56 56 70 56
 	Title: Annual Report ${year} · Cooperativa Solvent
+	Keywords: annual report, ${year}, cooperative, renewable energy, accounts
 	Language: en
 	Page overlay:
 		Id: footer
@@ -104,6 +105,7 @@ Document (dev.stxt.pdf):
 				Box:
 					Margin: 120 56 0 56
 	Section:
+		Footnote number format: symbols
 		Id: body
 		Block:
 			Id: contents
@@ -230,11 +232,16 @@ Document (dev.stxt.pdf):
 				Footer rows:
 					Row: {total}
 						Style: total
-						Cell: <item>
+						Cell: ${item}[^audit]
 							Row header: true
+							Typography:
+								Markup: markdown
 						Cell: <current>
 						Cell: <previous>
 						Cell: <change>
+			Footnote:
+				Id: audit
+				Paragraph: <audit>
 			Heading 2:
 				Text: Where the investment went
 			Table:
@@ -273,6 +280,7 @@ Document (dev.stxt.pdf):
 				Text: Commitments for ${next_year}
 			List:
 				Marker: decimal
+				Marker suffix: parenthesis
 				List item: [commitments]
 					Paragraph: <text>
 			Heading 2:

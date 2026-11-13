@@ -9,6 +9,7 @@ Document (dev.stxt.pdf):
 		Orientation: landscape
 		Margin: 40 46 46 46
 	Title: Class ${class} timetable · School year ${school_year}
+	Keywords: timetable, class ${class}, school year ${school_year}
 	Language: en
 	Section:
 		Page overlay:

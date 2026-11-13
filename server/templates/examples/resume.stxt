@@ -8,6 +8,7 @@ Document (dev.stxt.pdf):
 	Page:
 		Paper: A4
 	Title: ${name} · ${position}
+	Keywords: <keywords>
 	Language: en
 	Section:
 		Grid:

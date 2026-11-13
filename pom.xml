@@ -58,7 +58,7 @@
         <dependency>
             <groupId>dev.stxt</groupId>
             <artifactId>stxt-pdf</artifactId>
-            <version>0.17.0</version>
+            <version>0.18.0</version>
         </dependency>
 
         <!-- The fill of the Slots of a layout document with JSON data (FillJson), before converting it. Its stxt-core

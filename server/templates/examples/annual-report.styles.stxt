@@ -156,3 +156,13 @@ Styles (dev.stxt.pdf):
 			Size: 11
 			Line height: 16
 			Color: navy
+	For element: Footnote area
+		Typography:
+			Size: 7.5
+			Line height: 10.5
+			Color: gray
+		Box:
+			Margin: 12 0 0 0
+			Border: 0.5 0 0 0
+			Border color: rule
+			Padding: 4 0 0 0

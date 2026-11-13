@@ -8,8 +8,6 @@ Styles (dev.stxt.pdf):
 	For element: Document
 		Typography:
 			Code font: IBM Plex Mono
-			Kerning: true
-			Ligatures: true
 			Size: 9
 			Line height: 12
 			Color: #17242A

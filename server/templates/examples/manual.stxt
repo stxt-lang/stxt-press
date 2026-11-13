@@ -8,6 +8,7 @@ Document (dev.stxt.pdf):
 		Paper: A4
 		Margin: 64 54 66 54
 	Title: Quick guide to the ${model} thermostat
+	Keywords: quick guide, thermostat, ${model}, installation
 	Language: en
 	Styles:
 		For element: Figure
