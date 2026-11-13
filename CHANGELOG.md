@@ -47,18 +47,18 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   Relative paths are relative to the folder of the file. An error is a `ConfigException` with its code and its line.
   Without a file, the server listens only on `127.0.0.1:8080`, without token.
 - `PressServer.startLazily`, whose shared converter is created by the first request that needs it.
-- The web editor, without token, with what it shows in its URL, so that a reload shows it again: `GET /editor` (a
-  blank document), `GET /editor/documents/{path}` (a document of the documents folder) and
-  `GET /editor/templates/{path}` (a template); the lists and the mode buttons change the URL, and with changes in the
-  panels leaving them asks first. A document mode (a document and its styles, without data: a blank one, rendered with
-  `/render`, or one of the documents folder, printed with `/print/documents` or, edited, rendered with `/render`) and a
-  templates mode (a template of the server with its sample data first and then its document and its chain of styles,
-  printed with `/print/templates` or, edited, rendered with `/render`, and its `curl`). The page fills the window, without a scroll of its own: on the left, one tab for each
-  file (the data, the document and each styles document), marked when it has an error or a warning; on the right, the
-  output of the last button. Fill (in the templates mode), preview as SVG pages with or without outlines, and the PDF,
-  shown in the viewer of the browser with a link that downloads it; the errors of the server are marked in their
-  panel, on their line, and their tab is shown. An answer that comes after the page shows another template or mode is
-  not shown: neither its output, nor its error, nor its message. If `/fonts` fails, the next preview asks for the
+- The web editor, without token, opened from the index, with what it shows in its URL, so that a reload shows it
+  again: `GET /editor` (a blank document), `GET /editor/documents/{path}` (a document of the documents folder) and
+  `GET /editor/templates/{path}` (a template); with changes in the panels, leaving the page asks first. A document (its
+  styles, without data: a blank one, rendered with `/render`, or one of the documents folder, printed with
+  `/print/documents` or, edited, rendered with `/render`) or a template (its sample data first and then its document
+  and its chain of styles, printed with `/print/templates` or, edited, rendered with `/render`, and its `curl`). The
+  page fills the window, without a scroll of its own: the bar has the path of what it shows, which links back to its
+  folder in the index, and the buttons; on the left, one tab for each file (the data, the document and each styles
+  document), marked when it has an error or a warning; on the right, the output of the last button. Fill (for a
+  template), preview as SVG pages with or without outlines, and the PDF, shown in the viewer of the browser with a link
+  that downloads it; the errors of the server are marked in their panel, on their line, and their tab is shown. If
+  `/fonts` fails, the next preview asks for the
   fonts again. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
 - The index, at `GET /`, without token, filling the window in two halves: on the left a tab for the documents (the

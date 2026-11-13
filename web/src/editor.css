@@ -62,13 +62,15 @@ select {
 
 .bar {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
-	gap: 1rem;
+	gap: 0.5rem 1rem;
 	padding: 0.6rem 1rem;
 	border-bottom: 1px solid var(--line);
 }
 
 .brand {
+	white-space: nowrap;
 	font-weight: 700;
 	color: var(--text);
 	text-decoration: none;
@@ -150,17 +152,21 @@ main.workspace {
 	flex: none;
 }
 
-.chooser {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 0.4rem 1rem;
-	margin-bottom: 0.6rem;
+/* What the editor shows, beside the name of the service: the path of the template or the document. */
+.place {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--stxt-font-mono, monospace);
+	font-size: 13px;
+	color: var(--muted);
 }
 
 .print {
 	min-width: 0;
 	max-width: 100%;
+	margin-bottom: 0.6rem;
 }
 
 .print summary {
@@ -247,15 +253,12 @@ main.workspace {
 	font-family: var(--stxt-font-mono, monospace);
 }
 
+/* The buttons of the editor, in the bar beside what it shows. */
 .actions {
 	display: flex;
+	flex: none;
 	align-items: center;
 	gap: 0.5rem;
-	margin-bottom: 0.6rem;
-}
-
-.actions .download {
-	margin-left: auto;
 }
 
 #message {

@@ -105,9 +105,10 @@ of the last **PDF** button, in the viewer of the browser, with links to edit it 
 entry it is of is marked in its list. Choosing a folder leaves only its branch open. What the index shows is in its
 hash (`/#documents/reference/01-values`), and the name of the editor goes back to the folder of what it shows.
 
-The editor is a page to try documents and templates against the server. What it shows is in its URL, so a reload shows
-it again, reading it from the server, which reads its folders on every request: a template or a document edited on
-disk is seen with a reload.
+The editor is a page to try a document or a template against the server. It is opened from the index, where another
+one is chosen: its name in the bar goes back to the folder of what it shows. What it shows is in its URL, so a reload
+shows it again, reading it from the server, which reads its folders on every request: a template or a document edited
+on disk is seen with a reload.
 
 | URL | What it shows |
 |---|---|
@@ -115,23 +116,22 @@ disk is seen with a reload.
 | `/editor/documents/{path}` | The document `{path}` of the documents folder: `/editor/documents/examples/poster/blue-hour` |
 | `/editor/templates/{path}` | The template `{path}` of the templates folder: `/editor/templates/catalogs/catalog` |
 
-The lists and the mode buttons change the URL, in the history of the browser; a mode button opens the first entry of
-its list. With changes in the panels, leaving them (another template, back, a reload) asks first. The two modes:
+With changes in the panels, leaving the page (the index, back, a reload) asks first. Nothing is saved on the server.
 
-- **Document**: a layout document and its styles, without data. The list has a new document, sent to `/render`, and
-  the documents of the server, each with its chain of styles, one panel per file: as the server has them, printed with
-  `/print/documents`; edited, with `/render`.
-- **Templates**: a template of the server: its sample data first, the panel that changes from one PDF to another, then
-  the document and its chain of styles, one panel per file. With the document and the styles as the server has them,
-  it is printed with `/print/templates` and the data of the panel; edited, with `/render` and the whole chain. Nothing
-  is saved on the server. The page shows the URL of `/print/templates` and a `curl` with the data of the panel.
+- **A document**: the document and its chain of styles, without data, one panel per file. As the server has them, it
+  is printed with `/print/documents`; edited, or a blank one, with `/render`.
+- **A template**: its sample data first, the panel that changes from one PDF to another, then the document and its
+  chain of styles, one panel per file. With the document and the styles as the server has them, it is printed with
+  `/print/templates` and the data of the panel; edited, with `/render` and the whole chain. The page shows the URL of
+  `/print/templates` and a `curl` with the data of the panel.
 
-The editor fills the window: on the left, one tab for each file (the data, the document, each styles document), with a
-dot when the file has an error (red) or a warning of the schema (amber); on the right, the output of the last button.
-**Preview** shows the SVG pages (with **Outlines**, the outlines of the boxes) and **PDF** the PDF in the viewer of the
-browser, with a link that downloads it with its name; in the templates mode, **Fill** shows the filled document. An
+The editor fills the window. The bar has the path of what it shows and the buttons; on the left, one tab for each
+file (the data, the document, each styles document), with a dot when the file has an error (red) or a warning of the
+schema (amber); on the right, the output of the last button. **Preview** shows the SVG pages (with **Outlines**, the
+outlines of the boxes) and **PDF** the PDF in the viewer of the browser, with a link that downloads it with its name;
+for a template, **Fill** shows the filled document. An
 error of the server is marked in its panel, on its line, and its tab is shown. The document panel validates against
-the schema of `/schema`, in the templates mode only while the data panel is empty: a document with Slots is validated
+the schema of `/schema`, for a template only while the data panel is empty: a document with Slots is validated
 by the server, once filled. A window narrower than 900 px shows one column, and the page scrolls.
 
 The pages and their files (`/assets/`) are served without token, the same page for every `{path}`, whether the template

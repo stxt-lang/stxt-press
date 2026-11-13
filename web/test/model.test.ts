@@ -8,7 +8,7 @@ import {
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
 import {
 	ancestors, BLANK, byFolder, defaultFolder, folderOf, folderRows, indexHash, indexHashOf, isUnder, parseIndexHash, parsePlace,
-	placeOfMode, placeUrl, samePlace, visibleRows,
+	placeUrl, visibleRows,
 } from "../src/place.ts";
 
 const DOCUMENT: DocumentState = {
@@ -317,22 +317,6 @@ describe("parsePlace and placeUrl", () => {
 		assert.equal(placeUrl({ mode: "template", path: "catalogs/catalog" }), "/editor/templates/catalogs/catalog");
 		assert.equal(placeUrl({ mode: "document", path: "examples/poster" }), "/editor/documents/examples/poster");
 		assert.equal(placeUrl(BLANK), "/editor");
-	});
-
-	it("compares places", () => {
-		assert.ok(samePlace({ mode: "template", path: "a" }, { mode: "template", path: "a" }));
-		assert.ok(!samePlace({ mode: "template", path: "a" }, { mode: "document", path: "a" }));
-		assert.ok(!samePlace(BLANK, { mode: "document", path: "a" }));
-	});
-
-	it("gives the place of a mode button: the first entry of its list", () => {
-		assert.deepEqual(placeOfMode("document", ["d1", "d2"], ["t1"]), { mode: "document", path: "d1" });
-		assert.deepEqual(placeOfMode("template", ["d1"], ["t1", "t2"]), { mode: "template", path: "t1" });
-	});
-
-	it("gives the blank document without documents, and no template without templates", () => {
-		assert.deepEqual(placeOfMode("document", [], ["t1"]), BLANK);
-		assert.equal(placeOfMode("template", ["d1"], []), null);
 	});
 });
 

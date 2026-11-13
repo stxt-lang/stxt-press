@@ -11,36 +11,27 @@
 <body class="editor">
 	<header class="bar">
 		<a class="brand" id="home" href="/">stxt-press</a>
-		<nav class="modes" aria-label="Mode">
-			<button type="button" data-mode="document" aria-pressed="true">Document</button>
-			<button type="button" data-mode="template" aria-pressed="false">Templates</button>
-		</nav>
+		<span id="place" class="place"></span>
+		<div class="actions">
+			<button type="button" id="fill">Fill</button>
+			<button type="button" id="preview">Preview</button>
+			<button type="button" id="pdf">PDF</button>
+			<label><input type="checkbox" id="debug"> Outlines</label>
+			<a id="download" class="download" hidden>Download</a>
+		</div>
 		<button type="button" id="token" class="quiet">Token</button>
 	</header>
 	<main class="workspace">
 		<section class="inputs" aria-label="Input">
-			<div id="document-mode" class="chooser">
-				<label>Document <select id="documents"></select></label>
-			</div>
-			<div id="template-mode" class="chooser" hidden>
-				<label>Template <select id="templates"></select></label>
-				<details class="print">
-					<summary><code id="print-url"></code></summary>
-					<pre id="curl"></pre>
-					<button type="button" id="copy-curl" class="quiet small">Copy curl</button>
-				</details>
-			</div>
+			<details id="print" class="print" hidden>
+				<summary><code id="print-url"></code></summary>
+				<pre id="curl"></pre>
+				<button type="button" id="copy-curl" class="quiet small">Copy curl</button>
+			</details>
 			<div id="tabs" class="tabs" role="tablist" aria-label="Files"></div>
 			<div id="panels"></div>
 		</section>
 		<section class="output" aria-label="Output">
-			<div class="actions">
-				<button type="button" id="fill">Fill</button>
-				<button type="button" id="preview">Preview</button>
-				<button type="button" id="pdf">PDF</button>
-				<label><input type="checkbox" id="debug"> Outlines</label>
-				<a id="download" class="download" hidden>Download</a>
-			</div>
 			<div id="message" role="status"></div>
 			<div id="view">
 				<div id="filled-panel" hidden>

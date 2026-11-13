@@ -1,10 +1,10 @@
 /**
  * The web editor of stxt-press: the panels of a document or of a template of the server, and the buttons that fill it,
- * preview it as SVG pages and show its PDF. What it shows is in its URL (`/editor/templates/{path}`,
- * `/editor/documents/{path}`, see `parsePlace`), so a reload shows the same template or document, read again from the
- * server. What a button asks for and where an error goes is in
- * model.ts, what a URL shows in place.ts, the panels and their tabs in panels.ts, and what the buttons give in
- * output.ts; here are the places, the buttons and the start.
+ * preview it as SVG pages and show its PDF. It is opened from the index, and what it shows is in its URL
+ * (`/editor/templates/{path}`, `/editor/documents/{path}` or `/editor`, see `parsePlace`), so a reload shows the same
+ * template or document, read again from the server. What a button asks for and where an error goes is in model.ts,
+ * what a URL shows in place.ts, the panels and their tabs in panels.ts, and what the buttons give in output.ts; here
+ * are the place, the buttons and the start.
  */
 import { $, askToken, call, errorOf, say, token } from "./api";
 import { curl, documentPanels, fileName, request, serverMessage, target, templatePanels, validatesDocument } from "./model";
@@ -12,18 +12,11 @@ import type { Format, LocalError, Panels, Request, ServerDocument, ServerError, 
 import { clearOutput, filled, loadFonts, showFilled, showPages, showPdf } from "./output";
 import { clearPanels, mark, panelOf, setSchema, showPanels, texts, unmarkAll, validateDocument } from "./panels";
 import type { Panel } from "./panels";
-import { BLANK, indexHashOf, parsePlace, placeOfMode, placeUrl, samePlace } from "./place";
+import { BLANK, indexHashOf, parsePlace, placeUrl } from "./place";
 import type { Place } from "./place";
 
+/** The mode of what the page shows: a document (blank, or of the server) or a template. */
 let mode: Place["mode"] = "document";
-/** What the page shows, as its URL says. */
-let current: Place = BLANK;
-/** The paths of the templates of the server, empty if it has none or `/templates` is off. */
-let templatePaths: string[] = [];
-/** The paths of the documents of the server, empty if it has none or `/documents` is off. */
-let documentPaths: string[] = [];
-/** Counts the places shown, so that the answer of one left behind is not shown over the next. */
-let showing = 0;
 /** Whether a panel was edited in the page since it was shown: leaving it then asks first. */
 let dirty = false;
 /** The template on the panels, as the server gave it, in the templates mode. */
@@ -119,14 +112,8 @@ function showServer(error: ServerError, asked: Request): void {
 	}
 }
 
-/**
- * Runs a button on the panels and shows what the server answers. The list, the mode buttons, back and forward stay on
- * while it runs: if they show another place before the answer comes, the answer is of panels that are not there any
- * more, and nothing of it is shown, neither the output nor the error nor the message.
- */
+/** Runs a button on the panels and shows what the server answers. */
 async function run(format: Format): Promise<void> {
-	const seq = showing;
-	const left = () => seq !== showing;
 	unmarkAll();
 	const asked = request(state(), format, $<HTMLInputElement>("debug").checked);
 	if (!("url" in asked)) {
@@ -139,195 +126,80 @@ async function run(format: Format): Promise<void> {
 	say(format === "stxt" ? "Filling…" : "Converting…");
 	try {
 		const response = await call(asked.method, asked.url, asked.body, asked.contentType);
-		if (left()) {
-			return;
-		}
 		if (!response.ok) {
 			const error = await errorOf(response);
-			if (left()) {
-				return;
-			}
 			// The output of the last button is not that of these panels.
 			clearOutput();
 			showServer(error, asked);
 			return;
 		}
 		if (format === "stxt") {
-			const text = await response.text();
-			if (!left()) {
-				showFilled(text);
-				say("Filled.");
-			}
+			showFilled(await response.text());
+			say("Filled.");
 		} else if (format === "svg") {
 			const pages = ((await response.json()) as { pages: string[] }).pages;
 			await loadFonts();
-			if (!left()) {
-				showPages(pages);
-			}
+			showPages(pages);
 		} else {
-			const pdf = await response.blob();
-			if (!left()) {
-				showPdf(pdf, fileName(state()));
-			}
+			showPdf(await response.blob(), fileName(state()));
 		}
 	} catch (e) {
-		if (!left()) {
-			say(`The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`, true);
-		}
+		say(`The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`, true);
 	} finally {
-		// Always: they go with the panels the page shows now, which may be those of another place.
 		setButtons();
 	}
 }
 
-// ---- The places
+// ---- The place
 
 /** A document of the documents folder of the server, with its chain of styles. */
-async function showDocument(path: string, seq: number): Promise<void> {
+async function showDocument(path: string): Promise<void> {
 	const response = await call("GET", `/documents/${path}`);
-	if (seq !== showing) {
-		return;
-	}
 	if (!response.ok) {
-		const error = await errorOf(response);
-		original = undefined;
-		originalDocument = undefined;
 		clear();
-		say(serverMessage(error, null), true);
+		say(serverMessage(await errorOf(response), null), true);
 		return;
 	}
-	const served = (await response.json()) as ServerDocument;
-	if (seq !== showing) {
-		return;
-	}
-	original = undefined;
-	originalDocument = served;
-	display(documentPanels(served));
+	originalDocument = (await response.json()) as ServerDocument;
+	display(documentPanels(originalDocument));
 }
 
-/** The panels of a blank document, with one blank styles panel, for the ones the user writes. */
-function showBlankDocument(): void {
-	original = undefined;
-	originalDocument = undefined;
-	display(documentPanels());
-}
-
-async function showTemplate(path: string, seq: number): Promise<void> {
+/** A template of the server: its data, its document and its chain of styles, with the URL and the curl that print it. */
+async function showTemplate(path: string): Promise<void> {
 	const response = await call("GET", `/templates/${path}`);
-	if (seq !== showing) {
-		return;
-	}
 	if (!response.ok) {
-		const error = await errorOf(response);
-		original = undefined;
-		originalDocument = undefined;
 		clear();
-		say(serverMessage(error, null), true);
+		say(serverMessage(await errorOf(response), null), true);
 		return;
 	}
-	const template = (await response.json()) as ServerTemplate;
-	if (seq !== showing) {
-		return;
-	}
-	original = template;
-	originalDocument = undefined;
-	$("print-url").textContent = `${location.origin}/print/templates/${template.path}`;
-	display(templatePanels(template));
+	original = (await response.json()) as ServerTemplate;
+	$("print-url").textContent = `${location.origin}/print/templates/${original.path}`;
+	$("print").hidden = false;
+	display(templatePanels(original));
 }
 
-/** Selects `value` in `select`, or nothing if it is not one of its options. */
-function choose(select: HTMLSelectElement, value: string): void {
-	select.value = value;
-	if (select.value !== value) {
-		select.selectedIndex = -1;
-	}
-}
-
-/** Shows `place`, without touching the history of the browser: the start, a link, the back and forward buttons. */
+/**
+ * Shows what the URL says: a template, a document of the server, or a blank document. The page shows one place: it is
+ * opened from the index, which is where another one is chosen.
+ */
 async function show(place: Place): Promise<void> {
-	const seq = ++showing;
-	current = place;
 	mode = place.mode;
 	document.title = place.path === null ? "New document · stxt-press" : `${place.path} · stxt-press`;
+	$("place").textContent = place.path === null ? "New document" : `${place.mode === "template" ? "templates" : "documents"}/${place.path}`;
 	// The index goes back to the folder of what the page shows.
 	$<HTMLAnchorElement>("home").href = `/${indexHashOf(place)}`;
-	document.querySelectorAll<HTMLButtonElement>(".modes button").forEach((button) => {
-		button.setAttribute("aria-pressed", String(button.dataset.mode === place.mode));
-	});
-	$("document-mode").hidden = place.mode !== "document";
-	$("template-mode").hidden = place.mode !== "template";
 	// A document is converted as it is: no data, so nothing to fill.
 	$("fill").hidden = place.mode === "document";
-	choose($<HTMLSelectElement>("documents"), place.mode === "document" ? place.path ?? "" : "");
-	choose($<HTMLSelectElement>("templates"), place.mode === "template" ? place.path ?? "" : "");
-	clearOutput();
-	say("");
 	if (place.path === null) {
-		showBlankDocument();
+		display(documentPanels());
 	} else if (place.mode === "document") {
-		await showDocument(place.path, seq);
+		await showDocument(place.path);
 	} else {
-		await showTemplate(place.path, seq);
+		await showTemplate(place.path);
 	}
-}
-
-/** Whether the page can leave what it shows: without edits in the panels, or if the user says so. */
-function canLeave(): boolean {
-	return !dirty || window.confirm("The panels have changes that will be lost. Leave them?");
-}
-
-/** Goes to `place`: a new entry in the history of the browser, so that a reload shows it again. */
-function go(place: Place): void {
-	if (samePlace(place, current)) {
-		return;
-	}
-	if (!canLeave()) {
-		// The selects go back to what the page shows.
-		choose($<HTMLSelectElement>("documents"), current.mode === "document" ? current.path ?? "" : "");
-		choose($<HTMLSelectElement>("templates"), current.mode === "template" ? current.path ?? "" : "");
-		return;
-	}
-	window.history.pushState(null, "", placeUrl(place));
-	void show(place);
 }
 
 async function start(): Promise<void> {
-	const schemaResponse = await call("GET", "/schema");
-	setSchema(schemaResponse.ok ? await schemaResponse.text() : "");
-
-	// The document mode lists the documents of the server after the blank one, and the templates mode its templates.
-	const documents = $<HTMLSelectElement>("documents");
-	const templates = $<HTMLSelectElement>("templates");
-	documents.add(new Option("New document", ""));
-	const [listedDocuments, listedTemplates] = await Promise.all([call("GET", "/documents"), call("GET", "/templates")]);
-	if (listedDocuments.ok) {
-		documentPaths = ((await listedDocuments.json()) as { documents: { path: string }[] }).documents.map((entry) => entry.path);
-		for (const path of documentPaths) {
-			documents.add(new Option(path, path));
-		}
-	}
-	if (listedTemplates.ok) {
-		templatePaths = ((await listedTemplates.json()) as { templates: { path: string }[] }).templates.map((entry) => entry.path);
-		for (const path of templatePaths) {
-			templates.add(new Option(path, path));
-		}
-	}
-	if (templatePaths.length === 0) {
-		// No templates, or /templates is off in this server: only the blank document.
-		document.querySelector<HTMLButtonElement>(".modes button[data-mode=template]")!.hidden = true;
-	}
-	documents.onchange = () => go({ mode: "document", path: documents.value || null });
-	templates.onchange = () => go({ mode: "template", path: templates.value });
-	document.querySelectorAll<HTMLButtonElement>(".modes button").forEach((button) => {
-		button.onclick = () => {
-			const next = button.dataset.mode as Place["mode"];
-			// The mode already shown stays where it is.
-			const place = next === current.mode ? null : placeOfMode(next, documentPaths, templatePaths);
-			if (place) {
-				go(place);
-			}
-		};
-	});
 	$("fill").onclick = () => void run("stxt");
 	$("preview").onclick = () => void run("svg");
 	$("pdf").onclick = () => void run("pdf");
@@ -341,23 +213,16 @@ async function start(): Promise<void> {
 		await navigator.clipboard.writeText($("curl").textContent ?? "");
 		say("curl copied.");
 	};
-
-	window.addEventListener("popstate", () => {
-		const place = parsePlace(location.pathname) ?? BLANK;
-		if (canLeave()) {
-			void show(place);
-		} else {
-			// The page stays where it was, and so does its URL.
-			window.history.pushState(null, "", placeUrl(current));
-		}
-	});
 	window.addEventListener("beforeunload", (event) => {
 		if (dirty) {
 			event.preventDefault();
 			event.returnValue = "";
 		}
 	});
+	setButtons();
 
+	const schemaResponse = await call("GET", "/schema");
+	setSchema(schemaResponse.ok ? await schemaResponse.text() : "");
 	// The URL as the page writes it, without what the page does not read (a query).
 	const place = parsePlace(location.pathname) ?? BLANK;
 	window.history.replaceState(null, "", placeUrl(place));

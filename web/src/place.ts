@@ -1,7 +1,7 @@
 /**
  * The places of the pages, without the DOM: what the URL of the editor shows (a template, a document of the documents
- * folder, or a blank document), the URL of each one and the place of a mode button; and for the index, what its hash
- * shows (a tab and a folder) and the tree of the folders.
+ * folder, or a blank document) and the URL of each one; and for the index, what its hash shows (a tab and a folder)
+ * and the tree of the folders.
  */
 
 /**
@@ -43,23 +43,6 @@ export function parsePlace(pathname: string): Place | null {
 /** The URL of a place, as `parsePlace` reads it. */
 export function placeUrl(place: Place): string {
 	return place.path === null ? "/editor" : `${PREFIX[place.mode]}${place.path}`;
-}
-
-/** Whether two places are the same. */
-export function samePlace(a: Place, b: Place): boolean {
-	return a.mode === b.mode && a.path === b.path;
-}
-
-/**
- * The place of a mode button: the first entry of the list of that mode, the documents of the server or its templates.
- * Without documents, the blank document; without templates, `null`.
- */
-export function placeOfMode(next: Place["mode"], documentPaths: string[], templatePaths: string[]): Place | null {
-	if (next === "document") {
-		return { mode: "document", path: documentPaths[0] ?? null };
-	}
-	const path = templatePaths[0];
-	return path === undefined ? null : { mode: "template", path };
 }
 
 // ---- The index
