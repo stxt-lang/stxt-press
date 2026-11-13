@@ -8,27 +8,29 @@
 	<link rel="stylesheet" href="/assets/editor.css">
 	<script src="/assets/index.js" defer></script>
 </head>
-<body>
+<body class="index-page">
 	<header class="bar">
 		<a class="brand" href="/">stxt-press</a>
+		<nav class="modes" aria-label="Section">
+			<button type="button" data-tab="documents" aria-pressed="true">Documents</button>
+			<button type="button" data-tab="templates" aria-pressed="false">Templates</button>
+			<button type="button" data-tab="api" aria-pressed="false">API</button>
+		</nav>
+		<a href="/editor">New document</a>
 		<span id="versions" class="muted"></span>
 		<button type="button" id="token" class="quiet">Token</button>
 	</header>
 	<main class="index">
-		<p id="message" role="status"></p>
-		<section aria-labelledby="templates-title">
-			<h1 id="templates-title">Templates</h1>
-			<p id="templates-message" class="status"></p>
-			<div id="templates"></div>
-		</section>
-		<section aria-labelledby="documents-title">
-			<h1 id="documents-title">Documents</h1>
-			<p id="documents-message" class="status"></p>
-			<div id="documents"></div>
-			<p class="new"><a href="/editor">New document</a>: a blank document, converted with <code>/render</code>.</p>
-		</section>
-		<section aria-labelledby="api-title">
-			<h1 id="api-title">API</h1>
+		<div class="lists">
+		<div id="browser" class="browser">
+			<nav id="folders" class="folders" aria-label="Folders"></nav>
+			<section class="entries" aria-labelledby="folder-title">
+				<h1 id="folder-title"></h1>
+				<p id="message" role="status"></p>
+				<div id="entries"></div>
+			</section>
+		</div>
+		<section id="api" class="api" aria-label="API" hidden>
 			<table class="routes">
 				<thead>
 					<tr><th>Route</th><th>What it does</th></tr>
@@ -47,6 +49,17 @@
 			</table>
 			<p class="muted"><code>/print</code> and <code>/render</code> take <code>?format=pdf|svg|stxt</code> and
 				<code>&amp;debug=true</code>.</p>
+		</section>
+		</div>
+		<section class="preview" aria-label="PDF">
+			<div class="preview-bar">
+				<span id="preview-title" class="muted">The PDF button of an entry shows its PDF here.</span>
+				<span class="links">
+					<a id="preview-edit" hidden>Edit</a>
+					<a id="preview-download" hidden>Download</a>
+				</span>
+			</div>
+			<iframe id="preview-frame" title="PDF" hidden></iframe>
 		</section>
 	</main>
 	<dialog id="token-dialog">

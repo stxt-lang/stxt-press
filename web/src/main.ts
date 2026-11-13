@@ -12,7 +12,7 @@ import type { Format, LocalError, Panels, Request, ServerDocument, ServerError, 
 import { clearOutput, filled, loadFonts, showFilled, showPages, showPdf } from "./output";
 import { clearPanels, mark, panelOf, setSchema, showPanels, texts, unmarkAll, validateDocument } from "./panels";
 import type { Panel } from "./panels";
-import { BLANK, parsePlace, placeOfMode, placeUrl, samePlace } from "./place";
+import { BLANK, indexHashOf, parsePlace, placeOfMode, placeUrl, samePlace } from "./place";
 import type { Place } from "./place";
 
 let mode: Place["mode"] = "document";
@@ -249,6 +249,8 @@ async function show(place: Place): Promise<void> {
 	current = place;
 	mode = place.mode;
 	document.title = place.path === null ? "New document · stxt-press" : `${place.path} · stxt-press`;
+	// The index goes back to the folder of what the page shows.
+	$<HTMLAnchorElement>("home").href = `/${indexHashOf(place)}`;
 	document.querySelectorAll<HTMLButtonElement>(".modes button").forEach((button) => {
 		button.setAttribute("aria-pressed", String(button.dataset.mode === place.mode));
 	});

@@ -97,8 +97,13 @@ of the editor, and is turned off with it, as are `/`, `/editor` and `/assets/`, 
 
 ## Index and editor
 
-`GET /` is the index: the templates and the documents of the server by folder, each with a link to the editor and a
-button that opens its PDF; a link to a new document; and the routes of the API.
+`GET /` is the index, which fills the window in two halves, as the editor. On the left, a tab for the documents (the
+one it opens with), one for the templates and one for the routes of the API, and a link to a new document. The
+documents and the templates tabs show the tree of their folders, with how many entries each one has, and the entries
+of the folder chosen and of those below it, each with a link to the editor and a **PDF** button. On the right, the PDF
+of the last **PDF** button, in the viewer of the browser, with links to edit it and to download it with its name; the
+entry it is of is marked in its list. Choosing a folder leaves only its branch open. What the index shows is in its
+hash (`/#documents/reference/01-values`), and the name of the editor goes back to the folder of what it shows.
 
 The editor is a page to try documents and templates against the server. What it shows is in its URL, so a reload shows
 it again, reading it from the server, which reads its folders on every request: a template or a document edited on

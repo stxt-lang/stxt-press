@@ -271,19 +271,6 @@ main.workspace {
 	color: var(--error);
 }
 
-/* The line under each list of the index: why it is empty or not listed. */
-.status {
-	color: var(--muted);
-}
-
-.status:empty {
-	display: none;
-}
-
-.status.error {
-	color: var(--error);
-}
-
 #view {
 	display: flex;
 	flex-direction: column;
@@ -376,22 +363,201 @@ dialog .buttons {
 	margin-top: 0.8rem;
 }
 
-/* The index */
+/* The index fills the window, as the editor: a tab for the templates, one for the documents and one for the API. The
+   list tabs have the tree of the folders on the left and the entries of the folder chosen on the right, each part
+   scrolling inside if it does not fit. */
+
+body.index-page {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	overflow: hidden;
+}
+
+body.index-page .bar {
+	flex: none;
+}
 
 main.index {
+	flex: 1 1 0;
+	min-height: 0;
+	gap: 0;
+	padding: 0;
+}
+
+/* The left half: the lists, or the API. */
+.lists {
+	min-width: 0;
+	min-height: 0;
+	border-right: 1px solid var(--line);
+}
+
+.browser {
+	display: grid;
+	grid-template-columns: 15rem minmax(0, 1fr);
+	height: 100%;
+}
+
+/* The right half: the PDF of the last PDF button. */
+.preview {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: 0;
+	padding: 0.75rem 1rem;
+}
+
+.preview-bar {
+	display: flex;
+	align-items: baseline;
+	gap: 1rem;
+	flex: none;
+	margin-bottom: 0.5rem;
+}
+
+#preview-title {
+	min-width: 0;
+	overflow-wrap: anywhere;
+	font-family: var(--stxt-font-mono, monospace);
+	font-size: 13px;
+}
+
+#preview-title.error {
+	color: var(--error);
+}
+
+.preview-bar .links {
+	display: flex;
+	gap: 0.8rem;
+	margin-left: auto;
+	white-space: nowrap;
+}
+
+#preview-frame {
+	flex: 1 1 0;
+	min-height: 0;
+	width: 100%;
+	border: 1px solid var(--line);
+}
+
+.index li.current {
+	background: var(--surface);
+	box-shadow: inset 3px 0 0 var(--accent);
+	padding-left: 0.5rem;
+}
+
+.folders {
+	overflow: auto;
+	padding: 0.5rem 0;
+	border-right: 1px solid var(--line);
+	background: var(--surface);
+}
+
+.folder-row {
+	display: flex;
+	align-items: stretch;
+}
+
+.folder-row .caret {
+	flex: none;
+	width: 1.6rem;
+	padding: 0;
+	border: none;
+	background: none;
+	color: var(--muted);
+}
+
+.folder-row .name {
+	display: flex;
+	flex: 1 1 auto;
+	min-width: 0;
+	justify-content: space-between;
+	gap: 0.5rem;
+	padding: 0.15rem 0.8rem 0.15rem 0;
+	border: none;
+	background: none;
+	color: var(--text);
+	text-align: left;
+}
+
+.folder-row .name:hover {
+	color: var(--accent);
+}
+
+.folder-row .name[aria-current="true"] {
+	color: var(--accent);
+	font-weight: 600;
+}
+
+.folder-row .name span:first-child {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.folder-row .count {
+	color: var(--muted);
+	font-size: 12px;
+	font-weight: 400;
+}
+
+.entries,
+.api {
+	height: 100%;
+	overflow: auto;
+	padding: 0.75rem 1rem;
+}
+
+.api {
 	max-width: 72rem;
 }
 
 .index h1 {
-	margin: 0 0 0.6rem;
-	font-size: 18px;
+	margin: 0 0 0.4rem;
+	font-size: 16px;
+	font-family: var(--stxt-font-mono, monospace);
 }
 
-.index .folder h2 {
+.index .entries h2 {
 	margin: 0.8rem 0 0.2rem;
 	font-size: 13px;
 	font-weight: 600;
 	color: var(--muted);
+	font-family: var(--stxt-font-mono, monospace);
+}
+
+/* A narrow window: the tree above the entries and the PDF below them, and the page scrolls. */
+@media (max-width: 900px) {
+	body.index-page {
+		display: block;
+		height: auto;
+		overflow: visible;
+	}
+
+	.lists {
+		border-right: none;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.browser {
+		display: block;
+	}
+
+	#preview-frame {
+		flex: none;
+		height: 40rem;
+	}
+
+	.folders {
+		max-height: 16rem;
+		border-right: none;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.entries,
+	.api {
+		height: auto;
+	}
 }
 
 .index ul {
@@ -417,10 +583,6 @@ main.index {
 	align-items: center;
 	gap: 0.6rem;
 	margin-left: auto;
-}
-
-.index .new {
-	margin-top: 1rem;
 }
 
 .routes {

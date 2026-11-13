@@ -61,8 +61,12 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   not shown: neither its output, nor its error, nor its message. If `/fonts` fails, the next preview asks for the
   fonts again. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
-- The index, at `GET /`, without token: the templates and the documents of the server by folder, each with a link to
-  the editor and a button that opens its PDF, a link to a new document, and the routes of the API. The files of the index and the
+- The index, at `GET /`, without token, filling the window in two halves: on the left a tab for the documents (the
+  one it opens with), one for the templates and one for the routes of the API, and a link to a new document; the
+  documents and the templates tabs show the tree of their folders, each with how many entries it has, and the entries
+  of the folder chosen and below it, each with a link to the editor and a PDF button. On the right, the PDF of the last
+  PDF button, in the viewer of the browser, with links to edit and to download it. What it shows is in its hash (`/#documents/reference/01-values`), and the
+  name of the editor links back to the folder of what it shows. The files of the index and the
   editor are served under `/assets/`. It is turned off with the editor.
 - `GET /fonts` also lists the faces of the fonts (family, weight, style and the SHA-256 of the file), and
   `GET /fonts/{id}` gives the file of a face: the SVG pages name their fonts and do not carry them. Both are for the

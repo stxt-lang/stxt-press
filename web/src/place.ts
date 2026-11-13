@@ -1,6 +1,7 @@
 /**
- * The places of the editor, without the DOM: what its URL shows (a template, a document of the documents folder, or a
- * blank document), the URL of each one, the place of a mode button, and the entries by folder for the index.
+ * The places of the pages, without the DOM: what the URL of the editor shows (a template, a document of the documents
+ * folder, or a blank document), the URL of each one and the place of a mode button; and for the index, what its hash
+ * shows (a tab and a folder) and the tree of the folders.
  */
 
 /**
@@ -59,6 +60,128 @@ export function placeOfMode(next: Place["mode"], documentPaths: string[], templa
 	}
 	const path = templatePaths[0];
 	return path === undefined ? null : { mode: "template", path };
+}
+
+// ---- The index
+
+/** What the index shows: a tab, and in the templates and the documents tabs, a folder (`""` the root, `null` none yet). */
+export interface IndexPlace {
+	tab: "templates" | "documents" | "api";
+	folder: string | null;
+}
+
+const TABS: IndexPlace["tab"][] = ["templates", "documents", "api"];
+
+/** The place of the hash of the index (`#documents/reference/01-values`); the documents tab without a valid one. */
+export function parseIndexHash(hash: string): IndexPlace {
+	const text = hash.startsWith("#") ? hash.slice(1) : hash;
+	const slash = text.indexOf("/");
+	const tab = (slash < 0 ? text : text.slice(0, slash)) as IndexPlace["tab"];
+	if (!TABS.includes(tab)) {
+		return { tab: "documents", folder: null };
+	}
+	if (slash < 0 || tab === "api") {
+		return { tab, folder: null };
+	}
+	const folder = text.slice(slash + 1);
+	return { tab, folder: PATH.test(folder) ? folder : null };
+}
+
+/** The hash of a place of the index, as `parseIndexHash` reads it. The root folder is written as no folder. */
+export function indexHash(place: IndexPlace): string {
+	return place.folder ? `#${place.tab}/${place.folder}` : `#${place.tab}`;
+}
+
+/** The hash of the index that lists `place` of the editor: its folder in its tab. */
+export function indexHashOf(place: Place): string {
+	if (place.path === null) {
+		return "#documents";
+	}
+	const slash = place.path.lastIndexOf("/");
+	return indexHash({ tab: place.mode === "template" ? "templates" : "documents", folder: slash < 0 ? null : place.path.slice(0, slash) });
+}
+
+/** The folder of a path: `""` for one at the root. */
+export function folderOf(path: string): string {
+	const slash = path.lastIndexOf("/");
+	return slash < 0 ? "" : path.slice(0, slash);
+}
+
+/** Whether `path` is in `folder` or below it (`""` is the root: every path). */
+export function isUnder(path: string, folder: string): boolean {
+	return folder === "" || path.startsWith(`${folder}/`);
+}
+
+/**
+ * A folder in the tree of the index.
+ *
+ * - `label`: its last segment, or `/` for the root.
+ * - `depth`: its number of segments, minus one; the root is 0.
+ * - `count`: the entries in it and below it.
+ * - `parent`: whether it has folders below it, which it shows or hides.
+ */
+export interface FolderRow {
+	path: string;
+	label: string;
+	depth: number;
+	count: number;
+	parent: boolean;
+}
+
+/**
+ * The folders of the entries `paths` as a tree, in order: each folder that has entries and every folder above it, each
+ * one followed by those below it. The root is there only if it has entries of its own.
+ */
+export function folderRows(paths: string[]): FolderRow[] {
+	const folders = new Set<string>();
+	for (const path of paths) {
+		const folder = folderOf(path);
+		if (folder === "") {
+			folders.add("");
+			continue;
+		}
+		const segments = folder.split("/");
+		for (let i = 1; i <= segments.length; i++) {
+			folders.add(segments.slice(0, i).join("/"));
+		}
+	}
+	const sorted = [...folders].sort(compareFolders);
+	return sorted.map((path) => ({
+		path,
+		label: path === "" ? "/" : path.slice(path.lastIndexOf("/") + 1),
+		depth: path === "" ? 0 : path.split("/").length - 1,
+		count: paths.filter((entry) => isUnder(entry, path)).length,
+		parent: path !== "" && sorted.some((other) => other.startsWith(`${path}/`)),
+	}));
+}
+
+/** The order of the tree: segment by segment, so that a folder comes right before those below it; the root first. */
+function compareFolders(a: string, b: string): number {
+	const as = a === "" ? [] : a.split("/");
+	const bs = b === "" ? [] : b.split("/");
+	for (let i = 0; i < Math.min(as.length, bs.length); i++) {
+		if (as[i] !== bs[i]) {
+			return as[i] < bs[i] ? -1 : 1;
+		}
+	}
+	return as.length - bs.length;
+}
+
+/** The folders above `folder`, from the top: `a/b/c` gives `a` and `a/b`. */
+export function ancestors(folder: string): string[] {
+	const segments = folder === "" ? [] : folder.split("/");
+	return segments.slice(0, -1).map((_, i) => segments.slice(0, i + 1).join("/"));
+}
+
+/** The rows shown: those whose folders above are all open. */
+export function visibleRows(rows: FolderRow[], open: Set<string>): FolderRow[] {
+	return rows.filter((row) => ancestors(row.path).every((above) => open.has(above)));
+}
+
+/** The folder shown when the place names none, or one that is not there: the first one with entries of its own. */
+export function defaultFolder(rows: FolderRow[], paths: string[]): string | null {
+	const own = rows.find((row) => paths.some((path) => folderOf(path) === row.path));
+	return own ? own.path : null;
 }
 
 /**
