@@ -616,6 +616,40 @@ main.index {
 	font-size: 12px;
 }
 
+/* An entry of a list: the row shows its SVG pages, and its name is the button that does it. */
+.index #entries li {
+	cursor: pointer;
+}
+
+.index #entries li:hover {
+	background: var(--surface);
+}
+
+button.entry {
+	padding: 0;
+	border: none;
+	background: none;
+	color: var(--accent);
+	text-align: left;
+	text-decoration: underline;
+}
+
+/* A link that looks as a quiet button: Edit, beside the PDF button. */
+a.button {
+	display: inline-block;
+	padding: 0.35rem 0.8rem;
+	border: 1px solid var(--accent);
+	background: #fff;
+	color: var(--accent);
+	text-decoration: none;
+	line-height: normal;
+}
+
+a.button.small {
+	padding: 0.1rem 0.5rem;
+	font-size: 12px;
+}
+
 .index li .links {
 	display: flex;
 	align-items: center;

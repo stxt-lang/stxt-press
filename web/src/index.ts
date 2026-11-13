@@ -1,8 +1,9 @@
 /**
  * The index of stxt-press, at GET /, in two halves, as the editor. On the left a tab for the documents of the server,
  * one for its templates and one for the routes of the API; the documents and the templates tabs show the tree of their
- * folders and the entries of the folder chosen and those below it, each with a link to the editor and two buttons that
- * show it. On the right, its SVG pages or its PDF, in the viewer of the browser.
+ * folders and the entries of the folder chosen and those below it: a click on one shows its SVG pages, and each has a
+ * link to the editor and a button that shows its PDF. On the right, those pages or that PDF, in the viewer of the
+ * browser.
  * What it shows is in its hash (`#documents/reference/01-values`, see `parseIndexHash`), so a reload or the back button
  * shows it again. It does not load the editors: they are in editor.js.
  */
@@ -326,10 +327,20 @@ function showEntries(tab: ListTab, entries: Entry[], folder: string): void {
 			const item = list.appendChild(element("li"));
 			item.dataset.tab = tab;
 			item.dataset.path = entry.path;
-			item.appendChild(link(nameOf(entry.path), placeUrl({ mode: LISTS[tab].mode, path: entry.path })));
+			// The entry itself shows its SVG pages, the fast preview; its name is the button, for the keyboard, and a
+			// click anywhere on the row but its actions does the same.
+			const show = () => void preview(tab, entry.path, "svg");
+			item.onclick = (event) => {
+				if (!(event.target as Element).closest("a, button")) {
+					show();
+				}
+			};
+			const name = item.appendChild(button(nameOf(entry.path), "entry", show));
+			name.title = `Show the pages of ${entry.path}`;
 			item.appendChild(element("span", marks(entry), "muted"));
 			const actions = item.appendChild(element("span", undefined, "links"));
-			actions.appendChild(button("SVG", "quiet small", () => void preview(tab, entry.path, "svg")));
+			const edit = actions.appendChild(link("Edit", placeUrl({ mode: LISTS[tab].mode, path: entry.path })));
+			edit.className = "button quiet small";
 			actions.appendChild(button("PDF", "quiet small", () => void preview(tab, entry.path, "pdf")));
 		}
 	}
