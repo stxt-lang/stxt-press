@@ -20,7 +20,6 @@ Styles (dev.stxt.pdf):
 			Line height: 14.5
 			Color: ink
 			Numbered: true
-			Kerning: true
 	For element: Heading 1
 		Typography:
 			Font: IBM Plex Serif
