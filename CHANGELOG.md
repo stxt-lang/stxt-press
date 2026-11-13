@@ -63,7 +63,7 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   fonts again. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
 - The index, at `GET /`, without token, filling the window in two halves: on the left a tab for the documents (the
-  one it opens with), one for the templates and one for the routes of the API, and a link to a new document; the
+  one it opens with), one for the templates and one for the routes of the API; the
   documents and the templates tabs show the tree of their folders, each with how many entries it has, and the entries
   of the folder chosen and below it, each with a link to the editor and a PDF button. On the right, the PDF of the last
   PDF button, in the viewer of the browser, with links to edit and to download it. What it shows is in its hash (`/#documents/reference/01-values`), and the
@@ -76,7 +76,8 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   the images of the examples of `stxt-pdf` in `resources/`, and sample templates in `templates/examples/`: one for each
   example of `stxt-pdf` (an invoice, a letter, a resume, an annual report, a newsletter, a menu, a contract, a manual,
   a catalog, a certificate and a timetable), with Slots for what changes from one document to another, its styles and
-  its sample data, which give the pages of the example; and documents in `documents/`: complete examples of other
+  its sample data, which give the pages of the example, and a `.styles.stxt` with the base typography for a new
+  template of the folder; and documents in `documents/`: complete examples of other
   kinds of documents (`examples/`) and a reference of the layout language, one small document for each use, with a
   line that says what it shows (`reference/`). Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, for the
   editors with discovery. `start --config server/server.stxt` starts it.
@@ -149,4 +150,11 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - In the editor, **Save** and Ctrl+S, with `Save` on: the files that changed, asking first for a `.styles.stxt` of a
   folder. Each half of the editor, and the PDF of the index, has a button that puts it over the window, under the bar,
   which keeps its buttons and gets a cross that puts it back, as Esc does (the idea of the editor of `pdf_gen`). The buttons say how long they took (`PDF in 312 ms.`).
+- The creation of a template or a document, with `Save` on: the same `PUT` with `If-None-Match: *` creates its `.stxt`
+  and, if the body has them, its own styles and its sample data, in a folder that exists (`Templates.create`); it
+  answers `201`, and `412` (`TEMPLATE_EXISTS`, `DOCUMENT_EXISTS`) if there is already one at that path. The lists of
+  `/files/templates` and `/files/documents` say whether the server creates (`writable`). In the index, to the right of
+  the name of the folder, **New document** or **New template** asks for its name, checks that it is valid and not that
+  of one in the folder, creates it with a page that has its name as title and heading, and opens it in the editor;
+  without `Save`, the documents tab has **Blank document** there, the editor without a file.
 - The `server.stxt` of `server/` has `Save: true`.

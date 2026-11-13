@@ -8,7 +8,7 @@
  */
 import { $, askToken, call, errorOf, say } from "./api";
 import { maximizable } from "./maximize";
-import { took } from "./model";
+import { createRequest, newEntryPath, took } from "./model";
 import { ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, parseIndexHash, placeUrl, visibleRows } from "./place";
 import type { FolderRow, IndexPlace, Place } from "./place";
 
@@ -27,8 +27,14 @@ const LISTS: Record<ListTab, { mode: Place["mode"]; title: string; print: string
 	documents: { mode: "document", title: "Documents", print: "/documents" },
 };
 
-/** The entries of each list tab once the server gave them, or why it did not. */
-const lists: Record<ListTab, { entries?: Entry[]; problem?: string; error?: boolean }> = { templates: {}, documents: {} };
+/**
+ * The entries of each list tab once the server gave them, and whether it creates new ones (`Save` on), or why it did
+ * not give them.
+ */
+const lists: Record<ListTab, { entries?: Entry[]; writable?: boolean; problem?: string; error?: boolean }> = {
+	templates: {},
+	documents: {},
+};
 /** The folders open in the tree of each list tab: those whose folders below are shown. */
 const open: Record<ListTab, Set<string>> = { templates: new Set(), documents: new Set() };
 /** The last folder shown in each list tab, which its tab button goes back to. */
@@ -203,9 +209,82 @@ function showFolders(tab: ListTab, rows: FolderRow[], folder: string): void {
 	}
 }
 
+/**
+ * What adds an entry to the folder shown, to the right of its title: with `Save` on, a button that asks for the name of
+ * a new template or document and creates it there; without it, in the documents tab, the link to a blank document of
+ * the editor, which is not kept.
+ */
+function showNew(tab: ListTab | null, folder: string): void {
+	const writable = tab !== null && lists[tab].writable === true;
+	const add = $<HTMLButtonElement>("new-entry");
+	add.hidden = !writable;
+	if (tab !== null && writable) {
+		add.textContent = `New ${LISTS[tab].mode}`;
+		add.title = `A new ${LISTS[tab].mode} in ${folder === "" ? "the root folder" : `${folder}/`}`;
+		add.onclick = () => void create(tab, folder);
+	}
+	$("blank-document").hidden = writable || tab !== "documents";
+}
+
+/**
+ * Asks for the name of a new template or document in `folder`, until it is a valid one that the folder does not have,
+ * and creates it in the server (`PUT` with `If-None-Match: *`); then opens it in the editor.
+ */
+async function create(tab: ListTab, folder: string): Promise<void> {
+	const noun = LISTS[tab].mode;
+	const dialog = $<HTMLDialogElement>("new-dialog");
+	const input = $<HTMLInputElement>("new-name");
+	const problem = $("new-problem");
+	$("new-question").textContent = `The name of the new ${noun} in ${folder === "" ? "the root folder" : `${folder}/`}:`;
+	input.value = "";
+	problem.textContent = "";
+	const ok = $<HTMLButtonElement>("new-ok");
+	ok.disabled = false;
+	dialog.showModal();
+	const done = () => {
+		ok.onclick = null;
+		$("new-cancel").onclick = null;
+		input.onkeydown = null;
+		input.oninput = null;
+		dialog.close();
+	};
+	const submit = async () => {
+		const asked = newEntryPath(input.value, folder, (lists[tab].entries ?? []).map((entry) => entry.path), noun);
+		if ("problem" in asked) {
+			problem.textContent = asked.problem;
+			input.focus();
+			return;
+		}
+		ok.disabled = true;
+		const request = createRequest(noun, asked.path);
+		const response = await call("PUT", request.url, request.body, "application/json", { "If-None-Match": "*" });
+		ok.disabled = false;
+		if (!response.ok) {
+			const error = await errorOf(response);
+			problem.textContent = error.code === "TEMPLATE_EXISTS" || error.code === "DOCUMENT_EXISTS"
+				? `There is already a ${noun} called ${nameOf(asked.path)} in this folder.`
+				: `${error.code}: ${error.message}`;
+			return;
+		}
+		done();
+		location.href = placeUrl({ mode: noun, path: asked.path });
+	};
+	ok.onclick = () => void submit();
+	$("new-cancel").onclick = done;
+	input.oninput = () => {
+		problem.textContent = "";
+	};
+	input.onkeydown = (event) => {
+		if (event.key === "Enter") {
+			void submit();
+		}
+	};
+}
+
 /** The entries of `folder` and of those below it, by folder, each with its link to the editor and its PDF. */
 function showEntries(tab: ListTab, entries: Entry[], folder: string): void {
 	$("folder-title").textContent = folder === "" ? "/" : `${folder}/`;
+	showNew(tab, folder);
 	const host = $("entries");
 	host.replaceChildren();
 	const groups = byFolder(entries.filter((entry) => isUnder(entry.path, folder)));
@@ -236,6 +315,7 @@ function show(): void {
 	$("api").hidden = place.tab !== "api";
 	$("browser").hidden = place.tab === "api";
 	say("");
+	showNew(null, "");
 	if (place.tab === "api") {
 		return;
 	}
@@ -246,10 +326,15 @@ function show(): void {
 	$("folder-title").textContent = LISTS[tab].title;
 	if (!list.entries) {
 		say(list.problem ?? "Loading…", list.error === true);
+		if (list.problem !== undefined) {
+			showNew(tab, "");
+		}
 		return;
 	}
 	if (list.entries.length === 0) {
 		say(`The server has no ${tab}.`);
+		// The first one goes in the root folder.
+		showNew(tab, "");
 		return;
 	}
 	const paths = list.entries.map((entry) => entry.path);
@@ -292,7 +377,8 @@ async function versions(): Promise<void> {
 async function load(tab: ListTab): Promise<void> {
 	const listed = await call("GET", `/files/${tab}`);
 	if (listed.ok) {
-		lists[tab] = { entries: ((await listed.json()) as Record<string, Entry[]>)[tab] };
+		const body = (await listed.json()) as Record<string, Entry[]> & { writable?: boolean };
+		lists[tab] = { entries: body[tab], writable: body.writable === true };
 	} else if (listed.status === 404) {
 		off("route-files");
 		off("route-files-texts");

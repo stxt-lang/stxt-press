@@ -341,6 +341,48 @@ export function saveRequest(state: State): SaveRequest | null {
 	};
 }
 
+/** What the name of a new template or document can be: one segment of a path of the server. */
+const NAME = /^[A-Za-z0-9_-]+$/;
+
+/**
+ * The path of a new template or document called `name` in `folder`, or why it cannot be: a name that is not one segment
+ * of a path, or that of one already in the folder (`existing` are the paths of the list). The names are compared
+ * without case: a Windows server would not tell `Letter` from `letter`, and two such names would confuse anyway.
+ */
+export function newEntryPath(name: string, folder: string, existing: string[], noun: string)
+	: { path: string } | { problem: string } {
+	const trimmed = name.trim();
+	if (!NAME.test(trimmed)) {
+		return { problem: "The name can have only letters, digits, - and _." };
+	}
+	const path = folder === "" ? trimmed : `${folder}/${trimmed}`;
+	if (existing.some((other) => other.toLowerCase() === path.toLowerCase())) {
+		return { problem: `There is already a ${noun} called ${trimmed} in this folder.` };
+	}
+	return { path };
+}
+
+/**
+ * The first text of a new template or document: an A4 page with its name as title and heading, which converts as it
+ * is, under the styles of its folder.
+ */
+export function newDocumentText(name: string): string {
+	return `Document (dev.stxt.pdf):\n\tLanguage: en\n\tTitle: ${name}\n\tPage:\n\t\tPaper: A4\n\t\tMargin: 20mm\n`
+		+ `\tSection:\n\t\tHeading 1:\n\t\t\tText: ${name}\n`;
+}
+
+/**
+ * The request that creates a new template or document: a `PUT` of its files with `If-None-Match: *`, which the server
+ * refuses if there is already one at that path.
+ */
+export function createRequest(mode: "template" | "document", path: string): { url: string; body: string } {
+	const name = path.slice(path.lastIndexOf("/") + 1);
+	return {
+		url: `/files/${mode === "template" ? "templates" : "documents"}/${path}`,
+		body: JSON.stringify({ document: newDocumentText(name) }),
+	};
+}
+
 /** The message of something that took `ms` milliseconds: `Converted in 312 ms.`, `Converted in 1.4 s.` */
 export function took(what: string, ms: number): string {
 	return `${what} in ${ms < 1000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`}.`;

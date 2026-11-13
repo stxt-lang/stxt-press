@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
-	curl, documentPanels, fileName, isUnchanged, jsonErrorLine, parseData, request, saveRequest, serverMessage, tabState, tabs,
+	createRequest, curl, documentPanels, fileName, isUnchanged, jsonErrorLine, newDocumentText, newEntryPath, parseData, request, saveRequest, serverMessage, tabState, tabs,
 	target, templatePanels, took, validatesDocument,
 } from "../src/model.ts";
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
@@ -460,5 +460,39 @@ describe("the save", () => {
 	it("says how long something took", () => {
 		assert.equal(took("PDF", 312.4), "PDF in 312 ms.");
 		assert.equal(took("Saved a.stxt", 1440), "Saved a.stxt in 1.4 s.");
+	});
+});
+
+describe("a new template or document", () => {
+	const existing = ["examples/blue-hour", "examples/Letter", "reference/01-values/01-lengths"];
+
+	it("is a name of one segment in the folder chosen", () => {
+		assert.deepEqual(newEntryPath(" poster ", "examples", existing, "document"), { path: "examples/poster" });
+		assert.deepEqual(newEntryPath("my_report-2", "", existing, "document"), { path: "my_report-2" });
+	});
+
+	it("is not a name with other characters, nor a path", () => {
+		for (const name of ["", "  ", "a/b", "a.stxt", "a b", "../x", ".styles", "año"]) {
+			assert.ok("problem" in newEntryPath(name, "examples", existing, "document"), name);
+		}
+	});
+
+	it("is not one the folder already has, whatever its case", () => {
+		assert.deepEqual(newEntryPath("blue-hour", "examples", existing, "document"),
+			{ problem: "There is already a document called blue-hour in this folder." });
+		assert.ok("problem" in newEntryPath("letter", "examples", existing, "template"));
+		// The same name in another folder is another path.
+		assert.deepEqual(newEntryPath("blue-hour", "", existing, "document"), { path: "blue-hour" });
+	});
+
+	it("starts as a page with its name, created with a PUT of its document", () => {
+		const text = newDocumentText("poster");
+		assert.ok(text.startsWith("Document (dev.stxt.pdf):\n"), text);
+		assert.match(text, /\n\tTitle: poster\n/);
+		assert.match(text, /\n\tPage:\n/);
+		assert.match(text, /\n\t\t\tText: poster\n/);
+		assert.deepEqual(createRequest("document", "examples/poster"),
+			{ url: "/files/documents/examples/poster", body: JSON.stringify({ document: text }) });
+		assert.equal(createRequest("template", "examples/poster").url, "/files/templates/examples/poster");
 	});
 });

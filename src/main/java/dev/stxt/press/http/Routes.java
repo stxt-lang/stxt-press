@@ -309,10 +309,10 @@ final class Routes {
     }
 
     /**
-     * {@code GET /files/templates} and {@code GET /files/documents}: the paths, each with whether it has its own styles and, a
-     * template, sample data.
+     * {@code GET /files/templates} and {@code GET /files/documents}: the paths, each with whether it has its own styles
+     * and, a template, sample data; and whether new ones can be created ({@code writable}, with {@code Save} on).
      */
-    private static void list(HttpExchange exchange, Templates folder, Templates.Kind kind) throws Exception {
+    private void list(HttpExchange exchange, Templates folder, Templates.Kind kind) throws Exception {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Templates.Entry entry : folder == null ? List.<Templates.Entry>of() : folder.list()) {
             Map<String, Object> item = new LinkedHashMap<>();
@@ -323,7 +323,10 @@ final class Routes {
             }
             list.add(item);
         }
-        Responses.sendJson(exchange, 200, Map.of(kind.noun() + "s", list));
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(kind.noun() + "s", list);
+        body.put("writable", config.save() && folder != null);
+        Responses.sendJson(exchange, 200, body);
     }
 
     /**
@@ -336,15 +339,16 @@ final class Routes {
             save(exchange, folder, kind, path);
             return;
         }
-        sendTexts(exchange, kind, get(folder, kind, path), null);
+        sendTexts(exchange, 200, kind, get(folder, kind, path), null);
     }
 
     /**
      * {@code PUT /files/templates/{path}} and {@code PUT /files/documents/{path}}, with {@code Save} on: writes the
      * files of the body ({@link SaveBody}) if they are still those of the version of {@code If-Match}, the {@code ETag}
      * of the {@code GET} they come from. It answers as the {@code GET}, with the new version, and the files it wrote
-     * ({@code written}). A JSON body is required, so that a form of another site cannot send one without the preflight
-     * of CORS, which the server does not answer.
+     * ({@code written}). With {@code If-None-Match: *} instead, it creates a new one ({@link Templates#create}), which
+     * must not exist ({@code 412}), and answers {@code 201}. A JSON body is required, so that a form of another site
+     * cannot send one without the preflight of CORS, which the server does not answer.
      */
     private void save(HttpExchange exchange, Templates folder, Templates.Kind kind, String path) throws Exception {
         String type = exchange.getRequestHeaders().getFirst("Content-Type");
@@ -352,10 +356,12 @@ final class Routes {
             throw new HttpError(415, HttpError.CONTENT_TYPE_NOT_VALID, "A save takes a body of type "
                     + Responses.JSON_TYPE);
         }
+        String noneMatch = exchange.getRequestHeaders().getFirst("If-None-Match");
+        boolean create = noneMatch != null && noneMatch.trim().equals("*");
         String match = exchange.getRequestHeaders().getFirst("If-Match");
-        if (match == null || match.isBlank()) {
+        if (!create && (match == null || match.isBlank())) {
             throw new HttpError(428, HttpError.VERSION_REQUIRED, "A save takes If-Match with the ETag of the GET of the "
-                    + kind.noun() + ", so that it does not undo a change made since");
+                    + kind.noun() + ", so that it does not undo a change made since, or If-None-Match: * to create one");
         }
         Templates.Change change = SaveBody.change(Requests.body(exchange, config.maxBodySize()), kind);
         if (folder == null) {
@@ -363,11 +369,11 @@ final class Routes {
         }
         Templates.Saved saved;
         try {
-            saved = folder.save(path, unquote(match), change);
+            saved = create ? folder.create(path, change) : folder.save(path, unquote(match), change);
         } catch (IllegalArgumentException e) {
             throw new HttpError(400, HttpError.BODY_NOT_VALID, e.getMessage());
         }
-        sendTexts(exchange, kind, saved.template(), saved.written());
+        sendTexts(exchange, create ? 201 : 200, kind, saved.template(), saved.written());
     }
 
     /** {@return the version of an {@code If-Match}: without its quotes and without a weak {@code W/}} */
@@ -381,8 +387,8 @@ final class Routes {
     }
 
     /** Answers with the texts of {@code template}, its version and, after a save, the files written. */
-    private void sendTexts(HttpExchange exchange, Templates.Kind kind, Template template, List<String> written)
-            throws IOException {
+    private void sendTexts(HttpExchange exchange, int status, Templates.Kind kind, Template template,
+            List<String> written) throws IOException {
         List<Map<String, Object>> styles = new ArrayList<>();
         for (Job.Styles item : template.styles()) {
             styles.add(Map.of("path", item.name(), "text", item.text()));
@@ -399,7 +405,7 @@ final class Routes {
             body.put("written", written);
         }
         exchange.getResponseHeaders().set("ETag", "\"" + template.version() + "\"");
-        Responses.sendJson(exchange, 200, body);
+        Responses.sendJson(exchange, status, body);
     }
 
     /** {@return the template or the document of {@code path} in {@code folder}, which may be {@code null}} */

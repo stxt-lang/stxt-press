@@ -16,7 +16,6 @@
 			<button type="button" data-tab="templates" aria-pressed="false">Templates</button>
 			<button type="button" data-tab="api" aria-pressed="false">API</button>
 		</nav>
-		<a href="/editor">New document</a>
 		<span id="versions" class="muted"></span>
 		<button type="button" id="token" class="quiet">Token</button>
 	</header>
@@ -25,7 +24,11 @@
 		<div id="browser" class="browser">
 			<nav id="folders" class="folders" aria-label="Folders"></nav>
 			<section class="entries" aria-labelledby="folder-title">
-				<h1 id="folder-title"></h1>
+				<div class="entries-head">
+					<h1 id="folder-title"></h1>
+					<button type="button" id="new-entry" class="small" hidden>New document</button>
+					<a id="blank-document" href="/editor" hidden title="This server does not save: a blank document to try, not kept">Blank document</a>
+				</div>
 				<p id="message" role="status"></p>
 				<div id="entries"></div>
 			</section>
@@ -62,6 +65,15 @@
 			<iframe id="preview-frame" title="PDF" hidden></iframe>
 		</section>
 	</main>
+	<dialog id="new-dialog">
+		<p id="new-question"></p>
+		<input type="text" id="new-name" autocomplete="off" spellcheck="false" aria-label="Name" aria-describedby="new-problem">
+		<p id="new-problem" class="problem" role="alert"></p>
+		<div class="buttons">
+			<button type="button" id="new-ok">Create</button>
+			<button type="button" id="new-cancel" class="quiet">Cancel</button>
+		</div>
+	</dialog>
 	<dialog id="token-dialog">
 		<p>The server asks for a token.</p>
 		<input type="password" id="token-input" autocomplete="off" aria-label="Token">

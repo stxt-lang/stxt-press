@@ -68,6 +68,7 @@ An error is a JSON body with its `code` and its `message`:
 | `404` | The route, the template or the document does not exist (`NOT_FOUND`, `TEMPLATE_NOT_FOUND`, `DOCUMENT_NOT_FOUND`) |
 | `405` | The method is not one of the route, which the `Allow` header lists |
 | `409` | A save from a version that is not that of the files any more (`FILES_CHANGED`) |
+| `412` | A creation where there is already a template or a document (`TEMPLATE_EXISTS`, `DOCUMENT_EXISTS`) |
 | `413` | The body is larger than the server accepts (`BODY_TOO_LARGE`), or the document exceeds a limit of the engine |
 | `422` | The document, its styles or its data are not valid |
 | `503` | The conversion ran out of time (`CANCELLED`), the server is converting as many as it can or stopping (`SERVER_BUSY`), or it is warming up (`SERVER_STARTING`, `/health` too) |
@@ -128,12 +129,28 @@ created, and no file is deleted. The answer is that of the `GET`, with the new `
 (`"written"`). A save needs `Content-Type: application/json` (`415`, `CONTENT_TYPE_NOT_VALID`) and `If-Match` (`428`,
 `VERSION_REQUIRED`). Without `Save`, `PUT` is a `405`. A server that others reach should have a token with `Save` on.
 
+With `If-None-Match: *` instead of `If-Match`, the same `PUT` creates a new template or document: its `.stxt` and, if
+the body has them, its own styles and its sample data, with LF. There must be none at that path (`412`,
+`TEMPLATE_EXISTS`, `DOCUMENT_EXISTS`), and its folder has to exist (`404`): no folder is created. It answers `201`,
+as the `GET` of the new one. The lists of `/files/templates` and `/files/documents` say whether the server creates
+(`"writable"`).
+
+```bash
+curl -X PUT -H 'Content-Type: application/json' -H 'If-None-Match: *' \
+    --data-binary '{"document": "Document (dev.stxt.pdf): ..."}' \
+    http://127.0.0.1:8080/files/documents/examples/poster
+```
+
 ## Index and editor
 
 `GET /` is the index, which fills the window in two halves, as the editor. On the left, a tab for the documents (the
-one it opens with), one for the templates and one for the routes of the API, and a link to a new document. The
-documents and the templates tabs show the tree of their folders, with how many entries each one has, and the entries
-of the folder chosen and of those below it, each with a link to the editor and a **PDF** button. On the right, the PDF
+one it opens with), one for the templates and one for the routes of the API. The documents and the templates tabs
+show the tree of their folders, with how many entries each one has, and the entries of the folder chosen and of those
+below it, each with a link to the editor and a **PDF** button. To the right of the name of the folder, with `Save` on,
+**New document** (or **New template**) asks for a name, which can have only letters, digits, `-` and `_` and cannot be
+that of one in the folder, creates it there with a page that has its name as title and heading, and opens it in the
+editor; its look comes from the `.styles.stxt` of its folders. Without `Save`, the documents tab has there **Blank
+document**, the editor without a file, which is not kept. On the right, the PDF
 of the last **PDF** button, in the viewer of the browser, with links to edit it and to download it with its name; the
 entry it is of is marked in its list. Choosing a folder leaves only its branch open. What the index shows is in its
 hash (`/#documents/reference/01-values`), and the name of the editor goes back to the folder of what it shows.
@@ -272,7 +289,8 @@ defaults; the fonts IBM Plex Sans, Serif and Mono and
 the images of the examples of stxt-pdf in `resources/`; and side by side in `templates/examples/`, one template for
 each example of stxt-pdf (`invoice`, `letter`, `resume`, `annual-report`, `newsletter`, `menu`, `contract`, `manual`,
 `catalog`, `certificate` and `timetable`), with Slots for what changes from one document to another, its styles and its sample data,
-which give the example; and in `documents/`, documents printed as they are: complete examples of other kinds of
+which give the example, and a `.styles.stxt` with the base typography, which a new template of the folder takes and
+those of the examples set again; and in `documents/`, documents printed as they are: complete examples of other kinds of
 documents side by side in `documents/examples/`, and in `documents/reference/` a reference of the layout language, one small
 document for each use, with a line that says what it shows. Its `.stxt/` has the schemas `dev.stxt.pdf` and `dev.stxt.press`, so that an editor
 with discovery (VS Code with the STXT extension) checks and completes every file of the folder. `server/start.sh`

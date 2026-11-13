@@ -365,6 +365,14 @@ dialog .buttons {
 	margin-top: 0.8rem;
 }
 
+dialog .problem {
+	min-height: 1.2em;
+	margin: 0.4rem 0 0;
+	max-width: 18rem;
+	color: var(--error);
+	font-size: 13px;
+}
+
 /* The index fills the window, as the editor: a tab for the templates, one for the documents and one for the API. The
    list tabs have the tree of the folders on the left and the entries of the folder chosen on the right, each part
    scrolling inside if it does not fit. */
@@ -518,6 +526,22 @@ main.index {
 	margin: 0 0 0.4rem;
 	font-size: 16px;
 	font-family: var(--stxt-font-mono, monospace);
+}
+
+/* The title of the folder, and to its right what adds an entry to it. */
+.entries-head {
+	display: flex;
+	align-items: baseline;
+	gap: 0.75rem;
+	margin-bottom: 0.4rem;
+}
+
+.entries-head h1 {
+	margin: 0;
+}
+
+.entries-head a {
+	font-size: 13px;
 }
 
 .index .entries h2 {

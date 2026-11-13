@@ -410,8 +410,8 @@ class PressServerTest {
     void aServerWithoutFoldersHasNoTemplatesOrDocuments() throws Exception {
         server = PressServer.start(SHARED, null, null, ServerConfig.DEFAULT.withAddress("127.0.0.1", 0));
 
-        assertEquals("{\"templates\":[]}", text(get("/files/templates")));
-        assertEquals("{\"documents\":[]}", text(get("/files/documents")));
+        assertEquals("{\"templates\":[],\"writable\":false}", text(get("/files/templates")));
+        assertEquals("{\"documents\":[],\"writable\":false}", text(get("/files/documents")));
         error(get("/print/hello"), 404, "TEMPLATE_NOT_FOUND");
         error(get("/documents/hello"), 404, "DOCUMENT_NOT_FOUND");
         error(get("/files/documents/hello"), 404, "DOCUMENT_NOT_FOUND");
@@ -1094,5 +1094,50 @@ class PressServerTest {
                 HttpError.BODY_NOT_VALID);
         error(put("/files/templates/missing", body, "application/json", version), 404, TemplateException.NOT_FOUND);
         assertEquals(DOCUMENT, Files.readString(templates.folder().resolve("hello.stxt")));
+    }
+
+    // ---- The creation
+
+    /** A {@code PUT} with {@code If-None-Match: *}, which creates. */
+    private HttpResponse<byte[]> create(String path, String body) throws Exception {
+        return CLIENT.send(request(path).PUT(BodyPublishers.ofString(body)).header("Content-Type", "application/json")
+                .header("If-None-Match", "*").build(), BodyHandlers.ofByteArray());
+    }
+
+    @Test
+    void aNewDocumentIsCreatedOnceAndThenPrinted() throws Exception {
+        start(ServerConfig.DEFAULT.withSave(true));
+        assertTrue(json(get("/files/documents")).get("writable").asBoolean());
+        String body = JSON.writeValueAsString(Map.of("document", DOCUMENT.replace("Hello.", "New.")));
+
+        HttpResponse<byte[]> created = create("/files/documents/letters/note", body);
+
+        assertEquals(201, created.statusCode(), () -> text(created));
+        assertEquals("[\"letters/note.stxt\"]", json(created).get("written").toString());
+        assertEquals(etag(created), etag(get("/files/documents/letters/note")));
+        // It takes the styles of its folder, as the others.
+        assertTrue(json(created).get("styles").findValuesAsText("path").contains(".styles.stxt"));
+        assertTrue(isPdf(get("/documents/letters/note").body()));
+
+        // Once it exists, another creation is refused and writes nothing.
+        String other = JSON.writeValueAsString(Map.of("document", DOCUMENT.replace("Hello.", "Other.")));
+        error(create("/files/documents/letters/note", other), 412, TemplateException.DOCUMENT_EXISTS);
+        assertTrue(Files.readString(documents.folder().resolve("letters/note.stxt")).contains("New."));
+        error(create("/files/templates/hello", other), 412, TemplateException.EXISTS);
+        assertEquals(DOCUMENT, Files.readString(templates.folder().resolve("hello.stxt")));
+        // Its folder has to exist.
+        error(create("/files/documents/missing/note", body), 404, TemplateException.DOCUMENT_NOT_FOUND);
+        assertFalse(Files.exists(documents.folder().resolve("missing")));
+    }
+
+    @Test
+    void withoutSaveNothingIsCreated() throws Exception {
+        start(ServerConfig.DEFAULT);
+        assertFalse(json(get("/files/templates")).get("writable").asBoolean());
+
+        error(create("/files/templates/fresh", JSON.writeValueAsString(Map.of("document", DOCUMENT))), 405,
+                HttpError.METHOD_NOT_ALLOWED);
+
+        assertFalse(Files.exists(templates.folder().resolve("fresh.stxt")));
     }
 }

@@ -87,6 +87,7 @@ final class Responses {
             status = switch (template.reason()) {
                 case NOT_FOUND -> 404;
                 case CHANGED -> 409;
+                case EXISTS -> 412;
                 case LINK_OUTSIDE -> 500;
             };
             if (status == 500) {

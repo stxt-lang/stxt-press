@@ -3,12 +3,15 @@ package dev.stxt.press.templates;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,7 +49,7 @@ import dev.stxt.utils.FileUtils;
  * {@link TemplateException#DOCUMENT_LINK_OUTSIDE}).</p>
  *
  * <p>{@link #save} writes the files of a template or a document, under the same rules: only those of its chain, and
- * never through a link that leaves the folder.</p>
+ * never through a link that leaves the folder. {@link #create} creates a new one in a folder that exists.</p>
  */
 public final class Templates {
 
@@ -62,20 +65,24 @@ public final class Templates {
     /** What a folder has: templates, with their sample data, or documents, converted as they are. */
     public enum Kind {
         /** The templates of {@code /print}, with their sample data. */
-        TEMPLATE("template", "templates", TemplateException.NOT_FOUND, TemplateException.LINK_OUTSIDE),
+        TEMPLATE("template", "templates", TemplateException.NOT_FOUND, TemplateException.LINK_OUTSIDE,
+                TemplateException.EXISTS),
         /** The documents of {@code /documents}, without data. */
-        DOCUMENT("document", "documents", TemplateException.DOCUMENT_NOT_FOUND, TemplateException.DOCUMENT_LINK_OUTSIDE);
+        DOCUMENT("document", "documents", TemplateException.DOCUMENT_NOT_FOUND, TemplateException.DOCUMENT_LINK_OUTSIDE,
+                TemplateException.DOCUMENT_EXISTS);
 
         private final String noun;
         private final String folderNoun;
         private final String notFound;
         private final String linkOutside;
+        private final String exists;
 
-        Kind(String noun, String folderNoun, String notFound, String linkOutside) {
+        Kind(String noun, String folderNoun, String notFound, String linkOutside, String exists) {
             this.noun = noun;
             this.folderNoun = folderNoun;
             this.notFound = notFound;
             this.linkOutside = linkOutside;
+            this.exists = exists;
         }
 
         /** {@return what one of the folder is called in the messages: {@code template} or {@code document}} */
@@ -285,6 +292,72 @@ public final class Templates {
     }
 
     /**
+     * Creates the template or the document of {@code path}, which must not exist: its {@code <name>.stxt} with the
+     * document of {@code change} and, if their text is not blank, its own styles ({@code <name>.styles.stxt}) and, of a
+     * template, its sample data ({@code <name>.json}), with LF. Its folder has to exist already: no folder is created,
+     * and no other file is written. The {@code .stxt} is created only if no file has its name, as one step, so that two
+     * creations at once do not write one over the other.
+     *
+     * @param path the path of the new template or document
+     * @param change the texts to write; its styles can only be the own ones; not {@code null}
+     * @return the new template or document, read from its files, and the files written
+     * @throws TemplateException if {@code path} is not a valid path or its folder does not exist ({@link Kind#notFound()}),
+     *         if there is already one at {@code path} ({@link TemplateException#EXISTS},
+     *         {@link TemplateException#DOCUMENT_EXISTS}), or if its folder is a link that leaves the folder
+     * @throws IllegalArgumentException if {@code change} has styles that are not the own ones, or data for a document
+     * @throws IOException if a file cannot be written
+     */
+    public synchronized Saved create(String path, Change change) throws IOException {
+        Objects.requireNonNull(change, "change");
+        if (!isPath(path)) {
+            throw kind.notFound(path, "not a valid path");
+        }
+        if (change.data() != null && kind != Kind.TEMPLATE) {
+            throw new IllegalArgumentException("A document has no data");
+        }
+        String own = path + STYLES;
+        for (String name : change.styles().keySet()) {
+            if (!name.equals(own)) {
+                throw new IllegalArgumentException("A new " + kind.noun + " has only its own styles, " + own
+                        + ", not " + name);
+            }
+        }
+        Path file = folder.resolve(path + DOCUMENT);
+        Path parent = file.getParent();
+        if (!Files.isDirectory(parent)) {
+            String above = path.contains("/") ? path.substring(0, path.lastIndexOf('/')) : "";
+            throw kind.notFound(path, "the folder " + above + " does not exist");
+        }
+        if (!parent.toRealPath().startsWith(real)) {
+            throw linkOutside(path + DOCUMENT, path);
+        }
+        TemplateException exists = new TemplateException(kind.exists, TemplateException.Reason.EXISTS, path,
+                "There is already a " + kind.noun + " " + path);
+        if (Files.exists(file, LinkOption.NOFOLLOW_LINKS)) {
+            throw exists;
+        }
+        try {
+            Files.writeString(file, lf(change.document()), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW,
+                    StandardOpenOption.WRITE);
+        } catch (FileAlreadyExistsException e) {
+            throw exists;
+        }
+        List<String> written = new ArrayList<>(List.of(path + DOCUMENT));
+        if (change.styles().containsKey(own) && write(own, change.styles().get(own), path)) {
+            written.add(own);
+        }
+        if (change.data() != null && write(path + DATA, change.data(), path)) {
+            written.add(path + DATA);
+        }
+        return new Saved(get(path), written);
+    }
+
+    /** {@return {@code text} with LF line ends} */
+    private static String lf(String text) {
+        return text.replace("\r\n", "\n").replace('\r', '\n');
+    }
+
+    /**
      * Writes {@code text} in the file {@code relative} if it changes it; {@return whether it was written}. A file that
      * does not exist is created only if the text is not blank.
      */
@@ -305,8 +378,8 @@ public final class Templates {
         } else if (text.isBlank()) {
             return false;
         }
-        String lf = text.replace("\r\n", "\n").replace('\r', '\n');
-        if (before != null && before.replace("\r\n", "\n").replace('\r', '\n').equals(lf)) {
+        String lf = lf(text);
+        if (before != null && lf(before).equals(lf)) {
             return false;
         }
         String out = before != null && before.contains("\r\n") ? lf.replace("\n", "\r\n") : lf;

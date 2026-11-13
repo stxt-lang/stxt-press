@@ -5,9 +5,10 @@ import java.io.IOException;
 /**
  * A template or a document of a folder that cannot be given or saved: its path is not that of one
  * ({@link #NOT_FOUND}, {@link #DOCUMENT_NOT_FOUND}), one of its files is a link that leaves the folder
- * ({@link #LINK_OUTSIDE}, {@link #DOCUMENT_LINK_OUTSIDE}), or its files changed since the version a save starts from
- * ({@link #FILES_CHANGED}). The first and the last are of the request (a {@code 404} and a {@code 409}), the second of
- * the server (a {@code 500}), and none says where a link goes.
+ * ({@link #LINK_OUTSIDE}, {@link #DOCUMENT_LINK_OUTSIDE}), its files changed since the version a save starts from
+ * ({@link #FILES_CHANGED}), or it already exists when it is to be created ({@link #EXISTS}, {@link #DOCUMENT_EXISTS}).
+ * All but the link are of the request (a {@code 404}, a {@code 409} and a {@code 412}); the link is of the server (a
+ * {@code 500}), and no message says where it goes.
  */
 public final class TemplateException extends IOException {
 
@@ -23,6 +24,10 @@ public final class TemplateException extends IOException {
     public static final String DOCUMENT_LINK_OUTSIDE = "DOCUMENT_LINK_OUTSIDE";
     /** The files of a template or a document are not those of the version a save starts from. */
     public static final String FILES_CHANGED = "FILES_CHANGED";
+    /** A template is to be created at a path that already has one. */
+    public static final String EXISTS = "TEMPLATE_EXISTS";
+    /** A document is to be created at a path that already has one. */
+    public static final String DOCUMENT_EXISTS = "DOCUMENT_EXISTS";
 
     /** What went wrong, which decides whose fault it is. */
     public enum Reason {
@@ -31,7 +36,9 @@ public final class TemplateException extends IOException {
         /** A file is a link that leaves the folder: the server. */
         LINK_OUTSIDE,
         /** The files changed since the version a save starts from: someone else saved first. */
-        CHANGED
+        CHANGED,
+        /** There is already a template or a document at the path to create: the request. */
+        EXISTS
     }
 
     /** The stable code of the error, in capitals. */
@@ -48,8 +55,9 @@ public final class TemplateException extends IOException {
     }
 
     /**
-     * {@return the stable code of the error: {@link #NOT_FOUND} or {@link #LINK_OUTSIDE} for a template,
-     * {@link #DOCUMENT_NOT_FOUND} or {@link #DOCUMENT_LINK_OUTSIDE} for a document, {@link #FILES_CHANGED} for both}
+     * {@return the stable code of the error: {@link #NOT_FOUND}, {@link #LINK_OUTSIDE} or {@link #EXISTS} for a
+     * template, {@link #DOCUMENT_NOT_FOUND}, {@link #DOCUMENT_LINK_OUTSIDE} or {@link #DOCUMENT_EXISTS} for a document,
+     * {@link #FILES_CHANGED} for both}
      */
     public String code() {
         return code;

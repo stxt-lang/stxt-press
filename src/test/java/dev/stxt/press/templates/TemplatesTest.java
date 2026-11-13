@@ -444,6 +444,68 @@ class TemplatesTest {
         assertTrue(Files.readString(folder.resolve("invoices/receipt.stxt")).contains("Linked."));
     }
 
+    // ---- The creation
+
+    @Test
+    void aNewTemplateIsCreatedInItsFolderWithTheStylesAbove() throws IOException {
+        Templates.Saved created = templates.create("invoices/2026/credit-note",
+                change(RECEIPT.replace("\n", "\r\n"), Map.of("invoices/2026/credit-note.styles.stxt", " "), "{}"));
+
+        assertEquals(List.of("invoices/2026/credit-note.stxt", "invoices/2026/credit-note.json"), created.written());
+        // A new file has LF, and blank own styles are not created.
+        assertEquals(RECEIPT, Files.readString(folder.resolve("invoices/2026/credit-note.stxt")));
+        assertFalse(Files.exists(folder.resolve("invoices/2026/credit-note.styles.stxt")));
+        assertEquals(List.of(".styles.stxt", "invoices/.styles.stxt"), names(created.template()));
+        assertEquals("{}", created.template().data());
+        assertEquals(templates.get("invoices/2026/credit-note"), created.template());
+        assertTrue(templates.list().stream().anyMatch(entry -> entry.path().equals("invoices/2026/credit-note")));
+    }
+
+    @Test
+    void aTemplateThatExistsIsNotCreatedAgain() throws IOException {
+        for (String path : List.of("invoices/receipt", "own")) {
+            String before = Files.readString(folder.resolve(path + ".stxt"));
+
+            TemplateException e = assertThrows(TemplateException.class,
+                    () -> templates.create(path, change(OWN.replace("Own", "Other"), Map.of(), null)), path);
+
+            assertEquals(TemplateException.EXISTS, e.code());
+            assertEquals(TemplateException.Reason.EXISTS, e.reason());
+            assertEquals(before, Files.readString(folder.resolve(path + ".stxt")));
+        }
+        Templates documents = new Templates(folder, Templates.Kind.DOCUMENT);
+        assertEquals(TemplateException.DOCUMENT_EXISTS, assertThrows(TemplateException.class,
+                () -> documents.create("own", change(OWN, Map.of(), null))).code());
+    }
+
+    @Test
+    void aNewTemplateNeedsAValidPathInAFolderThatExists() throws IOException {
+        for (String path : List.of("", "a//b", "../outside", "a.b", ".hidden", "invoices/", "missing/new")) {
+            TemplateException e = assertThrows(TemplateException.class,
+                    () -> templates.create(path, change(OWN, Map.of(), null)), path);
+            assertEquals(TemplateException.NOT_FOUND, e.code(), path);
+        }
+        assertFalse(Files.exists(folder.resolve("missing")));
+        // Only its own styles, and no data for a document.
+        assertThrows(IllegalArgumentException.class,
+                () -> templates.create("fresh", change(OWN, Map.of(".styles.stxt", "x"), null)));
+        assertThrows(IllegalArgumentException.class, () -> new Templates(folder, Templates.Kind.DOCUMENT)
+                .create("fresh", change(OWN, Map.of(), "{}")));
+        assertFalse(Files.exists(folder.resolve("fresh.stxt")));
+    }
+
+    @Test
+    void aNewTemplateIsNotCreatedInAFolderLinkedOutside() throws IOException {
+        Path outside = Files.createDirectories(temp.resolve("outside"));
+        link(folder.resolve("away"), outside);
+
+        TemplateException e = assertThrows(TemplateException.class,
+                () -> templates.create("away/new", change(OWN, Map.of(), null)));
+
+        assertEquals(TemplateException.LINK_OUTSIDE, e.code());
+        assertFalse(Files.exists(outside.resolve("new.stxt")));
+    }
+
     @Test
     void theVersionChangesWithAnyFile() throws IOException {
         String version = templates.get("invoices/receipt").version();

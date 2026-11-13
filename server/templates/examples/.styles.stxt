@@ -1,0 +1,10 @@
+# Styles shared by the sample templates: the base typography, so that a new template of this folder converts before it
+# has styles of its own. Each template brings its own look in its <name>.styles.stxt, which sets these four again and
+# wins over them, so they change none of the templates here.
+Styles (dev.stxt.pdf):
+	For element: Document
+		Typography:
+			Font: IBM Plex Sans
+			Size: 10
+			Line height: 14
+			Color: #1E2328
