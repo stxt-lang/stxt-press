@@ -4,13 +4,15 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>stxt-press</title>
-	<link rel="icon" href="data:,">
+	<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+	<link rel="preload" href="/assets/russo-one-latin.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="stylesheet" href="/assets/editor.css">
 	<script src="/assets/editor.js" defer></script>
 </head>
 <body class="editor">
 	<header class="bar">
-		<a class="brand" id="home" href="/">stxt-press</a>
+		<a class="brand" id="home" href="/" title="The index of the server"><span class="brand-name">STXT</span> <span class="brand-sub">Press</span></a>
 		<span id="place" class="place"></span>
 		<div class="actions">
 			<button type="button" id="save" title="Save the files (Ctrl+S)" hidden>Save</button>
@@ -48,8 +50,8 @@
 		<p>The server asks for a token.</p>
 		<input type="password" id="token-input" autocomplete="off" aria-label="Token">
 		<div class="buttons">
-			<button type="button" id="token-ok">Use</button>
 			<button type="button" id="token-cancel" class="quiet">Cancel</button>
+			<button type="button" id="token-ok">Use</button>
 		</div>
 	</dialog>
 </body>

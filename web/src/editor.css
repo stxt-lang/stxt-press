@@ -1,18 +1,44 @@
 /* The pages of stxt-press: the index and the editor. The editors take their styles from the stylesheet of @stxt-lang/editor,
-   which goes before this one in editor.css. No rounded corners, like the portal and the playground. */
+   which goes before this one in editor.css. The look is that of the playground (../stxt-play/css), which shares its
+   palette with the portal: the same colours, the blue top bar with the wordmark in Russo One, the same buttons, lists
+   and dialogs. No rounded corners, like the portal and the playground. */
 
-:root {
-	--accent: #0d5cb6;
-	--text: #1f2328;
-	--muted: #59636e;
-	--line: #d0d7de;
-	--surface: #f6f8fa;
-	--error: #b42318;
-	--warning: #bf8700;
-	--font: system-ui, -apple-system, "Segoe UI", sans-serif;
+/* Russo One: the identity font of the STXT wordmark, served from the jar (the page loads only what the server serves).
+   The file is the one of the portal, with its licence beside it (russo-one-OFL.txt). */
+@font-face {
+	font-family: "Russo One";
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url("/assets/russo-one-latin.woff2") format("woff2");
 }
 
-* {
+/* The palette of the playground (stxt-play, css/_settings.scss and css/_theme.scss), by hand: keep them in sync. */
+:root {
+	color-scheme: light;
+
+	--bar: #0a6fae; /* the top bar; what is written on it is always white */
+	--accent: #0a6fae; /* links, the current entry, focus, primary buttons */
+	--accent-hover: #095f95;
+	--on-accent: #fff;
+	--text: #444;
+	--muted: #6a737d;
+	--panel: #f7fcff; /* the page, the tree of the folders, the output */
+	--surface: #fff; /* the editors, the entries, the dialogs */
+	--border: #e8f4fa;
+	--active: #e8f4fa; /* the current folder and entry */
+	--subtle: #f5f5f5; /* rules inside a part, and the hover of a row */
+	--error: #c0392b;
+	--warning: #9a6b00;
+	--backdrop: rgba(10, 42, 64, 0.45);
+	--font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--font-brand: "Russo One", "Arial Black", sans-serif;
+	--mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+*,
+*::before,
+*::after {
 	box-sizing: border-box;
 }
 
@@ -26,27 +52,48 @@ body {
 	font-family: var(--font);
 	font-size: 14px;
 	color: var(--text);
-	background: #fff;
+	background: var(--panel);
 }
 
+code,
+pre {
+	font-family: var(--mono);
+}
+
+a {
+	color: var(--accent);
+}
+
+/* Buttons: the primary one on the accent, the quiet one on the surface, as the buttons of the dialogs of the
+   playground. */
 button {
 	font: inherit;
 	padding: 0.35rem 0.8rem;
 	border: 1px solid var(--accent);
 	background: var(--accent);
-	color: #fff;
+	color: var(--on-accent);
 	cursor: pointer;
 }
 
-button.quiet,
-.modes button {
-	background: #fff;
-	color: var(--accent);
+button:hover {
+	background: var(--accent-hover);
 }
 
-.modes button[aria-pressed="true"] {
-	background: var(--accent);
-	color: #fff;
+button.quiet {
+	border-color: var(--border);
+	background: var(--surface);
+	color: var(--text);
+}
+
+button.quiet:hover {
+	border-color: var(--accent);
+	background: var(--panel);
+}
+
+button:focus-visible,
+a:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
 }
 
 button:disabled {
@@ -54,47 +101,130 @@ button:disabled {
 	cursor: default;
 }
 
-select {
-	font: inherit;
-	padding: 0.25rem;
-	min-width: 16rem;
+button.small {
+	padding: 0.1rem 0.5rem;
+	font-size: 12px;
 }
 
-.bar {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 0.5rem 1rem;
-	padding: 0.6rem 1rem;
-	border-bottom: 1px solid var(--line);
-}
-
-.brand {
-	white-space: nowrap;
-	font-weight: 700;
+/* A link that looks as a quiet button: Edit, beside the PDF button. */
+a.button {
+	display: inline-block;
+	padding: 0.35rem 0.8rem;
+	border: 1px solid var(--border);
+	background: var(--surface);
 	color: var(--text);
 	text-decoration: none;
+	line-height: normal;
+}
+
+a.button:hover {
+	border-color: var(--accent);
+	background: var(--panel);
+}
+
+a.button.small {
+	padding: 0.1rem 0.5rem;
+	font-size: 12px;
 }
 
 .muted {
 	color: var(--muted);
 }
 
-button.small {
-	padding: 0.1rem 0.5rem;
-	font-size: 12px;
-}
-
-a {
-	color: var(--accent);
-}
-
-.modes {
+/* The top bar, as that of the playground and the portal: 52px, the wordmark in Russo One, and on it everything white,
+   the buttons with a white border and the sections as a segmented choice. */
+.bar {
 	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem 1rem;
+	min-height: 52px;
+	padding: 0.4rem 1.25rem;
+	background: var(--bar);
+	color: #fff;
 }
 
-.modes button + button {
-	border-left: none;
+.brand {
+	flex: none;
+	white-space: nowrap;
+	color: #fff;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	text-decoration: none;
+}
+
+.brand-name {
+	font-family: var(--font-brand);
+	font-weight: 400;
+	font-size: 1.45rem;
+	line-height: 1;
+}
+
+.brand-sub {
+	font-weight: 400;
+	font-size: 0.9rem;
+	opacity: 0.85;
+}
+
+.brand:hover .brand-sub,
+.brand:focus-visible .brand-sub {
+	text-decoration: underline;
+}
+
+.bar a:focus-visible,
+.bar button:focus-visible {
+	outline-color: #fff;
+}
+
+.bar button {
+	padding: 0.15rem 0.6rem;
+	border: 1px solid rgba(255, 255, 255, 0.6);
+	background: transparent;
+	color: #fff;
+}
+
+.bar button:hover {
+	background: rgba(255, 255, 255, 0.15);
+}
+
+.bar button:disabled:hover {
+	background: transparent;
+}
+
+.bar a {
+	color: #fff;
+}
+
+.bar label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	font-size: 13px;
+}
+
+/* The sections of the index: Documents | Templates | API. */
+.modes {
+	display: inline-flex;
+	border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.bar .modes button {
+	border: 0;
+	font-size: 13px;
+}
+
+.bar .modes button + button {
+	border-left: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.bar .modes button[aria-pressed="true"] {
+	background: #fff;
+	color: var(--bar);
+	font-weight: 600;
+}
+
+.bar .modes button:focus-visible {
+	outline-offset: -2px;
 }
 
 #token {
@@ -103,13 +233,47 @@ a {
 
 #versions {
 	font-size: 12px;
+	color: #fff;
+	opacity: 0.7;
+}
+
+/* What the editor shows, beside the name of the service: the path of the template or the document. */
+.place {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: var(--mono);
+	font-size: 13px;
+	opacity: 0.95;
+}
+
+/* The buttons of the editor, in the bar beside what it shows. */
+.actions {
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.actions .download {
+	font-size: 13px;
+	opacity: 0.9;
+}
+
+/* The heading of a part: small capitals in the muted colour, as the headers of the lists of the playground. */
+#filled-panel h2,
+.routes th {
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--muted);
 }
 
 main {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-	gap: 1rem;
-	padding: 1rem;
 }
 
 @media (max-width: 900px) {
@@ -119,7 +283,8 @@ main {
 }
 
 /* The editor fills the window, without a scroll of the page: on the left the files of what is edited, a tab each, and
-   on the right the output (the filled document, the pages or the PDF). Each part scrolls inside. */
+   on the right the output (the filled document, the pages or the PDF). Each part scrolls inside; the parts meet at a
+   border, without gaps, as the panes of the playground. */
 
 body.editor {
 	display: flex;
@@ -135,8 +300,6 @@ body.editor .bar {
 main.workspace {
 	flex: 1 1 0;
 	min-height: 0;
-	gap: 0.75rem;
-	padding: 0.75rem 1rem;
 }
 
 .workspace .inputs,
@@ -147,26 +310,26 @@ main.workspace {
 	min-height: 0;
 }
 
+.workspace .inputs {
+	border-right: 1px solid var(--border);
+	background: var(--surface);
+}
+
+.workspace .output {
+	padding: 0.6rem 1rem 0.75rem;
+}
+
 .workspace .inputs > *,
 .workspace .output > * {
 	flex: none;
 }
 
-/* What the editor shows, beside the name of the service: the path of the template or the document. */
-.place {
-	min-width: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	font-family: var(--stxt-font-mono, monospace);
-	font-size: 13px;
-	color: var(--muted);
-}
-
 .print {
 	min-width: 0;
 	max-width: 100%;
-	margin-bottom: 0.6rem;
+	padding: 0.5rem 1rem;
+	border-bottom: 1px solid var(--border);
+	background: var(--panel);
 }
 
 .print summary {
@@ -178,7 +341,7 @@ main.workspace {
 	margin: 0.4rem 0;
 	padding: 0.5rem;
 	background: var(--surface);
-	border: 1px solid var(--line);
+	border: 1px solid var(--border);
 	font-size: 12px;
 	white-space: pre-wrap;
 	word-break: break-all;
@@ -186,34 +349,41 @@ main.workspace {
 	overflow: auto;
 }
 
-/* The tabs of the files: the data, the document and each styles document, with the path the server gives them. */
+/* The tabs of the files: the data, the document and each styles document, with the path the server gives them. The one
+   chosen is underlined in the accent, as the tabs of the panes of the playground. */
 
 .tabs {
 	display: flex;
 	flex-wrap: wrap;
-	border-bottom: 1px solid var(--line);
+	padding: 0 0.5rem;
+	border-bottom: 1px solid var(--border);
+	background: var(--panel);
 }
 
 .tabs button {
 	margin-bottom: -1px;
-	padding: 0.3rem 0.7rem;
-	border: 1px solid transparent;
+	padding: 0.45rem 0.7rem;
+	border: 0;
+	border-bottom: 2px solid transparent;
 	background: none;
 	color: var(--muted);
-	font-family: var(--stxt-font-mono, monospace);
+	font-family: var(--mono);
 	font-size: 12px;
 }
 
 .tabs button:hover {
+	background: none;
 	color: var(--text);
 }
 
 .tabs button[aria-selected="true"] {
-	border-color: var(--line);
-	border-bottom-color: #fff;
-	background: #fff;
-	color: var(--text);
+	border-bottom-color: var(--accent);
+	color: var(--accent);
 	font-weight: 600;
+}
+
+.tabs button:focus-visible {
+	outline-offset: -2px;
 }
 
 /* A file with an error (of the syntax or of the server) or a warning (of the schema). */
@@ -243,29 +413,21 @@ main.workspace {
 	height: 100%;
 }
 
+/* The editors are delimited by the layout, not by a border of their own, as the editor of the playground. */
 #panels .cm-editor {
-	border: 1px solid var(--line);
-	border-top: none;
+	border: 0;
 }
 
 .panel .cm-editor .cm-scroller {
 	overflow: auto;
-	font-family: var(--stxt-font-mono, monospace);
-}
-
-/* The buttons of the editor, in the bar beside what it shows. */
-.actions {
-	display: flex;
-	flex: none;
-	align-items: center;
-	gap: 0.5rem;
+	font-family: var(--stxt-font-mono, var(--mono));
 }
 
 #message {
 	min-height: 1.4rem;
 	max-height: 20vh;
 	overflow: auto;
-	margin-bottom: 0.6rem;
+	margin: 0 0 0.5rem;
 	color: var(--muted);
 	white-space: pre-wrap;
 }
@@ -273,6 +435,7 @@ main.workspace {
 #message.error {
 	color: var(--error);
 }
+
 #view {
 	display: flex;
 	flex-direction: column;
@@ -293,9 +456,6 @@ main.workspace {
 #filled-panel h2 {
 	flex: none;
 	margin: 0 0 0.3rem;
-	font-size: 13px;
-	font-weight: 600;
-	color: var(--muted);
 }
 
 #filled {
@@ -304,15 +464,15 @@ main.workspace {
 }
 
 #filled .cm-editor {
-	border: 1px solid var(--line);
+	border: 1px solid var(--border);
 }
 
 #pages,
 #preview-pages {
 	overflow: auto;
 	padding: 0.75rem;
-	background: var(--surface);
-	border: 1px solid var(--line);
+	background: var(--panel);
+	border: 1px solid var(--border);
 }
 
 #pages .page,
@@ -322,13 +482,12 @@ main.workspace {
 	max-width: 100%;
 	margin: 0 auto 0.75rem;
 	background: #fff;
-	border: 1px solid var(--line);
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+	box-shadow: 0 1px 4px rgba(10, 42, 64, 0.18);
 }
 
 #pdf-frame {
 	width: 100%;
-	border: 1px solid var(--line);
+	border: 1px solid var(--border);
 }
 
 /* A narrow window: one column, and the page scrolls. */
@@ -337,6 +496,11 @@ main.workspace {
 		display: block;
 		height: auto;
 		overflow: visible;
+	}
+
+	.workspace .inputs {
+		border-right: 0;
+		border-bottom: 1px solid var(--border);
 	}
 
 	#panels {
@@ -350,27 +514,55 @@ main.workspace {
 	}
 }
 
+/* The dialogs (the token, the name of a new entry): a card over a dimmed page, as the dialogs of the playground. */
 dialog {
-	border: 1px solid var(--line);
-	padding: 1rem;
+	width: calc(100% - 2rem);
+	max-width: 26rem;
+	padding: 1.25rem 1.4rem 1.1rem;
+	border: 0;
+	background: var(--surface);
+	color: var(--text);
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+dialog::backdrop {
+	background: var(--backdrop);
+}
+
+dialog p {
+	margin: 0 0 0.8rem;
+	font-size: 0.9rem;
+	line-height: 1.45;
 }
 
 dialog input {
-	font: inherit;
-	width: 18rem;
-	padding: 0.3rem;
+	width: 100%;
+	padding: 0.4rem 0.55rem;
+	border: 1px solid var(--border);
+	background: var(--panel);
+	color: var(--text);
+	font: 13px var(--mono);
+}
+
+dialog input:focus {
+	border-color: var(--accent);
+	outline: none;
 }
 
 dialog .buttons {
 	display: flex;
+	justify-content: flex-end;
 	gap: 0.5rem;
-	margin-top: 0.8rem;
+	margin-top: 1rem;
+}
+
+dialog .buttons button {
+	padding: 0.4rem 0.9rem;
 }
 
 dialog .problem {
 	min-height: 1.2em;
 	margin: 0.4rem 0 0;
-	max-width: 18rem;
 	color: var(--error);
 	font-size: 13px;
 }
@@ -393,15 +585,14 @@ body.index-page .bar {
 main.index {
 	flex: 1 1 0;
 	min-height: 0;
-	gap: 0;
-	padding: 0;
 }
 
 /* The left half: the lists, or the API. */
 .lists {
 	min-width: 0;
 	min-height: 0;
-	border-right: 1px solid var(--line);
+	border-right: 1px solid var(--border);
+	background: var(--surface);
 }
 
 .browser {
@@ -410,13 +601,13 @@ main.index {
 	height: 100%;
 }
 
-/* The right half: the PDF of the last PDF button. */
+/* The right half: the pages or the PDF of the last entry shown. */
 .preview {
 	display: flex;
 	flex-direction: column;
 	min-width: 0;
 	min-height: 0;
-	padding: 0.75rem 1rem;
+	padding: 0.6rem 1rem 0.75rem;
 }
 
 .preview-bar {
@@ -430,7 +621,7 @@ main.index {
 #preview-title {
 	min-width: 0;
 	overflow-wrap: anywhere;
-	font-family: var(--stxt-font-mono, monospace);
+	font-family: var(--mono);
 	font-size: 13px;
 }
 
@@ -453,35 +644,36 @@ main.index {
 }
 
 #preview-frame {
-	border: 1px solid var(--line);
+	border: 1px solid var(--border);
 }
 
-#preview-pages[hidden],
-#preview-frame[hidden] {
-	display: none;
-}
-
-.index li.current {
-	background: var(--surface);
-	box-shadow: inset 3px 0 0 var(--accent);
-	padding-left: 0.5rem;
-}
-
+/* The tree of the folders, as the document list of the playground: the current one with a bar in the accent. */
 .folders {
 	overflow: auto;
-	padding: 0.5rem 0;
-	border-right: 1px solid var(--line);
-	background: var(--surface);
+	padding: 0.25rem 0;
+	border-right: 1px solid var(--border);
+	background: var(--panel);
+	font-size: 13px;
 }
 
 .folder-row {
 	display: flex;
 	align-items: stretch;
+	border-left: 3px solid transparent;
+}
+
+.folder-row:hover {
+	background: var(--subtle);
+}
+
+.folder-row:has(.name[aria-current="true"]) {
+	border-left-color: var(--accent);
+	background: var(--active);
 }
 
 .folder-row .caret {
 	flex: none;
-	width: 1.6rem;
+	width: 1.5rem;
 	padding: 0;
 	border: none;
 	background: none;
@@ -494,15 +686,16 @@ main.index {
 	min-width: 0;
 	justify-content: space-between;
 	gap: 0.5rem;
-	padding: 0.15rem 0.8rem 0.15rem 0;
+	padding: 0.3rem 0.8rem 0.3rem 0;
 	border: none;
 	background: none;
 	color: var(--text);
 	text-align: left;
 }
 
-.folder-row .name:hover {
-	color: var(--accent);
+.folder-row button:focus-visible {
+	outline-width: 1px;
+	outline-offset: -1px;
 }
 
 .folder-row .name[aria-current="true"] {
@@ -518,7 +711,7 @@ main.index {
 
 .folder-row .count {
 	color: var(--muted);
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: 400;
 }
 
@@ -536,7 +729,8 @@ main.index {
 .index h1 {
 	margin: 0 0 0.4rem;
 	font-size: 16px;
-	font-family: var(--stxt-font-mono, monospace);
+	font-family: var(--mono);
+	color: var(--accent);
 }
 
 /* The title of the folder, and to its right what adds an entry to it. */
@@ -556,11 +750,11 @@ main.index {
 }
 
 .index .entries h2 {
-	margin: 0.8rem 0 0.2rem;
+	margin: 0.9rem 0 0.2rem;
 	font-size: 13px;
 	font-weight: 600;
 	color: var(--muted);
-	font-family: var(--stxt-font-mono, monospace);
+	font-family: var(--mono);
 }
 
 /* A narrow window: the tree above the entries and the PDF below them, and the page scrolls. */
@@ -573,7 +767,7 @@ main.index {
 
 	.lists {
 		border-right: none;
-		border-bottom: 1px solid var(--line);
+		border-bottom: 1px solid var(--border);
 	}
 
 	.browser {
@@ -589,7 +783,7 @@ main.index {
 	.folders {
 		max-height: 16rem;
 		border-right: none;
-		border-bottom: 1px solid var(--line);
+		border-bottom: 1px solid var(--border);
 	}
 
 	.entries,
@@ -608,21 +802,29 @@ main.index {
 	display: flex;
 	align-items: center;
 	gap: 0.6rem;
-	padding: 0.3rem 0;
-	border-bottom: 1px solid var(--line);
+	padding: 0.3rem 0.5rem 0.3rem calc(0.5rem - 3px);
+	border-left: 3px solid transparent;
+	border-bottom: 1px solid var(--subtle);
 }
 
 .index li .muted {
 	font-size: 12px;
 }
 
-/* An entry of a list: the row shows its SVG pages, and its name is the button that does it. */
+/* An entry of a list: the row shows its SVG pages, and its name is the button that does it. The one shown has the bar
+   in the accent, as the active document of the playground. */
 .index #entries li {
 	cursor: pointer;
 }
 
 .index #entries li:hover {
-	background: var(--surface);
+	background: var(--subtle);
+}
+
+.index li.current,
+.index #entries li.current:hover {
+	border-left-color: var(--accent);
+	background: var(--active);
 }
 
 button.entry {
@@ -631,23 +833,11 @@ button.entry {
 	background: none;
 	color: var(--accent);
 	text-align: left;
+}
+
+button.entry:hover {
+	background: none;
 	text-decoration: underline;
-}
-
-/* A link that looks as a quiet button: Edit, beside the PDF button. */
-a.button {
-	display: inline-block;
-	padding: 0.35rem 0.8rem;
-	border: 1px solid var(--accent);
-	background: #fff;
-	color: var(--accent);
-	text-decoration: none;
-	line-height: normal;
-}
-
-a.button.small {
-	padding: 0.1rem 0.5rem;
-	font-size: 12px;
 }
 
 .index li .links {
@@ -664,15 +854,14 @@ a.button.small {
 
 .routes th,
 .routes td {
-	padding: 0.35rem 0.4rem;
-	border-bottom: 1px solid var(--line);
+	padding: 0.4rem 0.5rem;
+	border-bottom: 1px solid var(--subtle);
 	text-align: left;
 	vertical-align: top;
 }
 
 .routes th {
-	font-size: 12px;
-	color: var(--muted);
+	border-bottom-color: var(--border);
 }
 
 .routes tr.off code {
@@ -680,12 +869,14 @@ a.button.small {
 	text-decoration: line-through;
 }
 
+/* A mark beside a route, as the source of a problem in the playground. */
 .badge {
 	margin-left: 0.4rem;
-	padding: 0 0.3rem;
-	font-size: 11px;
+	padding: 0 0.4rem;
+	background: var(--subtle);
 	color: var(--muted);
-	border: 1px solid var(--line);
+	font-family: var(--mono);
+	font-size: 11px;
 }
 
 /* Full window for a part (maximize.ts): the button shows when the mouse is over the part, at its bottom right, out of
@@ -696,7 +887,7 @@ a.button.small {
 	position: relative;
 }
 
-.maximize {
+button.maximize {
 	position: absolute;
 	right: 1.4rem;
 	bottom: 1.2rem;
@@ -704,10 +895,15 @@ a.button.small {
 	padding: 0 0.45rem;
 	font-size: 15px;
 	line-height: 1.6;
-	background: #fff;
+	border-color: var(--border);
+	background: var(--surface);
 	color: var(--text);
-	border: 1px solid var(--line);
 	opacity: 0;
+}
+
+button.maximize:hover {
+	border-color: var(--accent);
+	background: var(--panel);
 }
 
 .maximizable:hover > .maximize,
@@ -716,7 +912,7 @@ a.button.small {
 }
 
 @media (hover: none) {
-	.maximize {
+	button.maximize {
 		opacity: 1;
 	}
 }
@@ -728,7 +924,7 @@ a.button.small {
 	height: auto !important;
 	margin: 0;
 	padding: 0.75rem !important;
-	background: #fff;
+	background: var(--panel);
 }
 
 /* Over the window, the cross of the bar puts it back. */
@@ -737,11 +933,23 @@ a.button.small {
 }
 
 .bar .restore {
-	padding: 0.15rem 0.6rem;
+	padding: 0.05rem 0.6rem;
 	font-size: 15px;
 	line-height: 1.4;
 }
 
 body.with-maximized {
 	overflow: hidden;
+}
+
+/* A narrow window: the bar wraps, as that of the playground, and drops the versions. */
+@media (max-width: 720px) {
+	.bar {
+		gap: 0.4rem 0.75rem;
+		padding: 0.4rem 1rem;
+	}
+
+	#versions {
+		display: none;
+	}
 }

@@ -160,3 +160,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   of one in the folder, creates it with a page that has its name as title and heading, and opens it in the editor;
   without `Save`, the documents tab has **Blank document** there, the editor without a file.
 - The `server.stxt` of `server/` has `Save: true`.
+- The index and the editor take the look of the playground (`stxt-play`), with the palette of the portal: the blue top
+  bar with the STXT wordmark in Russo One (served from the jar, with its OFL licence, as `/assets/russo-one-latin.woff2`)
+  and «Press» beside it, its buttons and sections in white, the tree of the folders and the current entry marked as the
+  document list of the playground, the file tabs underlined in the accent, the parts of the editor meeting at a border
+  without gaps, and the dialogs as cards over a dimmed page, with Cancel before the main button. The pages have the
+  favicon of STXT, and `/assets/` serves `.png` and `.txt` files with their types.

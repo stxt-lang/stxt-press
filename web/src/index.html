@@ -4,13 +4,15 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>stxt-press</title>
-	<link rel="icon" href="data:,">
+	<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+	<link rel="preload" href="/assets/russo-one-latin.woff2" as="font" type="font/woff2" crossorigin>
 	<link rel="stylesheet" href="/assets/editor.css">
 	<script src="/assets/index.js" defer></script>
 </head>
 <body class="index-page">
 	<header class="bar">
-		<a class="brand" href="/">stxt-press</a>
+		<a class="brand" href="/" title="The index of the server"><span class="brand-name">STXT</span> <span class="brand-sub">Press</span></a>
 		<nav class="modes" aria-label="Section">
 			<button type="button" data-tab="documents" aria-pressed="true">Documents</button>
 			<button type="button" data-tab="templates" aria-pressed="false">Templates</button>
@@ -71,16 +73,16 @@
 		<input type="text" id="new-name" autocomplete="off" spellcheck="false" aria-label="Name" aria-describedby="new-problem">
 		<p id="new-problem" class="problem" role="alert"></p>
 		<div class="buttons">
-			<button type="button" id="new-ok">Create</button>
 			<button type="button" id="new-cancel" class="quiet">Cancel</button>
+			<button type="button" id="new-ok">Create</button>
 		</div>
 	</dialog>
 	<dialog id="token-dialog">
 		<p>The server asks for a token.</p>
 		<input type="password" id="token-input" autocomplete="off" aria-label="Token">
 		<div class="buttons">
-			<button type="button" id="token-ok">Use</button>
 			<button type="button" id="token-cancel" class="quiet">Cancel</button>
+			<button type="button" id="token-ok">Use</button>
 		</div>
 	</dialog>
 </body>

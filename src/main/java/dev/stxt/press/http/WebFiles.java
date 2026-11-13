@@ -21,7 +21,7 @@ final class WebFiles {
     /** The types of the files of the editor, by extension. */
     private static final Map<String, String> EDITOR_TYPES = Map.of("html", "text/html; charset=utf-8", "js",
             "text/javascript; charset=utf-8", "css", "text/css; charset=utf-8", "svg", "image/svg+xml", "json",
-            Responses.JSON_TYPE, "woff2", "font/woff2");
+            Responses.JSON_TYPE, "woff2", "font/woff2", "png", "image/png", "txt", "text/plain; charset=utf-8");
     /**
      * What the page of the editor may load: only its own files and the API of the server. The styles of CodeMirror
      * are inline, and the PDF is shown in a frame of a {@code blob:} URL, made by the page from the answer of the API.
