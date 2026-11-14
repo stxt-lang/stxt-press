@@ -42,12 +42,12 @@ public record Template(String path, String document, List<Job.Styles> styles, St
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("Every Java has SHA-256", e);
         }
-        add(digest, path + ".stxt", document);
+        add(digest, path + Templates.DOCUMENT, document);
         for (Job.Styles item : styles) {
             add(digest, item.name(), item.text());
         }
         if (data != null) {
-            add(digest, path + ".json", data);
+            add(digest, path + Templates.DATA, data);
         }
         return HexFormat.of().formatHex(digest.digest());
     }

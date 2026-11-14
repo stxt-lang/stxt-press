@@ -65,9 +65,6 @@ final class Responses {
             body.put("message", http.getMessage());
         } else if (e instanceof PressException press) {
             status = status(press.kind());
-            if (status == 500) {
-                LOG.log(Level.ERROR, "Error of " + exchange.getRequestURI(), e);
-            }
             body.put("kind", press.kind().name());
             body.put("code", press.code());
             body.put("line", press.line());
@@ -79,7 +76,6 @@ final class Responses {
         } else if (e instanceof StxtPdfException engine) {
             // The converter of a lazy server could not be created: its resources.
             status = status(engine.kind());
-            LOG.log(status == 500 ? Level.ERROR : Level.WARNING, "Error of " + exchange.getRequestURI(), e);
             body.put("kind", engine.kind().name());
             body.put("code", engine.code());
             body.put("message", engine.getMessage());
@@ -90,16 +86,19 @@ final class Responses {
                 case EXISTS -> 412;
                 case LINK_OUTSIDE -> 500;
             };
-            if (status == 500) {
-                LOG.log(Level.ERROR, "Error of " + exchange.getRequestURI(), e);
-            }
             body.put("code", template.code());
             body.put("message", template.getMessage());
         } else {
-            LOG.log(Level.ERROR, "Error of " + exchange.getRequestURI(), e);
             status = 500;
             body.put("code", HttpError.INTERNAL);
             body.put("message", "Internal error of the server");
+        }
+        // What is the fault of the server goes to the log, once; and so does a converter that could not be created,
+        // whatever its kind, since it is never the fault of the request.
+        if (status == 500) {
+            LOG.log(Level.ERROR, "Error of " + exchange.getRequestURI(), e);
+        } else if (e instanceof StxtPdfException) {
+            LOG.log(Level.WARNING, "Error of " + exchange.getRequestURI(), e);
         }
         sendJson(exchange, status, body);
     }

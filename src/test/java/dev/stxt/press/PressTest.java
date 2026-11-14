@@ -122,6 +122,13 @@ class PressTest {
         assertTrue(filled.contains("Paragraph: Three."), filled);
     }
 
+    /** The text a job converts: filled with its data, or the document as it is without them. */
+    @Test
+    void theTextOfAJobIsFilledOnlyWithData() {
+        assertEquals(WITH_SLOTS, Press.filled(job(WITH_SLOTS)));
+        assertEquals(Press.fill(WITH_SLOTS, DATA), Press.filled(job(WITH_SLOTS).withData(DATA)));
+    }
+
     @Test
     void aDocumentWithoutSlotsIsFilledAsItIs() {
         assertEquals(Press.fill(DOCUMENT, "{}"), Press.fill(DOCUMENT, DATA));

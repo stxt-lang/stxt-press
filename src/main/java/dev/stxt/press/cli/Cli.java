@@ -136,7 +136,7 @@ final class Cli {
 
     /** {@code start}: starts the server of the configuration and waits until the process is stopped. */
     private void startUntilStopped(List<String> args) throws UsageException, ConfigException, Failure {
-        ServerFile config = config(Arguments.parse(args, Set.of(), Set.of("--config"), Set.of()).none());
+        ServerFile config = startConfig(args);
         // Before the first server of the JVM, which is when the JDK reads them: a slow client cannot keep a thread.
         PressServer.limitTimes(config.http().timeout());
         PressServer server = startServer(config);
@@ -154,9 +154,17 @@ final class Cli {
         }
     }
 
-    /** {@code start} without waiting: {@return the server, already answering} */
+    /**
+     * {@code start} without waiting: {@return the server, already answering} Without the time limits of
+     * {@link #startUntilStopped}, which are of the JVM: for the tests.
+     */
     PressServer start(List<String> args) throws UsageException, ConfigException, Failure {
-        return startServer(config(Arguments.parse(args, Set.of(), Set.of("--config"), Set.of()).none()));
+        return startServer(startConfig(args));
+    }
+
+    /** {@return the configuration of {@code start}: its only option is {@code --config}} */
+    private ServerFile startConfig(List<String> args) throws UsageException, ConfigException {
+        return config(Arguments.parse(args, Set.of(), Set.of("--config"), Set.of()).none());
     }
 
     private PressServer startServer(ServerFile config) throws Failure {

@@ -54,8 +54,10 @@ public final class Templates {
     /** The name of the styles file of a folder, and the end of that of a template. */
     public static final String STYLES = ".styles.stxt";
 
-    private static final String DOCUMENT = ".stxt";
-    private static final String DATA = ".json";
+    /** The extension of the document of a template, {@code <name>.stxt}. */
+    static final String DOCUMENT = ".stxt";
+    /** The extension of the sample data of a template, {@code <name>.json}. */
+    static final String DATA = ".json";
 
     private static final Pattern SEGMENT = Pattern.compile("[A-Za-z0-9_-]+");
     private static final Pattern PATH = Pattern.compile("[A-Za-z0-9_-]+(/[A-Za-z0-9_-]+)*");

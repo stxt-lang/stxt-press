@@ -91,7 +91,7 @@ final class Conversions {
     void respond(HttpExchange exchange, Job job, Format format, String name) throws Exception {
         if (format == Format.STXT) {
             // Without the converter: a fill reads no resources, so it does not create that of a lazy server.
-            String filled = job.data() == null ? job.document() : Press.fill(job.document(), job.data());
+            String filled = Press.filled(job);
             Responses.send(exchange, 200, Responses.STXT_TYPE, filled.getBytes(StandardCharsets.UTF_8));
             return;
         }

@@ -23,6 +23,7 @@ import dev.stxt.press.Options;
 import dev.stxt.press.Press;
 import dev.stxt.press.http.Requests.Format;
 import dev.stxt.press.templates.Template;
+import dev.stxt.press.templates.TemplateException;
 import dev.stxt.press.templates.Templates;
 
 /**
@@ -354,12 +355,10 @@ final class Routes {
                     + kind.noun() + ", so that it does not undo a change made since, or If-None-Match: * to create one");
         }
         Templates.Change change = SaveBody.change(Requests.body(exchange, config.maxBodySize()), kind);
-        if (folder == null) {
-            throw kind.notFound(path, "the server has no " + kind.noun() + "s folder");
-        }
+        Templates existing = present(folder, kind, path);
         Templates.Saved saved;
         try {
-            saved = create ? folder.create(path, change) : folder.save(path, unquote(match), change);
+            saved = create ? existing.create(path, change) : existing.save(path, unquote(match), change);
         } catch (IllegalArgumentException e) {
             throw new HttpError(400, HttpError.BODY_NOT_VALID, e.getMessage());
         }
@@ -400,9 +399,16 @@ final class Routes {
 
     /** {@return the template or the document of {@code path} in {@code folder}, which may be {@code null}} */
     private static Template get(Templates folder, Templates.Kind kind, String path) throws IOException {
+        return present(folder, kind, path).get(path);
+    }
+
+    /**
+     * {@return {@code folder}, if the server has it} Without it, {@code path} is not found, as one that is not in it.
+     */
+    private static Templates present(Templates folder, Templates.Kind kind, String path) throws TemplateException {
         if (folder == null) {
             throw kind.notFound(path, "the server has no " + kind.noun() + "s folder");
         }
-        return folder.get(path);
+        return folder;
     }
 }

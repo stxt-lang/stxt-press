@@ -99,6 +99,8 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - `AtomicFile`, in `dev.stxt.press.templates`: a file written to a hidden file beside it and moved over it once whole,
   so that a write that fails leaves the file as it was. The save of the templates and the documents and the `-o` of
   the commands share it.
+- `Press.filled(Job)`, the text a job converts (its document filled with its data, or as it is without them), which is
+  what `?format=stxt` answers.
 - `PressException.describe`, the error as one line, `where:line: CODE: message`, with the name of each source (its
   file, say), which the errors of the commands and the warnings of the warm up share.
 - The error of a file of a template or a document that cannot be read, or is not UTF-8, names the file: in the log of

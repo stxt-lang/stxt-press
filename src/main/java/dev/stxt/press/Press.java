@@ -169,18 +169,30 @@ public final class Press {
         }
     }
 
+    /**
+     * {@return the text a job converts: its document filled with its data, or the document as it is without data} It is
+     * what {@code ?format=stxt} answers. Like {@link #fill}, it needs no converter and validates nothing.
+     *
+     * @param job the job; not {@code null}
+     * @throws PressException as {@link #fill}, if the job has data
+     */
+    public static String filled(Job job) {
+        return job.data() == null ? job.document() : fill(job.document(), job.data());
+    }
+
     /** A job ready to lay out: the converter with its styles and options, and its document, filled if it had data. */
     private record Prepared(Converter converter, InlineNode document, String filled) {
     }
 
     private Prepared prepare(Job job) {
-        Objects.requireNonNull(job, "job");
-        String filled = job.data() == null ? null : fill(job.document(), job.data());
+        String text = filled(Objects.requireNonNull(job, "job"));
+        // Only with data is the text another one, whose lines are those of the errors of FILLED.
+        String filled = job.data() == null ? null : text;
         Converter converter;
         InlineNode document;
         try {
             converter = forJob(job);
-            document = new DocumentReader().read(filled == null ? job.document() : filled);
+            document = new DocumentReader().read(text);
         } catch (StxtPdfException e) {
             throw fromEngine(e, job, filled);
         }
