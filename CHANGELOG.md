@@ -4,16 +4,21 @@ All notable changes to `stxt-press` are documented in this file, newest first.
 
 The format follows [Keep a Changelog](http://keepachangelog.com/).
 
-## [Unreleased]
+## [0.6.0] - 2026-11-14
+
+The Docker image, and a fix of the permissions of the files the service writes. No route, node of `server.stxt` or
+command changes.
 
 ### Added
 
-- **The Docker image**: a `Dockerfile` at the root of the project, built after `mvn package`, with the folder
-  `server/` as it is on `eclipse-temurin:17-jre`, and its `server.stxt` with `Host: 0.0.0.0` and `Save: false`. It
-  runs as a user without privileges, exposes `8080`, checks its health with `/health` and stops in order with
-  `docker stop`. Own templates, documents, resources or `server.stxt` are mounted over those of the image. The
-  workflow `docker.yml` publishes it to `ghcr.io/stxt-lang/stxt-press`, with the version as its tag, by hand or when
-  a release is published.
+- **The Docker image**, `ghcr.io/stxt-lang/stxt-press`, for `linux/amd64` and `linux/arm64`, with a tag for each
+  version and `latest` for the last release: `docker run --rm -p 127.0.0.1:8080:8080 ghcr.io/stxt-lang/stxt-press`.
+  It is the folder `server/` as it is on `eclipse-temurin:17-jre`, with its `server.stxt` changed to
+  `Host: 0.0.0.0` and `Save: false`. It runs as a user without privileges (`stxt-press`, uid `10001`), exposes
+  `8080`, checks its health with `/health` and stops in order with `docker stop`. Own templates, documents,
+  resources or `server.stxt` are mounted over those of the image. The `Dockerfile` is at the root of the project,
+  built after `mvn package`, and the workflow `docker.yml` publishes the image when a release is published, or by
+  hand without moving `latest`.
 
 ### Fixed
 

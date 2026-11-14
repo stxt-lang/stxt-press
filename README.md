@@ -6,11 +6,20 @@ are the work of [stxt-pdf](https://github.com/stxt-lang/stxt-pdf), and the fill 
 [stxt-transform](https://github.com/stxt-lang/stxt-java-transform): this project does not parse, validate or lay out
 anything itself.
 
-Version 0.5.0. The routes, `server.stxt` and the Java API may still change between minor versions before 1.0.
+Version 0.6.0. The routes, `server.stxt` and the Java API may still change between minor versions before 1.0.
 
 ## Start
 
-The folder [`server/`](server/) is a whole server: the jar, the scripts that start it, its `server.stxt`, the IBM Plex
+With Docker, the image of the last release:
+
+```bash
+docker run --rm -p 127.0.0.1:8080:8080 ghcr.io/stxt-lang/stxt-press
+```
+
+The server listens on `http://127.0.0.1:8080/`, where the [index and the editor](#index-and-editor) are, with the
+examples, and Ctrl+C stops it ([Docker](#docker)).
+
+Without Docker, the folder [`server/`](server/) is a whole server: the jar, the scripts that start it, its `server.stxt`, the IBM Plex
 fonts, nineteen example templates and documents, and a reference of the layout language. It comes with the source of
 each [release](https://github.com/stxt-lang/stxt-press/releases) and with a clone of the repository, and needs
 **Java 17** or later:
@@ -19,9 +28,8 @@ each [release](https://github.com/stxt-lang/stxt-press/releases) and with a clon
 server/start.sh
 ```
 
-On Windows, `server\start.bat`. The server listens on `http://127.0.0.1:8080/`, where the [index and the
-editor](#index-and-editor) are, and Ctrl+C stops it. A template, filled with its sample data or with other data, and a
-document:
+On Windows, `server\start.bat`. The server listens on the same address. A template, filled with its sample data or
+with other data, and a document:
 
 ```bash
 curl -o invoice.pdf http://127.0.0.1:8080/print/examples/invoice
@@ -35,14 +43,12 @@ exist`. The folder can be copied anywhere, and its [`README.md`](server/README.m
 
 ## Docker
 
-The image is the folder `server/` on `eclipse-temurin:17-jre`, with two changes to its `server.stxt`: `Host: 0.0.0.0`,
-so that it answers from outside the container, and `Save: false`. It is built from the root of the repository after
-`mvn package`, which leaves in `server/` the jar of the code:
+The image is published at `ghcr.io/stxt-lang/stxt-press`, for `linux/amd64` and `linux/arm64`: one tag for each
+version (`0.6.0`), and `latest` for the last release. It is the folder `server/` on `eclipse-temurin:17-jre`, with two
+changes to its `server.stxt`: `Host: 0.0.0.0`, so that it answers from outside the container, and `Save: false`.
 
 ```bash
-mvn package -Dnpm.install=ci
-docker build -t stxt-press .
-docker run --rm -p 127.0.0.1:8080:8080 stxt-press
+docker run --rm -p 127.0.0.1:8080:8080 ghcr.io/stxt-lang/stxt-press:0.6.0
 ```
 
 The image answers without token, to anyone who reaches its port: `-p 127.0.0.1:8080:8080` keeps it on the machine.
@@ -56,7 +62,7 @@ docker run --rm -p 127.0.0.1:8080:8080 \
     -v "$PWD/templates:/opt/stxt-press/templates:ro" \
     -v "$PWD/documents:/opt/stxt-press/documents:ro" \
     -v "$PWD/resources:/opt/stxt-press/resources:ro" \
-    stxt-press
+    ghcr.io/stxt-lang/stxt-press:0.6.0
 ```
 
 A token, other routes or other limits need an own `server.stxt`, with `Host: 0.0.0.0`. Its relative paths are relative
@@ -67,11 +73,19 @@ are mounted without `:ro` and writable by the uid `10001`:
 docker run --rm -p 8080:8080 \
     -v "$PWD/server.stxt:/opt/stxt-press/server.stxt:ro" \
     -e STXT_PRESS_TOKEN="$(cat token.txt)" \
-    stxt-press
+    ghcr.io/stxt-lang/stxt-press:0.6.0
 ```
 
 `docker stop` gives the server 10 seconds before it kills it, and a conversion in progress has the `Timeout` of
 `server.stxt` (30 seconds by default): `docker run --stop-timeout 40` lets it end.
+
+The image is built from the root of the repository after `mvn package`, which leaves in `server/` the jar of the
+code:
+
+```bash
+mvn package -Dnpm.install=ci
+docker build -t stxt-press .
+```
 
 ## Templates and documents
 
@@ -109,11 +123,11 @@ The routes of the clients:
 | `GET /documents/{path}` | The document `{path}`, as it is |
 | `POST /render` | Any document: `{"document": "...", "styles": ["..."], "data": {...}, "options": {...}}` |
 | `GET /schema` | The schema `dev.stxt.pdf` of the engine |
-| `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.5.0", "stxt-pdf": "0.18.0"}}`, without token |
+| `GET /health` | `{"status": "ok", "versions": {"stxt-press": "0.6.0", "stxt-pdf": "0.18.0"}}`, without token |
 
 `/print`, `/documents` and `/render` answer with a PDF (`?format=pdf`, the default), one SVG per page (`?format=svg`,
 as `{"pages": [...]}`) or the filled document (`?format=stxt`). `&debug=true` paints the outlines of the boxes. Every
-PDF names its producer in its document information and its XMP: `stxt-press 0.5.0 (stxt-pdf 0.18.0)`, or the
+PDF names its producer in its document information and its XMP: `stxt-press 0.6.0 (stxt-pdf 0.18.0)`, or the
 `Producer` of `server.stxt`.
 
 The routes of the editor:
@@ -341,7 +355,7 @@ does not exist, `Resource folder` with `Font folder`...). A change in the file n
 | `Routes` | all on but `Save` | `Editor` (the index, the editor and `/fonts`), `Render`, `Files` (the routes under `/files/`) and `Save` ([Saving](#saving)) |
 | `Limits` | | `Max body size` (bytes, 2 MiB), `Timeout` (seconds, 30), `Concurrent conversions` (4), and the limits of the engine: `Max pages`, `Max image pixels`, `Max SVG elements`, `Max SVG depth`, `Max PDF bytes` |
 | `Template options` | | `PDF UA` (`1` or `2`), `PDF A` (`A2B`, `A2A`, `A3B`, `A3A`) and one `Exclude` for each check not made, as the `options` of `/render`; for the templates and the documents of the server |
-| `Producer` | `stxt-press 0.5.0 (stxt-pdf 0.18.0)` | The producer that the PDFs of the server and of `render`, `print` and `documents` name |
+| `Producer` | `stxt-press 0.6.0 (stxt-pdf 0.18.0)` | The producer that the PDFs of the server and of `render`, `print` and `documents` name |
 
 The `server.stxt` of `server/` listens on `127.0.0.1:8080`, turns `Save` on, for the editor of the same machine, and
 shows the other nodes commented with their defaults.

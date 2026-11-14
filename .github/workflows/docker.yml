@@ -1,5 +1,6 @@
-# The Docker image, published to ghcr.io/stxt-lang/stxt-press with the version of the pom as its tag. Only by hand or
-# when a release is published: publishing is a decision, not a push.
+# The Docker image, published to ghcr.io/stxt-lang/stxt-press with the version of the pom as its tag, and latest too
+# when a release that is not a prerelease is published. Only by hand or with a release: publishing is a decision, not
+# a push. A run by hand does not move latest, which is always the image of the last release.
 name: Docker
 
 on:
@@ -29,6 +30,11 @@ jobs:
           test -n "$pdf" && test -n "$press"
           echo "pdf=$pdf" >> "$GITHUB_OUTPUT"
           echo "press=$press" >> "$GITHUB_OUTPUT"
+          tags="ghcr.io/stxt-lang/stxt-press:$press"
+          if [ "${{ github.event_name }}" = release ] && [ "${{ github.event.release.prerelease }}" = false ]; then
+              tags="$tags,ghcr.io/stxt-lang/stxt-press:latest"
+          fi
+          echo "tags=$tags" >> "$GITHUB_OUTPUT"
       # A release publishes the image of its own version only.
       - name: Tag of the release
         if: github.event_name == 'release'
@@ -60,5 +66,5 @@ jobs:
           context: stxt-press
           platforms: linux/amd64,linux/arm64
           build-args: VERSION=${{ steps.pom.outputs.press }}
-          tags: ghcr.io/stxt-lang/stxt-press:${{ steps.pom.outputs.press }}
+          tags: ${{ steps.pom.outputs.tags }}
           push: true
