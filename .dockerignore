@@ -1,0 +1,3 @@
+# The image is the folder server/, with the jar that mvn package puts in it: nothing else goes to Docker.
+*
+!server

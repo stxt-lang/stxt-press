@@ -4,6 +4,24 @@ All notable changes to `stxt-press` are documented in this file, newest first.
 
 The format follows [Keep a Changelog](http://keepachangelog.com/).
 
+## [Unreleased]
+
+### Added
+
+- **The Docker image**: a `Dockerfile` at the root of the project, built after `mvn package`, with the folder
+  `server/` as it is on `eclipse-temurin:17-jre`, and its `server.stxt` with `Host: 0.0.0.0` and `Save: false`. It
+  runs as a user without privileges, exposes `8080`, checks its health with `/health` and stops in order with
+  `docker stop`. Own templates, documents, resources or `server.stxt` are mounted over those of the image. The
+  workflow `docker.yml` publishes it to `ghcr.io/stxt-lang/stxt-press`, with the version as its tag, by hand or when
+  a release is published.
+
+### Fixed
+
+- **The permissions of the files written**: a save of the editor and the `-o` of a command left the file readable
+  only by its owner (`rw-------`), since it was written to a temporary file of the JDK and moved over it. A server or
+  a container that runs as another user could not read it any more. Now a file replaced keeps its permissions, and a
+  new one has those of any file the process creates.
+
 ## [0.5.0] - 2026-11-14
 
 The first version: a service that makes PDF and SVG from layout documents (`dev.stxt.pdf`), with the Slots filled with

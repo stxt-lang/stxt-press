@@ -27,3 +27,6 @@ schemas, of those inside `stxt-press.jar`; a test checks that they are the same,
 stxt-pdf with its sample data gives the pages of that example, that each example template with its sample data is its
 document of `documents/examples/`, and that every document converts. A template with Slots validates only once filled: the editor
 marks the Slot of a node without value, such as `Row: [lines]`, until then.
+
+The Docker image of stxt-press is this folder, with `Host: 0.0.0.0` and `Save: false` in its `server.stxt`: see
+"Docker" in the [README of the project](../README.md#docker).

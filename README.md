@@ -33,6 +33,46 @@ The jar attached to each release is that same `server/stxt-press.jar`. Alone, it
 and a resources folder with the fonts: without them, `start` stops with `The fonts folder .../resources/fonts does not
 exist`. The folder can be copied anywhere, and its [`README.md`](server/README.md) lists what each part has.
 
+## Docker
+
+The image is the folder `server/` on `eclipse-temurin:17-jre`, with two changes to its `server.stxt`: `Host: 0.0.0.0`,
+so that it answers from outside the container, and `Save: false`. It is built from the root of the repository after
+`mvn package`, which leaves in `server/` the jar of the code:
+
+```bash
+mvn package -Dnpm.install=ci
+docker build -t stxt-press .
+docker run --rm -p 127.0.0.1:8080:8080 stxt-press
+```
+
+The image answers without token, to anyone who reaches its port: `-p 127.0.0.1:8080:8080` keeps it on the machine.
+The folder is `/opt/stxt-press`, and the server runs as the user `stxt-press` (uid `10001`). It warms up before
+answering, and its health check calls `/health`.
+
+Own templates, documents or resources replace those of the image:
+
+```bash
+docker run --rm -p 127.0.0.1:8080:8080 \
+    -v "$PWD/templates:/opt/stxt-press/templates:ro" \
+    -v "$PWD/documents:/opt/stxt-press/documents:ro" \
+    -v "$PWD/resources:/opt/stxt-press/resources:ro" \
+    stxt-press
+```
+
+A token, other routes or other limits need an own `server.stxt`, with `Host: 0.0.0.0`. Its relative paths are relative
+to `/opt/stxt-press`, and the token comes in the variable that its `Token env` names. With `Save: true`, the folders
+are mounted without `:ro` and writable by the uid `10001`:
+
+```bash
+docker run --rm -p 8080:8080 \
+    -v "$PWD/server.stxt:/opt/stxt-press/server.stxt:ro" \
+    -e STXT_PRESS_TOKEN="$(cat token.txt)" \
+    stxt-press
+```
+
+`docker stop` gives the server 10 seconds before it kills it, and a conversion in progress has the `Timeout` of
+`server.stxt` (30 seconds by default): `docker run --stop-timeout 40` lets it end.
+
 ## Templates and documents
 
 The server prints two kinds of files, each from its own folder:

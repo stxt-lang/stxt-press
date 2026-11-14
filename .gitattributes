@@ -1,3 +1,6 @@
 # The scripts keep the line ends of their system in every checkout, whatever core.autocrlf says.
 *.sh text eol=lf
 *.bat text eol=crlf
+# The Dockerfile runs in Linux: LF in every checkout.
+Dockerfile text eol=lf
+.dockerignore text eol=lf
