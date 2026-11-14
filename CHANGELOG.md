@@ -92,7 +92,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   anywhere. The Java is that of `JAVA_HOME`, or the `java` of the `PATH`.
 - The command line, `java -jar stxt-press.jar <command>`: `start` (the HTTP service with its `server.stxt`, which
   stops on `SIGTERM` letting the conversions in progress finish), `render` (a document with its styles and data, to
-  PDF), `print` (a template, to PDF) and `fill` (the filled document). The errors of a job go to stderr with their file
+  PDF), `print` (a template, to PDF), `documents` (a document of the documents folder, to PDF, as `GET
+  /documents/{path}`, with `--documents <folder>` or the `Document folder` of `server.stxt`) and `fill` (the filled
+  document). The errors of a job go to stderr with their file
   and line. Exit codes: `0`, `1` if the job failed, `2` if the invocation is not valid. A file that cannot be read or
   is not UTF-8 is `1` with `print` too, as with `render`, and the message names it: a file of the template (its `.stxt`,
   a `.styles.stxt` of its chain, its sample data) gave `2` and «The templates folder cannot be read».

@@ -33,8 +33,8 @@ import dev.stxt.press.templates.Templates;
 import dev.stxt.utils.FileUtils;
 
 /**
- * The command line of the service (ROADMAP-PDF 2.8): {@code start}, {@code render}, {@code print} and {@code fill},
- * with the names of the HTTP routes. It is the face of the service on the command line, not a CLI of the ecosystem:
+ * The command line of the service (ROADMAP-PDF 2.8): {@code start}, {@code render}, {@code print}, {@code documents}
+ * and {@code fill}, with the names of the HTTP routes. It is the face of the service on the command line, not a CLI of the ecosystem:
  * {@code stxt-cli} has nothing of PDF.
  *
  * <p>Exit codes, those of {@code stxt-cli}: {@link #OK}, {@link #FAILED} if the job failed (an error of the document,
@@ -55,6 +55,7 @@ final class Cli {
               start                      Starts the HTTP service
               render <document>          Converts a layout document to PDF
               print <template>           Converts a template of the templates folder to PDF
+              documents <document>       Converts a document of the documents folder to PDF
               fill <document>            Fills the Slots of a document with JSON data
 
             Options of start:
@@ -75,6 +76,12 @@ final class Cli {
               -o, --output <file>        Where the PDF is written; - for stdout (required)
               --data <file>              The JSON data, instead of the sample data of the template
               --templates <folder>       The templates folder, instead of the Template folder of server.stxt
+              --debug                    Paints the outlines of the boxes
+              --config <file>            The server.stxt with the folders, the limits and the template options
+
+            Options of documents:
+              -o, --output <file>        Where the PDF is written; - for stdout (required)
+              --documents <folder>       The documents folder, instead of the Document folder of server.stxt
               --debug                    Paints the outlines of the boxes
               --config <file>            The server.stxt with the folders, the limits and the template options
 
@@ -113,7 +120,8 @@ final class Cli {
                 case "-v", "--version" -> out.println("stxt-press " + version());
                 case "start" -> startUntilStopped(rest);
                 case "render" -> render(rest);
-                case "print" -> print(rest);
+                case "print" -> print(rest, Templates.Kind.TEMPLATE);
+                case "documents" -> print(rest, Templates.Kind.DOCUMENT);
                 case "fill" -> fill(rest);
                 default -> throw new UsageException(command.isEmpty() ? "A command is missing"
                         : "Unknown command " + command);
@@ -211,39 +219,49 @@ final class Cli {
         writePdf(new Press(config.converter()), job, output, files);
     }
 
-    /** {@code print}: a template of the templates folder, with its sample data or those of {@code --data}, to PDF. */
-    private void print(List<String> args) throws UsageException, ConfigException, Failure {
-        Arguments a = Arguments.parse(args, Set.of("--debug"), Set.of("--output", "--data", "--config", "--templates"),
-                Set.of());
-        String path = a.one("<template>");
+    /**
+     * {@code print}: a template of the templates folder, with its sample data or those of {@code --data}, to PDF; and
+     * {@code documents}: a document of the documents folder, as it is, without data. Both with the chain of styles of
+     * their folder and the template options of {@code server.stxt}, as {@code /print/{path}} and
+     * {@code /documents/{path}}.
+     */
+    private void print(List<String> args, Templates.Kind kind) throws UsageException, ConfigException, Failure {
+        boolean template = kind == Templates.Kind.TEMPLATE;
+        String folderOption = template ? "--templates" : "--documents";
+        Arguments a = Arguments.parse(args, Set.of("--debug"), template
+                ? Set.of("--output", "--data", "--config", folderOption)
+                : Set.of("--output", "--config", folderOption), Set.of());
+        String path = a.one("<" + kind.noun() + ">");
         String output = a.required("--output");
         ServerFile config = config(a.value("--config"));
-        Path folder = a.value("--templates") != null ? resolve(a.value("--templates")) : config.templateFolder();
+        Path folder = a.value(folderOption) != null ? resolve(a.value(folderOption))
+                : template ? config.templateFolder() : config.documentFolder();
         if (folder == null) {
-            throw new UsageException("No templates folder: --templates, or Template folder in server.stxt");
+            throw new UsageException("No " + kind.noun() + "s folder: " + folderOption + ", or "
+                    + (template ? "Template" : "Document") + " folder in server.stxt");
         }
         Templates templates;
         try {
-            templates = new Templates(folder);
+            templates = new Templates(folder, kind);
         } catch (IOException e) {
-            throw new UsageException("The templates folder cannot be read: " + e.getMessage());
+            throw new UsageException("The " + kind.noun() + "s folder cannot be read: " + e.getMessage());
         }
-        Template template;
+        Template entry;
         try {
-            template = templates.get(path);
+            entry = templates.get(path);
         } catch (TemplateException e) {
             throw new UsageException(e.code() + ": " + e.getMessage());
         } catch (IOException e) {
-            // A file of the template that cannot be read or is not UTF-8: the job failed, as with render. The message
-            // says which file.
+            // A file of the template or the document that cannot be read or is not UTF-8: the job failed, as with
+            // render. The message says which file.
             throw new Failure(e.getMessage());
         }
         Options options = config.http().templateOptions().withDebug(a.flag("--debug"));
-        String data = a.value("--data");
-        Job job = data == null ? template.job(options) : template.job(options, read(data));
+        String data = template ? a.value("--data") : null;
+        Job job = data == null ? entry.job(options) : entry.job(options, read(data));
 
         Map<String, String> files = new LinkedHashMap<>();
-        templates.files(template).forEach((source, file) -> files.put(source, file.toString()));
+        templates.files(entry).forEach((source, file) -> files.put(source, file.toString()));
         if (data != null) {
             files.put(PressException.DATA, data);
         }

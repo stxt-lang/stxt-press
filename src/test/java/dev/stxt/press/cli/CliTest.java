@@ -36,8 +36,10 @@ import dev.stxt.pdf.model.Check;
 import dev.stxt.pdf.model.PdfA;
 import dev.stxt.pdf.resources.Resources;
 import dev.stxt.pdf.stxt.DocumentReader;
+import dev.stxt.press.Options;
 import dev.stxt.press.Press;
 import dev.stxt.press.http.PressServer;
+import dev.stxt.press.templates.Templates;
 
 /**
  * The command line (ROADMAP-PDF 2.8), on {@link Cli} with its streams in memory: each command, where its result goes,
@@ -230,6 +232,97 @@ class CliTest {
         assertTrue(err().contains("No templates folder"), err());
         assertEquals(Cli.USAGE, run("print", "nothing", "--templates", TEMPLATES.toString(), "-o", "x.pdf"));
         assertTrue(err().contains("TEMPLATE_NOT_FOUND"), err());
+    }
+
+    // ---- documents
+
+    /**
+     * {@return a documents folder in the working directory: {@code letters/letter} with the styles of the root (the
+     * font) and its own, and beside it a {@code letter.json} that is not JSON, which a document does not read}
+     */
+    private Path documentsFolder() throws IOException {
+        Path folder = Files.createDirectories(dir.resolve("documents/letters"));
+        Files.writeString(dir.resolve("documents/.styles.stxt"), """
+                Styles (dev.stxt.pdf):
+                \tFor element: Document
+                \t\tTypography:
+                \t\t\tFont: IBM Plex Sans
+                \t\t\tSize: 11
+                """);
+        Files.writeString(folder.resolve("letter.stxt"), """
+                Document (dev.stxt.pdf):
+                \tLanguage: en
+                \tTitle: Letter
+                \tPage:
+                \t\tPaper: A4
+                \t\tMargin: 40
+                \tSection:
+                \t\tParagraph: Hello.
+                """);
+        Files.writeString(folder.resolve("letter.styles.stxt"), """
+                Styles (dev.stxt.pdf):
+                \tFor element: Paragraph
+                \t\tTypography:
+                \t\t\tColor: #123456
+                """);
+        Files.writeString(folder.resolve("letter.json"), "not json");
+        return dir.resolve("documents");
+    }
+
+    /** The PDF of {@code documents} is that of the document with its chain of styles, as {@code /documents/{path}}. */
+    @Test
+    void documentsConvertsADocumentWithItsChainOfStyles() throws Exception {
+        Path folder = documentsFolder();
+
+        int code = run("documents", "letters/letter", "--documents", "documents", "-o", "letter.pdf");
+
+        assertEquals(Cli.OK, code, this::err);
+        Press press = new Press(Converter.builder().resources(new Resources(RESOURCES)).producer(Press.producer())
+                .build());
+        ByteArrayOutputStream expected = new ByteArrayOutputStream();
+        press.pdf(new Templates(folder, Templates.Kind.DOCUMENT).get("letters/letter").job(Options.DEFAULT), expected);
+        assertArrayEquals(expected.toByteArray(), Files.readAllBytes(dir.resolve("letter.pdf")));
+    }
+
+    @Test
+    void documentsTakesTheDocumentsFolderOfServerStxt() throws Exception {
+        Path folder = documentsFolder();
+        Files.writeString(dir.resolve("press.stxt"), "Server (dev.stxt.press):\n    Resource folder: " + RESOURCES
+                + "\n    Document folder: " + folder + "\n");
+
+        assertEquals(Cli.OK, run("documents", "letters/letter", "--config", "press.stxt", "-o", "-"), this::err);
+        assertTrue(out().startsWith("%PDF-"));
+    }
+
+    @Test
+    void anErrorOfADocumentSaysItsFileAndLine() throws Exception {
+        Path folder = documentsFolder();
+        Files.writeString(folder.resolve("letters/broken.stxt"), "Document (dev.stxt.pdf):\n    Title: T\n"
+                + "    Colour: red\n");
+
+        int code = run("documents", "letters/broken", "--documents", "documents", "-o", "x.pdf");
+
+        assertEquals(Cli.FAILED, code);
+        assertTrue(err().startsWith("stxt-press: " + folder.toAbsolutePath().normalize().resolve("letters/broken.stxt")
+                + ":3: "), err());
+    }
+
+    @Test
+    void documentsWithoutFolderOrWithADocumentThatDoesNotExistOrWithData() throws Exception {
+        assertEquals(Cli.USAGE, run("documents", "letters/letter", "-o", "x.pdf"));
+        assertTrue(err().contains("No documents folder: --documents, or Document folder in server.stxt"), err());
+
+        documentsFolder();
+        err.reset();
+        assertEquals(Cli.USAGE, run("documents", "nothing", "--documents", "documents", "-o", "x.pdf"));
+        assertTrue(err().contains("DOCUMENT_NOT_FOUND"), err());
+
+        // A document has no data.
+        err.reset();
+        assertEquals(Cli.USAGE, run("documents", "letters/letter", "--documents", "documents", "--data", "letter.json",
+                "-o", "x.pdf"));
+        assertTrue(err().contains("Unknown option --data"), err());
+        assertFalse(Files.exists(dir.resolve("x.pdf")));
     }
 
     // ---- fill

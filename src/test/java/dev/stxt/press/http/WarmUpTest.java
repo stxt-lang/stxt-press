@@ -21,7 +21,7 @@ import dev.stxt.press.templates.Templates;
 /**
  * The warm up with errors that the engine does not give at will: an exception that no job expects, such as a failure of
  * the engine with one document, is a failure of that document, a warning with its stack trace, and the others are
- * converted all the same. The conversions of the engine itself are in {@code PressServerTest}.
+ * converted all the same. The conversions of the engine itself are in {@link ServerLifecycleTest}.
  */
 class WarmUpTest {
 

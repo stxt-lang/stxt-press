@@ -205,9 +205,10 @@ The jar runs with `java -jar stxt-press.jar <command>`. The commands have the na
 | `start [--config <file>]` | Starts the HTTP service with its `server.stxt` |
 | `render <document> -o <file>` | Converts a layout document to PDF, with `--styles <file>` (one for each, in order), `--data <file>`, `--pdf-ua <1\|2>`, `--pdf-a <A2B\|A2A\|A3B\|A3A>`, `--exclude <check>` and `--debug` |
 | `print <template> -o <file>` | Converts a template of the templates folder to PDF, with its sample data or those of `--data <file>`; the folder is that of `server.stxt` or `--templates <folder>` |
+| `documents <document> -o <file>` | Converts a document of the documents folder to PDF, as it is, with its chain of styles; the folder is that of `server.stxt` or `--documents <folder>` |
 | `fill <document> --data <file>` | Writes the document with its Slots filled, to stdout or to `-o <file>` |
 
-`render` and `print` take the resources folder, the limits and the options of the templates from `server.stxt`,
+`render`, `print` and `documents` take the resources folder, the limits and the options of the templates from `server.stxt`,
 found as for `start` (`--config`, `STXT_PRESS_CONFIG`, `./server.stxt`). `-` is stdin for a document or a data file,
 and stdout for `-o`. A file of `-o` is replaced only when the job ends well. `java -jar stxt-press.jar --help` lists
 every option.
@@ -221,7 +222,7 @@ stxt-press: server/templates/examples/invoice.stxt:73: SLOT_NO_DATA: Node 'Block
 | Exit code | When |
 |---|---|
 | `0` | The job ended well |
-| `1` | The job failed: the document, its styles, its data, a resource, a limit |
+| `1` | The job failed: the document, its styles, its data, a resource, a limit, a file that cannot be read or is not UTF-8 |
 | `2` | The invocation is not valid: an option, a file that does not exist, a `server.stxt` that is not valid |
 
 `start` warms up before answering (`Warm up` of `server.stxt`): it reads the whole resources folder and converts every
