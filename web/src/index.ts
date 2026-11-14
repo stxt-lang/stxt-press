@@ -10,8 +10,10 @@
 import { askToken, call, errorOf, get, setTokenAsker } from "./api";
 import { $, button, element, link, say } from "./dom";
 import { maximizable } from "./maximize";
-import { createRequest, newEntryPath, pagesLabel, printUrl, took, unreachable } from "./model";
-import { ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, parseIndexHash, placeUrl, visibleRows } from "./place";
+import { createRequest, newEntryPath, pagesLabel, printUrl, serverMessage, took, unreachable } from "./model";
+import {
+	ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, nameOf, parseIndexHash, placeUrl, visibleRows,
+} from "./place";
 import type { FolderRow, IndexPlace, Place } from "./place";
 import { setupThemeToggle } from "./theme";
 import { askTokenInDialog } from "./tokenDialog";
@@ -69,7 +71,7 @@ async function openFromApi(url: string, type?: string): Promise<void> {
 	if (!response.ok) {
 		tab?.close();
 		const error = await errorOf(response);
-		say(`${error.code}: ${error.message}`, true);
+		say(serverMessage(error, false), true);
 		return;
 	}
 	const blob = type ? new Blob([await response.text()], { type }) : await response.blob();
@@ -80,11 +82,6 @@ async function openFromApi(url: string, type?: string): Promise<void> {
 		location.href = href;
 	}
 	setTimeout(() => URL.revokeObjectURL(href), 60_000);
-}
-
-/** The name of an entry, the last segment of its path, which names its PDF. */
-function nameOf(path: string): string {
-	return path.slice(path.lastIndexOf("/") + 1);
 }
 
 /**
@@ -109,7 +106,8 @@ async function preview(tab: ListTab, path: string, format: "pdf" | "svg"): Promi
 		if (!response.ok) {
 			const error = await errorOf(response);
 			if (seq === previews) {
-				title.textContent = `${path} · ${error.code}${error.line ? ` (line ${error.line} of ${error.source})` : ""}: ${error.message}`;
+				// Every source of an error of an entry is one of its files: its line is said.
+				title.textContent = `${path} · ${serverMessage(error, true)}`;
 				title.classList.add("error");
 			}
 			return;
@@ -271,7 +269,7 @@ async function create(tab: ListTab, folder: string): Promise<void> {
 			const error = await errorOf(response);
 			problem.textContent = error.code === "TEMPLATE_EXISTS" || error.code === "DOCUMENT_EXISTS"
 				? `There is already a ${noun} called ${nameOf(asked.path)} in this folder.`
-				: `${error.code}: ${error.message}`;
+				: serverMessage(error, false);
 			return;
 		}
 		dialog.close();
@@ -411,7 +409,7 @@ async function load(tab: ListTab): Promise<void> {
 		lists[tab] = { problem: `The ${tab} are not listed in this server (Files: false).` };
 	} else {
 		const error = await errorOf(listed);
-		lists[tab] = { problem: `${error.code}: ${error.message}`, error: true };
+		lists[tab] = { problem: serverMessage(error, false), error: true };
 	}
 }
 

@@ -20,6 +20,9 @@ export const BLANK: Place = { mode: "document", path: null };
 /** The path of a template or a document: segments of `[A-Za-z0-9_-]`, as the folders of the server name them. */
 const PATH = /^[A-Za-z0-9_-]+(\/[A-Za-z0-9_-]+)*$/;
 
+/** The folder of the server that holds the templates or the documents: it names them in the URLs and in the index. */
+export const FOLDER = { template: "templates", document: "documents" } as const;
+
 /** The beginning of the URL of each mode with a path. */
 const PREFIX = { template: "/editor/templates/", document: "/editor/documents/" } as const;
 
@@ -80,14 +83,18 @@ export function indexHashOf(place: Place): string {
 	if (place.path === null) {
 		return "#documents";
 	}
-	const slash = place.path.lastIndexOf("/");
-	return indexHash({ tab: place.mode === "template" ? "templates" : "documents", folder: slash < 0 ? null : place.path.slice(0, slash) });
+	return indexHash({ tab: FOLDER[place.mode], folder: folderOf(place.path) });
 }
 
 /** The folder of a path: `""` for one at the root. */
 export function folderOf(path: string): string {
 	const slash = path.lastIndexOf("/");
 	return slash < 0 ? "" : path.slice(0, slash);
+}
+
+/** The name of a path, its last segment: that of a template or a document, which names its PDF. */
+export function nameOf(path: string): string {
+	return path.slice(path.lastIndexOf("/") + 1);
 }
 
 /** Whether `path` is in `folder` or below it (`""` is the root: every path). */
@@ -131,7 +138,7 @@ export function folderRows(paths: string[]): FolderRow[] {
 	const sorted = [...folders].sort(compareFolders);
 	return sorted.map((path) => ({
 		path,
-		label: path === "" ? "/" : path.slice(path.lastIndexOf("/") + 1),
+		label: path === "" ? "/" : nameOf(path),
 		depth: path === "" ? 0 : path.split("/").length - 1,
 		count: paths.filter((entry) => isUnder(entry, path)).length,
 		parent: path !== "" && sorted.some((other) => other.startsWith(`${path}/`)),
@@ -174,8 +181,7 @@ export function defaultFolder(rows: FolderRow[], paths: string[]): string | null
 export function byFolder<T extends { path: string }>(entries: T[]): { folder: string; entries: T[] }[] {
 	const groups = new Map<string, T[]>();
 	for (const entry of entries) {
-		const slash = entry.path.lastIndexOf("/");
-		const folder = slash < 0 ? "" : entry.path.slice(0, slash);
+		const folder = folderOf(entry.path);
 		const group = groups.get(folder);
 		if (group) {
 			group.push(entry);

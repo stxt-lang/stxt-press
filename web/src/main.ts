@@ -11,7 +11,7 @@ import { askToken, call, errorOf, get, setTokenAsker, token } from "./api";
 import { $, say } from "./dom";
 import { maximizable, restore } from "./maximize";
 import {
-	curl, documentPanels, fileName, filesAdded, pagesLabel, request, saveRequest, serverMessage, target, templatePanels, took,
+	curl, documentPanels, fileName, filesAdded, filesUrl, pagesLabel, request, saveRequest, serverMessage, target, templatePanels, took,
 	unreachable, validatesDocument,
 } from "./model";
 import type {
@@ -20,7 +20,7 @@ import type {
 import { clearOutput, filled, showFilled, showPages, showPdf } from "./output";
 import { clearPanels, mark, panelOf, setSchema, showPanels, texts, unmarkAll, validateDocument } from "./panels";
 import type { Panel } from "./panels";
-import { BLANK, indexHashOf, parsePlace, placeUrl } from "./place";
+import { BLANK, FOLDER, indexHashOf, parsePlace, placeUrl } from "./place";
 import type { Place } from "./place";
 import { setupThemeToggle } from "./theme";
 import { askTokenInDialog } from "./tokenDialog";
@@ -128,7 +128,7 @@ function showLocal(error: LocalError): void {
 
 function showServer(error: ServerError, asked: Request): void {
 	const where = target(error.source, asked.stylesNames);
-	say(serverMessage(error, where), true);
+	say(serverMessage(error, where !== null), true);
 	if (!where) {
 		return;
 	}
@@ -229,8 +229,8 @@ async function save(): Promise<void> {
 		if (!response.ok) {
 			const error = await errorOf(response);
 			say(error.code === "FILES_CHANGED"
-				? `${serverMessage(error, null)}. Nothing was saved. Copy the changes of the panels, and reload to see the files.`
-				: serverMessage(error, null), true);
+				? `${serverMessage(error, false)}. Nothing was saved. Copy the changes of the panels, and reload to see the files.`
+				: serverMessage(error, false), true);
 			return;
 		}
 		const saved = (await response.json()) as ServerTemplate | ServerDocument;
@@ -259,11 +259,11 @@ async function save(): Promise<void> {
  * Reads a template or a document of the server, with its version and whether the server saves it, and shows its
  * panels; a template, also with the URL and the curl that print it.
  */
-async function load(mode: Place["mode"], folder: string, path: string): Promise<void> {
-	const response = await get(`/files/${folder}/${path}`);
+async function load(mode: Place["mode"], path: string): Promise<void> {
+	const response = await get(filesUrl(mode, path));
 	if (!response.ok) {
 		clear();
-		say(serverMessage(await errorOf(response), null), true);
+		say(serverMessage(await errorOf(response), false), true);
 		return;
 	}
 	const version = response.headers.get("ETag") ?? undefined;
@@ -284,9 +284,8 @@ async function load(mode: Place["mode"], folder: string, path: string): Promise<
  * opened from the index, which is where another one is chosen.
  */
 async function show(place: Place): Promise<void> {
-	const folder = place.mode === "template" ? "templates" : "documents";
 	document.title = place.path === null ? "New document · stxt-press" : `${place.path} · stxt-press`;
-	$("place").textContent = place.path === null ? "New document" : `${folder}/${place.path}`;
+	$("place").textContent = place.path === null ? "New document" : `${FOLDER[place.mode]}/${place.path}`;
 	// The index goes back to the folder of what the page shows.
 	$<HTMLAnchorElement>("home").href = `/${indexHashOf(place)}`;
 	// A document is converted as it is: no data, so nothing to fill.
@@ -295,7 +294,7 @@ async function show(place: Place): Promise<void> {
 		loaded = BLANK_LOADED;
 		display(panelsOf(loaded));
 	} else {
-		await load(place.mode, folder, place.path);
+		await load(place.mode, place.path);
 	}
 }
 

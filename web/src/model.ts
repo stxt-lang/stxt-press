@@ -1,3 +1,6 @@
+// With its extension: the tests run this file with the type stripping of Node, which does not add it.
+import { FOLDER, nameOf } from "./place.ts";
+
 /**
  * What the editor decides without the DOM: which request a button makes, where an error of the server goes and what
  * it says, the JSON of the data, the panels of a place and their tabs, and the curl of a template; the places and their
@@ -215,9 +218,12 @@ export function target(source: string | null | undefined, stylesNames: string[])
 	return null;
 }
 
-/** The message of an error of the server: its code, its line and source if it is of a panel (`where`), its message. */
-export function serverMessage(error: ServerError, where: Target | null): string {
-	const place = error.line && where ? ` (line ${error.line} of ${error.source})` : "";
+/**
+ * The message of an error of the server: its code, its line and source if it is `located` in one of the files shown
+ * (a panel of the editor, a file of an entry of the index), and its message.
+ */
+export function serverMessage(error: ServerError, located: boolean): string {
+	const place = error.line && located ? ` (line ${error.line} of ${error.source})` : "";
 	return `${error.code}${place}: ${error.message}`;
 }
 
@@ -329,20 +335,21 @@ export function saveRequest(state: State): SaveRequest | null {
 		}
 	});
 	changed.push(...styles.map((item) => item.path));
-	const fields = [`"document":${JSON.stringify(state.document)}`];
+	// The data go as the text of the panel, so this body is JSON.stringify of an object, unlike that of request.
+	const body: { document: string; styles?: StylesText[]; data?: string } = { document: state.document };
 	if (styles.length > 0) {
-		fields.push(`"styles":${JSON.stringify(styles)}`);
+		body.styles = styles;
 	}
 	if (state.mode === "template") {
 		const before = state.original.data;
 		if (before === null ? state.data.trim() !== "" : !sameText(state.data, before)) {
 			changed.push(`${state.path}.json`);
-			fields.push(`"data":${JSON.stringify(state.data)}`);
+			body.data = state.data;
 		}
 	}
 	return {
-		url: `/files/${state.mode === "template" ? "templates" : "documents"}/${state.path}`,
-		body: `{${fields.join(",")}}`,
+		url: filesUrl(state.mode, state.path),
+		body: JSON.stringify(body),
 		changed,
 		shared: changed.filter((name) => name === ".styles.stxt" || name.endsWith("/.styles.stxt")),
 	};
@@ -393,11 +400,15 @@ export function newDocumentText(name: string): string {
  * refuses if there is already one at that path.
  */
 export function createRequest(mode: "template" | "document", path: string): { url: string; body: string } {
-	const name = path.slice(path.lastIndexOf("/") + 1);
 	return {
-		url: `/files/${mode === "template" ? "templates" : "documents"}/${path}`,
-		body: JSON.stringify({ document: newDocumentText(name) }),
+		url: filesUrl(mode, path),
+		body: JSON.stringify({ document: newDocumentText(nameOf(path)) }),
 	};
+}
+
+/** The URL of the files of a template or a document: `GET` reads them, and `PUT` saves or creates them. */
+export function filesUrl(mode: "template" | "document", path: string): string {
+	return `/files/${FOLDER[mode]}/${path}`;
 }
 
 /**
@@ -427,7 +438,7 @@ export function unreachable(e: unknown): string {
 
 /** The name of the PDF that is downloaded: that of the template or the document, or `document.pdf` for a blank one. */
 export function fileName(state: State): string {
-	return state.path === null ? "document.pdf" : `${state.path.slice(state.path.lastIndexOf("/") + 1)}.pdf`;
+	return state.path === null ? "document.pdf" : `${nameOf(state.path)}.pdf`;
 }
 
 /** `text` between single quotes for a POSIX shell. */
@@ -440,8 +451,7 @@ export function shellQuote(text: string): string {
  * it reads it from the variable `STXT_PRESS_TOKEN` instead of writing it.
  */
 export function curl(origin: string, path: string, data: string, token: boolean): string {
-	const name = path.slice(path.lastIndexOf("/") + 1);
-	const parts = ["curl", "-f", "-o", `${name}.pdf`];
+	const parts = ["curl", "-f", "-o", `${nameOf(path)}.pdf`];
 	if (token) {
 		parts.push("-H", "\"Authorization: Bearer $STXT_PRESS_TOKEN\"");
 	}
