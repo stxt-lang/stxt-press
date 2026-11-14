@@ -93,7 +93,11 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - The command line, `java -jar stxt-press.jar <command>`: `start` (the HTTP service with its `server.stxt`, which
   stops on `SIGTERM` letting the conversions in progress finish), `render` (a document with its styles and data, to
   PDF), `print` (a template, to PDF) and `fill` (the filled document). The errors of a job go to stderr with their file
-  and line. Exit codes: `0`, `1` if the job failed, `2` if the invocation is not valid.
+  and line. Exit codes: `0`, `1` if the job failed, `2` if the invocation is not valid. A file that cannot be read or
+  is not UTF-8 is `1` with `print` too, as with `render`, and the message names it: a file of the template (its `.stxt`,
+  a `.styles.stxt` of its chain, its sample data) gave `2` and «The templates folder cannot be read».
+- The error of a file of a template or a document that cannot be read, or is not UTF-8, names the file: in the log of
+  its `500`, in the warm up and in `print`.
 - The jar is a single file with every dependency inside (`maven-shade-plugin`), with `dev.stxt.press.cli.Main` as
   its `Main-Class`.
 - The warm up of the server (`Warm up` in `server.stxt`, on by default): before answering, it reads the whole resources

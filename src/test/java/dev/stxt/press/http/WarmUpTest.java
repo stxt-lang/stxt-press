@@ -98,7 +98,8 @@ class WarmUpTest {
 
         WarmUp.Failure fine = result.failures().stream().filter(f -> f.path().equals("fine")).findFirst().orElseThrow();
         assertNull(fine.unexpected(), fine::toString);
-        assertTrue(fine.error().startsWith("It cannot be read"), fine::toString);
+        assertTrue(fine.error().endsWith("fine.stxt cannot be read, or is not UTF-8: Input length = 1"),
+                fine::toString);
         assertTrue(fine.warning(), "it has sample data");
     }
 }

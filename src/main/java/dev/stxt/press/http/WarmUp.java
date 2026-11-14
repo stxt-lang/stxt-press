@@ -168,7 +168,8 @@ final class WarmUp {
         } catch (TemplateException e) {
             error = e.code() + ": " + e.getMessage();
         } catch (IOException e) {
-            error = "It cannot be read: " + e.getMessage();
+            // Templates.get says which file in its message.
+            error = e.getMessage();
         } catch (RuntimeException e) {
             // An error no job expects: a failure of the engine with this document. Over HTTP it is a 500 and the server
             // goes on, so here it does not stop the start either.

@@ -218,14 +218,20 @@ final class Cli {
             throw new UsageException("No templates folder: --templates, or Template folder in server.stxt");
         }
         Templates templates;
-        Template template;
         try {
             templates = new Templates(folder);
+        } catch (IOException e) {
+            throw new UsageException("The templates folder cannot be read: " + e.getMessage());
+        }
+        Template template;
+        try {
             template = templates.get(path);
         } catch (TemplateException e) {
             throw new UsageException(e.code() + ": " + e.getMessage());
         } catch (IOException e) {
-            throw new UsageException("The templates folder cannot be read: " + e.getMessage());
+            // A file of the template that cannot be read or is not UTF-8: the job failed, as with render. The message
+            // says which file.
+            throw new Failure(e.getMessage());
         }
         Options options = config.http().templateOptions().withDebug(a.flag("--debug"));
         String data = a.value("--data");

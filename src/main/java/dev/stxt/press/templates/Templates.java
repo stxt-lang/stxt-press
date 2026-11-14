@@ -159,7 +159,8 @@ public final class Templates {
      * @throws TemplateException if there is no template at {@code path} ({@link Kind#notFound()}) or a file of it is a
      *         link that leaves the folder ({@link TemplateException#LINK_OUTSIDE},
      *         {@link TemplateException#DOCUMENT_LINK_OUTSIDE})
-     * @throws IOException if a file of it cannot be read or is not valid UTF-8
+     * @throws IOException if a file of it cannot be read or is not valid UTF-8, with the path of that file in its
+     *         message
      */
     public Template get(String path) throws IOException {
         if (!isPath(path) || !isFile(path + DOCUMENT)) {
@@ -458,7 +459,12 @@ public final class Templates {
         if (!file.toRealPath().startsWith(real)) {
             throw linkOutside(relative, template);
         }
-        return FileUtils.readFileContent(file.toFile());
+        try {
+            return FileUtils.readFileContent(file.toFile());
+        } catch (IOException e) {
+            // The message of the JDK does not say which file: Input length = 1, for one that is not UTF-8.
+            throw new IOException(file + " cannot be read, or is not UTF-8: " + e.getMessage(), e);
+        }
     }
 
     private TemplateException linkOutside(String relative, String template) {

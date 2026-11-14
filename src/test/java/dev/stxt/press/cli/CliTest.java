@@ -2,6 +2,7 @@ package dev.stxt.press.cli;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -198,6 +199,29 @@ class CliTest {
         assertEquals(Cli.FAILED, code);
         assertTrue(err().startsWith("stxt-press: " + TEMPLATES.resolve("examples/invoice.stxt") + ":"), err());
         assertTrue(err().contains("SLOT_NO_DATA"), err());
+    }
+
+    /**
+     * A file of a template that is not UTF-8 is a failure of the job (exit 1) that names the file, as with
+     * {@code render}; a templates folder that does not exist is one of the invocation (exit 2).
+     */
+    @Test
+    void aFileOfATemplateThatIsNotUtf8IsAFailureThatNamesIt() throws Exception {
+        Path folder = Files.createDirectories(dir.resolve("templates"));
+        Files.writeString(folder.resolve("letter.stxt"), "Document (dev.stxt.pdf):\n    Title: T\n");
+        // A styles file of the chain, not the template itself.
+        Files.write(folder.resolve(".styles.stxt"), new byte[] {'S', (byte) 0xFF, (byte) 0xFE});
+
+        int code = run("print", "letter", "--templates", "templates", "-o", "x.pdf");
+
+        assertEquals(Cli.FAILED, code, this::err);
+        assertTrue(err().startsWith("stxt-press: " + folder.toAbsolutePath().normalize().resolve(".styles.stxt")
+                + " cannot be read, or is not UTF-8: "), err());
+        assertFalse(Files.exists(dir.resolve("x.pdf")));
+
+        err.reset();
+        assertEquals(Cli.USAGE, run("print", "letter", "--templates", "nowhere", "-o", "x.pdf"));
+        assertTrue(err().startsWith("stxt-press: The templates folder cannot be read: "), err());
     }
 
     @Test
