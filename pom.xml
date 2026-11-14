@@ -6,7 +6,7 @@
 
     <groupId>dev.stxt</groupId>
     <artifactId>stxt-press</artifactId>
-    <version>0.1.0</version>
+    <version>0.5.0</version>
     <packaging>jar</packaging>
 
     <!-- A service, not a library: it is distributed as a jar of the GitHub releases and as a Docker image, not on
