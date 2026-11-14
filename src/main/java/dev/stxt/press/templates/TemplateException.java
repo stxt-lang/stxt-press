@@ -72,12 +72,4 @@ public final class TemplateException extends IOException {
     public Reason reason() {
         return reason;
     }
-
-    /**
-     * {@return whether the path is not that of a template or a document ({@link #NOT_FOUND},
-     * {@link #DOCUMENT_NOT_FOUND}), and not a link that leaves the folder}
-     */
-    public boolean notFound() {
-        return reason == Reason.NOT_FOUND;
-    }
 }

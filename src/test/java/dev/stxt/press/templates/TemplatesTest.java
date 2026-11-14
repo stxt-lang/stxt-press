@@ -327,7 +327,7 @@ class TemplatesTest {
 
         TemplateException missing = assertThrows(TemplateException.class, () -> documents.get("missing"));
         assertEquals(TemplateException.DOCUMENT_NOT_FOUND, missing.code());
-        assertTrue(missing.notFound());
+        assertEquals(TemplateException.Reason.NOT_FOUND, missing.reason());
         assertEquals("There is no document missing", missing.getMessage());
 
         Path outside = Files.createDirectories(temp.resolve("outside"));
@@ -335,7 +335,7 @@ class TemplatesTest {
         link(folder.resolve("linked.stxt"), outside.resolve("secret.stxt"));
         TemplateException link = assertThrows(TemplateException.class, () -> documents.get("linked"));
         assertEquals(TemplateException.DOCUMENT_LINK_OUTSIDE, link.code());
-        assertFalse(link.notFound());
+        assertEquals(TemplateException.Reason.LINK_OUTSIDE, link.reason());
         assertTrue(link.getMessage().contains("documents folder"), link.getMessage());
     }
 

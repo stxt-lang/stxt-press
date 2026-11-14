@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 import com.sun.net.httpserver.HttpServer;
 
 import dev.stxt.pdf.convert.Converter;
+import dev.stxt.press.Options;
 import dev.stxt.press.templates.Templates;
 
 /**
@@ -47,16 +48,23 @@ public final class PressServer implements AutoCloseable {
     private final HttpServer server;
     private final ExecutorService executor;
     private final Gate gate;
-    private final Routes routes;
     private final Conversions conversions;
+    /** The templates folder, or {@code null}: the warm up converts its templates. */
+    private final Templates templates;
+    /** The documents folder, or {@code null}: the warm up converts its documents. */
+    private final Templates documents;
+    /** The options of the templates and the documents, those of the warm up. */
+    private final Options templateOptions;
 
-    private PressServer(HttpServer server, ExecutorService executor, Gate gate, Routes routes,
-            Conversions conversions) {
+    private PressServer(HttpServer server, ExecutorService executor, Gate gate, Conversions conversions,
+            Templates templates, Templates documents, Options templateOptions) {
         this.server = server;
         this.executor = executor;
         this.gate = gate;
-        this.routes = routes;
         this.conversions = conversions;
+        this.templates = templates;
+        this.documents = documents;
+        this.templateOptions = templateOptions;
     }
 
     /**
@@ -173,7 +181,7 @@ public final class PressServer implements AutoCloseable {
         server.setExecutor(executor);
         server.createContext("/", gate);
         server.start();
-        return new PressServer(server, executor, gate, routes, conversions);
+        return new PressServer(server, executor, gate, conversions, templates, documents, config.templateOptions());
     }
 
     /** {@return the gate of the server, with the requests in progress, for the tests} */
@@ -200,7 +208,7 @@ public final class PressServer implements AutoCloseable {
     public void warmUp() {
         LOG.log(Level.INFO, "Warming up on port " + address().getPort() + ": every request is answered with 503 until "
                 + "the resources are read and the templates and documents converted");
-        WarmUp.Result result = routes.warmUp();
+        WarmUp.Result result = conversions.warmUp(templates, documents, templateOptions);
         for (WarmUp.Failure failure : result.failures()) {
             String what = failure.path() == null ? "The warm up document"
                     : "The " + failure.kind().noun() + " " + failure.path();

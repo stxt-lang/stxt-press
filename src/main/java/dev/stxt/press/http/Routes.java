@@ -167,16 +167,6 @@ final class Routes {
                         (exchange, rest, parameters) -> font(exchange, rest)));
     }
 
-    /**
-     * Warms the server up: creates its converter, which reads the whole resources folder, and converts its templates
-     * and its documents ({@link WarmUp}).
-     *
-     * @throws dev.stxt.pdf.model.StxtPdfException if the converter cannot be created: its resources
-     */
-    WarmUp.Result warmUp() {
-        return conversions.warmUp(templates, documents, config.templateOptions());
-    }
-
     /** Answers the request with the first route of {@link #table} that it matches and that is on. */
     void route(HttpExchange exchange) throws Exception {
         String path = exchange.getRequestURI().getRawPath();

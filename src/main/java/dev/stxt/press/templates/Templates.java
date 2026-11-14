@@ -88,11 +88,6 @@ public final class Templates {
             return noun;
         }
 
-        /** {@return the code of a path that is not one of the folder} */
-        public String notFound() {
-            return notFound;
-        }
-
         /** {@return the error of a path that is not one of the folder, for whoever has none} */
         public TemplateException notFound(String path, String why) {
             return new TemplateException(notFound, TemplateException.Reason.NOT_FOUND, path, "There is no " + noun + " " + path
@@ -154,7 +149,8 @@ public final class Templates {
      * documents folder, the document, without data.
      *
      * @param path the path of the template, without extension and with {@code /} between segments
-     * @throws TemplateException if there is no template at {@code path} ({@link Kind#notFound()}) or a file of it is a
+     * @throws TemplateException if there is no template at {@code path} ({@link TemplateException#NOT_FOUND},
+     *         {@link TemplateException#DOCUMENT_NOT_FOUND}) or a file of it is a
      *         link that leaves the folder ({@link TemplateException#LINK_OUTSIDE},
      *         {@link TemplateException#DOCUMENT_LINK_OUTSIDE})
      * @throws IOException if a file of it cannot be read or is not valid UTF-8, with the path of that file in its
@@ -300,7 +296,8 @@ public final class Templates {
      * @param path the path of the new template or document
      * @param change the texts to write; its styles can only be the own ones; not {@code null}
      * @return the new template or document, read from its files, and the files written
-     * @throws TemplateException if {@code path} is not a valid path or its folder does not exist ({@link Kind#notFound()}),
+     * @throws TemplateException if {@code path} is not a valid path or its folder does not exist
+     *         ({@link TemplateException#NOT_FOUND}, {@link TemplateException#DOCUMENT_NOT_FOUND}),
      *         if there is already one at {@code path} ({@link TemplateException#EXISTS},
      *         {@link TemplateException#DOCUMENT_EXISTS}), or if its folder is a link that leaves the folder
      * @throws IllegalArgumentException if {@code change} has styles that are not the own ones, or data for a document
