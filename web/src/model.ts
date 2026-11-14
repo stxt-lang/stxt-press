@@ -401,6 +401,13 @@ export function took(what: string, ms: number): string {
 	return `${what} in ${ms < 1000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`}.`;
 }
 
+/**
+ * The message of a call that got no answer (the server stopped or restarting, the network down): what `fetch` throws.
+ */
+export function unreachable(e: unknown): string {
+	return `The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`;
+}
+
 /** The name of the PDF that is downloaded: that of the template or the document, or `document.pdf` for a blank one. */
 export function fileName(state: State): string {
 	return state.path === null ? "document.pdf" : `${state.path.slice(state.path.lastIndexOf("/") + 1)}.pdf`;

@@ -3,7 +3,7 @@ import { describe, it } from "node:test";
 
 import {
 	createRequest, curl, documentPanels, fileName, isUnchanged, jsonErrorLine, newDocumentText, newEntryPath, parseData, printUrl, request, saveRequest, serverMessage, tabState, tabs,
-	target, templatePanels, took, validatesDocument,
+	target, templatePanels, took, unreachable, validatesDocument,
 } from "../src/model.ts";
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
 import {
@@ -469,6 +469,11 @@ describe("the save", () => {
 	it("says how long something took", () => {
 		assert.equal(took("PDF", 312.4), "PDF in 312 ms.");
 		assert.equal(took("Saved a.stxt", 1440), "Saved a.stxt in 1.4 s.");
+	});
+
+	it("says that the server cannot be reached, with what fetch threw", () => {
+		assert.equal(unreachable(new TypeError("Failed to fetch")), "The server cannot be reached: Failed to fetch");
+		assert.equal(unreachable("offline"), "The server cannot be reached: offline");
 	});
 });
 

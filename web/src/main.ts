@@ -11,7 +11,8 @@ import { askToken, call, errorOf, get, setTokenAsker, token } from "./api";
 import { $, say } from "./dom";
 import { maximizable, restore } from "./maximize";
 import {
-	curl, documentPanels, fileName, request, saveRequest, serverMessage, target, templatePanels, took, validatesDocument,
+	curl, documentPanels, fileName, request, saveRequest, serverMessage, target, templatePanels, took, unreachable,
+	validatesDocument,
 } from "./model";
 import type { Format, LocalError, Panels, Request, ServerDocument, ServerError, ServerTemplate, State, Target } from "./model";
 import { clearOutput, filled, loadFonts, showFilled, showPages, showPdf } from "./output";
@@ -172,7 +173,7 @@ async function run(format: Format): Promise<void> {
 			say(took("PDF", ms));
 		}
 	} catch (e) {
-		say(`The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`, true);
+		say(unreachable(e), true);
 	} finally {
 		setButtons();
 	}
@@ -232,7 +233,7 @@ async function save(): Promise<void> {
 		const written = saved.written ?? [];
 		say(written.length === 0 ? "Nothing to save: the files are as they were." : took(`Saved ${written.join(", ")}`, ms));
 	} catch (e) {
-		say(`The server cannot be reached: ${e instanceof Error ? e.message : String(e)}`, true);
+		say(unreachable(e), true);
 	} finally {
 		setButtons();
 	}
@@ -309,8 +310,19 @@ async function start(): Promise<void> {
 		}
 	};
 	$("copy-curl").onclick = async () => {
-		await navigator.clipboard.writeText($("curl").textContent ?? "");
-		say("curl copied.");
+		const curlText = $("curl");
+		try {
+			await navigator.clipboard.writeText(curlText.textContent ?? "");
+			say("curl copied.");
+		} catch {
+			// The browser gives the clipboard only to a secure page (HTTPS, or localhost): from any other address, such
+			// as that of a server in a container, the curl is selected for the user to copy.
+			const range = document.createRange();
+			range.selectNodeContents(curlText);
+			getSelection()?.removeAllRanges();
+			getSelection()?.addRange(range);
+			say("This page cannot copy (it is not HTTPS or localhost): the curl is selected, copy it with Ctrl+C.");
+		}
 	};
 	// Ctrl+S (Cmd+S on a Mac) saves, instead of saving the page in the browser.
 	document.addEventListener("keydown", (event) => {
@@ -331,12 +343,17 @@ async function start(): Promise<void> {
 	document.querySelectorAll<HTMLElement>(".workspace > section").forEach(maximizable);
 	setButtons();
 
-	const schemaResponse = await get("/schema");
-	setSchema(schemaResponse.ok ? await schemaResponse.text() : "");
-	// The URL as the page writes it, without what the page does not read (a query).
-	const place = parsePlace(location.pathname) ?? BLANK;
-	window.history.replaceState(null, "", placeUrl(place));
-	await show(place);
+	try {
+		const schemaResponse = await get("/schema");
+		setSchema(schemaResponse.ok ? await schemaResponse.text() : "");
+		// The URL as the page writes it, without what the page does not read (a query).
+		const place = parsePlace(location.pathname) ?? BLANK;
+		window.history.replaceState(null, "", placeUrl(place));
+		await show(place);
+	} catch (e) {
+		clear();
+		say(unreachable(e), true);
+	}
 }
 
 void start();

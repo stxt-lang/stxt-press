@@ -10,7 +10,7 @@
 import { askToken, call, errorOf, get, setTokenAsker } from "./api";
 import { $, button, element, link, say } from "./dom";
 import { maximizable } from "./maximize";
-import { createRequest, newEntryPath, printUrl, took } from "./model";
+import { createRequest, newEntryPath, printUrl, took, unreachable } from "./model";
 import { loadFonts, renderPages } from "./pages";
 import { ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, parseIndexHash, placeUrl, visibleRows } from "./place";
 import type { FolderRow, IndexPlace, Place } from "./place";
@@ -57,7 +57,14 @@ let previewUrl: string | undefined;
  */
 async function openFromApi(url: string, type?: string): Promise<void> {
 	const tab = window.open("", "_blank");
-	const response = await get(url);
+	let response: Response;
+	try {
+		response = await get(url);
+	} catch (e) {
+		tab?.close();
+		say(unreachable(e), true);
+		return;
+	}
 	if (!response.ok) {
 		tab?.close();
 		const error = await errorOf(response);
@@ -92,53 +99,62 @@ async function preview(tab: ListTab, path: string, format: "pdf" | "svg"): Promi
 	const title = $("preview-title");
 	title.textContent = `${path} · converting…`;
 	title.classList.remove("error");
-	const started = performance.now();
-	const response = await get(printUrl(LISTS[tab].mode, path, format));
-	if (seq !== previews) {
-		return;
-	}
-	if (!response.ok) {
-		const error = await errorOf(response);
+	try {
+		const started = performance.now();
+		const response = await get(printUrl(LISTS[tab].mode, path, format));
+		if (seq !== previews) {
+			return;
+		}
+		if (!response.ok) {
+			const error = await errorOf(response);
+			if (seq === previews) {
+				title.textContent = `${path} · ${error.code}${error.line ? ` (line ${error.line} of ${error.source})` : ""}: ${error.message}`;
+				title.classList.add("error");
+			}
+			return;
+		}
+		const frame = $<HTMLIFrameElement>("preview-frame");
+		const pagesHost = $("preview-pages");
+		const download = $<HTMLAnchorElement>("preview-download");
+		if (format === "svg") {
+			const pages = ((await response.json()) as { pages: string[] }).pages;
+			// The fonts once, the first time: an SVG names its fonts and does not carry them.
+			await loadFonts();
+			if (seq !== previews) {
+				return;
+			}
+			renderPages(pagesHost, pages);
+			const ms = performance.now() - started;
+			title.textContent = `${path} · ${took(pages.length === 1 ? "1 page" : `${pages.length} pages`, ms)}`;
+			freePdf();
+			frame.hidden = true;
+			pagesHost.hidden = false;
+			pagesHost.scrollTop = 0;
+			download.hidden = true;
+		} else {
+			const pdf = await response.blob();
+			const ms = performance.now() - started;
+			if (seq !== previews) {
+				return;
+			}
+			freePdf();
+			previewUrl = URL.createObjectURL(pdf);
+			title.textContent = `${path} · ${took("PDF", ms)}`;
+			frame.src = previewUrl;
+			frame.hidden = false;
+			pagesHost.hidden = true;
+			pagesHost.replaceChildren();
+			download.href = previewUrl;
+			download.download = `${nameOf(path)}.pdf`;
+			download.hidden = false;
+		}
+	} catch (e) {
+		// No answer: the server stopped, or the network is down.
 		if (seq === previews) {
-			title.textContent = `${path} · ${error.code}${error.line ? ` (line ${error.line} of ${error.source})` : ""}: ${error.message}`;
+			title.textContent = `${path} · ${unreachable(e)}`;
 			title.classList.add("error");
 		}
 		return;
-	}
-	const frame = $<HTMLIFrameElement>("preview-frame");
-	const pagesHost = $("preview-pages");
-	const download = $<HTMLAnchorElement>("preview-download");
-	if (format === "svg") {
-		const pages = ((await response.json()) as { pages: string[] }).pages;
-		// The fonts once, the first time: an SVG names its fonts and does not carry them.
-		await loadFonts();
-		if (seq !== previews) {
-			return;
-		}
-		renderPages(pagesHost, pages);
-		const ms = performance.now() - started;
-		title.textContent = `${path} · ${took(pages.length === 1 ? "1 page" : `${pages.length} pages`, ms)}`;
-		freePdf();
-		frame.hidden = true;
-		pagesHost.hidden = false;
-		pagesHost.scrollTop = 0;
-		download.hidden = true;
-	} else {
-		const pdf = await response.blob();
-		const ms = performance.now() - started;
-		if (seq !== previews) {
-			return;
-		}
-		freePdf();
-		previewUrl = URL.createObjectURL(pdf);
-		title.textContent = `${path} · ${took("PDF", ms)}`;
-		frame.src = previewUrl;
-		frame.hidden = false;
-		pagesHost.hidden = true;
-		pagesHost.replaceChildren();
-		download.href = previewUrl;
-		download.download = `${nameOf(path)}.pdf`;
-		download.hidden = false;
 	}
 	const edit = $<HTMLAnchorElement>("preview-edit");
 	edit.href = placeUrl({ mode: LISTS[tab].mode, path });
@@ -266,9 +282,16 @@ async function create(tab: ListTab, folder: string): Promise<void> {
 		}
 		ok.disabled = true;
 		const request = createRequest(noun, asked.path);
-		const response = await call({ method: "PUT", url: request.url, body: request.body, contentType: "application/json",
-			headers: { "If-None-Match": "*" } });
-		ok.disabled = false;
+		let response: Response;
+		try {
+			response = await call({ method: "PUT", url: request.url, body: request.body, contentType: "application/json",
+				headers: { "If-None-Match": "*" } });
+		} catch (e) {
+			problem.textContent = unreachable(e);
+			return;
+		} finally {
+			ok.disabled = false;
+		}
 		if (!response.ok) {
 			const error = await errorOf(response);
 			problem.textContent = error.code === "TEMPLATE_EXISTS" || error.code === "DOCUMENT_EXISTS"
@@ -396,7 +419,14 @@ async function versions(): Promise<void> {
 
 /** Asks the server for the entries of a list tab, or says why they are not listed. */
 async function load(tab: ListTab): Promise<void> {
-	const listed = await get(`/files/${tab}`);
+	let listed: Response;
+	try {
+		listed = await get(`/files/${tab}`);
+	} catch (e) {
+		// A reload asks again.
+		lists[tab] = { problem: unreachable(e), error: true };
+		return;
+	}
 	if (listed.ok) {
 		const body = (await listed.json()) as Record<string, Entry[]> & { writable?: boolean };
 		lists[tab] = { entries: body[tab], writable: body.writable === true };
