@@ -169,7 +169,8 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
 - In the editor, Fill, Preview and PDF put back the files when they are over the window, so that what they give is
   seen; the output over the window stays, and shows it.
 - In the editor, the tabs of the styles go from the nearest to the farthest: after the document, its own styles, then
-  those of its folder and of each folder above. The styles are still applied, and sent to `/render`, from the root.
+  those of its folder and of each folder above; the arrow keys, Home and End go through them in that order. The styles
+  are still applied, and sent to `/render`, from the root.
 - The `server/` folder carries `stxt-press.jar`, so that the folder downloaded is a server that starts as it is. The
   jar no longer carries the Maven descriptor of the project (`META-INF/maven/dev.stxt/stxt-press/`), which nothing
   reads.

@@ -36,6 +36,8 @@ let documentPanel: Panel | undefined;
 let stylesPanels: Panel[] = [];
 /** The data panel of the templates mode; the document mode has none. */
 let dataPanel: Panel | undefined;
+/** The panels with a tab, in the order of their tabs, which is that of `tabs` (model.ts) and is not worked out again. */
+let tabbed: Panel[] = [];
 
 /** Sets the schema of the STXT panels made from now on. */
 export function setSchema(text: string): void {
@@ -140,7 +142,8 @@ export function showPanels(panels: Panels, onEdit: () => void, onData: () => voi
 	});
 	const order = tabs(panels).map(({ target, title }): [Panel, string] => [panelOf(target)!, title]);
 	order.forEach(([panel, title], i) => addTab(panel, title, i));
-	$("panels").append(...order.map(([panel]) => panel.element));
+	tabbed = order.map(([panel]) => panel);
+	$("panels").append(...tabbed.map((panel) => panel.element));
 	activate(order[0][0]);
 }
 
@@ -152,6 +155,7 @@ export function clearPanels(): void {
 	documentPanel = undefined;
 	stylesPanels = [];
 	dataPanel = undefined;
+	tabbed = [];
 	$("tabs").replaceChildren();
 }
 
@@ -215,12 +219,6 @@ export function mark(panel: Panel, line: number, message: string): void {
 
 // ---- The tabs
 
-/** The panels with a tab, in the order of the tabs. */
-function tabbed(): Panel[] {
-	return [...(dataPanel ? [dataPanel] : []), ...(documentPanel ? [documentPanel] : []), ...stylesPanels]
-		.filter((panel) => panel.tab);
-}
-
 /** Gives `panel` a tab named `title` in `#tabs`. */
 function addTab(panel: Panel, title: string, index: number): void {
 	const tab = document.createElement("button");
@@ -241,7 +239,7 @@ function addTab(panel: Panel, title: string, index: number): void {
 
 /** Shows `panel` and hides the other panels with a tab. */
 function activate(panel: Panel): void {
-	for (const other of tabbed()) {
+	for (const other of tabbed) {
 		const on = other === panel;
 		other.element.hidden = !on;
 		other.tab!.setAttribute("aria-selected", String(on));
@@ -253,14 +251,13 @@ function activate(panel: Panel): void {
 
 /** The arrow keys, Home and End move between the tabs, as in a tab list. */
 function moveTab(panel: Panel, event: KeyboardEvent): void {
-	const panels = tabbed();
-	const at = panels.indexOf(panel);
-	const to = { ArrowLeft: at - 1, ArrowRight: at + 1, Home: 0, End: panels.length - 1 }[event.key];
+	const at = tabbed.indexOf(panel);
+	const to = { ArrowLeft: at - 1, ArrowRight: at + 1, Home: 0, End: tabbed.length - 1 }[event.key];
 	if (to === undefined) {
 		return;
 	}
 	event.preventDefault();
-	const next = panels[(to + panels.length) % panels.length];
+	const next = tabbed[(to + tabbed.length) % tabbed.length];
 	activate(next);
 	next.tab!.focus();
 }
