@@ -11,10 +11,12 @@ import { askToken, call, errorOf, get, setTokenAsker, token } from "./api";
 import { $, say } from "./dom";
 import { maximizable, restore } from "./maximize";
 import {
-	curl, documentPanels, fileName, request, saveRequest, serverMessage, target, templatePanels, took, unreachable,
-	validatesDocument,
+	curl, documentPanels, fileName, filesAdded, request, saveRequest, serverMessage, target, templatePanels, took,
+	unreachable, validatesDocument,
 } from "./model";
-import type { Format, LocalError, Panels, Request, ServerDocument, ServerError, ServerTemplate, State, Target } from "./model";
+import type {
+	Format, LocalError, Panels, Request, ServerDocument, ServerError, ServerTemplate, State, Target,
+} from "./model";
 import { clearOutput, filled, loadFonts, showFilled, showPages, showPdf } from "./output";
 import { clearPanels, mark, panelOf, setSchema, showPanels, texts, unmarkAll, validateDocument } from "./panels";
 import type { Panel } from "./panels";
@@ -23,20 +25,29 @@ import type { Place } from "./place";
 import { setupThemeToggle } from "./theme";
 import { askTokenInDialog } from "./tokenDialog";
 
-/** The mode of what the page shows: a document (blank, or of the server) or a template. */
-let mode: Place["mode"] = "document";
-/** Whether a panel was edited in the page since it was shown: leaving it then asks first. */
-let dirty = false;
-/** The template on the panels, as the server gave it, in the templates mode. */
-let original: ServerTemplate | undefined;
-/** The document of the server on the panels, as the server gave it, in the document mode; none for a blank one. */
-let originalDocument: ServerDocument | undefined;
+/**
+ * What the page shows, as the server gave it: a template, or a document of the server (`server`) or a blank one (no
+ * `server`). `version` is that of its files (the `ETag` of the server), which a save starts from; `writable`, whether
+ * the server saves them (`Save` of `server.stxt`): without it there is no Save button.
+ */
+type Loaded = (
+	| { mode: "template"; server: ServerTemplate }
+	| { mode: "document"; server?: ServerDocument }
+) & { version?: string; writable: boolean };
+
+/** A blank document, which nothing on the server holds. */
+const BLANK_LOADED: Loaded = { mode: "document", writable: false };
+
+let loaded: Loaded = BLANK_LOADED;
 /** What the panels show; `undefined` without panels (a template that cannot be read), and then the buttons are off. */
 let shown: Panels | undefined;
-/** The version of the files on the panels (the `ETag` of the server), which a save starts from. */
-let version: string | undefined;
-/** Whether the server saves what the page shows (`Save` of `server.stxt`): without it there is no Save button. */
-let writable = false;
+/** Whether a panel was edited in the page since it was shown: leaving it then asks first. */
+let dirty = false;
+
+/** The panels of what is loaded: the data first for a template, then the document and its styles. */
+function panelsOf(what: Loaded): Panels {
+	return what.mode === "template" ? templatePanels(what.server) : documentPanels(what.server);
+}
 
 // ---- The panels
 
@@ -65,7 +76,7 @@ function display(panels: Panels): void {
 function setButtons(): void {
 	["fill", "preview", "pdf"].forEach((id) => ($<HTMLButtonElement>(id).disabled = shown === undefined));
 	const save = $<HTMLButtonElement>("save");
-	save.hidden = !writable;
+	save.hidden = !loaded.writable;
 	save.disabled = shown === undefined || !dirty;
 }
 
@@ -80,8 +91,8 @@ function dataChanged(): void {
 	const data = texts().data;
 	// The document panel validates only without data: see validatesDocument.
 	validateDocument(validatesDocument(data));
-	if (mode === "template" && original) {
-		$("curl").textContent = curl(location.origin, original.path, data, token() !== null);
+	if (loaded.mode === "template") {
+		$("curl").textContent = curl(location.origin, loaded.server.path, data, token() !== null);
 	}
 }
 
@@ -90,19 +101,18 @@ function panelAt(where: Target): Panel | undefined {
 	return where.panel === "filled" ? filled() : panelOf(where);
 }
 
-function state(): State {
-	const panels = texts();
-	const styles = panels.styles.map((text, i) => ({ path: shown!.styles[i].path, text }));
-	if (mode === "template" && original) {
-		return { mode: "template", path: original.path, document: panels.document, styles, data: panels.data, original };
+/** The texts of the panels `panels` shows, with what is loaded. */
+function state(panels: Panels): State {
+	const now = texts();
+	const styles = now.styles.map((text, i) => ({ path: panels.styles[i].path, text }));
+	if (loaded.mode === "template") {
+		const template = loaded.server;
+		return {
+			mode: "template", path: template.path, document: now.document, styles, data: now.data, original: template,
+		};
 	}
-	return {
-		mode: "document",
-		path: originalDocument?.path ?? null,
-		document: panels.document,
-		styles,
-		original: originalDocument,
-	};
+	const server = loaded.server;
+	return { mode: "document", path: server?.path ?? null, document: now.document, styles, original: server };
 }
 
 // ---- The buttons
@@ -134,9 +144,13 @@ function showServer(error: ServerError, asked: Request): void {
 async function run(format: Format): Promise<void> {
 	// What the button gives is shown in the output: a part over the window that is not the output (the files) goes
 	// back, so that it is seen, and so are the errors in the files. The output over the window stays, and shows it.
+	if (!shown) {
+		return;
+	}
 	restore(document.querySelector(".workspace .output"));
 	unmarkAll();
-	const asked = request(state(), format, $<HTMLInputElement>("debug").checked);
+	const current = state(shown);
+	const asked = request(current, format, $<HTMLInputElement>("debug").checked);
 	if (!("url" in asked)) {
 		clearOutput();
 		showLocal(asked);
@@ -169,7 +183,7 @@ async function run(format: Format): Promise<void> {
 		} else {
 			const pdf = await response.blob();
 			const ms = performance.now() - started;
-			showPdf(pdf, fileName(state()));
+			showPdf(pdf, fileName(current));
 			say(took("PDF", ms));
 		}
 	} catch (e) {
@@ -186,8 +200,13 @@ async function run(format: Format): Promise<void> {
  * them with `/print` or `/documents`.
  */
 async function save(): Promise<void> {
-	const asked = saveRequest(state());
-	if (!asked || version === undefined) {
+	// A blank document is no file of the server, and without a version there is nothing to save over.
+	const before = loaded;
+	if (!shown || !before.server || before.version === undefined) {
+		return;
+	}
+	const asked = saveRequest(state(shown));
+	if (!asked) {
 		return;
 	}
 	if (asked.changed.length === 0) {
@@ -205,7 +224,7 @@ async function save(): Promise<void> {
 	const started = performance.now();
 	try {
 		const response = await call({ method: "PUT", url: asked.url, body: asked.body, contentType: "application/json",
-			headers: { "If-Match": version } });
+			headers: { "If-Match": before.version } });
 		if (!response.ok) {
 			const error = await errorOf(response);
 			say(error.code === "FILES_CHANGED"
@@ -213,21 +232,15 @@ async function save(): Promise<void> {
 				: serverMessage(error, null), true);
 			return;
 		}
-		const saved = (await response.json()) as ServerTemplate & ServerDocument;
+		const saved = (await response.json()) as ServerTemplate | ServerDocument;
 		const ms = performance.now() - started;
-		version = response.headers.get("ETag") ?? undefined;
-		const before = mode === "template" ? original : originalDocument;
-		// A file it created (the own styles of a document without any, the data of a template without them) changes
-		// the files of the panels: they are shown again, as the server has them now.
-		const newFiles = !before || saved.styles.length !== before.styles.length
-			|| (mode === "template" && original?.data === null && saved.data !== null);
-		if (mode === "template") {
-			original = saved;
-		} else {
-			originalDocument = saved;
-		}
-		if (newFiles) {
-			display(mode === "template" ? templatePanels(saved) : documentPanels(saved));
+		// The files as the server has them now, which the next save starts from.
+		const version = response.headers.get("ETag") ?? undefined;
+		loaded = before.mode === "template"
+			? { ...before, server: saved as ServerTemplate, version }
+			: { ...before, server: saved, version };
+		if (filesAdded(before.server, saved)) {
+			display(panelsOf(loaded));
 		}
 		dirty = false;
 		const written = saved.written ?? [];
@@ -241,38 +254,28 @@ async function save(): Promise<void> {
 
 // ---- The place
 
-/** Keeps what the server says of the files it gave: their version, and whether it saves them. */
-function served(response: Response, body: { writable?: boolean }): void {
-	version = response.headers.get("ETag") ?? undefined;
-	writable = body.writable === true && version !== undefined;
-}
-
-/** A document of the documents folder of the server, with its chain of styles. */
-async function showDocument(path: string): Promise<void> {
-	const response = await get(`/files/documents/${path}`);
+/**
+ * Reads a template or a document of the server, with its version and whether the server saves it, and shows its
+ * panels; a template, also with the URL and the curl that print it.
+ */
+async function load(mode: Place["mode"], folder: string, path: string): Promise<void> {
+	const response = await get(`/files/${folder}/${path}`);
 	if (!response.ok) {
 		clear();
 		say(serverMessage(await errorOf(response), null), true);
 		return;
 	}
-	originalDocument = (await response.json()) as ServerDocument;
-	served(response, originalDocument);
-	display(documentPanels(originalDocument));
-}
-
-/** A template of the server: its data, its document and its chain of styles, with the URL and the curl that print it. */
-async function showTemplate(path: string): Promise<void> {
-	const response = await get(`/files/templates/${path}`);
-	if (!response.ok) {
-		clear();
-		say(serverMessage(await errorOf(response), null), true);
-		return;
+	const version = response.headers.get("ETag") ?? undefined;
+	const server = (await response.json()) as ServerTemplate | ServerDocument;
+	const writable = server.writable === true && version !== undefined;
+	loaded = mode === "template"
+		? { mode, server: server as ServerTemplate, version, writable }
+		: { mode, server, version, writable };
+	if (loaded.mode === "template") {
+		$("print-url").textContent = `${location.origin}/print/${loaded.server.path}`;
+		$("print").hidden = false;
 	}
-	original = (await response.json()) as ServerTemplate;
-	served(response, original);
-	$("print-url").textContent = `${location.origin}/print/${original.path}`;
-	$("print").hidden = false;
-	display(templatePanels(original));
+	display(panelsOf(loaded));
 }
 
 /**
@@ -280,19 +283,18 @@ async function showTemplate(path: string): Promise<void> {
  * opened from the index, which is where another one is chosen.
  */
 async function show(place: Place): Promise<void> {
-	mode = place.mode;
+	const folder = place.mode === "template" ? "templates" : "documents";
 	document.title = place.path === null ? "New document · stxt-press" : `${place.path} · stxt-press`;
-	$("place").textContent = place.path === null ? "New document" : `${place.mode === "template" ? "templates" : "documents"}/${place.path}`;
+	$("place").textContent = place.path === null ? "New document" : `${folder}/${place.path}`;
 	// The index goes back to the folder of what the page shows.
 	$<HTMLAnchorElement>("home").href = `/${indexHashOf(place)}`;
 	// A document is converted as it is: no data, so nothing to fill.
 	$("fill").hidden = place.mode === "document";
 	if (place.path === null) {
-		display(documentPanels());
-	} else if (place.mode === "document") {
-		await showDocument(place.path);
+		loaded = BLANK_LOADED;
+		display(panelsOf(loaded));
 	} else {
-		await showTemplate(place.path);
+		await load(place.mode, folder, place.path);
 	}
 }
 

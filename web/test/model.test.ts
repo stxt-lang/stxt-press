@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
-	createRequest, curl, documentPanels, fileName, isUnchanged, jsonErrorLine, newDocumentText, newEntryPath, parseData, printUrl, request, saveRequest, serverMessage, tabState, tabs,
+	createRequest, curl, documentPanels, fileName, filesAdded, isUnchanged, jsonErrorLine, newDocumentText, newEntryPath, parseData, printUrl, request, saveRequest, serverMessage, tabState, tabs,
 	target, templatePanels, took, unreachable, validatesDocument,
 } from "../src/model.ts";
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
@@ -464,6 +464,19 @@ describe("the save", () => {
 
 	it("is none for a blank document, which is no file of the server", () => {
 		assert.equal(saveRequest(DOCUMENT), null);
+	});
+
+	it("tells when it created files, so that the panels are shown again", () => {
+		const files = { path: "letters/letter", document: "doc", styles: [{ path: "letters/.styles.stxt", text: "a" }] };
+		const own = { path: "letters/letter.styles.stxt", text: "b" };
+		// The own styles of a document without them.
+		assert.equal(filesAdded(files, { ...files, styles: [...files.styles, own] }), true);
+		// The data of a template without them.
+		assert.equal(filesAdded({ ...files, data: null }, { ...files, data: "{}" }), true);
+		// Files that were there, changed.
+		assert.equal(filesAdded(files, { ...files, document: "changed", written: ["letters/letter.stxt"] }), false);
+		assert.equal(filesAdded({ ...files, data: "{}" }, { ...files, data: "{\"a\": 1}" }), false);
+		assert.equal(filesAdded({ ...files, data: null }, { ...files, data: null }), false);
 	});
 
 	it("says how long something took", () => {

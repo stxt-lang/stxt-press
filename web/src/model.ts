@@ -23,11 +23,15 @@ export interface DocumentState {
 	path: string | null;
 	document: string;
 	styles: StylesText[];
-	original?: { document: string; styles: StylesText[] };
+	original?: Pick<ServerDocument, "document" | "styles">;
 }
 
-/** A document as `GET /files/documents/{path}` gives it, with whether the server saves it (`Save` of `server.stxt`). */
-export interface ServerDocument {
+/**
+ * The files of a template or a document as `GET /files/{folder}/{path}` gives them, and its `PUT` after a save: the
+ * document and its chain of styles, whether the server saves them (`Save` of `server.stxt`), and after a save, the
+ * files it wrote.
+ */
+export interface ServerFiles {
 	path: string;
 	document: string;
 	styles: StylesText[];
@@ -35,14 +39,12 @@ export interface ServerDocument {
 	written?: string[];
 }
 
-/** A template as `GET /files/templates/{path}` gives it: its data as the text of its file, or `null` without one. */
-export interface ServerTemplate {
-	path: string;
-	document: string;
-	styles: StylesText[];
+/** A document as `GET /files/documents/{path}` gives it. */
+export type ServerDocument = ServerFiles;
+
+/** A template as `GET /files/templates/{path}` gives it, with its data: the text of its file, `null` without one. */
+export interface ServerTemplate extends ServerFiles {
 	data: string | null;
-	writable?: boolean;
-	written?: string[];
 }
 
 /** The panels of the templates mode, and the template as the server gave it. */
@@ -52,7 +54,7 @@ export interface TemplateState {
 	document: string;
 	styles: StylesText[];
 	data: string;
-	original: { document: string; styles: StylesText[]; data: string | null };
+	original: Pick<ServerTemplate, "document" | "styles" | "data">;
 }
 
 export type State = DocumentState | TemplateState;
@@ -344,6 +346,16 @@ export function saveRequest(state: State): SaveRequest | null {
 		changed,
 		shared: changed.filter((name) => name === ".styles.stxt" || name.endsWith("/.styles.stxt")),
 	};
+}
+
+/**
+ * Whether a save created files that the panels did not have as files: the own styles of a document that had none
+ * (written from its blank styles panel), or the data of a template that had none. The panels are then shown again, as
+ * the server has the files now.
+ */
+export function filesAdded(before: ServerDocument | ServerTemplate, saved: ServerDocument | ServerTemplate): boolean {
+	const data = (files: ServerDocument | ServerTemplate) => ("data" in files ? files.data : null);
+	return saved.styles.length !== before.styles.length || (data(before) === null && data(saved) !== null);
 }
 
 /** What the name of a new template or document can be: one segment of a path of the server. */
