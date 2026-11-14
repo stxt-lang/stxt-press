@@ -4,8 +4,6 @@ Styles (dev.stxt.pdf):
 		Box:
 			Margin: 0 0 16 0
 			Padding: 8
-			Border: 0.5
-			Border color: rule
 		For element: Paragraph
 			Typography:
 				Font: IBM Plex Serif

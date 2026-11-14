@@ -56,10 +56,10 @@ function maximize(part: HTMLElement, on: boolean): void {
 	}
 }
 
-/** Puts back the part over the window, if there is one. */
-export function restore(): void {
+/** Puts back the part over the window, if there is one and it is not `keep`. */
+export function restore(keep?: Element | null): void {
 	const part = document.querySelector<HTMLElement>(".maximized");
-	if (part) {
+	if (part && part !== keep) {
 		maximize(part, false);
 	}
 }

@@ -129,9 +129,9 @@ function showServer(error: ServerError, asked: Request): void {
 
 /** Runs a button on the panels and shows what the server answers. */
 async function run(format: Format): Promise<void> {
-	// The part over the window goes back, whichever it is, so that the page shows the files and what the button gives,
-	// or the errors in the files.
-	restore();
+	// What the button gives is shown in the output: a part over the window that is not the output (the files) goes
+	// back, so that it is seen, and so are the errors in the files. The output over the window stays, and shows it.
+	restore(document.querySelector(".workspace .output"));
 	unmarkAll();
 	const asked = request(state(), format, $<HTMLInputElement>("debug").checked);
 	if (!("url" in asked)) {
