@@ -258,8 +258,11 @@ export function templatePanels(template: ServerTemplate): Panels {
 }
 
 /**
- * The tabs of the panels, in order: the data first, since they are what changes from one PDF to another, then the
- * document and its styles. The first one is the panel shown.
+ * The tabs of the panels, from the most important to the least: the data first, since they are what changes from one
+ * PDF to another, then the document and its styles from the nearest to the farthest (its own, that of its folder, that
+ * of the folder above...). The chain stays in `panels.styles` in the order it is applied, from the root, which is the
+ * order of a request and of the `styles[n]` of the errors; only the tabs go the other way. The first one is the panel
+ * shown.
  */
 export function tabs(panels: Panels): { target: Target; title: string }[] {
 	const list: { target: Target; title: string }[] = [];
@@ -267,7 +270,9 @@ export function tabs(panels: Panels): { target: Target; title: string }[] {
 		list.push({ target: { panel: "data" }, title: panels.data.title });
 	}
 	list.push({ target: { panel: "document" }, title: panels.document.title });
-	panels.styles.forEach((item, index) => list.push({ target: { panel: "styles", index }, title: item.path }));
+	for (let index = panels.styles.length - 1; index >= 0; index--) {
+		list.push({ target: { panel: "styles", index }, title: panels.styles[index].path });
+	}
 	return list;
 }
 

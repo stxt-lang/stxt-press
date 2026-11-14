@@ -181,7 +181,8 @@ tried with the buttons and lost on leaving.
   and a `curl` with the data of the panel.
 
 The editor fills the window. The bar has the path of what it shows and the buttons; on the left, one tab for each
-file (the data, the document, each styles document), with a dot when the file has an error (red) or a warning of the
+file, from the most important to the least (the data, the document, and its styles from the nearest: its own, that of
+its folder, that of the folder above), with a dot when the file has an error (red) or a warning of the
 schema (amber); on the right, the output of the last button. **Preview** shows the SVG pages (with **Outlines**, the
 outlines of the boxes) and **PDF** the PDF in the viewer of the browser, with a link that downloads it with its name;
 for a template, **Fill** shows the filled document. Each one says how long it took. Each half has a button, at its

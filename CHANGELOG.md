@@ -166,6 +166,10 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   document list of the playground, the file tabs underlined in the accent, the parts of the editor meeting at a border
   without gaps, and the dialogs as cards over a dimmed page, with Cancel before the main button. The pages have the
   favicon of STXT, and `/assets/` serves `.png` and `.txt` files with their types.
+- In the editor, Fill, Preview and PDF put back the part over the window, the files or the output, so that the page
+  shows the files and what they give.
+- In the editor, the tabs of the styles go from the nearest to the farthest: after the document, its own styles, then
+  those of its folder and of each folder above. The styles are still applied, and sent to `/render`, from the root.
 - The `server/` folder carries `stxt-press.jar`, so that the folder downloaded is a server that starts as it is. The
   jar no longer carries the Maven descriptor of the project (`META-INF/maven/dev.stxt/stxt-press/`), which nothing
   reads.

@@ -39,7 +39,7 @@ function cross(): HTMLButtonElement | null {
 		button.title = "Back (Esc)";
 		button.setAttribute("aria-label", button.title);
 		button.hidden = true;
-		button.onclick = restore;
+		button.onclick = () => restore();
 		host.insertBefore(button, host.querySelector("#token"));
 	}
 	return button;
@@ -57,7 +57,7 @@ function maximize(part: HTMLElement, on: boolean): void {
 }
 
 /** Puts back the part over the window, if there is one. */
-function restore(): void {
+export function restore(): void {
 	const part = document.querySelector<HTMLElement>(".maximized");
 	if (part) {
 		maximize(part, false);

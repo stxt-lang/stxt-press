@@ -217,18 +217,27 @@ describe("the panels", () => {
 		const panels = documentPanels({ path: "reference/tables/basic", document: "text", styles: chain });
 		assert.deepEqual(panels.styles, chain);
 		assert.deepEqual(panels.document, { title: "reference/tables/basic.stxt", text: "text" });
+		assert.deepEqual(tabs(panels).map((tab) => tab.title),
+			["reference/tables/basic.stxt", "reference/tables/basic.styles.stxt", "reference/.styles.stxt"]);
 	});
 
-	it("are the data first, then the document and its chain of styles, for a template", () => {
-		const styles = [{ path: ".styles.stxt", text: "root" }, { path: "invoices/invoice.styles.stxt", text: "own" }];
+	it("are the data first, then the document and its chain of styles from the nearest, for a template", () => {
+		const styles = [
+			{ path: ".styles.stxt", text: "root" },
+			{ path: "invoices/.styles.stxt", text: "folder" },
+			{ path: "invoices/invoice.styles.stxt", text: "own" },
+		];
 		const panels = templatePanels({ path: "invoices/invoice", document: "doc", styles, data: "{}" });
 
+		// The tabs from the nearest styles; the panels keep the chain in the order it is applied.
 		assert.deepEqual(tabs(panels), [
 			{ target: { panel: "data" }, title: "invoices/invoice.json" },
 			{ target: { panel: "document" }, title: "invoices/invoice.stxt" },
+			{ target: { panel: "styles", index: 2 }, title: "invoices/invoice.styles.stxt" },
+			{ target: { panel: "styles", index: 1 }, title: "invoices/.styles.stxt" },
 			{ target: { panel: "styles", index: 0 }, title: ".styles.stxt" },
-			{ target: { panel: "styles", index: 1 }, title: "invoices/invoice.styles.stxt" },
 		]);
+		assert.deepEqual(panels.styles, styles);
 		assert.deepEqual(panels.data, { title: "invoices/invoice.json", text: "{}" });
 	});
 

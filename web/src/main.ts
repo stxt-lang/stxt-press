@@ -8,7 +8,7 @@
  * maximize.ts; here are the place, the buttons and the start.
  */
 import { $, askToken, call, errorOf, say, token } from "./api";
-import { maximizable } from "./maximize";
+import { maximizable, restore } from "./maximize";
 import {
 	curl, documentPanels, fileName, request, saveRequest, serverMessage, target, templatePanels, took, validatesDocument,
 } from "./model";
@@ -129,6 +129,9 @@ function showServer(error: ServerError, asked: Request): void {
 
 /** Runs a button on the panels and shows what the server answers. */
 async function run(format: Format): Promise<void> {
+	// The part over the window goes back, whichever it is, so that the page shows the files and what the button gives,
+	// or the errors in the files.
+	restore();
 	unmarkAll();
 	const asked = request(state(), format, $<HTMLInputElement>("debug").checked);
 	if (!("url" in asked)) {
