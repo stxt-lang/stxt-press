@@ -2,7 +2,6 @@ package dev.stxt.press.templates;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -10,7 +9,6 @@ import java.nio.file.LinkOption;
 import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -384,17 +382,8 @@ public final class Templates {
             return false;
         }
         String out = before != null && before.contains("\r\n") ? lf.replace("\n", "\r\n") : lf;
-        Path temporary = Files.createTempFile(target.getParent(), "." + target.getFileName() + ".", ".tmp");
-        try {
-            Files.writeString(temporary, out, StandardCharsets.UTF_8);
-            try {
-                Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-            } catch (AtomicMoveNotSupportedException e) {
-                Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING);
-            }
-        } finally {
-            Files.deleteIfExists(temporary);
-        }
+        byte[] bytes = out.getBytes(StandardCharsets.UTF_8);
+        AtomicFile.write(target, stream -> stream.write(bytes));
         return true;
     }
 

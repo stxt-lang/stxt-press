@@ -96,6 +96,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   and line. Exit codes: `0`, `1` if the job failed, `2` if the invocation is not valid. A file that cannot be read or
   is not UTF-8 is `1` with `print` too, as with `render`, and the message names it: a file of the template (its `.stxt`,
   a `.styles.stxt` of its chain, its sample data) gave `2` and «The templates folder cannot be read».
+- `AtomicFile`, in `dev.stxt.press.templates`: a file written to a hidden file beside it and moved over it once whole,
+  so that a write that fails leaves the file as it was. The save of the templates and the documents and the `-o` of
+  the commands share it.
 - `PressException.describe`, the error as one line, `where:line: CODE: message`, with the name of each source (its
   file, say), which the errors of the commands and the warnings of the warm up share.
 - The error of a file of a template or a document that cannot be read, or is not UTF-8, names the file: in the log of

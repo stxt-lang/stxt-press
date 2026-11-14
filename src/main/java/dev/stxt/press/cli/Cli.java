@@ -1,17 +1,13 @@
 package dev.stxt.press.cli;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -30,6 +26,7 @@ import dev.stxt.press.PressException;
 import dev.stxt.press.config.ConfigException;
 import dev.stxt.press.config.ServerFile;
 import dev.stxt.press.http.PressServer;
+import dev.stxt.press.templates.AtomicFile;
 import dev.stxt.press.templates.Template;
 import dev.stxt.press.templates.TemplateException;
 import dev.stxt.press.templates.Templates;
@@ -315,19 +312,14 @@ final class Cli {
         }
     }
 
-    /** What writes the result to a stream. */
-    private interface Writer {
-        void write(OutputStream target) throws IOException;
-    }
-
     /**
-     * Writes the result to {@code output}, or to stdout with {@code -}. A file is written beside its target and moved
-     * over it at the end, so that a job that fails leaves the file that was there, if any, as it was.
+     * Writes the result to {@code output}, or to stdout with {@code -}. A file is written whole or not at all
+     * ({@link AtomicFile}), so that a job that fails leaves the file that was there, if any, as it was.
      */
-    private void write(String output, Writer writer) throws UsageException, Failure {
+    private void write(String output, AtomicFile.Content content) throws UsageException, Failure {
         if (output.equals("-")) {
             try {
-                writer.write(out);
+                content.writeTo(out);
                 out.flush();
             } catch (IOException e) {
                 throw new Failure("stdout cannot be written: " + e.getMessage());
@@ -339,28 +331,10 @@ final class Cli {
             throw new UsageException("The output " + output + " cannot be written: "
                     + (Files.isDirectory(target) ? "it is a folder" : "its folder does not exist"));
         }
-        Path temporary = null;
         try {
-            temporary = Files.createTempFile(target.getParent(), "." + target.getFileName(), ".tmp");
-            try (OutputStream stream = new BufferedOutputStream(Files.newOutputStream(temporary))) {
-                writer.write(stream);
-            }
-            try {
-                Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-            } catch (AtomicMoveNotSupportedException e) {
-                Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING);
-            }
-            temporary = null;
+            AtomicFile.write(target, content);
         } catch (IOException e) {
             throw new Failure(output + " cannot be written: " + e.getMessage());
-        } finally {
-            if (temporary != null) {
-                try {
-                    Files.deleteIfExists(temporary);
-                } catch (IOException e) {
-                    // It was going to be deleted: the error that matters is the one of the job.
-                }
-            }
         }
     }
 
