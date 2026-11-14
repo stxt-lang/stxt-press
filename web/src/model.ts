@@ -408,6 +408,11 @@ export function printUrl(mode: "template" | "document", path: string, format: "p
 	return `/${mode === "template" ? "print" : "documents"}/${path}${format === "svg" ? "?format=svg" : ""}`;
 }
 
+/** How many SVG pages a preview gave, for its message: `1 page`, `3 pages`. */
+export function pagesLabel(count: number): string {
+	return count === 1 ? "1 page" : `${count} pages`;
+}
+
 /** The message of something that took `ms` milliseconds: `Converted in 312 ms.`, `Converted in 1.4 s.` */
 export function took(what: string, ms: number): string {
 	return `${what} in ${ms < 1000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`}.`;

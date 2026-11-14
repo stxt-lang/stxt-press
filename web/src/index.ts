@@ -10,12 +10,12 @@
 import { askToken, call, errorOf, get, setTokenAsker } from "./api";
 import { $, button, element, link, say } from "./dom";
 import { maximizable } from "./maximize";
-import { createRequest, newEntryPath, printUrl, took, unreachable } from "./model";
-import { loadFonts, renderPages } from "./pages";
+import { createRequest, newEntryPath, pagesLabel, printUrl, took, unreachable } from "./model";
 import { ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, parseIndexHash, placeUrl, visibleRows } from "./place";
 import type { FolderRow, IndexPlace, Place } from "./place";
 import { setupThemeToggle } from "./theme";
 import { askTokenInDialog } from "./tokenDialog";
+import { loadFonts, Viewer } from "./viewer";
 
 /** An entry of `GET /files/templates` or `GET /files/documents`: a document has no `data`. */
 interface Entry {
@@ -48,8 +48,9 @@ const lastFolder: Record<ListTab, string | null> = { templates: null, documents:
 let previewed: { tab: ListTab; path: string } | undefined;
 /** Counts the previews asked for, so that the answer of one left behind is not shown over the next. */
 let previews = 0;
-/** The `blob:` URL of the PDF shown, freed when another one takes its place. */
-let previewUrl: string | undefined;
+/** The pages or the PDF of the entry shown, in the right half. */
+const viewer = new Viewer($<HTMLIFrameElement>("preview-frame"), $("preview-pages"),
+	$<HTMLAnchorElement>("preview-download"));
 
 /**
  * Opens what the API gives at `url` in a new tab, as a blob: a link cannot carry the token. The tab is opened before the
@@ -113,9 +114,6 @@ async function preview(tab: ListTab, path: string, format: "pdf" | "svg"): Promi
 			}
 			return;
 		}
-		const frame = $<HTMLIFrameElement>("preview-frame");
-		const pagesHost = $("preview-pages");
-		const download = $<HTMLAnchorElement>("preview-download");
 		if (format === "svg") {
 			const pages = ((await response.json()) as { pages: string[] }).pages;
 			// The fonts once, the first time: an SVG names its fonts and does not carry them.
@@ -123,30 +121,16 @@ async function preview(tab: ListTab, path: string, format: "pdf" | "svg"): Promi
 			if (seq !== previews) {
 				return;
 			}
-			renderPages(pagesHost, pages);
-			const ms = performance.now() - started;
-			title.textContent = `${path} · ${took(pages.length === 1 ? "1 page" : `${pages.length} pages`, ms)}`;
-			freePdf();
-			frame.hidden = true;
-			pagesHost.hidden = false;
-			pagesHost.scrollTop = 0;
-			download.hidden = true;
+			viewer.showPages(pages);
+			title.textContent = `${path} · ${took(pagesLabel(pages.length), performance.now() - started)}`;
 		} else {
 			const pdf = await response.blob();
 			const ms = performance.now() - started;
 			if (seq !== previews) {
 				return;
 			}
-			freePdf();
-			previewUrl = URL.createObjectURL(pdf);
+			viewer.showPdf(pdf, `${nameOf(path)}.pdf`);
 			title.textContent = `${path} · ${took("PDF", ms)}`;
-			frame.src = previewUrl;
-			frame.hidden = false;
-			pagesHost.hidden = true;
-			pagesHost.replaceChildren();
-			download.href = previewUrl;
-			download.download = `${nameOf(path)}.pdf`;
-			download.hidden = false;
 		}
 	} catch (e) {
 		// No answer: the server stopped, or the network is down.
@@ -159,15 +143,6 @@ async function preview(tab: ListTab, path: string, format: "pdf" | "svg"): Promi
 	const edit = $<HTMLAnchorElement>("preview-edit");
 	edit.href = placeUrl({ mode: LISTS[tab].mode, path });
 	edit.hidden = false;
-}
-
-/** Frees the PDF shown, if any, when something else takes its place. */
-function freePdf(): void {
-	if (previewUrl) {
-		$<HTMLIFrameElement>("preview-frame").src = "about:blank";
-		URL.revokeObjectURL(previewUrl);
-		previewUrl = undefined;
-	}
 }
 
 /** Marks in the list the entry whose PDF the right half shows. */

@@ -11,19 +11,20 @@ import { askToken, call, errorOf, get, setTokenAsker, token } from "./api";
 import { $, say } from "./dom";
 import { maximizable, restore } from "./maximize";
 import {
-	curl, documentPanels, fileName, filesAdded, request, saveRequest, serverMessage, target, templatePanels, took,
+	curl, documentPanels, fileName, filesAdded, pagesLabel, request, saveRequest, serverMessage, target, templatePanels, took,
 	unreachable, validatesDocument,
 } from "./model";
 import type {
 	Format, LocalError, Panels, Request, ServerDocument, ServerError, ServerTemplate, State, Target,
 } from "./model";
-import { clearOutput, filled, loadFonts, showFilled, showPages, showPdf } from "./output";
+import { clearOutput, filled, showFilled, showPages, showPdf } from "./output";
 import { clearPanels, mark, panelOf, setSchema, showPanels, texts, unmarkAll, validateDocument } from "./panels";
 import type { Panel } from "./panels";
 import { BLANK, indexHashOf, parsePlace, placeUrl } from "./place";
 import type { Place } from "./place";
 import { setupThemeToggle } from "./theme";
 import { askTokenInDialog } from "./tokenDialog";
+import { loadFonts } from "./viewer";
 
 /**
  * What the page shows, as the server gave it: a template, or a document of the server (`server`) or a blank one (no
@@ -179,7 +180,7 @@ async function run(format: Format): Promise<void> {
 			const ms = performance.now() - started;
 			await loadFonts();
 			showPages(pages);
-			say(took(pages.length === 1 ? "1 page" : `${pages.length} pages`, ms));
+			say(took(pagesLabel(pages.length), ms));
 		} else {
 			const pdf = await response.blob();
 			const ms = performance.now() - started;

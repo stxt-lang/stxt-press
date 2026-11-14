@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import {
-	createRequest, curl, documentPanels, fileName, filesAdded, isUnchanged, jsonErrorLine, newDocumentText, newEntryPath, parseData, printUrl, request, saveRequest, serverMessage, tabState, tabs,
+	createRequest, curl, documentPanels, fileName, filesAdded, isUnchanged, jsonErrorLine, newDocumentText, newEntryPath, pagesLabel, parseData, printUrl, request, saveRequest, serverMessage, tabState, tabs,
 	target, templatePanels, took, unreachable, validatesDocument,
 } from "../src/model.ts";
 import type { DocumentState, Request, TemplateState } from "../src/model.ts";
@@ -477,6 +477,12 @@ describe("the save", () => {
 		assert.equal(filesAdded(files, { ...files, document: "changed", written: ["letters/letter.stxt"] }), false);
 		assert.equal(filesAdded({ ...files, data: "{}" }, { ...files, data: "{\"a\": 1}" }), false);
 		assert.equal(filesAdded({ ...files, data: null }, { ...files, data: null }), false);
+	});
+
+	it("says how many pages a preview gave", () => {
+		assert.equal(pagesLabel(1), "1 page");
+		assert.equal(pagesLabel(12), "12 pages");
+		assert.equal(took(pagesLabel(2), 75), "2 pages in 75 ms.");
 	});
 
 	it("says how long something took", () => {
