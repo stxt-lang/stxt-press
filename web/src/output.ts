@@ -3,7 +3,7 @@
  * (a read-only panel), the SVG pages with the fonts of the server (pages.ts), or the PDF in the viewer of the browser
  * with its download link. This module owns the panel of the filled document and the URL of the PDF.
  */
-import { $, say } from "./api";
+import { $, say } from "./dom";
 import { renderPages } from "./pages";
 import { stxtPanel } from "./panels";
 import type { Panel } from "./panels";

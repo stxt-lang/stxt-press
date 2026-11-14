@@ -2,7 +2,7 @@
  * The SVG pages of a preview, shared by the editor (output.ts) and the index: the fonts of the server registered in the
  * page, and the pages painted each in a shadow root. It has no editor in it, so the index does not load CodeMirror.
  */
-import { call } from "./api";
+import { get } from "./api";
 
 /** The fonts of the server, registered in the page by the first preview. */
 let fontsLoaded: Promise<void> | undefined;
@@ -32,14 +32,14 @@ export function renderPages(host: HTMLElement, pages: string[]): void {
  */
 export function loadFonts(): Promise<void> {
 	fontsLoaded ??= (async () => {
-		const response = await call("GET", "/fonts");
+		const response = await get("/fonts");
 		if (!response.ok) {
 			throw new Error(`/fonts answered ${response.status}`);
 		}
 		const faces = ((await response.json()) as { faces: { family: string; weight: number; style: string; id: string }[] }).faces;
 		await Promise.all(faces.map(async (face) => {
 			try {
-				const file = await call("GET", `/fonts/${face.id}`);
+				const file = await get(`/fonts/${face.id}`);
 				if (file.ok) {
 					const font = new FontFace(face.family, await file.arrayBuffer(), { weight: String(face.weight), style: face.style });
 					document.fonts.add(await font.load());

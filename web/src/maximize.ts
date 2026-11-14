@@ -70,9 +70,9 @@ function place(part: HTMLElement): void {
 	part.style.top = part.classList.contains("maximized") && host ? `${host.getBoundingClientRect().bottom}px` : "";
 }
 
-// Unless the editor already used the Esc (to close its completion, for instance).
+// Unless the editor already used the Esc (to close its completion, for instance), or it closes a dialog.
 document.addEventListener("keydown", (event) => {
-	if (event.key === "Escape" && !event.defaultPrevented) {
+	if (event.key === "Escape" && !event.defaultPrevented && !document.querySelector("dialog[open]")) {
 		restore();
 	}
 });

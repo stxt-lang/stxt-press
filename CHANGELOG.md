@@ -60,7 +60,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   template), preview as SVG pages with or without outlines, and the PDF, shown in the viewer of the browser with a link
   that downloads it; the errors of the server are marked in their panel, on their line, and their tab is shown. If
   `/fonts` fails, the next preview asks for the
-  fonts again. With a token, the page asks for it on a `401`. It is turned off with `Editor: false` in the
+  fonts again. With a token, the page asks for it on a `401`, once for every request that gets one meanwhile; closing
+  the dialog with Esc is Cancel, and the token is kept for the tab even where the browser blocks `sessionStorage`. It
+  is turned off with `Editor: false` in the
   `Routes` of `server.stxt`. Built from `web/` by Maven, with Node installed by `frontend-maven-plugin`.
 - The index, at `GET /`, without token, filling the window in two halves: on the left a tab for the documents (the
   one it opens with), one for the templates and one for the routes of the API; the

@@ -7,13 +7,15 @@
  * What it shows is in its hash (`#documents/reference/01-values`, see `parseIndexHash`), so a reload or the back button
  * shows it again. It does not load the editors: they are in editor.js.
  */
-import { $, askToken, call, errorOf, say } from "./api";
+import { askToken, call, errorOf, get, setTokenAsker } from "./api";
+import { $, button, element, link, say } from "./dom";
 import { maximizable } from "./maximize";
 import { createRequest, newEntryPath, printUrl, took } from "./model";
 import { loadFonts, renderPages } from "./pages";
 import { ancestors, byFolder, defaultFolder, folderRows, indexHash, isUnder, parseIndexHash, placeUrl, visibleRows } from "./place";
 import type { FolderRow, IndexPlace, Place } from "./place";
 import { setupThemeToggle } from "./theme";
+import { askTokenInDialog } from "./tokenDialog";
 
 /** An entry of `GET /files/templates` or `GET /files/documents`: a document has no `data`. */
 interface Entry {
@@ -49,37 +51,13 @@ let previews = 0;
 /** The `blob:` URL of the PDF shown, freed when another one takes its place. */
 let previewUrl: string | undefined;
 
-function element<K extends keyof HTMLElementTagNameMap>(tag: K, text?: string, className?: string): HTMLElementTagNameMap[K] {
-	const node = document.createElement(tag);
-	if (text !== undefined) {
-		node.textContent = text;
-	}
-	if (className) {
-		node.className = className;
-	}
-	return node;
-}
-
-function link(text: string, href: string): HTMLAnchorElement {
-	const a = element("a", text);
-	a.href = href;
-	return a;
-}
-
-function button(text: string, className: string, onclick: () => void): HTMLButtonElement {
-	const b = element("button", text, className);
-	b.type = "button";
-	b.onclick = onclick;
-	return b;
-}
-
 /**
  * Opens what the API gives at `url` in a new tab, as a blob: a link cannot carry the token. The tab is opened before the
  * call, while the click still allows it.
  */
 async function openFromApi(url: string, type?: string): Promise<void> {
 	const tab = window.open("", "_blank");
-	const response = await call("GET", url);
+	const response = await get(url);
 	if (!response.ok) {
 		tab?.close();
 		const error = await errorOf(response);
@@ -115,7 +93,7 @@ async function preview(tab: ListTab, path: string, format: "pdf" | "svg"): Promi
 	title.textContent = `${path} · converting…`;
 	title.classList.remove("error");
 	const started = performance.now();
-	const response = await call("GET", printUrl(LISTS[tab].mode, path, format));
+	const response = await get(printUrl(LISTS[tab].mode, path, format));
 	if (seq !== previews) {
 		return;
 	}
@@ -272,13 +250,13 @@ async function create(tab: ListTab, folder: string): Promise<void> {
 	const ok = $<HTMLButtonElement>("new-ok");
 	ok.disabled = false;
 	dialog.showModal();
-	const done = () => {
+	// However it closes (Create, Cancel or Esc), the dialog is left without the handlers of this folder.
+	dialog.addEventListener("close", () => {
 		ok.onclick = null;
 		$("new-cancel").onclick = null;
 		input.onkeydown = null;
 		input.oninput = null;
-		dialog.close();
-	};
+	}, { once: true });
 	const submit = async () => {
 		const asked = newEntryPath(input.value, folder, (lists[tab].entries ?? []).map((entry) => entry.path), noun);
 		if ("problem" in asked) {
@@ -288,7 +266,8 @@ async function create(tab: ListTab, folder: string): Promise<void> {
 		}
 		ok.disabled = true;
 		const request = createRequest(noun, asked.path);
-		const response = await call("PUT", request.url, request.body, "application/json", { "If-None-Match": "*" });
+		const response = await call({ method: "PUT", url: request.url, body: request.body, contentType: "application/json",
+			headers: { "If-None-Match": "*" } });
 		ok.disabled = false;
 		if (!response.ok) {
 			const error = await errorOf(response);
@@ -297,11 +276,11 @@ async function create(tab: ListTab, folder: string): Promise<void> {
 				: `${error.code}: ${error.message}`;
 			return;
 		}
-		done();
+		dialog.close();
 		location.href = placeUrl({ mode: noun, path: asked.path });
 	};
 	ok.onclick = () => void submit();
-	$("new-cancel").onclick = done;
+	$("new-cancel").onclick = () => dialog.close();
 	input.oninput = () => {
 		problem.textContent = "";
 	};
@@ -417,7 +396,7 @@ async function versions(): Promise<void> {
 
 /** Asks the server for the entries of a list tab, or says why they are not listed. */
 async function load(tab: ListTab): Promise<void> {
-	const listed = await call("GET", `/files/${tab}`);
+	const listed = await get(`/files/${tab}`);
 	if (listed.ok) {
 		const body = (await listed.json()) as Record<string, Entry[]> & { writable?: boolean };
 		lists[tab] = { entries: body[tab], writable: body.writable === true };
@@ -433,6 +412,7 @@ async function load(tab: ListTab): Promise<void> {
 
 async function start(): Promise<void> {
 	setupThemeToggle($("theme-toggle"));
+	setTokenAsker(askTokenInDialog);
 	$("token").onclick = () => void askToken().then(() => location.reload());
 	$("schema").onclick = () => void openFromApi("/schema", "text/plain; charset=utf-8");
 	document.querySelectorAll<HTMLButtonElement>(".modes button").forEach((b) => {

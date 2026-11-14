@@ -11,7 +11,7 @@ import { EditorView, keymap, lineNumbers } from "@codemirror/view";
 import { mount, toCmDiagnostics } from "@stxt-lang/editor";
 import type { Editor } from "@stxt-lang/editor";
 
-import { $ } from "./api";
+import { $ } from "./dom";
 import { tabState, tabs } from "./model";
 import type { Panels, Target } from "./model";
 

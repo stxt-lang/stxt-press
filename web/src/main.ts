@@ -7,7 +7,8 @@
  * the panels and their tabs in panels.ts, what the buttons give in output.ts and the full window of each half in
  * maximize.ts; here are the place, the buttons and the start.
  */
-import { $, askToken, call, errorOf, say, token } from "./api";
+import { askToken, call, errorOf, get, setTokenAsker, token } from "./api";
+import { $, say } from "./dom";
 import { maximizable, restore } from "./maximize";
 import {
 	curl, documentPanels, fileName, request, saveRequest, serverMessage, target, templatePanels, took, validatesDocument,
@@ -19,6 +20,7 @@ import type { Panel } from "./panels";
 import { BLANK, indexHashOf, parsePlace, placeUrl } from "./place";
 import type { Place } from "./place";
 import { setupThemeToggle } from "./theme";
+import { askTokenInDialog } from "./tokenDialog";
 
 /** The mode of what the page shows: a document (blank, or of the server) or a template. */
 let mode: Place["mode"] = "document";
@@ -144,7 +146,7 @@ async function run(format: Format): Promise<void> {
 	say(format === "stxt" ? "Filling…" : "Converting…");
 	const started = performance.now();
 	try {
-		const response = await call(asked.method, asked.url, asked.body, asked.contentType);
+		const response = await call(asked);
 		if (!response.ok) {
 			const error = await errorOf(response);
 			// The output of the last button is not that of these panels.
@@ -201,7 +203,8 @@ async function save(): Promise<void> {
 	say("Saving…");
 	const started = performance.now();
 	try {
-		const response = await call("PUT", asked.url, asked.body, "application/json", { "If-Match": version });
+		const response = await call({ method: "PUT", url: asked.url, body: asked.body, contentType: "application/json",
+			headers: { "If-Match": version } });
 		if (!response.ok) {
 			const error = await errorOf(response);
 			say(error.code === "FILES_CHANGED"
@@ -245,7 +248,7 @@ function served(response: Response, body: { writable?: boolean }): void {
 
 /** A document of the documents folder of the server, with its chain of styles. */
 async function showDocument(path: string): Promise<void> {
-	const response = await call("GET", `/files/documents/${path}`);
+	const response = await get(`/files/documents/${path}`);
 	if (!response.ok) {
 		clear();
 		say(serverMessage(await errorOf(response), null), true);
@@ -258,7 +261,7 @@ async function showDocument(path: string): Promise<void> {
 
 /** A template of the server: its data, its document and its chain of styles, with the URL and the curl that print it. */
 async function showTemplate(path: string): Promise<void> {
-	const response = await call("GET", `/files/templates/${path}`);
+	const response = await get(`/files/templates/${path}`);
 	if (!response.ok) {
 		clear();
 		say(serverMessage(await errorOf(response), null), true);
@@ -294,6 +297,7 @@ async function show(place: Place): Promise<void> {
 
 async function start(): Promise<void> {
 	setupThemeToggle($("theme-toggle"));
+	setTokenAsker(askTokenInDialog);
 	$("save").onclick = () => void save();
 	$("fill").onclick = () => void run("stxt");
 	$("preview").onclick = () => void run("svg");
@@ -327,7 +331,7 @@ async function start(): Promise<void> {
 	document.querySelectorAll<HTMLElement>(".workspace > section").forEach(maximizable);
 	setButtons();
 
-	const schemaResponse = await call("GET", "/schema");
+	const schemaResponse = await get("/schema");
 	setSchema(schemaResponse.ok ? await schemaResponse.text() : "");
 	// The URL as the page writes it, without what the page does not read (a query).
 	const place = parsePlace(location.pathname) ?? BLANK;
