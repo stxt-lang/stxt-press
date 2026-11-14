@@ -60,8 +60,31 @@ final class WarmUp {
      * @param withData whether the template has sample data: without them, a template with Slots cannot be converted,
      *        and that is no error of the template; {@code true} for a document, which has no Slots to fill
      * @param error what the error says, with its code and its line
+     * @param unexpected the exception of an error that no job expects (a failure of the engine with this document), for
+     *        its stack trace in the log; {@code null} for the others, whose message says it all
      */
-    record Failure(Templates.Kind kind, String path, boolean withData, String error) {
+    record Failure(Templates.Kind kind, String path, boolean withData, String error, Throwable unexpected) {
+
+        /**
+         * {@return whether it is a warning in the log, and not only information} Only the failure of a template without
+         * sample data is information, since a template with Slots needs the data of the request; an unexpected error
+         * is always a warning.
+         */
+        boolean warning() {
+            return withData || unexpected != null;
+        }
+    }
+
+    /** What converts a job in the warm up, throwing its output away. */
+    @FunctionalInterface
+    interface Conversion {
+        void convert(Job job) throws IOException;
+    }
+
+    /** What a warm up tries for one document: reading it and converting it. */
+    @FunctionalInterface
+    private interface Step {
+        void run() throws IOException;
     }
 
     private WarmUp() {
@@ -69,7 +92,7 @@ final class WarmUp {
 
     /**
      * Converts every template of {@code templates} and every document of {@code documents}, or the small document if
-     * there are none and the server has fonts.
+     * there are none and the server has fonts, to PDF and to SVG.
      *
      * @param press the core of the server, on its shared converter
      * @param templates the templates folder, or {@code null}
@@ -81,6 +104,18 @@ final class WarmUp {
      */
     static Result run(Press press, Templates templates, Templates documents, String font, Options options,
             Duration timeout) {
+        return run(job -> {
+            press.pdf(job, OutputStream.nullOutputStream(), Cancellation.timeout(timeout));
+            press.svg(job, Cancellation.timeout(timeout));
+        }, templates, documents, font, options);
+    }
+
+    /**
+     * Like {@link #run(Press, Templates, Templates, String, Options, Duration)}, with {@code conversion} converting each
+     * job: for the tests, which need errors the engine does not give at will.
+     */
+    static Result run(Conversion conversion, Templates templates, Templates documents, String font,
+            Options options) {
         long start = System.nanoTime();
         List<Failure> failures = new ArrayList<>();
         int converted = 0;
@@ -94,50 +129,51 @@ final class WarmUp {
                 entries = folder.list();
             } catch (IOException e) {
                 failures.add(new Failure(folder.kind(), null, true, "The " + folder.kind().noun()
-                        + "s folder cannot be read: " + e.getMessage()));
+                        + "s folder cannot be read: " + e.getMessage(), null));
                 continue;
             }
             none &= entries.isEmpty();
             for (Templates.Entry entry : entries) {
-                String error;
-                try {
-                    Template template = folder.get(entry.path());
-                    error = convert(press, template.job(options), timeout);
-                } catch (TemplateException e) {
-                    error = e.code() + ": " + e.getMessage();
-                } catch (IOException e) {
-                    error = "It cannot be read: " + e.getMessage();
-                }
-                if (error == null) {
+                Failure failure = attempt(folder.kind(), entry.path(),
+                        folder.kind() == Templates.Kind.DOCUMENT || entry.data(),
+                        () -> conversion.convert(folder.get(entry.path()).job(options)));
+                if (failure == null) {
                     converted++;
                 } else {
-                    failures.add(new Failure(folder.kind(), entry.path(),
-                            folder.kind() == Templates.Kind.DOCUMENT || entry.data(), error));
+                    failures.add(failure);
                 }
             }
         }
         if (none && font != null) {
-            String error = convert(press, new Job(DOCUMENT.formatted(font), List.of(), null, Options.DEFAULT), timeout);
-            if (error == null) {
+            Failure failure = attempt(Templates.Kind.TEMPLATE, null, true, () -> conversion
+                    .convert(new Job(DOCUMENT.formatted(font), List.of(), null, Options.DEFAULT)));
+            if (failure == null) {
                 converted++;
             } else {
-                failures.add(new Failure(Templates.Kind.TEMPLATE, null, true, error));
+                failures.add(failure);
             }
         }
         return new Result(converted, List.copyOf(failures), Duration.ofNanos(System.nanoTime() - start));
     }
 
-    /** Converts {@code job} to PDF and to SVG; {@return its error, or {@code null} if it was converted} */
-    private static String convert(Press press, Job job, Duration timeout) {
+    /** Runs {@code step} for one document; {@return its failure, or {@code null} if it was converted} */
+    private static Failure attempt(Templates.Kind kind, String path, boolean withData, Step step) {
+        String error;
         try {
-            press.pdf(job, OutputStream.nullOutputStream(), Cancellation.timeout(timeout));
-            press.svg(job, Cancellation.timeout(timeout));
+            step.run();
             return null;
         } catch (PressException e) {
-            return e.code() + (e.line() > 0 ? " (line " + e.line() + " of " + e.source() + ")" : "") + ": "
+            error = e.code() + (e.line() > 0 ? " (line " + e.line() + " of " + e.source() + ")" : "") + ": "
                     + e.getMessage();
+        } catch (TemplateException e) {
+            error = e.code() + ": " + e.getMessage();
         } catch (IOException e) {
-            return e.getMessage();
+            error = "It cannot be read: " + e.getMessage();
+        } catch (RuntimeException e) {
+            // An error no job expects: a failure of the engine with this document. Over HTTP it is a 500 and the server
+            // goes on, so here it does not stop the start either.
+            return new Failure(kind, path, withData, "Unexpected error: " + e, e);
         }
+        return new Failure(kind, path, withData, error, null);
     }
 }

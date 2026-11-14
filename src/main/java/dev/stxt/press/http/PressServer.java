@@ -191,7 +191,8 @@ public final class PressServer implements AutoCloseable {
      * converts every template with its sample data and every document, to PDF and to SVG, throwing the output away;
      * without templates or documents, a small document. One that cannot be converted is a warning in the log, and the
      * server answers all the same: its error is that of {@code /print}. For a template without sample data it is only
-     * information, since a template with Slots needs the data of the request.
+     * information, since a template with Slots needs the data of the request. An error that no job expects (a failure
+     * of the engine with one document) is a warning with its stack trace, and does not stop the start either.
      *
      * @throws dev.stxt.pdf.model.StxtPdfException if the converter cannot be created: its resources; the server keeps
      *         answering {@code 503}, and whoever started it closes it
@@ -203,8 +204,9 @@ public final class PressServer implements AutoCloseable {
         for (WarmUp.Failure failure : result.failures()) {
             String what = failure.path() == null ? "The warm up document"
                     : "The " + failure.kind().noun() + " " + failure.path();
-            LOG.log(failure.withData() ? Level.WARNING : Level.INFO, what + " could not be converted in the warm up"
-                    + (failure.withData() ? "" : " (it has no sample data)") + ": " + failure.error());
+            LOG.log(failure.warning() ? Level.WARNING : Level.INFO, what + " could not be converted in the warm up"
+                    + (failure.warning() ? "" : " (it has no sample data)") + ": " + failure.error(),
+                    failure.unexpected());
         }
         LOG.log(Level.INFO, "Warmed up in " + result.elapsed().toMillis() + " ms: " + result.converted() + " converted, "
                 + result.failures().size() + " not");

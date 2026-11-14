@@ -100,7 +100,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   folder and converts every template with its sample data and every document, to PDF and to SVG, so that the first request is as fast as
   the next ones (the catalog of `server/`, 1.3 s cold and 0.3 s warm). It listens from the start, and until it ends
   every route, `/health` too, answers `503` with the code `SERVER_STARTING` and `Retry-After: 1`. A template or a
-  document that cannot be converted is a warning in the log, or only information if it has no sample data. It replaces `Preload
+  document that cannot be converted is a warning in the log, or only information if it has no sample data; an error
+  that no job expects (a failure of the engine with one document) is a warning with its stack trace, and the server
+  starts all the same, as it answers `500` to that document over HTTP. It replaces `Preload
   resources`; `Lazy init: true` turns it off, and both `true` is `CONFIG_CONFLICT`. `PressServer.startWarmingUp` and
   `PressServer.warmUp()` for it.
 - `PressServer.close(Duration)`, which answers new requests with `503` and waits for those in progress, and without
