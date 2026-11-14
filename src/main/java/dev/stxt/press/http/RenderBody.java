@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import dev.stxt.pdf.model.Check;
@@ -47,33 +45,19 @@ final class RenderBody {
      * @throws HttpError if the body is not JSON or not one of {@code /render} ({@code 400})
      */
     static Job job(byte[] body, boolean debug) throws HttpError {
-        JsonNode root;
-        try {
-            root = Json.MAPPER.readTree(body);
-        } catch (JacksonException e) {
-            throw notValid("The body is not JSON: " + e.getOriginalMessage());
-        } catch (IOException e) {
-            throw notValid("The body cannot be read: " + e.getMessage());
-        }
-        if (root == null || !root.isObject()) {
-            throw notValid("The body is not a JSON object");
-        }
-        known(root, FIELDS, "");
-
-        JsonNode document = root.get("document");
-        if (document == null || !document.isTextual()) {
-            throw notValid("The body has no document: \"document\" is required, as a string");
-        }
+        JsonNode root = Json.object(body);
+        Json.known(root, FIELDS, "");
+        String document = Json.required(root, "document");
 
         List<Job.Styles> styles = new ArrayList<>();
         JsonNode list = root.get("styles");
         if (list != null && !list.isNull()) {
             if (!list.isArray()) {
-                throw notValid("\"styles\" is not an array of strings");
+                throw Json.notValid("\"styles\" is not an array of strings");
             }
             for (JsonNode item : list) {
                 if (!item.isTextual()) {
-                    throw notValid("\"styles\" is not an array of strings");
+                    throw Json.notValid("\"styles\" is not an array of strings");
                 }
                 styles.add(new Job.Styles("styles[" + (styles.size() + 1) + "]", item.textValue()));
             }
@@ -90,7 +74,7 @@ final class RenderBody {
         }
 
         Options options = options(root.get("options"));
-        return new Job(document.textValue(), styles, data, debug ? options.withDebug(true) : options);
+        return new Job(document, styles, data, debug ? options.withDebug(true) : options);
     }
 
     /** {@return the options of the body, or the default ones without {@code options}} */
@@ -99,9 +83,9 @@ final class RenderBody {
             return Options.DEFAULT;
         }
         if (!node.isObject()) {
-            throw notValid("\"options\" is not a JSON object");
+            throw Json.notValid("\"options\" is not a JSON object");
         }
-        known(node, OPTIONS, "options.");
+        Json.known(node, OPTIONS, "options.");
         int pdfUa = Options.DEFAULT.pdfUa();
         PdfA pdfA = null;
         boolean debug = false;
@@ -110,7 +94,7 @@ final class RenderBody {
         JsonNode ua = node.get("pdfUa");
         if (ua != null) {
             if (!ua.isInt()) {
-                throw notValid("\"options.pdfUa\" is not 1 or 2");
+                throw Json.notValid("\"options.pdfUa\" is not 1 or 2");
             }
             pdfUa = ua.intValue();
         }
@@ -121,14 +105,14 @@ final class RenderBody {
         JsonNode d = node.get("debug");
         if (d != null) {
             if (!d.isBoolean()) {
-                throw notValid("\"options.debug\" is not a boolean");
+                throw Json.notValid("\"options.debug\" is not a boolean");
             }
             debug = d.booleanValue();
         }
         JsonNode exclude = node.get("exclude");
         if (exclude != null) {
             if (!exclude.isArray()) {
-                throw notValid("\"options.exclude\" is not an array of checks");
+                throw Json.notValid("\"options.exclude\" is not an array of checks");
             }
             for (JsonNode check : exclude) {
                 excluded.add(constant(Check.class, check, "options.exclude"));
@@ -137,7 +121,7 @@ final class RenderBody {
         try {
             return new Options(pdfUa, pdfA, debug, excluded);
         } catch (IllegalArgumentException e) {
-            throw notValid("\"options\" are not valid: " + e.getMessage());
+            throw Json.notValid("\"options\" are not valid: " + e.getMessage());
         }
     }
 
@@ -145,22 +129,8 @@ final class RenderBody {
     private static <E extends Enum<E>> E constant(Class<E> type, JsonNode node, String field) throws HttpError {
         E constant = node.isTextual() ? Options.named(type, node.textValue()) : null;
         if (constant == null) {
-            throw notValid("\"" + field + "\" is " + node + ", not one of " + Options.names(type));
+            throw Json.notValid("\"" + field + "\" is " + node + ", not one of " + Options.names(type));
         }
         return constant;
-    }
-
-    /** That {@code object} has no field but {@code fields}. */
-    private static void known(JsonNode object, Set<String> fields, String prefix) throws HttpError {
-        for (Map.Entry<String, JsonNode> field : object.properties()) {
-            String name = field.getKey();
-            if (!fields.contains(name)) {
-                throw notValid("Unknown field \"" + prefix + name + "\"");
-            }
-        }
-    }
-
-    private static HttpError notValid(String message) {
-        return new HttpError(400, HttpError.BODY_NOT_VALID, message);
     }
 }

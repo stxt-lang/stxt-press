@@ -1,11 +1,9 @@
 package dev.stxt.press.http;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import dev.stxt.press.templates.Templates;
@@ -40,41 +38,28 @@ final class SaveBody {
      * @throws HttpError if the body is not JSON or not one of a save ({@code 400})
      */
     static Templates.Change change(byte[] body, Templates.Kind kind) throws HttpError {
-        JsonNode root;
-        try {
-            root = Json.MAPPER.readTree(body);
-        } catch (JacksonException e) {
-            throw notValid("The body is not JSON: " + e.getOriginalMessage());
-        } catch (IOException e) {
-            throw notValid("The body cannot be read: " + e.getMessage());
-        }
-        if (root == null || !root.isObject()) {
-            throw notValid("The body is not a JSON object");
-        }
-        known(root, FIELDS, "");
-        JsonNode document = root.get("document");
-        if (document == null || !document.isTextual()) {
-            throw notValid("The body has no document: \"document\" is required, as a string");
-        }
+        JsonNode root = Json.object(body);
+        Json.known(root, FIELDS, "");
+        String document = Json.required(root, "document");
 
         Map<String, String> styles = new LinkedHashMap<>();
         JsonNode list = root.get("styles");
         if (list != null && !list.isNull()) {
             if (!list.isArray()) {
-                throw notValid("\"styles\" is not an array of {\"path\", \"text\"}");
+                throw Json.notValid("\"styles\" is not an array of {\"path\", \"text\"}");
             }
             for (JsonNode item : list) {
                 if (!item.isObject()) {
-                    throw notValid("\"styles\" is not an array of {\"path\", \"text\"}");
+                    throw Json.notValid("\"styles\" is not an array of {\"path\", \"text\"}");
                 }
-                known(item, STYLES_FIELDS, "styles[].");
+                Json.known(item, STYLES_FIELDS, "styles[].");
                 JsonNode path = item.get("path");
                 JsonNode text = item.get("text");
                 if (path == null || !path.isTextual() || text == null || !text.isTextual()) {
-                    throw notValid("Each of \"styles\" has a \"path\" and a \"text\", as strings");
+                    throw Json.notValid("Each of \"styles\" has a \"path\" and a \"text\", as strings");
                 }
                 if (styles.put(path.textValue(), text.textValue()) != null) {
-                    throw notValid("The styles file " + path.textValue() + " is twice in \"styles\"");
+                    throw Json.notValid("The styles file " + path.textValue() + " is twice in \"styles\"");
                 }
             }
         }
@@ -83,26 +68,13 @@ final class SaveBody {
         JsonNode value = root.get("data");
         if (value != null && !value.isNull()) {
             if (kind != Templates.Kind.TEMPLATE) {
-                throw notValid("A document has no \"data\"");
+                throw Json.notValid("A document has no \"data\"");
             }
             if (!value.isTextual()) {
-                throw notValid("\"data\" is the text of the file, as a string");
+                throw Json.notValid("\"data\" is the text of the file, as a string");
             }
             data = value.textValue();
         }
-        return new Templates.Change(document.textValue(), styles, data);
-    }
-
-    /** That {@code object} has no field but {@code fields}. */
-    private static void known(JsonNode object, Set<String> fields, String prefix) throws HttpError {
-        for (Map.Entry<String, JsonNode> field : object.properties()) {
-            if (!fields.contains(field.getKey())) {
-                throw notValid("Unknown field \"" + prefix + field.getKey() + "\"");
-            }
-        }
-    }
-
-    private static HttpError notValid(String message) {
-        return new HttpError(400, HttpError.BODY_NOT_VALID, message);
+        return new Templates.Change(document, styles, data);
     }
 }
