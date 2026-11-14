@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
@@ -181,6 +182,27 @@ class PressTest {
         assertEquals(Press.fill(document, DATA), e.filled());
         assertEquals(10, e.line(), "line 8 of the document with Slots, after two more paragraphs");
         assertTrue(e.filled().lines().toList().get(e.line() - 1).contains("Unknown: here"), e.filled());
+    }
+
+    /**
+     * The error as one line: the name of its source and its line, then its code and its message; the filled document
+     * by that name, and an error of no input without a place.
+     */
+    @Test
+    void anErrorIsDescribedWithTheNameOfItsSource() {
+        PressException data = assertThrows(PressException.class, () -> Press.fill(WITH_SLOTS, "{\n\"title\": }"));
+        assertEquals("invoice.json:2: JSON_NOT_VALID: " + data.getMessage(),
+                data.describe(Map.of(PressException.DATA, "invoice.json")));
+        assertEquals("data:2: JSON_NOT_VALID: " + data.getMessage(), data.describe(Map.of()));
+
+        PressException filled = assertThrows(PressException.class,
+                () -> pdf(job(WITH_SLOTS + "\t\tUnknown: here\n").withData(DATA)));
+        assertEquals("the filled document:10: " + filled.code() + ": " + filled.getMessage(),
+                filled.describe(Map.of(PressException.DOCUMENT, "invoice.stxt")));
+
+        PressException cancelled = assertThrows(PressException.class,
+                () -> PRESS.pdf(job(DOCUMENT), new ByteArrayOutputStream(), () -> true));
+        assertEquals(cancelled.code() + ": " + cancelled.getMessage(), cancelled.describe(Map.of()));
     }
 
     @Test

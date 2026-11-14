@@ -587,7 +587,14 @@ class PressServerTest {
         assertTrue(result.failures().get(0).withData());
         assertFalse(result.failures().get(1).withData());
         assertTrue(result.failures().get(2).withData());
-        assertTrue(result.failures().get(0).error().startsWith("NODE_NOT_DEFINED_IN_SCHEMA"), result::toString);
+        // As the command line writes it: the filled document of a template with sample data, and the file of one
+        // without them or of a document.
+        assertTrue(result.failures().get(0).error().startsWith("the filled document:2: NODE_NOT_DEFINED_IN_SCHEMA: "),
+                result::toString);
+        assertTrue(result.failures().get(1).error().startsWith(folder.resolve("plain.stxt") + ":2: "
+                + "NODE_NOT_DEFINED_IN_SCHEMA: "), result::toString);
+        assertTrue(result.failures().get(2).error().startsWith(documents.folder().resolve("broken.stxt") + ":2: "),
+                result::toString);
 
         WarmUp.Result none = WarmUp.run(new Press(SHARED), null, null, "IBM Plex Sans", Options.DEFAULT,
                 Duration.ofSeconds(30));

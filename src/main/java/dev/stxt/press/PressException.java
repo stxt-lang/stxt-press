@@ -1,5 +1,7 @@
 package dev.stxt.press;
 
+import java.util.Map;
+
 import dev.stxt.pdf.model.StxtPdfException;
 import dev.stxt.pdf.model.StxtPdfException.Kind;
 
@@ -74,5 +76,20 @@ public final class PressException extends RuntimeException {
     /** {@return the text of the filled document when {@link #source()} is {@link #FILLED}, or {@code null}} */
     public String filled() {
         return filled;
+    }
+
+    /**
+     * {@return the error as one line, {@code where:line: CODE: message}, for a log or a terminal} {@code where} is the
+     * name {@code names} gives the {@link #source()}, such as its file, or the source itself if it gives none, and
+     * {@code the filled document} for {@link #FILLED}, whose text is not in any file. Without a line, {@code where: CODE:
+     * message}; without a source, {@code CODE: message}.
+     *
+     * @param names the name of each source, such as the file of {@link #DOCUMENT}; not {@code null}, may be empty
+     */
+    public String describe(Map<String, String> names) {
+        String where = FILLED.equals(source) ? "the filled document"
+                : source == null ? null : names.getOrDefault(source, source);
+        String place = where == null ? "" : where + (line > NO_LINE ? ":" + line : "") + ": ";
+        return place + code + ": " + getMessage();
     }
 }

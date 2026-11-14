@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dev.stxt.pdf.model.Cancellation;
 import dev.stxt.press.Job;
@@ -59,7 +61,7 @@ final class WarmUp {
      *        templates or documents, or for a folder that cannot be read
      * @param withData whether the template has sample data: without them, a template with Slots cannot be converted,
      *        and that is no error of the template; {@code true} for a document, which has no Slots to fill
-     * @param error what the error says, with its code and its line
+     * @param error what the error says, with its code and, if it is of a line, the file and the line
      * @param unexpected the exception of an error that no job expects (a failure of the engine with this document), for
      *        its stack trace in the log; {@code null} for the others, whose message says it all
      */
@@ -84,7 +86,11 @@ final class WarmUp {
     /** What a warm up tries for one document: reading it and converting it. */
     @FunctionalInterface
     private interface Step {
-        void run() throws IOException;
+        /**
+         * @param files where it puts the file of each input of the document, by the source of its errors, once it has
+         *        read it: an error of the conversion is written with them
+         */
+        void run(Map<String, String> files) throws IOException;
     }
 
     private WarmUp() {
@@ -136,7 +142,11 @@ final class WarmUp {
             for (Templates.Entry entry : entries) {
                 Failure failure = attempt(folder.kind(), entry.path(),
                         folder.kind() == Templates.Kind.DOCUMENT || entry.data(),
-                        () -> conversion.convert(folder.get(entry.path()).job(options)));
+                        files -> {
+                            Template template = folder.get(entry.path());
+                            folder.files(template).forEach((source, file) -> files.put(source, file.toString()));
+                            conversion.convert(template.job(options));
+                        });
                 if (failure == null) {
                     converted++;
                 } else {
@@ -145,7 +155,7 @@ final class WarmUp {
             }
         }
         if (none && font != null) {
-            Failure failure = attempt(Templates.Kind.TEMPLATE, null, true, () -> conversion
+            Failure failure = attempt(Templates.Kind.TEMPLATE, null, true, files -> conversion
                     .convert(new Job(DOCUMENT.formatted(font), List.of(), null, Options.DEFAULT)));
             if (failure == null) {
                 converted++;
@@ -158,13 +168,14 @@ final class WarmUp {
 
     /** Runs {@code step} for one document; {@return its failure, or {@code null} if it was converted} */
     private static Failure attempt(Templates.Kind kind, String path, boolean withData, Step step) {
+        Map<String, String> files = new HashMap<>();
         String error;
         try {
-            step.run();
+            step.run(files);
             return null;
         } catch (PressException e) {
-            error = e.code() + (e.line() > 0 ? " (line " + e.line() + " of " + e.source() + ")" : "") + ": "
-                    + e.getMessage();
+            // With the file of its line, as the command line writes it.
+            error = e.describe(files);
         } catch (TemplateException e) {
             error = e.code() + ": " + e.getMessage();
         } catch (IOException e) {

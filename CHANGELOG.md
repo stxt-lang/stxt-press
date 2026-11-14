@@ -96,6 +96,8 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   and line. Exit codes: `0`, `1` if the job failed, `2` if the invocation is not valid. A file that cannot be read or
   is not UTF-8 is `1` with `print` too, as with `render`, and the message names it: a file of the template (its `.stxt`,
   a `.styles.stxt` of its chain, its sample data) gave `2` and «The templates folder cannot be read».
+- `PressException.describe`, the error as one line, `where:line: CODE: message`, with the name of each source (its
+  file, say), which the errors of the commands and the warnings of the warm up share.
 - The error of a file of a template or a document that cannot be read, or is not UTF-8, names the file: in the log of
   its `500`, in the warm up and in `print`.
 - The jar is a single file with every dependency inside (`maven-shade-plugin`), with `dev.stxt.press.cli.Main` as
@@ -104,7 +106,9 @@ The format follows [Keep a Changelog](http://keepachangelog.com/).
   folder and converts every template with its sample data and every document, to PDF and to SVG, so that the first request is as fast as
   the next ones (the catalog of `server/`, 1.3 s cold and 0.3 s warm). It listens from the start, and until it ends
   every route, `/health` too, answers `503` with the code `SERVER_STARTING` and `Retry-After: 1`. A template or a
-  document that cannot be converted is a warning in the log, or only information if it has no sample data; an error
+  document that cannot be converted is a warning in the log, or only information if it has no sample data, with its
+  error as the command line writes it (`file:line: CODE: message`, or `the filled document:line` for one of the
+  template filled with its sample data); an error
   that no job expects (a failure of the engine with one document) is a warning with its stack trace, and the server
   starts all the same, as it answers `500` to that document over HTTP. It replaces `Preload
   resources`; `Lazy init: true` turns it off, and both `true` is `CONFIG_CONFLICT`. `PressServer.startWarmingUp` and

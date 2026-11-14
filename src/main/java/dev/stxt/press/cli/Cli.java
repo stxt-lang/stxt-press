@@ -379,16 +379,9 @@ final class Cli {
      * {@code source}; an error of the filled document has the line of the filled text, which {@code fill} shows.
      */
     private static Failure failure(PressException e, Map<String, String> files) {
-        String where;
-        if (PressException.FILLED.equals(e.source())) {
-            where = "the filled document";
-        } else {
-            where = e.source() == null ? null : files.getOrDefault(e.source(), e.source());
-        }
-        String place = where == null ? "" : where + (e.line() > PressException.NO_LINE ? ":" + e.line() : "") + ": ";
         String hint = PressException.FILLED.equals(e.source())
                 ? System.lineSeparator() + "  (stxt-press fill writes the filled document)" : "";
-        return new Failure(place + e.code() + ": " + e.getMessage() + hint);
+        return new Failure(e.describe(files) + hint);
     }
 
     private static int pdfUa(String value) throws UsageException {
