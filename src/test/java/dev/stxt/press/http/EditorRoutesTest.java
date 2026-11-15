@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 import dev.stxt.press.templates.TemplateException;
 
@@ -36,9 +36,9 @@ class EditorRoutesTest extends ServerFixture {
 
         assertEquals("[{\"path\":\"hello\",\"styles\":false},{\"path\":\"letters/letter\",\"styles\":true}]",
                 list.toString());
-        assertEquals(DOCUMENT, letter.get("document").asText());
+        assertEquals(DOCUMENT, letter.get("document").asString());
         assertEquals(List.of(".styles.stxt", "letters/letter.styles.stxt"),
-                letter.get("styles").findValuesAsText("path"));
+                letter.get("styles").findValuesAsString("path"));
         assertFalse(letter.has("data"));
     }
 
@@ -62,10 +62,10 @@ class EditorRoutesTest extends ServerFixture {
 
         assertEquals("[{\"path\":\"hello\",\"styles\":false,\"data\":false},"
                 + "{\"path\":\"invoices/invoice\",\"styles\":false,\"data\":true}]", list.toString());
-        assertEquals(WITH_SLOTS, invoice.get("document").asText());
-        assertEquals(".styles.stxt", invoice.get("styles").get(0).get("path").asText());
-        assertEquals(STYLES, invoice.get("styles").get(0).get("text").asText());
-        assertEquals(SAMPLE, invoice.get("data").asText());
+        assertEquals(WITH_SLOTS, invoice.get("document").asString());
+        assertEquals(".styles.stxt", invoice.get("styles").get(0).get("path").asString());
+        assertEquals(STYLES, invoice.get("styles").get(0).get("text").asString());
+        assertEquals(SAMPLE, invoice.get("data").asString());
         assertTrue(json(get("/files/templates/hello")).get("data").isNull());
     }
 
@@ -88,13 +88,13 @@ class EditorRoutesTest extends ServerFixture {
         JsonNode faces = json(get("/fonts")).get("faces");
         JsonNode bold = null;
         for (JsonNode face : faces) {
-            if (face.get("family").asText().equals("IBM Plex Sans") && face.get("weight").asInt() == 700
-                    && face.get("style").asText().equals("normal")) {
+            if (face.get("family").asString().equals("IBM Plex Sans") && face.get("weight").asInt() == 700
+                    && face.get("style").asString().equals("normal")) {
                 bold = face;
             }
         }
         assertTrue(bold != null, faces::toString);
-        String id = bold.get("id").asText();
+        String id = bold.get("id").asString();
         HttpResponse<byte[]> file = get("/fonts/" + id);
 
         assertEquals(200, file.statusCode());
@@ -205,7 +205,7 @@ class EditorRoutesTest extends ServerFixture {
 
         assertEquals(200, saved.statusCode(), () -> text(saved));
         assertEquals("[\"invoices/invoice.stxt\"]", json(saved).get("written").toString());
-        assertEquals(edited, json(saved).get("document").asText());
+        assertEquals(edited, json(saved).get("document").asString());
         assertEquals(edited, Files.readString(templates.folder().resolve("invoices/invoice.stxt")));
         assertFalse(etag(saved).equals(etag(before)));
         assertEquals(etag(saved), etag(get("/files/templates/invoices/invoice")));
@@ -213,7 +213,7 @@ class EditorRoutesTest extends ServerFixture {
         // From the version before, someone else's save would be undone: nothing is written.
         JsonNode stale = error(put("/files/templates/invoices/invoice", JSON.writeValueAsString(Map.of("document", WITH_SLOTS)),
                 "application/json", etag(before)), 409, TemplateException.FILES_CHANGED);
-        assertTrue(stale.get("message").asText().contains("invoices/invoice"));
+        assertTrue(stale.get("message").asString().contains("invoices/invoice"));
         assertEquals(edited, Files.readString(templates.folder().resolve("invoices/invoice.stxt")));
     }
 
@@ -271,7 +271,7 @@ class EditorRoutesTest extends ServerFixture {
         assertEquals("[\"letters/note.stxt\"]", json(created).get("written").toString());
         assertEquals(etag(created), etag(get("/files/documents/letters/note")));
         // It takes the styles of its folder, as the others.
-        assertTrue(json(created).get("styles").findValuesAsText("path").contains(".styles.stxt"));
+        assertTrue(json(created).get("styles").findValuesAsString("path").contains(".styles.stxt"));
         assertTrue(isPdf(get("/documents/letters/note").body()));
 
         // Once it exists, another creation is refused and writes nothing.

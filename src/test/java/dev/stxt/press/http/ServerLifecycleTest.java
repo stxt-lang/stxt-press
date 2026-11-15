@@ -25,7 +25,7 @@ import java.util.concurrent.Semaphore;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 import dev.stxt.pdf.model.Limits;
 import dev.stxt.press.Options;
@@ -317,7 +317,7 @@ class ServerLifecycleTest extends ServerFixture {
         JsonNode body = error(post("/render", render(DOCUMENT + "\t\tParagraph: More.\n".repeat(200), Map.of())),
                 413, "PAGE_LIMIT");
 
-        assertEquals("LIMIT", body.get("kind").asText());
+        assertEquals("LIMIT", body.get("kind").asString());
     }
 
     @Test
@@ -326,7 +326,7 @@ class ServerLifecycleTest extends ServerFixture {
 
         JsonNode body = error(post("/render", render(DOCUMENT, Map.of())), 503, "CANCELLED");
 
-        assertEquals("CANCELLED", body.get("kind").asText());
+        assertEquals("CANCELLED", body.get("kind").asString());
         assertTrue(body.get("source").isNull());
     }
 

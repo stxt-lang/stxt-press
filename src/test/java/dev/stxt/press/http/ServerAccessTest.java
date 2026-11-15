@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 /**
  * Who a server of the test ({@link ServerFixture}) answers: the {@code Host} of a local server without token, the token,
@@ -67,8 +67,8 @@ class ServerAccessTest extends ServerFixture {
                 Raw response = raw("GET " + path + " HTTP/1.1", "Host: " + host);
                 assertEquals(403, response.status(), host + " " + path);
                 JsonNode body = JSON.readTree(response.body());
-                assertEquals(HttpError.HOST_NOT_ALLOWED, body.get("code").asText());
-                assertTrue(body.get("message").asText().contains("localhost, 127.0.0.1, [::1]"), body::toString);
+                assertEquals(HttpError.HOST_NOT_ALLOWED, body.get("code").asString());
+                assertTrue(body.get("message").asString().contains("localhost, 127.0.0.1, [::1]"), body::toString);
             }
         }
         // Without Host, as HTTP/1.0 allows, or with two. Two are refused by the later updates of the JDK 17 too, with a

@@ -6,7 +6,7 @@
 
     <groupId>dev.stxt</groupId>
     <artifactId>stxt-press</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
     <packaging>jar</packaging>
 
     <!-- A service, not a library: it is distributed as a jar of the GitHub releases and as a Docker image, not on
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>dev.stxt</groupId>
             <artifactId>stxt-core</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
 
         <!-- The layout engine: reads the layout documents (dev.stxt.pdf) and writes the PDF and the SVG pages.
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>dev.stxt</groupId>
             <artifactId>stxt-pdf</artifactId>
-            <version>0.18.0</version>
+            <version>0.18.1</version>
         </dependency>
 
         <!-- The fill of the Slots of a layout document with JSON data (FillJson), before converting it. Its stxt-core
@@ -67,16 +67,18 @@
         <dependency>
             <groupId>dev.stxt</groupId>
             <artifactId>stxt-transform</artifactId>
-            <version>0.1.0</version>
+            <version>0.2.0</version>
         </dependency>
 
         <!-- The JSON of the HTTP service: the body of /render and the responses. The data of a template (/print) are
              not read with it: they go to FillJson as they come.
-             Latest version at https://central.sonatype.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+             The same version as the one stxt-transform depends on: the enforcer's dependencyConvergence fails if they
+             differ.
+             Latest version at https://central.sonatype.com/artifact/tools.jackson.core/jackson-databind -->
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.22.4</version>
+            <version>3.3.0</version>
         </dependency>
 
         <dependency>

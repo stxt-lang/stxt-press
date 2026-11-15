@@ -35,7 +35,7 @@ class BodiesTest {
             "{\"styles\": []}|The body has no document: \"document\" is required, as a string",
             "{\"document\": 1}|The body has no document: \"document\" is required, as a string",
             "{\"document\": \"x\", \"other\": 1}|Unknown field \"other\"",
-            "{\"document\": \"x\"} {}|The body is not JSON: Trailing token (of type START_OBJECT) found after value (bound as `com.fasterxml.jackson.databind.JsonNode`): not allowed as per `DeserializationFeature.FAIL_ON_TRAILING_TOKENS`",
+            "{\"document\": \"x\"} {}|The body is not JSON: Trailing token (`JsonToken.START_OBJECT`) found after value (bound as `tools.jackson.databind.JsonNode`): not allowed as per `DeserializationFeature.FAIL_ON_TRAILING_TOKENS`",
             "{\"document\": \"x\", \"styles\": \"x\"}|\"styles\" is not an array of strings",
             "{\"document\": \"x\", \"options\": {\"color\": true}}|Unknown field \"options.color\"",
             "{\"document\": \"x\", \"options\": {\"pdfUa\": 3}}|\"options\" are not valid: PDF/UA is part 1 or 2, not 3"})

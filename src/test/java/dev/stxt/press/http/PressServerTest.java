@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 import dev.stxt.pdf.convert.Converter;
 
@@ -28,9 +28,9 @@ class PressServerTest extends ServerFixture {
     void healthGivesTheVersions() throws Exception {
         start(ServerConfig.DEFAULT);
         JsonNode health = json(get("/health"));
-        assertEquals("ok", health.get("status").asText());
+        assertEquals("ok", health.get("status").asString());
         assertTrue(health.get("versions").get("stxt-press").isNull());
-        assertEquals(Converter.version(), health.get("versions").get("stxt-pdf").asText());
+        assertEquals(Converter.version(), health.get("versions").get("stxt-pdf").asString());
     }
 
     @Test
@@ -71,7 +71,7 @@ class PressServerTest extends ServerFixture {
         assertEquals(200, response.statusCode(), () -> text(response));
         JsonNode pages = json(response).get("pages");
         assertEquals(1, pages.size());
-        assertTrue(pages.get(0).asText().startsWith("<svg"));
+        assertTrue(pages.get(0).asString().startsWith("<svg"));
     }
 
     @Test
@@ -109,9 +109,9 @@ class PressServerTest extends ServerFixture {
 
         assertEquals(422, response.statusCode(), () -> text(response));
         JsonNode body = json(response);
-        assertEquals("INVALID_DOCUMENT", body.get("kind").asText());
+        assertEquals("INVALID_DOCUMENT", body.get("kind").asString());
         assertEquals(6, body.get("line").asInt());
-        assertEquals("document", body.get("source").asText());
+        assertEquals("document", body.get("source").asString());
         assertFalse(body.has("filled"));
     }
 
@@ -123,7 +123,7 @@ class PressServerTest extends ServerFixture {
         JsonNode body = json(post("/render", JSON.writeValueAsString(Map.of("document", DOCUMENT,
                 "styles", List.of(STYLES, bad)))));
 
-        assertEquals("styles[2]", body.get("source").asText(), body::toString);
+        assertEquals("styles[2]", body.get("source").asString(), body::toString);
         assertEquals(4, body.get("line").asInt());
     }
 
@@ -136,9 +136,9 @@ class PressServerTest extends ServerFixture {
 
         assertEquals(422, response.statusCode());
         JsonNode body = json(response);
-        assertEquals("filled", body.get("source").asText());
+        assertEquals("filled", body.get("source").asString());
         assertEquals(9, body.get("line").asInt());
-        assertTrue(body.get("filled").asText().contains("Paragraph: Two."));
+        assertTrue(body.get("filled").asString().contains("Paragraph: Two."));
     }
 
     @Test
@@ -173,7 +173,7 @@ class PressServerTest extends ServerFixture {
 
         JsonNode body = error(post("/print/invoices/invoice", "{\n\"title\": }"), 422, "JSON_NOT_VALID");
 
-        assertEquals("data", body.get("source").asText());
+        assertEquals("data", body.get("source").asString());
         assertEquals(2, body.get("line").asInt());
     }
 
@@ -215,7 +215,7 @@ class PressServerTest extends ServerFixture {
         assertTrue(isPdf(pdf.body()));
         assertEquals("inline; filename=\"letter.pdf\"", pdf.headers().firstValue("Content-Disposition").orElse(null));
         // The colour of letter.styles.stxt, after the root .styles.stxt with the font.
-        assertTrue(json(svg).get("pages").get(0).asText().toLowerCase(java.util.Locale.ROOT).contains("#123456"),
+        assertTrue(json(svg).get("pages").get(0).asString().toLowerCase(java.util.Locale.ROOT).contains("#123456"),
                 () -> text(svg));
         // Without data the document is as it is: the letter.json beside it is not read.
         assertEquals(DOCUMENT, text(stxt));

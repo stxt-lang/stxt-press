@@ -1,12 +1,11 @@
 package dev.stxt.press.http;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 import dev.stxt.pdf.model.Check;
 import dev.stxt.pdf.model.PdfA;
@@ -56,21 +55,17 @@ final class RenderBody {
                 throw Json.notValid("\"styles\" is not an array of strings");
             }
             for (JsonNode item : list) {
-                if (!item.isTextual()) {
+                if (!item.isString()) {
                     throw Json.notValid("\"styles\" is not an array of strings");
                 }
-                styles.add(new Job.Styles("styles[" + (styles.size() + 1) + "]", item.textValue()));
+                styles.add(new Job.Styles("styles[" + (styles.size() + 1) + "]", item.stringValue()));
             }
         }
 
         String data = null;
         JsonNode value = root.get("data");
         if (value != null && !value.isNull()) {
-            try {
-                data = Json.MAPPER.writeValueAsString(value);
-            } catch (IOException e) {
-                throw new IllegalStateException("A JSON value read cannot be written", e);
-            }
+            data = Json.MAPPER.writeValueAsString(value);
         }
 
         Options options = options(root.get("options"));
@@ -127,7 +122,7 @@ final class RenderBody {
 
     /** {@return the constant of {@code type} that {@code node} names} */
     private static <E extends Enum<E>> E constant(Class<E> type, JsonNode node, String field) throws HttpError {
-        E constant = node.isTextual() ? Options.named(type, node.textValue()) : null;
+        E constant = node.isString() ? Options.named(type, node.stringValue()) : null;
         if (constant == null) {
             throw Json.notValid("\"" + field + "\" is " + node + ", not one of " + Options.names(type));
         }

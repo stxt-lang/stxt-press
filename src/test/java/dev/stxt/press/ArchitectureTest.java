@@ -53,7 +53,7 @@ class ArchitectureTest {
 
     /** The libraries that only one package may use, by the start of their names: the HTTP layer is {@code http}. */
     private static final Map<String, String> ONLY_IN = Map.of(
-            "com.fasterxml.jackson", "http",
+            "tools.jackson", "http",
             "com.sun.net.httpserver", "http");
 
     /** {@return the package of a source file: {@link #CORE} for those of {@code dev.stxt.press} itself} */

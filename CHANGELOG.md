@@ -4,6 +4,21 @@ All notable changes to `stxt-press` are documented in this file, newest first.
 
 The format follows [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.6.1] - 2026-11-15
+
+Jackson 3, and the latest versions of `stxt-core`, `stxt-pdf` and `stxt-transform`. No route, node of `server.stxt` or
+command changes, and the PDFs and the SVG pages are the same.
+
+### Changed
+
+- **Jackson 3**: the JSON of the service is read and written with `tools.jackson.core:jackson-databind` 3.3.0 instead
+  of `com.fasterxml.jackson.core:jackson-databind` 2.22.4. The routes, the bodies they accept and the JSON they answer
+  do not change; the message of a `BODY_NOT_VALID` for a body that is not JSON is that of Jackson, and some change
+  their wording.
+- On `dev.stxt:stxt-core` 1.0.4, `dev.stxt:stxt-pdf` 0.18.1 and `dev.stxt:stxt-transform` 0.2.0, instead of 1.0.3,
+  0.18.0 and 0.1.0. The message of an error of data of `POST /print` that are not JSON is now that of Jackson, which
+  `stxt-transform` uses since its 0.2.0.
+
 ## [0.6.0] - 2026-11-14
 
 The Docker image, and a fix of the permissions of the files the service writes. No route, node of `server.stxt` or

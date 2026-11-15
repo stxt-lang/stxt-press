@@ -1,15 +1,14 @@
 package dev.stxt.press.http;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.cfg.JsonNodeFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.cfg.JsonNodeFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * The JSON of the service: every JSON response, and the bodies of {@code /render} ({@link RenderBody}) and of a save
@@ -38,8 +37,6 @@ final class Json {
             root = MAPPER.readTree(body);
         } catch (JacksonException e) {
             throw notValid("The body is not JSON: " + e.getOriginalMessage());
-        } catch (IOException e) {
-            throw notValid("The body cannot be read: " + e.getMessage());
         }
         if (root == null || !root.isObject()) {
             throw notValid("The body is not a JSON object");
@@ -68,10 +65,10 @@ final class Json {
      */
     static String required(JsonNode body, String name) throws HttpError {
         JsonNode value = body.get(name);
-        if (value == null || !value.isTextual()) {
+        if (value == null || !value.isString()) {
             throw notValid("The body has no " + name + ": \"" + name + "\" is required, as a string");
         }
-        return value.textValue();
+        return value.stringValue();
     }
 
     /** {@return the error of a body that is not valid: {@code 400}, {@code BODY_NOT_VALID}} */

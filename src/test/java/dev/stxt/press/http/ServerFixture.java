@@ -22,8 +22,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import dev.stxt.pdf.convert.Converter;
 import dev.stxt.pdf.resources.Resources;
@@ -40,7 +41,7 @@ abstract class ServerFixture {
     static final Converter SHARED = Converter.builder()
             .resources(new Resources(Path.of("..", "stxt-pdf", "resources"))).build();
 
-    static final ObjectMapper JSON = new ObjectMapper();
+    static final ObjectMapper JSON = new JsonMapper();
     static final HttpClient CLIENT = HttpClient.newHttpClient();
 
     static final String DOCUMENT = """
@@ -167,8 +168,8 @@ abstract class ServerFixture {
         // An error carries text of the request: the browser takes it as JSON and nothing else.
         assertEquals("nosniff", response.headers().firstValue("X-Content-Type-Options").orElse(null));
         JsonNode body = json(response);
-        assertEquals(code, body.get("code").asText(), body::toString);
-        assertTrue(body.get("message").isTextual());
+        assertEquals(code, body.get("code").asString(), body::toString);
+        assertTrue(body.get("message").isString());
         return body;
     }
 }

@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
@@ -88,7 +88,7 @@ class GateTest {
         assertEquals(List.of(422), exchange.statuses);
         assertTrue(exchange.closed);
         JsonNode body = Json.MAPPER.readTree(exchange.written.toByteArray());
-        assertEquals("NODE_NOT_DEFINED_IN_SCHEMA", body.get("code").asText(), body::toString);
+        assertEquals("NODE_NOT_DEFINED_IN_SCHEMA", body.get("code").asString(), body::toString);
         assertEquals(0, gate.active());
     }
 

@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 import dev.stxt.press.templates.Templates;
 
@@ -55,11 +55,11 @@ final class SaveBody {
                 Json.known(item, STYLES_FIELDS, "styles[].");
                 JsonNode path = item.get("path");
                 JsonNode text = item.get("text");
-                if (path == null || !path.isTextual() || text == null || !text.isTextual()) {
+                if (path == null || !path.isString() || text == null || !text.isString()) {
                     throw Json.notValid("Each of \"styles\" has a \"path\" and a \"text\", as strings");
                 }
-                if (styles.put(path.textValue(), text.textValue()) != null) {
-                    throw Json.notValid("The styles file " + path.textValue() + " is twice in \"styles\"");
+                if (styles.put(path.stringValue(), text.stringValue()) != null) {
+                    throw Json.notValid("The styles file " + path.stringValue() + " is twice in \"styles\"");
                 }
             }
         }
@@ -70,10 +70,10 @@ final class SaveBody {
             if (kind != Templates.Kind.TEMPLATE) {
                 throw Json.notValid("A document has no \"data\"");
             }
-            if (!value.isTextual()) {
+            if (!value.isString()) {
                 throw Json.notValid("\"data\" is the text of the file, as a string");
             }
-            data = value.textValue();
+            data = value.stringValue();
         }
         return new Templates.Change(document, styles, data);
     }

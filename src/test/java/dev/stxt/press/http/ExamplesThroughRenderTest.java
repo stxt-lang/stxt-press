@@ -25,7 +25,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import dev.stxt.pdf.convert.Converter;
 import dev.stxt.pdf.resources.Resources;
@@ -78,7 +78,7 @@ class ExamplesThroughRenderTest {
             body.put("styles", List.of(Files.readString(styles)));
         }
         HttpRequest request = HttpRequest.newBuilder(URI.create("http://127.0.0.1:" + server.address().getPort()
-                + "/render")).POST(BodyPublishers.ofString(new ObjectMapper().writeValueAsString(body))).build();
+                + "/render")).POST(BodyPublishers.ofString(new JsonMapper().writeValueAsString(body))).build();
 
         HttpResponse<byte[]> response = HttpClient.newHttpClient().send(request, BodyHandlers.ofByteArray());
 
