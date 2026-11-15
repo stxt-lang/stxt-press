@@ -2,7 +2,8 @@
 
 A service that makes PDF and SVG from [STXT](https://stxt.dev) layout documents (`dev.stxt.pdf`), with their Slots
 filled with JSON data: an HTTP API, a web editor and a command line, in one jar. The layout, the PDF and the SVG pages
-are the work of [stxt-pdf](https://github.com/stxt-lang/stxt-pdf), and the fill of the Slots, of
+are the work of [stxt-pdf](https://github.com/stxt-lang/stxt-pdf), which writes the PDF with
+[Apache PDFBox](https://pdfbox.apache.org), and the fill of the Slots, of
 [stxt-transform](https://github.com/stxt-lang/stxt-java-transform): this project does not parse, validate or lay out
 anything itself.
 
