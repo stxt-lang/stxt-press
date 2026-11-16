@@ -10,10 +10,10 @@ Document (dev.stxt.pdf):
 			Style: topic
 		Heading 1:
 			Text: Side figure
-		Paragraph: With `Side: left` and a `Width`, the figure goes to the left with its caption and the paragraphs that follow it run beside it. Its `Margin` is the gap to the text.
+		Paragraph: With `Side box: left` and a `Width`, the figure goes to the left with its caption and the paragraphs that follow it run beside it. Its `Margin` is the gap to the text.
 			Style: intro
 		Figure:
-			Side: left
+			Side box: left
 			Box:
 				Width: 60mm
 				Margin: 0 12 6 0

@@ -79,7 +79,7 @@ Document (dev.stxt.pdf):
 						Style: label
 					Image: examples/resume/photo.jpg
 						Alt: Portrait photo cut into a circle
-						Fit: crop
+						Image fit: crop
 						Box:
 							Width: 100
 							Height: 100
@@ -90,7 +90,7 @@ Document (dev.stxt.pdf):
 						Style: label
 					Image: examples/catalog/silla.jpg
 						Alt: Walnut chair
-						Fit: crop
+						Image fit: crop
 						Box:
 							Width: 120
 							Height: 100

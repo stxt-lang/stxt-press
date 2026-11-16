@@ -1,7 +1,7 @@
-# Images: Side places an image at the left or the right and the text after it runs beside it, and Below side boxes moves a box under it.
+# Images: Side box places an image at the left or the right and the text after it runs beside it, and Below side boxes moves a box under it.
 Document (dev.stxt.pdf):
 	Language: en
-	Title: Images · Side
+	Title: Images · Side box
 	Page:
 		Paper: A4
 		Margin: 20mm
@@ -13,14 +13,14 @@ Document (dev.stxt.pdf):
 		Text: Images
 			Style: topic
 		Heading 1:
-			Text: Side
-		Paragraph: With `Side: left` or `Side: right`, an image goes to that side and the paragraphs after it shorten their lines beside it. Its `Margin` is the separation from the text. `Below side boxes: true` takes a box under the image instead of beside it.
+			Text: Side box
+		Paragraph: With `Side box: left` or `Side box: right`, an image goes to that side and the paragraphs after it shorten their lines beside it. Its `Margin` is the separation from the text. `Below side boxes: true` takes a box under the image instead of beside it.
 			Style: intro
-		Text: Side: right, Margin: 0 0 8 14
+		Text: Side box: right, Margin: 0 0 8 14
 			Style: label
 		Image: examples/newsletter/trail.jpg
 			Alt: A path between meadows with mountains in the background
-			Side: right
+			Side box: right
 			Box:
 				Width: 180
 				Margin: 0 0 8 14
@@ -28,13 +28,13 @@ Document (dev.stxt.pdf):
 		Paragraph: The walk takes about two hours there and back, with a climb of two hundred meters, and it is suitable for children. The path is well marked and has three benches along the way.
 		Paragraph: Below side boxes: true. This paragraph does not run beside the photograph: it starts under it.
 			Below side boxes: true
-		Text: Side: left, Margin: 0 14 8 0
+		Text: Side box: left, Margin: 0 14 8 0
 			Style: label
 			Box:
 				Margin: 10 0 4 0
 		Image: examples/catalog/silla.jpg
 			Alt: Walnut chair with a wool seat
-			Side: left
+			Side box: left
 			Box:
 				Width: 110
 				Margin: 0 14 8 0

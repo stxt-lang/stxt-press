@@ -65,20 +65,20 @@ Styles (dev.stxt.pdf):
 			Case: uppercase
 			Letter spacing: 1
 	For element: Heading 2
+		Numbered: true
 		Typography:
 			Size: 13
 			Line height: 18
 			Bold: true
 			Color: linden
-			Numbered: true
 		Box:
 			Margin: 14 0 5 0
 	For element: Heading 3
+		Numbered: true
 		Typography:
 			Size: 10.5
 			Line height: 15
 			Bold: true
-			Numbered: true
 		Box:
 			Margin: 10 0 4 0
 	For style: minutes

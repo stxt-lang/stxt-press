@@ -70,8 +70,7 @@ Styles (dev.stxt.pdf):
 		Box:
 			Margin: 0 0 14 0
 	For element: Figure
-		Typography:
-			Number label: Plate {number}.
+		Number label: Plate {number}.
 		Box:
 			Margin: 2 0 12 0
 	For element: Caption
@@ -83,8 +82,7 @@ Styles (dev.stxt.pdf):
 		Box:
 			Margin: 6 0 0 0
 	For id: cake-quantities
-		Typography:
-			Number label: Table {number}.
+		Number label: Table {number}.
 	For id: fig-pears
 		For element: Image
 			Box:

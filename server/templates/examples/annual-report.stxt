@@ -67,8 +67,8 @@ Document (dev.stxt.pdf):
 						Margin: 0 0 14 0
 						Padding: 0
 						Border: 0
+					Numbered: false
 					Typography:
-						Numbered: false
 						Font: IBM Plex Serif
 						Bold: true
 						Size: 44
@@ -112,11 +112,10 @@ Document (dev.stxt.pdf):
 			Heading 1:
 				In table of contents: false
 				Text: Contents
-				Typography:
-					Numbered: false
+				Numbered: false
 			Table of contents:
 				Id: toc
-				Levels: 1 1
+				Heading levels: 1 1
 		Block: {letter}
 			Id: letter
 			Box:

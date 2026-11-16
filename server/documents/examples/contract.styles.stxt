@@ -16,8 +16,8 @@ Styles (dev.stxt.pdf):
 			Size: 10
 			Line height: 15
 			Color: ink
-			Numbered: true
 	For element: Heading 1
+		Numbered: true
 		Typography:
 			Size: 15
 			Line height: 20
@@ -29,6 +29,7 @@ Styles (dev.stxt.pdf):
 		Box:
 			Margin: 0 0 4 0
 	For element: Heading 2
+		Numbered: true
 		Typography:
 			Font: IBM Plex Sans
 			Size: 9
@@ -43,13 +44,13 @@ Styles (dev.stxt.pdf):
 			Border: 0 0 0.5 0
 			Border color: rule
 	For style: annex
+		Number format: upper-roman
 		Typography:
 			Font: IBM Plex Sans
 			Size: 9
 			Line height: 13
 			Align: left
 			Letter spacing: 0.8
-			Number format: upper-roman
 		Box:
 			Margin: 16 0 6 0
 			Padding: 0 0 3 0

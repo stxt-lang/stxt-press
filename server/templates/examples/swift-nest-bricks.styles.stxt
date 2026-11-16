@@ -11,7 +11,6 @@ Styles (dev.stxt.pdf):
 			Line height: 13
 			Color: #22262B
 			Markup: markdown
-			Numbered: true
 	For element: Paragraph
 		Typography:
 			Align: justify
@@ -21,7 +20,7 @@ Styles (dev.stxt.pdf):
 			Margin: 0 0 5 0
 	For style: sup
 		Typography:
-			Position: superscript
+			Text position: superscript
 	For style: journal
 		Typography:
 			Font: IBM Plex Sans
@@ -36,6 +35,7 @@ Styles (dev.stxt.pdf):
 			Border: 0 0 2 0
 			Border color: journal
 	For element: Heading 1
+		Numbered: true
 		Typography:
 			Font: IBM Plex Sans
 			Size: 10.5
@@ -45,6 +45,7 @@ Styles (dev.stxt.pdf):
 		Box:
 			Margin: 12 0 5 0
 	For element: Heading 2
+		Numbered: true
 		Typography:
 			Font: IBM Plex Sans
 			Size: 9.5
@@ -55,16 +56,15 @@ Styles (dev.stxt.pdf):
 		Box:
 			Margin: 8 0 3 0
 	For style: paper-title
+		Numbered: false
 		Typography:
 			Size: 22
 			Line height: 27
 			Color: #22262B
-			Numbered: false
 		Box:
 			Margin: 4 0 10 0
 	For style: unnumbered
-		Typography:
-			Numbered: false
+		Numbered: false
 	For style: authors
 		Typography:
 			Font: IBM Plex Sans
@@ -112,11 +112,9 @@ Styles (dev.stxt.pdf):
 	For element: Figure
 		Box:
 			Margin: 6 0 10 0
-		Typography:
-			Number label: Figure {number}.
+		Number label: Figure {number}.
 	For id: tab-sites
-		Typography:
-			Number label: Table {number}.
+		Number label: Table {number}.
 	For element: Caption
 		Typography:
 			Font: IBM Plex Sans

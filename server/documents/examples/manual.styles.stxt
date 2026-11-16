@@ -7,8 +7,8 @@ Styles (dev.stxt.pdf):
 			Size: 9.5
 			Line height: 14.5
 			Color: #1F2A30
-			Numbered: true
 	For element: Heading 1
+		Numbered: true
 		Typography:
 			Size: 28
 			Line height: 32
@@ -17,6 +17,7 @@ Styles (dev.stxt.pdf):
 		Box:
 			Margin: 0 0 4 0
 	For element: Heading 2
+		Numbered: true
 		Typography:
 			Size: 15
 			Line height: 20
@@ -28,6 +29,7 @@ Styles (dev.stxt.pdf):
 			Border: 0 0 1 0
 			Border color: #BFD9D7
 	For element: Heading 3
+		Numbered: true
 		Typography:
 			Size: 10.5
 			Line height: 15

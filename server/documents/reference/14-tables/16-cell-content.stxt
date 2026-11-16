@@ -44,7 +44,7 @@ Document (dev.stxt.pdf):
 					Cell:
 						Image: examples/catalog/silla.jpg
 							Alt: Walnut chair
-							Fit: crop
+							Image fit: crop
 							Box:
 								Width: 100%
 								Height: 80

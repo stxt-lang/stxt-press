@@ -7,12 +7,10 @@ Document (dev.stxt.pdf):
 		Margin: 15mm
 	Styles:
 		For element: Heading 1
-			Typography:
-				Numbered: true
-				Number format: upper-roman
+			Numbered: true
+			Number format: upper-roman
 		For element: Heading 2
-			Typography:
-				Numbered: true
+			Numbered: true
 		For element: TOC 1
 			Typography:
 				Bold: true
@@ -27,15 +25,14 @@ Document (dev.stxt.pdf):
 			Style: topic
 		Heading 1:
 			In table of contents: false
-			Typography:
-				Numbered: false
+			Numbered: false
 			Text: Numbered headings
 		Paragraph: A numbered heading takes its number into its entry, written as its level says. Here the chapters are in Roman numerals and their sections in digits, `I.1`. The title has `Numbered: false`, so it neither carries a number nor counts.
 			Style: intro
 		Text: Contents
 			Style: contents
 		Table of contents:
-			Levels: 1 2
+			Heading levels: 1 2
 	Section:
 		Heading 1:
 			Text: Installation

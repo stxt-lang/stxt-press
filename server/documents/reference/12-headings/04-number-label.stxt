@@ -7,14 +7,12 @@ Document (dev.stxt.pdf):
 		Margin: 20mm
 	Styles:
 		For element: Heading 2
-			Typography:
-				Numbered: true
-				Number label: Chapter {number}.
+			Numbered: true
+			Number label: Chapter {number}.
 		For style: annex
-			Typography:
-				Numbered: true
-				Number format: upper-alpha
-				Number label: Appendix {number}:
+			Numbered: true
+			Number format: upper-alpha
+			Number label: Appendix {number}:
 	Section:
 		Text: Headings
 			Style: topic
@@ -30,8 +28,7 @@ Document (dev.stxt.pdf):
 			Text: Results
 		Paragraph: The rates are in appendix {number of: fees}, and the contacts in appendix {number of: contacts}.
 		Heading 2:
-			Typography:
-				Numbered: false
+			Numbered: false
 			Text: Appendices
 		Text: Number label: Appendix {number}: with Number format: upper-alpha
 			Style: label

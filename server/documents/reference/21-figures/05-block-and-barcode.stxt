@@ -22,13 +22,13 @@ Document (dev.stxt.pdf):
 					Gap: 8
 					Item:
 						Image: examples/catalog/taburete.jpg
-							Fit: crop
+							Image fit: crop
 							Box:
 								Width: 50mm
 								Height: 40mm
 					Item:
 						Image: examples/catalog/banco.jpg
-							Fit: crop
+							Image fit: crop
 							Box:
 								Width: 50mm
 								Height: 40mm

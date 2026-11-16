@@ -1,4 +1,4 @@
-# Two-page data sheet of an indoor air quality sensor. The key features are a side box (Side: right) that the
+# Two-page data sheet of an indoor air quality sensor. The key features are a side box (Side box: right) that the
 # overview runs beside, and the next heading goes below it (Below side boxes); its list marks each feature with a
 # check drawn in SVG (Marker: image). The front view and the dimension drawing are one Figure with a Block (two SVG
 # images side by side). The specification tables group their rows with cells that span several rows or columns
@@ -58,7 +58,7 @@ Document (dev.stxt.pdf):
 		Block:
 			Id: features
 			Style: features
-			Side: right
+			Side box: right
 			Text: Key features
 				Style: box-label
 			List:

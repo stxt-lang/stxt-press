@@ -11,11 +11,11 @@
 # A5 pages printed on both sides: Mirror margins gives the even pages the wide margin on the right, and the folios go
 # on the outer edge with two Page overlay, one for the odd pages, with the title of the book, and one for the even
 # ones, with the recipe in effect as a running head ({heading 2}). The chapter starts at the page in the data (Page
-# numbering: restart, First number). The opener has a drop cap (Drop cap: 3), an illustration as a numbered Figure
+# numbering: restart, First page number). The opener has a drop cap (Drop cap: 3), an illustration as a numbered Figure
 # ("Plate 1.") and the list of recipes as a Table of contents of the Heading 2 level. Each recipe starts on a new page
 # with its details on a shared baseline. The ingredients go in a List whose markers are a leaf drawn in SVG (Marker:
 # image), with the method as a numbered List beside them, in a Grid. The cook's notes run around a small illustration
-# (Side: right), the variations go in two Columns, and the quantity table has a numbered caption. The body text is IBM
+# (Side box: right), the variations go in two Columns, and the quantity table has a numbered caption. The body text is IBM
 # Plex Serif, justified with optimal line breaking and hyphenation (Language: en-GB).
 Document (dev.stxt.pdf):
 	Page:
@@ -59,7 +59,7 @@ Document (dev.stxt.pdf):
 	Section:
 		Id: chapter
 		Page numbering: restart
-		First number: <first_page>
+		First page number: <first_page>
 		Block:
 			Id: opener
 			Text: Chapter ${chapter}
@@ -82,7 +82,7 @@ Document (dev.stxt.pdf):
 				Style: list-label
 			Table of contents:
 				Id: recipes-toc
-				Levels: 2 2
+				Heading levels: 2 2
 		Block: [recipes]
 			Id: <id>
 			Style: recipe
@@ -152,7 +152,7 @@ Document (dev.stxt.pdf):
 				Text: Cook’s notes
 			Image: {?notes}<drawing>
 				Style: side-drawing
-				Side: right
+				Side box: right
 			Paragraph: {?notes}[paragraphs]
 			Block: {?variations}
 				Style: variations

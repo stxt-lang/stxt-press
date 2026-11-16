@@ -19,8 +19,8 @@ Styles (dev.stxt.pdf):
 			Size: 9.5
 			Line height: 14.5
 			Color: ink
-			Numbered: true
 	For element: Heading 1
+		Numbered: true
 		Typography:
 			Font: IBM Plex Serif
 			Size: 26
@@ -33,6 +33,7 @@ Styles (dev.stxt.pdf):
 			Border: 0 0 1 0
 			Border color: rule
 	For element: Heading 2
+		Numbered: true
 		Typography:
 			Font: IBM Plex Serif
 			Size: 13

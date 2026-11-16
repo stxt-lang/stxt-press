@@ -10,11 +10,11 @@ Document (dev.stxt.pdf):
 			Style: topic
 		Heading 1:
 			Text: Side box
-		Paragraph: With `Side: right` the code goes to the right of its container and the lines of the paragraphs that follow it get shorter beside it. Its `Margin` is the gap to the text.
+		Paragraph: With `Side box: right` the code goes to the right of its container and the lines of the paragraphs that follow it get shorter beside it. Its `Margin` is the gap to the text.
 			Style: intro
 		Barcode: https://stxt.dev/verify/2026-0147
 			Alt: QR code to verify certificate 2026-0147
-			Side: right
+			Side box: right
 			Box:
 				Width: 32mm
 				Margin: 0 0 6 12

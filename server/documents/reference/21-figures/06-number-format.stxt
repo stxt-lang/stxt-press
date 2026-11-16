@@ -1,4 +1,4 @@
-# Figures: Number format and Number label in the figure Typography, and Numbered: false for a figure without a number.
+# Figures: Number format and Number label in the figure rule, and Numbered: false for a figure without a number.
 Document (dev.stxt.pdf):
 	Language: en
 	Title: Figures · Number format and unnumbered figures
@@ -7,9 +7,8 @@ Document (dev.stxt.pdf):
 		Margin: 20mm
 	Styles:
 		For style: plate
-			Typography:
-				Number format: upper-roman
-				Number label: Plate {number} ·
+			Number format: upper-roman
+			Number label: Plate {number} ·
 	Section:
 		Text: Figures
 			Style: topic
@@ -37,8 +36,7 @@ Document (dev.stxt.pdf):
 					Text: Numbered: false
 						Style: label
 					Figure:
-						Typography:
-							Numbered: false
+						Numbered: false
 						Caption: Mirror, without a number.
 						Image: examples/catalog/espejo.jpg
 							Alt: Round mirror with a walnut frame

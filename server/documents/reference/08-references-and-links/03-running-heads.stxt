@@ -7,11 +7,9 @@ Document (dev.stxt.pdf):
 		Margin: 22mm 15mm 15mm 15mm
 	Styles:
 		For element: Heading 2
-			Typography:
-				Numbered: true
+			Numbered: true
 		For element: Heading 3
-			Typography:
-				Numbered: true
+			Numbered: true
 	Page overlay:
 		Pages: not-first
 		Offset: -36 0 auto 0

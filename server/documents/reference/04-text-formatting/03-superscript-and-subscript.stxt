@@ -1,4 +1,4 @@
-# Text formatting: Position superscript and subscript in the rule of a styled part.
+# Text formatting: Text position superscript and subscript in the rule of a styled part.
 Document (dev.stxt.pdf):
 	Language: en
 	Title: Text formatting · Superscript and subscript
@@ -20,20 +20,20 @@ Document (dev.stxt.pdf):
 				Markup: markdown
 		For style: sup
 			Typography:
-				Position: superscript
+				Text position: superscript
 		For style: sub
 			Typography:
-				Position: subscript
+				Text position: subscript
 		For style: note-mark
 			Typography:
-				Position: superscript
+				Text position: superscript
 				Color: #B3261E
 	Section:
 		Text: Text formatting
 			Style: topic
 		Heading 1:
 			Text: Superscript and subscript
-		Paragraph: A styled part whose rule declares `Position: superscript` or `subscript` is painted at 70% of the size, above or below the baseline, without changing the height of the line. `Position` is only valid in the rule of a styled part.
+		Paragraph: A styled part whose rule declares `Text position: superscript` or `subscript` is painted at 70% of the size, above or below the baseline, without changing the height of the line. `Text position` is only valid in the rule of a styled part.
 			Style: intro
 		Text: The 1[st]{sup} floor, of 85 m[2]{sup}, emits 12 kg of CO[2]{sub} a year.
 			Style: source

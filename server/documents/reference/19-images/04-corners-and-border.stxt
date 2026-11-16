@@ -45,13 +45,13 @@ Document (dev.stxt.pdf):
 							Border: 1
 							Border color: rule
 							Background: #FFFFFF
-		Text: Corner radius: 0 40 0 40, Fit: crop in a wide box
+		Text: Corner radius: 0 40 0 40, Image fit: crop in a wide box
 			Style: label
 			Box:
 				Margin: 16 0 4 0
 		Image: examples/catalog/escritorio.jpg
 			Alt: Walnut desk
-			Fit: crop
+			Image fit: crop
 			Box:
 				Width: 100%
 				Height: 120

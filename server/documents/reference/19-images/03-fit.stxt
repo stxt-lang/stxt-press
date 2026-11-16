@@ -1,7 +1,7 @@
-# Images: Fit says how an image fills a box of another proportion (inside, crop, stretch).
+# Images: Image fit says how an image fills a box of another proportion (inside, crop, stretch).
 Document (dev.stxt.pdf):
 	Language: en
-	Title: Images · Fit
+	Title: Images · Image fit
 	Page:
 		Paper: A4
 		Margin: 20mm
@@ -17,8 +17,8 @@ Document (dev.stxt.pdf):
 		Text: Images
 			Style: topic
 		Heading 1:
-			Text: Fit
-		Paragraph: With `Width` and `Height` the box has its own proportion. `Fit: inside` (the default) shows the whole image centered, `crop` fills the box and crops what is left over, and `stretch` fills it distorting the image.
+			Text: Image fit
+		Paragraph: With `Width` and `Height` the box has its own proportion. `Image fit: inside` (the default) shows the whole image centered, `crop` fills the box and crops what is left over, and `stretch` fills it distorting the image.
 			Style: intro
 		Text: The photograph: 1200 × 780 pixels, wider than tall
 			Style: label
@@ -31,25 +31,25 @@ Document (dev.stxt.pdf):
 			Gap: 20
 			Item:
 				Block:
-					Text: Fit: inside
+					Text: Image fit: inside
 						Style: label
 					Image: examples/newsletter/market.jpg
 						Alt: Stalls of the market in the main square
 						Style: framed
-						Fit: inside
+						Image fit: inside
 			Item:
 				Block:
-					Text: Fit: crop
+					Text: Image fit: crop
 						Style: label
 					Image: examples/newsletter/market.jpg
 						Alt: Stalls of the market in the main square
 						Style: framed
-						Fit: crop
+						Image fit: crop
 			Item:
 				Block:
-					Text: Fit: stretch
+					Text: Image fit: stretch
 						Style: label
 					Image: examples/newsletter/market.jpg
 						Alt: Stalls of the market in the main square
 						Style: framed
-						Fit: stretch
+						Image fit: stretch

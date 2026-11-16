@@ -7,18 +7,15 @@ Document (dev.stxt.pdf):
 		Margin: 20mm
 	Styles:
 		For element: Heading 2
-			Typography:
-				Numbered: true
+			Numbered: true
 		For element: Heading 3
-			Typography:
-				Numbered: true
+			Numbered: true
 		For element: List
 			Box:
 				Padding: 0 0 0 20
 				Margin: 0 0 10 0
 		For element: Figure
-			Typography:
-				Number label: Figure {number}.
+			Number label: Figure {number}.
 			Box:
 				Margin: 4 0 10 0
 		For element: Caption

@@ -9,11 +9,9 @@ Document (dev.stxt.pdf):
 	Language: en
 	Styles:
 		For element: Figure
-			Typography:
-				Number label: Figure {number}.
+			Number label: Figure {number}.
 		For style: table
-			Typography:
-				Number label: Table {number}.
+			Number label: Table {number}.
 	Section:
 		Page overlay:
 			Id: header
@@ -56,9 +54,9 @@ Document (dev.stxt.pdf):
 					Padding: 0
 					Border: 0
 					Margin: 0
+				Numbered: false
 				Typography:
 					Color: #FFFFFF
-					Numbered: false
 			Text: Install it, connect it to the app and program your home in under half an hour.
 				Typography:
 					Size: 11

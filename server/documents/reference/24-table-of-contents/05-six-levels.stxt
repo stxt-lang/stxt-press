@@ -1,4 +1,4 @@
-# Table of contents: Levels: 1 6 and the six entry rules, TOC 1 to TOC 6, each with its own indent and type.
+# Table of contents: Heading levels: 1 6 and the six entry rules, TOC 1 to TOC 6, each with its own indent and type.
 Document (dev.stxt.pdf):
 	Language: en
 	Title: Table of contents · Six levels
@@ -52,11 +52,11 @@ Document (dev.stxt.pdf):
 		Heading 1:
 			In table of contents: false
 			Text: Six levels
-		Paragraph: `Levels: 1 6` lists every heading level. The entries of each level are styled with their own rule, from `For element: TOC 1` to `TOC 6`.
+		Paragraph: `Heading levels: 1 6` lists every heading level. The entries of each level are styled with their own rule, from `For element: TOC 1` to `TOC 6`.
 			Style: intro
 		Table of contents:
 			Style: sample
-			Levels: 1 6
+			Heading levels: 1 6
 		Heading 1:
 			Text: Part one
 		Heading 2:

@@ -79,7 +79,7 @@ Document (dev.stxt.pdf):
 			Image: examples/newsletter/market.jpg
 				Id: lead-photo
 				Alt: Market stalls with colorful awnings
-				Fit: crop
+				Image fit: crop
 				Box:
 					Width: 100%
 					Height: 214
@@ -120,7 +120,7 @@ Document (dev.stxt.pdf):
 					Margin: 0 0 14 0
 				Block:
 					Id: feature-figure
-					Side: right
+					Side box: right
 					Box:
 						Width: 200
 						Margin: 0 0 4 16

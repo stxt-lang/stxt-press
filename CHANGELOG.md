@@ -4,6 +4,23 @@ All notable changes to `stxt-press` are documented in this file, newest first.
 
 The format follows [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.7.0] - 2026-11-16
+
+On `stxt-pdf` 0.19.0, whose layout documents use the names of the vocabulary reviewed before its 1.0. **From 0.6.1**:
+a template or a document of a server that uses the old names is an error until it is changed; once changed, it is laid
+out the same. No route, node of `server.stxt` or command changes.
+
+### Changed
+
+- On `dev.stxt:stxt-pdf` 0.19.0 instead of 0.18.1, which renames some names of the `dev.stxt.pdf` namespace without
+  an alias: `Side` is `Side box`, `Position` is `Text position`, `First number` of a `Section` is `First page number`,
+  `Number` of a `List item` is `Item number`, `Fit` is `Image fit` and `Levels` is `Heading levels`, and `Numbered`,
+  `Number format` and `Number label` are declared in the heading or in the `Figure`, or in a rule that reaches them,
+  and not in a `Typography`. A template or a document of a server with the old names has to be changed.
+- The templates and the documents of the `server/` folder, and its copy of the schema of `dev.stxt.pdf`, use the new
+  names. The numbered headings of the examples declare `Numbered: true` in the rule of each level, as those of
+  `stxt-pdf`.
+
 ## [0.6.1] - 2026-11-15
 
 Jackson 3, and the latest versions of `stxt-core`, `stxt-pdf` and `stxt-transform`. No route, node of `server.stxt` or

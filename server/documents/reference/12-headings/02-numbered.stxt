@@ -7,11 +7,9 @@ Document (dev.stxt.pdf):
 		Margin: 20mm
 	Styles:
 		For element: Heading 2
-			Typography:
-				Numbered: true
+			Numbered: true
 		For element: Heading 3
-			Typography:
-				Numbered: true
+			Numbered: true
 	Section:
 		Text: Headings
 			Style: topic
@@ -33,8 +31,7 @@ Document (dev.stxt.pdf):
 			Text: Test
 		Paragraph: Switch the power on and check the display.
 		Heading 3:
-			Typography:
-				Numbered: false
+			Numbered: false
 			Text: Notes, a heading with Numbered: false
 		Paragraph: A heading with `Numbered: false` is neither numbered nor counted.
 			Typography:

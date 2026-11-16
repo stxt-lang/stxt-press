@@ -7,25 +7,20 @@ Document (dev.stxt.pdf):
 		Margin: 20mm
 	Styles:
 		For element: Heading 2
-			Typography:
-				Numbered: true
-				Number format: upper-roman
+			Numbered: true
+			Number format: upper-roman
 		For element: Heading 3
-			Typography:
-				Numbered: true
-				Number format: upper-alpha
+			Numbered: true
+			Number format: upper-alpha
 		For element: Heading 4
-			Typography:
-				Numbered: true
-				Number format: decimal
+			Numbered: true
+			Number format: decimal
 		For element: Heading 5
-			Typography:
-				Numbered: true
-				Number format: lower-alpha
+			Numbered: true
+			Number format: lower-alpha
 		For element: Heading 6
-			Typography:
-				Numbered: true
-				Number format: lower-roman
+			Numbered: true
+			Number format: lower-roman
 	Section:
 		Text: Headings
 			Style: topic

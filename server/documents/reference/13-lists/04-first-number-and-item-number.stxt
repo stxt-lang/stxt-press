@@ -1,7 +1,7 @@
-# Lists: First number starts a numbered list at another number, and Number sets the number of one item.
+# Lists: First number starts a numbered list at another number, and Item number sets the number of one item.
 Document (dev.stxt.pdf):
 	Language: en
-	Title: Lists · First number and Number
+	Title: Lists · First number and Item number
 	Page:
 		Paper: A4
 		Margin: 20mm
@@ -9,8 +9,8 @@ Document (dev.stxt.pdf):
 		Text: Lists
 			Style: topic
 		Heading 1:
-			Text: First number and Number
-		Paragraph: `First number` on the `List` is the number of its first item, for a list that goes on after a paragraph. `Number` on a `List item` gives that item its number, and the following ones continue from it.
+			Text: First number and Item number
+		Paragraph: `First number` on the `List` is the number of its first item, for a list that goes on after a paragraph. `Item number` on a `List item` gives that item its number, and the following ones continue from it.
 			Style: intro
 		Text: Marker: decimal, First number: 4
 			Style: label
@@ -32,7 +32,7 @@ Document (dev.stxt.pdf):
 				Paragraph: The third item, written III.
 			List item:
 				Paragraph: The fourth one.
-		Text: Number: 10 on the third item
+		Text: Item number: 10 on the third item
 			Style: label
 		List:
 			Marker: decimal
@@ -41,7 +41,7 @@ Document (dev.stxt.pdf):
 			List item:
 				Paragraph: Second item.
 			List item:
-				Number: 10
-				Paragraph: This item has Number: 10.
+				Item number: 10
+				Paragraph: This item has Item number: 10.
 			List item:
 				Paragraph: The next one continues from it.

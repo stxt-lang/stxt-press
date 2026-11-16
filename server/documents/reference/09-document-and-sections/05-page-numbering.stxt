@@ -1,4 +1,4 @@
-# Document and sections: Page numbering none, continue and restart, with First number.
+# Document and sections: Page numbering none, continue and restart, with First page number.
 Document (dev.stxt.pdf):
 	Language: en
 	Title: Document and sections · Page numbering
@@ -17,7 +17,7 @@ Document (dev.stxt.pdf):
 			Style: topic
 		Heading 1:
 			Text: Page numbering
-		Paragraph: Each section says how its pages are numbered. `none` leaves them without a number and outside the count, like a cover. `continue`, the default, follows the count. `restart` starts again at 1, or at `First number`. `{{pages}}` is the last number of the current count.
+		Paragraph: Each section says how its pages are numbered. `none` leaves them without a number and outside the count, like a cover. `continue`, the default, follows the count. `restart` starts again at 1, or at `First page number`. `{{pages}}` is the last number of the current count.
 			Style: intro
 		Text: Page numbering: none  (this page: no number and no footer)
 			Style: card
@@ -31,7 +31,7 @@ Document (dev.stxt.pdf):
 				Before: page
 	Section:
 		Page numbering: restart
-		First number: 10
-		Text: Page numbering: restart, First number: 10
+		First page number: 10
+		Text: Page numbering: restart, First page number: 10
 			Style: card
 		Paragraph: This appendix starts a new count at 10, and the footer says 10 of 10.

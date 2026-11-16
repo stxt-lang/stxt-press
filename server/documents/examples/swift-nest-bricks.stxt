@@ -4,7 +4,7 @@
 # effect ({heading 1: first}, the first section that starts on the page, in a Page overlay with Pages: not-first). The figures and the table have numbered captions
 # ("Figure 1.", "Table 1.") that the text cites with {number of: id} and {page of: id}, the citations are the numbers
 # of the items of the reference list ([{number of: ref-id}], each one a link to its item) and three footnotes sit at
-# the bottom of the page of their call. The affiliation marks are superscript styled runs ([1]{sup}, Position:
+# the bottom of the page of their call. The affiliation marks are superscript styled runs ([1]{sup}, Text position:
 # superscript). Hyphenation in US English and optimal line breaking give the justified columns an even colour.
 Document (dev.stxt.pdf):
 	Page:
@@ -38,7 +38,7 @@ Document (dev.stxt.pdf):
 				Text: {page}
 	Section:
 		Page numbering: restart
-		First number: 41
+		First page number: 41
 		Block:
 			Id: front
 			Text: Urban Ecology Notes · Research article

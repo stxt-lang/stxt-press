@@ -1,11 +1,11 @@
 # A chapter of a seasonal cookbook, on A5 pages printed on both sides: Mirror margins gives the even pages the wide
 # margin on the right, and the folios go on the outer edge with two Page overlay, one for the odd pages, with the
 # title of the book, and one for the even ones, with the recipe in effect as a running head ({heading 2}). The
-# chapter starts at page 87 (Page numbering: restart, First number). The opener has a drop cap (Drop cap: 3), an
+# chapter starts at page 87 (Page numbering: restart, First page number). The opener has a drop cap (Drop cap: 3), an
 # illustration as a numbered Figure ("Plate 1.") and the list of recipes as a Table of contents of the Heading 2
 # level. Each recipe starts on a new page with its details on a shared baseline, the ingredients in a List whose
 # markers are a leaf drawn in SVG (Marker: image) and the method as a numbered List beside them, in a Grid. The cook's
-# notes run around a small illustration (Side: right), the variations and the method of the cake go in two Columns,
+# notes run around a small illustration (Side box: right), the variations and the method of the cake go in two Columns,
 # and the quantities of the cake are a Table with a numbered caption and a cell that spans two columns. The body
 # text is IBM Plex Serif, justified with optimal line breaking and hyphenation (Language: en-GB).
 Document (dev.stxt.pdf):
@@ -48,7 +48,7 @@ Document (dev.stxt.pdf):
 	Section:
 		Id: chapter
 		Page numbering: restart
-		First number: 87
+		First page number: 87
 		Block:
 			Id: opener
 			Text: Chapter 4
@@ -71,7 +71,7 @@ Document (dev.stxt.pdf):
 				Style: list-label
 			Table of contents:
 				Id: recipes-toc
-				Levels: 2 2
+				Heading levels: 2 2
 		Block:
 			Id: squash
 			Style: recipe
@@ -133,7 +133,7 @@ Document (dev.stxt.pdf):
 				Text: Cook’s notes
 			Image: documents/recipes/squash.svg
 				Style: side-drawing
-				Side: right
+				Side box: right
 			Paragraph: The butter is ready when the solids at the bottom of the pan turn golden brown and the foam settles. A light pan shows the colour; in a dark one it is easy to go too far, and burnt butter tastes bitter.
 			Paragraph: Onion squash and butternut roast in the same time. A pumpkin grown for carving is too watery for this: it steams instead of browning.
 			Paragraph: The squash keeps for two days in the fridge. Warm it in the oven and make the butter fresh.

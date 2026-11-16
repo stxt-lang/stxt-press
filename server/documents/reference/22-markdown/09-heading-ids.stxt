@@ -7,8 +7,7 @@ Document (dev.stxt.pdf):
 		Margin: 20mm
 	Styles:
 		For element: Heading 2
-			Typography:
-				Numbered: true
+			Numbered: true
 	Section:
 		Text: Markdown
 			Style: topic

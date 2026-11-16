@@ -25,7 +25,7 @@ Document (dev.stxt.pdf):
 			In table of contents: false
 			Text: Contents
 		Table of contents:
-			Levels: 2 3
+			Heading levels: 2 3
 			Box:
 				Margin: 0 0 16 0
 		Heading 2:

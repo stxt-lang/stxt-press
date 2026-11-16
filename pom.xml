@@ -6,7 +6,7 @@
 
     <groupId>dev.stxt</groupId>
     <artifactId>stxt-press</artifactId>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
     <packaging>jar</packaging>
 
     <!-- A service, not a library: it is distributed as a jar of the GitHub releases and as a Docker image, not on
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>dev.stxt</groupId>
             <artifactId>stxt-pdf</artifactId>
-            <version>0.18.1</version>
+            <version>0.19.0</version>
         </dependency>
 
         <!-- The fill of the Slots of a layout document with JSON data (FillJson), before converting it. Its stxt-core

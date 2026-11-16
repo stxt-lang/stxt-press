@@ -58,12 +58,12 @@ Document (dev.stxt.pdf):
 				Style: tagline
 		Heading 2:
 			Text: Overview
-		# The key features are a side box (Side: right) that the overview runs beside, and the next heading goes below
+		# The key features are a side box (Side box: right) that the overview runs beside, and the next heading goes below
 		# it (Below side boxes); its list marks each feature with a check drawn in SVG (Marker: image).
 		Block:
 			Id: features
 			Style: features
-			Side: right
+			Side box: right
 			Text: Key features
 				Style: box-label
 			List:

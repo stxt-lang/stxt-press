@@ -55,8 +55,7 @@ Document (dev.stxt.pdf):
 					Text: Page {page} of {pages}
 		Heading 1:
 			Text: Design services agreement
-			Typography:
-				Numbered: false
+			Numbered: false
 		Text: ${place}, ${date}
 			Typography:
 				Align: center
@@ -143,8 +142,7 @@ Document (dev.stxt.pdf):
 			Heading 1:
 				Id: annex-title
 				Style: annex
-				Typography:
-					Number label: Appendix {number} ·
+				Number label: Appendix {number} ·
 				Text: Schedule and fees
 			Table:
 				Id: fees

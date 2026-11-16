@@ -22,7 +22,7 @@ Document (dev.stxt.pdf):
 		Paragraph: A table of contents is broken between its entries like any text. The twenty entries of these recipes do not fit on the first page, and the last ones go at the top of the second.
 			Style: intro
 		Table of contents:
-			Levels: 2 2
+			Heading levels: 2 2
 		Heading 2:
 			Text: Almond soup
 		Paragraph: Cold, with grapes.

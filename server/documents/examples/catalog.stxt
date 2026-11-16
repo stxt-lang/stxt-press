@@ -115,7 +115,7 @@ Document (dev.stxt.pdf):
 				Style: lead
 			Table of contents:
 				Id: toc
-				Levels: 1 2
+				Heading levels: 1 2
 		Block:
 			Id: dining
 			Break:
