@@ -59,7 +59,7 @@ public final class Press {
 
     /**
      * {@return the producer of the PDFs of the service, with its version and that of the engine:
-     * {@code stxt-press 0.7.0 (stxt-pdf 0.19.0)}} Without a jar (the tests), {@code stxt-press (stxt-pdf 0.19.0)}.
+     * {@code stxt-press 0.7.1 (stxt-pdf 0.20.0)}} Without a jar (the tests), {@code stxt-press (stxt-pdf 0.20.0)}.
      */
     public static String producer() {
         String press = version();

@@ -1,0 +1,71 @@
+# Lists: Marker circle, square and checkbox, drawn by the engine, and Checked for the checked items.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Lists · Drawn markers
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Lists
+			Style: topic
+		Heading 1:
+			Text: Drawn markers
+		Paragraph: `circle`, `square` and `checkbox` are drawn by the engine, not taken from the font, in the color of the text of the item. The circle and the square are half as tall as the capitals; the checkbox is as tall as them, and is checked in the items with `Checked: true`.
+			Style: intro
+		Text: Marker: circle
+			Style: label
+		List:
+			Marker: circle
+			List item:
+				Paragraph: Fresh pasta, made in the morning.
+			List item:
+				Paragraph: Tomato sauce from the garden.
+		Text: Marker: square
+			Style: label
+		List:
+			Marker: square
+			List item:
+				Paragraph: Fresh pasta, made in the morning.
+			List item:
+				Paragraph: Tomato sauce from the garden.
+		Text: Marker: bullet, circle and square, one per level
+			Style: label
+		List:
+			Marker: bullet
+			List item:
+				Paragraph: Wood
+				List:
+					Marker: circle
+					List item:
+						Paragraph: Walnut
+						List:
+							Marker: square
+							List item:
+								Paragraph: Only for tables
+					List item:
+						Paragraph: Oak
+			List item:
+				Paragraph: Fabric
+		Text: Marker: checkbox, with Checked: true in the first two items
+			Style: label
+		List:
+			Marker: checkbox
+			List item:
+				Checked: true
+				Paragraph: Identity document
+			List item:
+				Checked: true
+				Paragraph: Signed contract
+			List item:
+				Paragraph: Proof of payment
+		Text: Marker: checkbox, in an item with another Color
+			Style: label
+		List:
+			Marker: checkbox
+			List item:
+				Checked: true
+				Paragraph: Sent on 3 March.
+			List item:
+				Typography:
+					Color: #B3261E
+				Paragraph: Overdue: the box takes the red of the text.

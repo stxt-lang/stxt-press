@@ -1,0 +1,49 @@
+# Text formatting: Highlight, a color behind a styled part of a line, like a highlighter.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Text formatting · Highlight
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Styles:
+		For style: source
+			Typography:
+				Font: IBM Plex Mono
+				Size: 9
+				Color: muted
+		For style: result
+			Box:
+				Margin: 0 0 14 0
+			Typography:
+				Size: 13
+				Line height: 18
+				Markup: markdown
+		For style: mark
+			Typography:
+				Highlight: #FFE680
+		For style: alert
+			Typography:
+				Highlight: #B3261E
+				Color: #FFFFFF
+				Bold: true
+	Section:
+		Text: Text formatting
+			Style: topic
+		Heading 1:
+			Text: Highlight
+		Paragraph: `Highlight`, in the `For style` rule of a styled part (`[text]{name}`), paints a color behind it. On each line the part is on, it is a rectangle as wide as the part and as tall as the font of its box, with no padding; it does not change the line. The text is checked for contrast against it. In a box, the color behind it is its `Background`.
+			Style: intro
+		Text: Payment is due on [15 May]{mark}.
+			Style: source
+		Text: Payment is due on [15 May]{mark}.
+			Style: result
+		Text: A part that crosses lines is highlighted on each of them, without the space where the line breaks
+			Style: label
+		Text: The [walnut chair with a wool seat and a back of woven cane]{mark} is back in stock.
+			Style: result
+			Box:
+				Width: 60mm
+		Text: [OVERDUE]{alert} Invoice 2026-118, with [**bold**, ++underlined++ and ~~struck~~ text]{mark} inside.
+			Style: source
+		Text: [OVERDUE]{alert} Invoice 2026-118, with [**bold**, ++underlined++ and ~~struck~~ text]{mark} inside.
+			Style: result

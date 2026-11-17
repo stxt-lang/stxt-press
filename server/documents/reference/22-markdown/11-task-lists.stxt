@@ -1,0 +1,46 @@
+# Markdown: lists of tasks, written - [ ] and - [x], and Bullet markers with circle and square.
+Document (dev.stxt.pdf):
+	Language: en
+	Title: Markdown · Lists of tasks
+	Page:
+		Paper: A4
+		Margin: 20mm
+	Section:
+		Text: Markdown
+			Style: topic
+		Heading 1:
+			Text: Lists of tasks
+		Paragraph: A bulleted list whose items start with `[ ]` or `[x]` and a space is a list of tasks: a `List` with `Marker: checkbox`, checked in the items written with `[x]`. It needs no `Bullet markers`. All the items of the list are tasks or none is, and `\[ ]` is text.
+			Style: intro
+		Text: - [ ] and - [x], without Bullet markers
+			Style: label
+		Markdown:
+			Content >>
+				- [x] Identity document
+				- [x] **Signed** contract
+				- [ ] Proof of payment
+		Text: Tasks with a bulleted list inside, which takes the second level of Bullet markers
+			Style: label
+		Markdown:
+			Bullet markers: bullet circle
+			Content >>
+				- [x] Book the room
+				- [ ] Send the agenda
+				  - Budget
+				  - Calendar
+		Text: \[ ] at the start of an item is text
+			Style: label
+		Markdown:
+			Bullet markers: dash
+			Content >>
+				- \[ ] is how an empty box is written.
+				- [x]without a space is text too.
+		Text: Bullet markers: circle square
+			Style: label
+		Markdown:
+			Bullet markers: circle square
+			Content >>
+				- Wood
+				  - Walnut
+				  - Oak
+				- Fabric

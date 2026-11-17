@@ -4,6 +4,22 @@ All notable changes to `stxt-press` are documented in this file, newest first.
 
 The format follows [Keep a Changelog](http://keepachangelog.com/).
 
+## [0.7.1] - 2026-11-17
+
+On `stxt-pdf` 0.20.0: drawn list markers, lists of tasks in a `Markdown` and `Highlight`. **From 0.7.0**: in a
+`Markdown`, the items of a bulleted list that start with `[ ]` or `[x]` are tasks and no longer text; no other template
+or document that was valid changes. No route, node of `server.stxt` or command changes.
+
+### Changed
+
+- On `dev.stxt:stxt-pdf` 0.20.0 instead of 0.19.0, which adds the markers `circle`, `square` and `checkbox` with
+  `Checked`, lists of tasks in a `Markdown` and `Highlight`, a color behind a styled run. In a `Markdown`, the items of
+  a bulleted list that start with `[ ]` or `[x]` are now tasks and no longer text; no other template or document that
+  was valid changes.
+- The `server/` folder has its copy of the schema of `dev.stxt.pdf` from 0.20.0, and three new documents in
+  `documents/reference/`: `13-lists/09-drawn-markers`, `22-markdown/11-task-lists` and
+  `04-text-formatting/11-highlight`.
+
 ## [0.7.0] - 2026-11-16
 
 On `stxt-pdf` 0.19.0, whose layout documents use the names of the vocabulary reviewed before its 1.0. **From 0.6.1**:
